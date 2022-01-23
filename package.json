@@ -1,0 +1,22 @@
+{
+  "name": "bctw-ui",
+  "version": "1.0.0",
+  "description": "Front-end (scientist-facing) interface for the BC Telemetry Warehouse.",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "(cd react && npm i); (cd react && cp node_modules/reflect-metadata/Reflect.js public); (cd backend && npm i);",
+    "start": "npm start --prefix backend",
+    "dev": "yarn --cwd react run start",
+    "build": "npm --prefix react run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/bctw-ui.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bcgov/bctw-ui/issues"
+  },
+  "homepage": "https://github.com/bcgov/bctw-ui#readme"
+}
