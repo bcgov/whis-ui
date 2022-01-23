@@ -5,16 +5,11 @@ metadata:
   name: "${NAME}-build-template"
   creationTimestamp: 
 objects:
-- apiVersion: tekton.dev/v1beta1
 - kind: Pipeline
+  apiVersion: tekton.dev/v1beta1
   metadata:
     name: "${NAME}-build-and-deploy"
-  spec:
-    triggers:
-    - type: GitHub
-      github:
-        secretReference:
-          name: whis-ui-webhook
+  spec:    
     workspaces:
     - name: shared-workspace
     params:
@@ -36,12 +31,12 @@ objects:
       default: "${NAME}"
     tasks:
     - name: fetch-repository
-      taskRef:crc
+      taskRef: 
         name: git-clone
         kind: ClusterTask
       workspaces:
       - name: output
-      workspace: shared-workspace
+        workspace: shared-workspace
       params:
       - name: url
         value: $(params.git-url)
