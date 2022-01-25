@@ -1,7 +1,9 @@
 FROM node:14 as builder
 WORKDIR /usr/src/app
 COPY . ./
-RUN npm build
+RUN npm install
+RUN cd react; npm install; cd ..
+RUN npm run build
 
 # Stage 2: Copy the JS React SPA into the Nginx HTML directory
 FROM bitnami/nginx:latest
