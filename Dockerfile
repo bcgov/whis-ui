@@ -5,7 +5,7 @@ RUN npm install
 RUN cd react; npm install; cd ..
 RUN npm run build
 
-RUN ls
+RUN pwd; ls
 
 # Stage 2: Copy the JS React SPA into the Nginx HTML directory
 FROM bitnami/nginx:latest
