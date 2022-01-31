@@ -1,0 +1,18 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: caddy
+  labels:
+    base-name: caddy
+    shared: 'true'
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: 2-alpine
+      from:
+        kind: DockerImage
+        name: 'artifacts.developer.gov.bc.ca/docker-remote/caddy:2-alpine'
+      importPolicy: {}
+      referencePolicy:
+        type: Local

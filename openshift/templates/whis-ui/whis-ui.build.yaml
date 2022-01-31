@@ -1,0 +1,84 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: whis-ui
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'whis-ui:latest'
+  resources:
+    limits:
+      cpu: '1'
+      memory: 4Gi
+    requests:
+      cpu: '1'
+      memory: 4Gi
+  successfulBuildsHistoryLimit: 2
+  failedBuildsHistoryLimit: 2
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'caddy:2-alpine'
+  postCommit: {}
+  source:
+    type: Dockerfile
+    dockerfile: |-
+      FROM caddy:2-alpine
+      EXPOSE 8080
+      COPY Caddyfile /etc/caddy
+      COPY build/ /srv/
+      copy assets /srv/
+    images:
+      - from:
+          kind: ImageStreamTag
+          name: 'whis-ui-intermediate:latest'
+        paths:
+          - sourcePath: /opt/app-root/src/Caddyfile
+            destinationDir: .
+          - sourcePath: /opt/app-root/src/assets
+            destinationDir: .
+          - sourcePath: /opt/app-root/src/public/build
+            destinationDir: .
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChange: {}
+    runPolicy: SerialLatestOnly
+---
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  annotations:
+    description: WHIS Intermediate build
+  name: whis-ui-intermediate
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'whis-ui-intermediate:latest'
+  resources:
+    limits:
+      cpu: '1'
+      memory: 6Gi
+    requests:
+      cpu: '1'
+      memory: 6Gi
+  successfulBuildsHistoryLimit: 2
+  failedBuildsHistoryLimit: 2
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'nodejs:12'
+  postCommit: {}
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/bcgov/whis-ui.git'
+      ref: main
+  runPolicy: SerialLatestOnly
