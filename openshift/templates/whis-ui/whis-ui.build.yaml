@@ -30,15 +30,12 @@ spec:
       EXPOSE 8080
       COPY Caddyfile /etc/caddy
       COPY build/ /srv/
-      copy assets /srv/
     images:
       - from:
           kind: ImageStreamTag
           name: 'whis-ui-intermediate:latest'
         paths:
           - sourcePath: /opt/app-root/src/Caddyfile
-            destinationDir: .
-          - sourcePath: /opt/app-root/src/assets
             destinationDir: .
           - sourcePath: /opt/app-root/src/public/build
             destinationDir: .

@@ -1,0 +1,75 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: whis-ui
+  labels:
+    app: whis-ui
+    env: dev
+spec:
+  strategy:
+    type: Recreate
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - whis-ui
+        from:
+          kind: ImageStreamTag
+          namespace: 314c0c-tools
+          name: 'whis-ui:dev'
+    - type: ConfigChange
+  replicas: 3
+  revisionHistoryLimit: 3
+  selector:
+    app: whis-ui
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: whis-ui
+    spec:
+      containers:
+        - resources:
+            limits:
+              cpu: '1'
+              memory: 200Mi
+            requests:
+              cpu: '100m'
+              memory: 200Mi
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 1
+            timeoutSeconds: 2
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: whis-ui
+          env:
+            - name: API_BASE
+              value: 'https://moe-whis-dev.apps.silver.devops.gov.bc.ca/'
+            - name: KEYCLOAK_REALM
+              value: onestopauth
+            - name: KEYCLOAK_CLIENT_ID
+              value: wildlife-health-information-system-1618
+            - name: KEYCLOAK_URL
+              value: 'https://dev.oidc.gov.bc.ca/auth'
+          securityContext:
+            capabilities: {}
+            privileged: false
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
