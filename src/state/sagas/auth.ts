@@ -46,6 +46,7 @@ function* initializeAuthentication() {
     {
       checkLoginIframe: false,
       onLoad: 'check-sso',
+      pkceMethod: 'S256'
     }
   );
 
