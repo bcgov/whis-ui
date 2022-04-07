@@ -1,14 +1,26 @@
 const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+require('dotenv').config()
+
+// configurationSource may be 'Webpack', 'Caddy', or 'Hardcoded' depending on environment
 
 commonConfig = (htmlWebpackOptions, configurationSource) => {
 
   const buildPath = path.resolve(__dirname, 'public', 'build');
   const mainPath = path.resolve(__dirname, 'src', 'main/entry.tsx');
+
+  const expandedConfiguration = {};
+
+  if (configurationSource === 'Webpack') {
+   // these should be defined in environment or .env file
+    expandedConfiguration['CONFIGURATION_API_BASE'] = JSON.stringify(process.env.API_BASE);
+    expandedConfiguration['CONFIGURATION_KEYCLOAK_CLIENT_ID'] = JSON.stringify(process.env.KEYCLOAK_CLIENT_ID);
+    expandedConfiguration['CONFIGURATION_KEYCLOAK_REALM'] = JSON.stringify(process.env.KEYCLOAK_REALM);
+    expandedConfiguration['CONFIGURATION_KEYCLOAK_URL'] = JSON.stringify(process.env.KEYCLOAK_URL);
+  }
 
   return {
     entry: {
@@ -118,7 +130,8 @@ commonConfig = (htmlWebpackOptions, configurationSource) => {
       // new CompressionPlugin(),
       new Webpack.DefinePlugin(
         {
-          'CONFIGURATION_SOURCE': JSON.stringify(configurationSource)
+          'CONFIGURATION_SOURCE': JSON.stringify(configurationSource),
+          ...expandedConfiguration
         }
       ),
       new HtmlWebpackPlugin({

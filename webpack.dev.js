@@ -6,7 +6,7 @@ const config = merge(commonConfig({
   filename: 'index.html',
   templateParameters: {},
   template: path.resolve(__dirname, 'templates/main.html'),
-}, 'Hardcoded'), {
+}, 'Webpack'), {
   mode: 'development',
   devtool: 'source-map',
   devServer: {
