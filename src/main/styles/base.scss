@@ -107,7 +107,19 @@ dd {
   font-family: $fontFamily;
 }
 
+a {
+  text-decoration: none;
 
+  color: $link;
 
-
-
+  &:hover {
+    color: $linkHover;
+    text-decoration: underline;
+  }
+  &:visited {
+    color: $link;
+  }
+  &:active {
+    color: $linkActive;
+  }
+}

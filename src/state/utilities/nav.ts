@@ -1,10 +1,8 @@
-const nav = (path, name, roles, category?, component?, props?) => ({
+const nav = (path, name, roles, category?) => ({
   path,
   name,
   roles,
   category,
-  component,
-  props
 });
 
 export {nav};

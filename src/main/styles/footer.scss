@@ -20,12 +20,8 @@ footer {
     a {
       display: block;
       padding: 0;
-      color: $darkBackgroundText;
+      color: $darkBackgroundText !important;
       text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 

@@ -6,6 +6,10 @@
   width: 12rem;
   flex: 0 0 auto;
 
+  padding-left: 0.5em;
+  border-right: 2px solid darkgray;
+
+
   ul {
     margin: 0 auto;
     padding: 0;
@@ -17,8 +21,8 @@
 
     a {
       display: block;
-      padding: 0.5rem 0;
-      text-decoration: none;
+      padding: 0.125rem 0;
+      line-height: 1;
       font-size: 0.875rem;
       font-weight: 700;
     }

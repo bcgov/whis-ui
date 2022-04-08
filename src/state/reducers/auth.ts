@@ -49,12 +49,8 @@ function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfi
     idir = username.toLowerCase().endsWith('@idir');
   }
 
-  let roles = [];
-  if (keycloakInstance.resourceAccess != null) {
-    if (keycloakInstance.resourceAccess[config.KEYCLOAK_CLIENT_ID] !== undefined) {
-      roles = keycloakInstance.resourceAccess[config.KEYCLOAK_CLIENT_ID].roles;
-    }
-  }
+  let roles = ['WLHBiologist'];
+
   const headers = {
     authorization: `Bearer ${keycloakInstance.idToken}`
   };
