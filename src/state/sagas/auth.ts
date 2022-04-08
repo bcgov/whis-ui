@@ -9,7 +9,7 @@ import {
   AUTH_SIGNIN_REQUEST,
   AUTH_UPDATE_TOKEN_STATE
 } from "../actions";
-import {TracksConfig} from "../config";
+import {AppConfig} from "../config";
 import {getConfiguration} from "../utilities/config_helper";
 
 
@@ -33,7 +33,7 @@ function* keepTokenFresh() {
 }
 
 function* initializeAuthentication() {
-  const config: TracksConfig = yield select(getConfiguration);
+  const config: AppConfig = yield select(getConfiguration);
 
   keycloakInstance = Keycloak(
     {
@@ -49,8 +49,6 @@ function* initializeAuthentication() {
       pkceMethod: 'S256'
     }
   );
-
-  console.log(keycloakInstance);
 
   yield put({
     type: AUTH_INITIALIZE_COMPLETE,

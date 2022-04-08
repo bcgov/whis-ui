@@ -1,12 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-const LandingPage = (props) => {
+interface ILandingPage {
+  bestName: string;
+}
+
+const LandingPage: React.FC<ILandingPage> = (props) => {
   const {bestName} = props;
 
   return (
     <div>
-      <h1>Welcome to Tracks, {bestName}</h1>
+      <h1>Welcome to WHIS, {bestName}</h1>
+      <p>Use the navigation links on the left to access site functions.</p>
     </div>
   )
 
@@ -14,7 +19,6 @@ const LandingPage = (props) => {
 
 const mapStateToProps = (state) => {
   const mappedProps = {
-    currentUserRoles: state.Auth.roles,
     bestName: state.Auth.bestName,
   };
 

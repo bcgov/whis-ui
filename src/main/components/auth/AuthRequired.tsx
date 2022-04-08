@@ -30,18 +30,11 @@ const AuthRequired: React.FC<{children}> = (props) => {
   }
 
   if (authenticated) {
-    if (roles.length > 0) {
       return (
         <>
           {children}
         </>
       );
-    } else {
-      return (
-        <p>No roles</p>
-      )
-    }
-
   }
 
   return (

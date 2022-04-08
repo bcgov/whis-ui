@@ -17,7 +17,7 @@ const Header: React.FC = () => {
       <div className={'container'}>
         <Link to="/" className={'homeLink'}>
           <img src={GovLogo} alt={'BC Government Logo'} id="logo" />
-          WHIS
+          Wildlife Health Information System
         </Link>
         <nav className="profile">
           <li>
