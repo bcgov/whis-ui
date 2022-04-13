@@ -1,18 +1,17 @@
-import {combineReducers} from "redux";
-import {createAuthReducer} from "./auth";
+import {combineReducers} from 'redux';
+import {createAuthReducer} from './auth';
 
-import {AppConfig} from "../config";
+import {AppConfig} from '../config';
 
-import {createConfigurationReducerWithDefaultState} from "./configuration";
+import {createConfigurationReducerWithDefaultState} from './configuration';
 
 function createRootReducer(config: AppConfig) {
+	const rootReducer = combineReducers({
+		Configuration: createConfigurationReducerWithDefaultState(config),
+		Auth: createAuthReducer(config)
+	});
 
-  const rootReducer = combineReducers({
-    Configuration: createConfigurationReducerWithDefaultState(config),
-    Auth: createAuthReducer(config),
-  });
-
-  return rootReducer;
+	return rootReducer;
 }
 export {createRootReducer};
 

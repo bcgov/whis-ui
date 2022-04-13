@@ -1,47 +1,39 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import Icon from '@mdi/react'
-import {mdiAccountCircle} from '@mdi/js'
-import "../../styles/header.scss";
-import {keycloakInstance} from "../../../state/sagas/auth";
+import Icon from '@mdi/react';
+import {mdiAccountCircle} from '@mdi/js';
+import '../../styles/header.scss';
+import {keycloakInstance} from '../../../state/sagas/auth';
 import GovLogo from '../../styles/assets/images/gov3_bc_logo.png';
-import {useSelector} from "../../../state/utilities/use_selector";
+import {useSelector} from '../../../state/utilities/use_selector';
 
 const Header: React.FC = () => {
+	const bestName = useSelector(state => state.Auth.bestName);
 
-  const bestName = useSelector(state => state.Auth.bestName);
-
-  return (
-    <header id="header" className={'header'}>
-      <div className={'container'}>
-        <Link to="/" className={'homeLink'}>
-          <img src={GovLogo} alt={'BC Government Logo'} id="logo" />
-          Wildlife Health Information System
-        </Link>
-        <nav className="profile">
-          <li>
-            <div className={'username'}>
-              <Icon path={mdiAccountCircle}
-                    title="User Profile"
-                    size={1}>
-              </Icon>
-              <span>
-              {bestName}
-            </span>
-            </div>
-          </li>
-          <li>
-            <Button className={'logout'} color="primary"
-                    onClick={() => keycloakInstance.logout()}
-            >
-              Log out
-            </Button>
-          </li>
-        </nav>
-      </div>
-    </header>
-  );
-}
+	return (
+		<header id="header" className={'header'}>
+			<div className={'container'}>
+				<Link to="/" className={'homeLink'}>
+					<img src={GovLogo} alt={'BC Government Logo'} id="logo" />
+					Wildlife Health Information System
+				</Link>
+				<nav className="profile">
+					<li>
+						<div className={'username'}>
+							<Icon path={mdiAccountCircle} title="User Profile" size={1}></Icon>
+							<span>{bestName}</span>
+						</div>
+					</li>
+					<li>
+						<Button className={'logout'} color="primary" onClick={() => keycloakInstance.logout()}>
+							Log out
+						</Button>
+					</li>
+				</nav>
+			</div>
+		</header>
+	);
+};
 
 export default Header;

@@ -1,20 +1,17 @@
-import {AppConfig} from "../config";
+import {AppConfig} from '../config';
 
 interface ConfigurationState {
-  current: AppConfig
+	current: AppConfig;
 }
 
 function createConfigurationReducerWithDefaultState(configuration: AppConfig) {
+	const initialState: ConfigurationState = {
+		current: configuration
+	};
 
-  const initialState: ConfigurationState = {
-    current: configuration
-  };
-
-  return (state = initialState, action) => {
-    return state;
-  };
-
-
+	return (state = initialState, action) => {
+		return state;
+	};
 }
 
 export {createConfigurationReducerWithDefaultState};
