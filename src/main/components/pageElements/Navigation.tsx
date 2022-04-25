@@ -12,9 +12,12 @@ const Navigation: React.FC = () => {
 	const currentUserRoles = useSelector(state => state.Auth.roles);
 
 	const navs = [
-		nav('/wildlifeIds', 'Dashboard', ['WLHBiologist'], 'Wildlife ID'),
-		nav('/wildlifeIds/list', 'List', ['WLHBiologist'], 'Wildlife ID'),
-		nav('/wildlifeIds/generate', 'Generate', ['WLHBiologist'], 'Wildlife ID')
+		nav('/wildlifeIds', 'Dashboard', ['BIOLOGIST'], 'Wildlife ID'),
+		nav('/wildlifeIds/list', 'List', ['BIOLOGIST'], 'Wildlife ID'),
+		nav('/wildlifeIds/generate', 'Generate', ['BIOLOGIST'], 'Wildlife ID'),
+		nav('/admin/year', 'Years', ['ADMIN'], 'Code Tables'),
+		nav('/admin/codeTables', 'Code Tables', ['ADMIN'], 'Code Tables')
+
 	];
 
 	useEffect(() => {
@@ -43,8 +46,8 @@ const Navigation: React.FC = () => {
 		<nav className={'sideNav'}>
 			{categoriesSeen.map(c => (
 				<>
-					<h3 key={c}>{c}</h3>
-					<ul>
+					<h3 key={`${c}-h3`}>{c}</h3>
+					<ul key={`${c}-ul`}>
 						{sortedNavs
 							.filter(n => n.category === c)
 							.map((n, i) => {

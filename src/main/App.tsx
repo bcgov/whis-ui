@@ -9,8 +9,9 @@ import LandingPage from './pages/LandingPage';
 import NotFound from './pages/NotFound';
 import Navigation from './components/pageElements/Navigation';
 import WildlifeIdRoutes from './routes/wildlifeIds';
+import AdminRoutes from "./routes/Admin";
 
-const App: React.FC<{store}> = ({store}) => {
+const App: React.FC<{ store }> = ({store}) => {
 	return (
 		<Provider store={store}>
 			<BrowserRouter>
@@ -23,6 +24,7 @@ const App: React.FC<{store}> = ({store}) => {
 								<main>
 									<Routes>
 										{WildlifeIdRoutes}
+										{AdminRoutes}
 										<Route path="/" element={<LandingPage />} />
 										<Route path="" element={<LandingPage />} />
 										<Route path="*" element={<NotFound />} />

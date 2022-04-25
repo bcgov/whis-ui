@@ -9,7 +9,7 @@ const List: React.FC = () => {
 	useEffect(() => {
 
 		const doAPIRequest = async () => {
-			const data = await api.getHealthIDs();
+			const data = await api.getCodeTables();
 			setItems(data);
 		};
 
@@ -22,9 +22,6 @@ const List: React.FC = () => {
 	return (
 		<>
 			<h2>Listing Current IDs</h2>
-			{items.map((i, j) => (
-				<p key={j}>{i.year} -- {i.number}</p>
-			))}
 		</>
 	);
 };
