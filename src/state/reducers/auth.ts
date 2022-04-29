@@ -1,26 +1,32 @@
 import {keycloakInstance} from '../sagas/auth';
-import {AUTH_INITIALIZE_COMPLETE, AUTH_REQUEST_COMPLETE, AUTH_UPDATE_TOKEN_STATE} from '../actions';
+import {
+	AUTH_CLEAR_ROLES,
+	AUTH_INITIALIZE_COMPLETE,
+	AUTH_REFRESH_ROLES_COMPLETE, AUTH_REFRESH_ROLES_ERROR,
+	AUTH_REFRESH_ROLES_REQUEST,
+	AUTH_REQUEST_COMPLETE,
+	AUTH_UPDATE_TOKEN_STATE
+} from '../actions';
 import {AppConfig} from '../config';
 import {createRootReducer} from './index';
 
 class AuthState {
 	initialized: boolean;
-	loading: boolean;
 	error: boolean;
 	authenticated: true;
-
-	username: string;
-	idir: boolean;
 
 	bestName: string;
 	requestHeaders: {
 		authorization: string;
 	};
+
 	roles: string[];
+	rolesInitialized: false;
 
 	constructor() {
 		this.initialized = false;
 		this.roles = [];
+		this.rolesInitialized = false;
 	}
 }
 
@@ -39,14 +45,10 @@ function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfi
 		}
 	}
 	let username = null;
-	let idir = false;
 
 	if (keycloakInstance.idTokenParsed) {
 		username = keycloakInstance.idTokenParsed['preferred_username'];
-		idir = username.toLowerCase().endsWith('@idir');
 	}
-
-	const roles = ['WLHBiologist'];
 
 	const headers = {
 		authorization: `Bearer ${keycloakInstance.idToken}`
@@ -55,39 +57,67 @@ function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfi
 	return {
 		bestName,
 		headers,
-		roles,
-		username,
-		idir
+		username
 	};
 }
+
 function createAuthReducer(configuration: AppConfig): (AuthState, AnyAction) => AuthState {
 	return (state = initialState, action) => {
 		switch (action.type) {
-			case AUTH_INITIALIZE_COMPLETE: {
-				const {authenticated} = action.payload;
-				return {
-					...state,
-					initialized: true,
-					authenticated,
-					...loadCurrentStateFromKeycloak(state, configuration)
-				};
+		case AUTH_INITIALIZE_COMPLETE: {
+			const {authenticated} = action.payload;
+			return {
+				...state,
+				initialized: true,
+				authenticated,
+				...loadCurrentStateFromKeycloak(state, configuration)
+			};
+		}
+		case AUTH_REQUEST_COMPLETE: {
+			const {authenticated} = action.payload;
+			return {
+				...state,
+				authenticated,
+				...loadCurrentStateFromKeycloak(state, configuration)
+			};
+		}
+		case AUTH_UPDATE_TOKEN_STATE: {
+			return {
+				...state,
+				...loadCurrentStateFromKeycloak(state, configuration)
+			};
+		}
+		case AUTH_REFRESH_ROLES_REQUEST: {
+			return {
+				...state,
+				roles: [],
+				rolesInitialized: false
 			}
-			case AUTH_REQUEST_COMPLETE: {
-				const {authenticated} = action.payload;
-				return {
-					...state,
-					authenticated,
-					...loadCurrentStateFromKeycloak(state, configuration)
-				};
+		}
+		case AUTH_CLEAR_ROLES: {
+			return {
+				...state,
+				roles: [],
+				rolesInitialized: false
 			}
-			case AUTH_UPDATE_TOKEN_STATE: {
-				return {
-					...state,
-					...loadCurrentStateFromKeycloak(state, configuration)
-				};
+		}
+		case AUTH_REFRESH_ROLES_COMPLETE: {
+			const {roles} = action.payload;
+			return {
+				...state,
+				roles,
+				rolesInitialized: true
 			}
-			default:
-				return state;
+		}
+		case AUTH_REFRESH_ROLES_ERROR: {
+			return {
+				...state,
+				roles: [],
+				rolesInitialized: false,
+			}
+		}
+		default:
+			return state;
 		}
 	};
 }

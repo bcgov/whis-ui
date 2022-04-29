@@ -6,15 +6,13 @@ import {AUTH_INITIALIZE_REQUEST, AUTH_SIGNIN_REQUEST} from '../../../state/actio
 import Loading from '../util/Loading';
 import {useSelector} from '../../../state/utilities/use_selector';
 
-const AuthRequired: React.FC<{children}> = props => {
+const AuthRequired: React.FC<{ children }> = props => {
 	const {children} = props;
 
 	const dispatch = useDispatch();
 
 	const initialized = useSelector(state => state.Auth.initialized);
 	const authenticated = useSelector(state => state.Auth.authenticated);
-
-	const roles = useSelector(state => state.Auth.roles);
 
 	const signin = () => dispatch({type: AUTH_SIGNIN_REQUEST});
 	const initialize = () => dispatch({type: AUTH_INITIALIZE_REQUEST});
@@ -26,7 +24,7 @@ const AuthRequired: React.FC<{children}> = props => {
 	}, [initialized]);
 
 	if (!initialized) {
-		return <Loading />;
+		return <Loading/>;
 	}
 
 	if (authenticated) {

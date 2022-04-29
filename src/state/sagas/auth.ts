@@ -2,7 +2,7 @@ import {all, delay, put, select, takeLatest} from 'redux-saga/effects';
 import Keycloak from 'keycloak-js';
 import {
 	AUTH_INITIALIZE_COMPLETE,
-	AUTH_INITIALIZE_REQUEST,
+	AUTH_INITIALIZE_REQUEST, AUTH_REFRESH_ROLES_COMPLETE, AUTH_REFRESH_ROLES_ERROR, AUTH_REFRESH_ROLES_REQUEST,
 	AUTH_REFRESH_TOKEN,
 	AUTH_REQUEST_COMPLETE,
 	AUTH_REQUEST_ERROR,
@@ -11,11 +11,29 @@ import {
 } from '../actions';
 import {AppConfig} from '../config';
 import {getConfiguration} from '../utilities/config_helper';
+import {useSelector} from "react-redux";
+import {getAuthHeaders} from "../utilities/authentication_helper";
+import {default as axios} from "axios";
 
 const MIN_TOKEN_FRESHNESS = 2 * 60; //want our token to be good for atleast this long at all times
 const GRACE_PERIOD = 10; // get a new one with this much time to spare
 
 let keycloakInstance = null;
+
+function* refreshRoles() {
+	const configuration = yield select(getConfiguration);
+	const authHeaders = yield select(getAuthHeaders);
+	try {
+		const result = yield axios.get(`${configuration.API_BASE}/users/me`, {
+			headers: authHeaders
+		});
+		yield put({type: AUTH_REFRESH_ROLES_COMPLETE, payload: {roles: result.data.roles}});
+	} catch (err) {
+		console.dir(err);
+		yield put({type: AUTH_REFRESH_ROLES_ERROR});
+	}
+
+}
 
 function* keepTokenFresh() {
 	yield keycloakInstance.updateToken(MIN_TOKEN_FRESHNESS);
@@ -53,6 +71,9 @@ function* initializeAuthentication() {
 	if (authStatus) {
 		// schedule our refresh
 		yield put({type: AUTH_REFRESH_TOKEN});
+
+		// load roles
+		yield put({type: AUTH_REFRESH_ROLES_REQUEST});
 	}
 }
 
@@ -70,7 +91,8 @@ function* authenticationSaga() {
 	yield all([
 		takeLatest(AUTH_INITIALIZE_REQUEST, initializeAuthentication),
 		takeLatest(AUTH_SIGNIN_REQUEST, handleSigninRequest),
-		takeLatest(AUTH_REFRESH_TOKEN, keepTokenFresh)
+		takeLatest(AUTH_REFRESH_TOKEN, keepTokenFresh),
+		takeLatest(AUTH_REFRESH_ROLES_REQUEST, refreshRoles)
 	]);
 }
 

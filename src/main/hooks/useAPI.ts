@@ -8,7 +8,7 @@ export const useAPI = () => {
 	const configuration = useSelector(getConfiguration);
 
 	return {
-		getCodeTables:  async (): Promise<any> => {
+		getCodeTables: async (): Promise<any> => {
 			const res = await axios.get(`${configuration.API_BASE}/codes`, {
 				headers: {
 					...authHeaders
@@ -16,7 +16,7 @@ export const useAPI = () => {
 			});
 			return res.data;
 		},
-		getCodeTable:  async (id: string): Promise<any> => {
+		getCodeTable: async (id: string): Promise<any> => {
 			const res = await axios.get(`${configuration.API_BASE}/codes/${id}`, {
 				headers: {
 					...authHeaders
@@ -24,12 +24,29 @@ export const useAPI = () => {
 			});
 			return res.data;
 		},
-		getHealthIDs:  async (): Promise<any> => {
+		getHealthIDs: async (): Promise<any> => {
 			const res = await axios.get(`${configuration.API_BASE}/ids`, {
 				headers: {
 					...authHeaders
 				}
 			});
+			return res.data;
+		},
+		getAccessRequestStatus: async (): Promise<any> => {
+			const res = await axios.get(`${configuration.API_BASE}/users/access_request`, {
+				headers: {
+					...authHeaders
+				}
+			});
+			return res.data;
+		},
+		sendAccessRequest: async (): Promise<any> => {
+			const res = await axios.post(`${configuration.API_BASE}/users/access_request`, null,
+				{
+					headers: {
+						...authHeaders
+					}
+				});
 			return res.data;
 		}
 	}
