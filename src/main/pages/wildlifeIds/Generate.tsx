@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {Box, Button, FormControl, InputLabel, makeStyles, MenuItem, Select, Slider, TextField, Typography} from '@material-ui/core';
+import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
+import {useAPI} from "../../hooks/useAPI";
 
 const useStyles = makeStyles(theme => ({
 	formControl: {
@@ -13,6 +15,9 @@ const useStyles = makeStyles(theme => ({
 
 const Generate: React.FC = () => {
 	const classes = useStyles();
+	const api = useAPI();
+
+	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
 
 	const validQuantities = [
 		{value: 1, label: '1'},
@@ -45,16 +50,28 @@ const Generate: React.FC = () => {
 
 	const handleSubmit = event => {
 		console.dir(formState);
+		api.generateIDs({quantity: formState.quantity}).then(result => {
+			setGenerateStatus({
+				status: 'ok',
+				message: JSON.stringify(result)
+			});
+		}).catch(err => {
+			console.dir(err);
+			setGenerateStatus({
+				status: 'failed',
+				message: JSON.stringify(err.response ? err.response.data : 'unknown')
+			});
+		});
+
 	};
 
 	const handleUpdate = event => {
 		const currentState = formState;
 		const matches = null;
-		console.log(event);
 
 		switch (event.target.name) {
-			default:
-				currentState[event.target.name] = event.target.value;
+		default:
+			currentState[event.target.name] = event.target.value;
 		}
 
 		setFormState(currentState);
@@ -63,6 +80,9 @@ const Generate: React.FC = () => {
 		<>
 			<Box style={{margin: 0, padding: 0}} display="flex" flexDirection={'column'}>
 				<Typography variant={'h5'}>Generate New Wildlife Health Identifiers</Typography>
+
+
+				<GenerationLockWidget/>
 
 				<FormControl className={classes.formControl}>
 					<Typography gutterBottom>Generated Quantity</Typography>
@@ -79,9 +99,9 @@ const Generate: React.FC = () => {
 					/>
 				</FormControl>
 
-				<TextField className={classes.formControl} label="Year" id="year" defaultValue={formState.year} name="year" onChange={handleUpdate} />
+				<TextField className={classes.formControl} label="Year" id="year" defaultValue={formState.year} name="year" onChange={handleUpdate}/>
 
-				<TextField className={classes.formControl} label="Species" id="species" defaultValue={formState.species} name="species" onChange={handleUpdate} />
+				<TextField className={classes.formControl} label="Species" id="species" defaultValue={formState.species} name="species" onChange={handleUpdate}/>
 
 				<FormControl className={classes.formControl}>
 					<InputLabel id="label-purpose-select">Purpose</InputLabel>
@@ -148,11 +168,15 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 
-				<TextField className={classes.formControl} label="Reason" id="reason" defaultValue={formState.reason} name="reason" onChange={handleUpdate} />
+				<TextField className={classes.formControl} label="Reason" id="reason" defaultValue={formState.reason} name="reason" onChange={handleUpdate}/>
 
 				<Button variant={'contained'} onClick={handleSubmit}>
 					Generate
 				</Button>
+
+				<strong>Request Status</strong>
+				<pre>{generateStatus.status}</pre>
+				<pre>{generateStatus.message}</pre>
 			</Box>
 		</>
 	);

@@ -4,6 +4,7 @@ import createSagaMiddleware from 'redux-saga';
 
 import logger from 'redux-logger';
 import authenticationSaga from './sagas/auth';
+import generationLockSaga from "./sagas/generation_lock";
 import {AppConfig} from './config';
 
 const setupStore = (configuration: AppConfig) => {
@@ -18,8 +19,10 @@ const setupStore = (configuration: AppConfig) => {
 
 	const store = createStore(createRootReducer(configuration), middlewares);
 
-	// run the sagas†
+	// run the sagas
 	sagaMiddleware.run(authenticationSaga);
+	sagaMiddleware.run(generationLockSaga);
+
 	return store;
 };
 

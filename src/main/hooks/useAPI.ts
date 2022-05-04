@@ -48,7 +48,17 @@ export const useAPI = () => {
 					}
 				});
 			return res.data;
+		},
+		generateIDs: async( r ): Promise<any> => {
+			const res = await axios.post(`${configuration.API_BASE}/ids`, r,
+				{
+					headers: {
+						...authHeaders
+					}
+				});
+			return res.data;
 		}
+
 	}
 
 
