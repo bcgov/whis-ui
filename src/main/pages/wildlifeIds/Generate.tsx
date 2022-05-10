@@ -49,7 +49,6 @@ const Generate: React.FC = () => {
 	});
 
 	const handleSubmit = event => {
-		console.dir(formState);
 		api.generateIDs({quantity: formState.quantity}).then(result => {
 			setGenerateStatus({
 				status: 'ok',
@@ -80,7 +79,6 @@ const Generate: React.FC = () => {
 		<>
 			<Box style={{margin: 0, padding: 0}} display="flex" flexDirection={'column'}>
 				<Typography variant={'h5'}>Generate New Wildlife Health Identifiers</Typography>
-
 
 				<GenerationLockWidget/>
 

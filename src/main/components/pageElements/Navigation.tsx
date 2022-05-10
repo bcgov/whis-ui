@@ -15,8 +15,8 @@ const Navigation: React.FC = () => {
 		nav('/wildlifeIds', 'Dashboard', ['BIOLOGIST'], 'Wildlife ID'),
 		nav('/wildlifeIds/list', 'List', ['BIOLOGIST'], 'Wildlife ID'),
 		nav('/wildlifeIds/generate', 'Generate', ['BIOLOGIST'], 'Wildlife ID'),
-		nav('/admin/year', 'Years', ['ADMIN'], 'Code Tables'),
-		nav('/admin/codeTables', 'Code Tables', ['ADMIN'], 'Code Tables')
+		nav('/admin/years', 'Years', ['ADMIN', 'BIOLOGIST'], 'Code Tables'),
+		nav('/admin/codeTables', 'Code Tables', ['ADMIN',  'BIOLOGIST'], 'Code Tables')
 
 	];
 

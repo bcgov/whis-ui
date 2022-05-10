@@ -1,12 +1,10 @@
 import React from 'react';
 import {Route} from 'react-router';
-import Dashboard from '../pages/wildlifeIds/Dashboard';
-import List from '../pages/wildlifeIds/List';
-import Generate from '../pages/wildlifeIds/Generate';
 import CodeTables from "../pages/admin/CodeTables";
+import Years from "../pages/admin/Years";
 
 const AdminRoutes = [
 	<Route path="/admin/codeTables" element={<CodeTables />} />,
-	// <Route path="/admin/codeTables" element={}>
+	<Route path="/admin/years" element={<Years />} />,
 ];
 export default AdminRoutes;

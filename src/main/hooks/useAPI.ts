@@ -24,6 +24,14 @@ export const useAPI = () => {
 			});
 			return res.data;
 		},
+		getYears: async (): Promise<any> => {
+			const res = await axios.get(`${configuration.API_BASE}/years`, {
+				headers: {
+					...authHeaders
+				}
+			});
+			return res.data;
+		},
 		getHealthIDs: async (): Promise<any> => {
 			const res = await axios.get(`${configuration.API_BASE}/ids`, {
 				headers: {
