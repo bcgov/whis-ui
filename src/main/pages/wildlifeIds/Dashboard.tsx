@@ -1,6 +1,4 @@
-import { makeStyles } from '@material-ui/core/node_modules/@material-ui/styles';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import '../../styles/dashboard.scss';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -119,7 +117,7 @@ const Dashboard: React.FC = () => {
 							<div className="report_detail">
 								<span className='count_num'>45</span>
 								<span>IDs Requests</span>
-								<span className='id_requests'>From 12 organasations</span>
+								<span className='id_requests'>From 12 organizations</span>
 							</div>
 							<div>
 								<svg height="30" width="370">

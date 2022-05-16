@@ -1,20 +1,9 @@
 import React, {useState} from 'react';
-import {Box, Button, FormControl, InputLabel, makeStyles, MenuItem, Select, Slider, TextField, Typography} from '@material-ui/core';
 import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
 import {useAPI} from "../../hooks/useAPI";
-
-const useStyles = makeStyles(theme => ({
-	formControl: {
-		margin: theme.spacing(1),
-		minWidth: 120
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2)
-	}
-}));
+import {Box, Button, FormControl, InputLabel, makeStyles, MenuItem, Select, Slider, TextField, Typography} from "@mui/material";
 
 const Generate: React.FC = () => {
-	const classes = useStyles();
 	const api = useAPI();
 
 	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
@@ -82,7 +71,7 @@ const Generate: React.FC = () => {
 
 				<GenerationLockWidget/>
 
-				<FormControl className={classes.formControl}>
+				<FormControl style={{minWidth: '120px'}}>
 					<Typography gutterBottom>Generated Quantity</Typography>
 					<Slider
 						aria-label="Quantity"
@@ -97,11 +86,11 @@ const Generate: React.FC = () => {
 					/>
 				</FormControl>
 
-				<TextField className={classes.formControl} label="Year" id="year" defaultValue={formState.year} name="year" onChange={handleUpdate}/>
+				<TextField  style={{minWidth: '120px'}} label="Year" id="year" defaultValue={formState.year} name="year" onChange={handleUpdate}/>
 
-				<TextField className={classes.formControl} label="Species" id="species" defaultValue={formState.species} name="species" onChange={handleUpdate}/>
+				<TextField  style={{minWidth: '120px'}} label="Species" id="species" defaultValue={formState.species} name="species" onChange={handleUpdate}/>
 
-				<FormControl className={classes.formControl}>
+				<FormControl  style={{minWidth: '120px'}}>
 					<InputLabel id="label-purpose-select">Purpose</InputLabel>
 					<Select labelId="label-purpose-select" id="purpose-select" defaultValue={formState.purpose} name="modeOfTransport" onChange={handleUpdate}>
 						{validPurposes.map((m, i) => (
@@ -113,7 +102,7 @@ const Generate: React.FC = () => {
 				</FormControl>
 
 				<TextField
-					className={classes.formControl}
+					style={{minWidth: '120px'}}
 					label="Requester Name"
 					id="requesterName"
 					defaultValue={formState.requesterName}
@@ -122,7 +111,7 @@ const Generate: React.FC = () => {
 				/>
 
 				<TextField
-					className={classes.formControl}
+					style={{minWidth: '120px'}}
 					label="Requester Contact Email"
 					id="requesterContactEmail"
 					defaultValue={formState.requesterContactEmail}
@@ -131,7 +120,7 @@ const Generate: React.FC = () => {
 				/>
 
 				<TextField
-					className={classes.formControl}
+					 style={{minWidth: '120px'}}
 					label="Requester Contact Phone"
 					id="requesterContactPhone"
 					defaultValue={formState.requesterContactPhone}
@@ -140,7 +129,7 @@ const Generate: React.FC = () => {
 				/>
 
 				<TextField
-					className={classes.formControl}
+					 style={{minWidth: '120px'}}
 					label="Requester Region"
 					id="requesterRegion"
 					defaultValue={formState.requesterRegion}
@@ -149,7 +138,7 @@ const Generate: React.FC = () => {
 				/>
 
 				<TextField
-					className={classes.formControl}
+					 style={{minWidth: '120px'}}
 					label="Requester Role"
 					id="requesterRole"
 					defaultValue={formState.requesterRole}
@@ -158,7 +147,7 @@ const Generate: React.FC = () => {
 				/>
 
 				<TextField
-					className={classes.formControl}
+					 style={{minWidth: '120px'}}
 					label="Associated Project"
 					id="associatedProject"
 					defaultValue={formState.associatedProject}
@@ -166,7 +155,7 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 
-				<TextField className={classes.formControl} label="Reason" id="reason" defaultValue={formState.reason} name="reason" onChange={handleUpdate}/>
+				<TextField  style={{minWidth: '120px'}} label="Reason" id="reason" defaultValue={formState.reason} name="reason" onChange={handleUpdate}/>
 
 				<Button variant={'contained'} onClick={handleSubmit}>
 					Generate
