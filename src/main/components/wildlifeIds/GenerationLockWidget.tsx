@@ -7,7 +7,7 @@ import {
 	RENEW_GENERATION_LOCK_REQUEST,
 	TEST_GENERATION_LOCK_REQUEST
 } from "../../../state/actions";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 
 const GenerationLockWidget: React.FC = () => {
 	const dispatch = useDispatch();

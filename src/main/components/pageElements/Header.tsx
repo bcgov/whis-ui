@@ -1,12 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import Icon from '@mdi/react';
 import {mdiAccountCircle} from '@mdi/js';
 import '../../styles/header.scss';
 import {keycloakInstance} from '../../../state/sagas/auth';
 import GovLogo from '../../styles/assets/images/gov3_bc_logo.png';
 import {useSelector} from '../../../state/utilities/use_selector';
+import {Button} from "@mui/material";
 
 const Header: React.FC = () => {
 	const bestName = useSelector(state => state.Auth.bestName);
