@@ -40,23 +40,23 @@ const List: React.FC = () => {
 					<h3>{ct.name} ~ {ct.displayed_name}</h3>
 					<table>
 						<thead>
-						<tr>
-							<th>value</th>
-							<th>displayed value</th>
-							<th>categories</th>
-							<th>effective</th>
-							<th>expires</th>
-						</tr>
+							<tr>
+								<th>value</th>
+								<th>displayed value</th>
+								<th>categories</th>
+								<th>effective</th>
+								<th>expires</th>
+							</tr>
 						</thead>
 						<tbody>
-						{ct.items.map(item => (
-							<tr key={`${ct.name} - ${item.id}`}>
-								<td>{item.value}</td>
-								<td>{item.displayed_value}</td>
-								<td>{item.categories?.join(', ')}</td>
-								<td>{item.effective}</td>
-								<td>{item.expires}</td>
-							</tr>))}
+							{ct.items.map(item => (
+								<tr key={`${ct.name} - ${item.id}`}>
+									<td>{item.value}</td>
+									<td>{item.displayed_value}</td>
+									<td>{item.categories?.join(', ')}</td>
+									<td>{item.effective}</td>
+									<td>{item.expires}</td>
+								</tr>))}
 						</tbody>
 					</table>
 				</div>))}

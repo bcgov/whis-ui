@@ -10,32 +10,19 @@ import NotFound from './pages/NotFound';
 import Navigation from './components/pageElements/Navigation';
 import WildlifeIdRoutes from './routes/wildlifeIds';
 import AdminRoutes from "./routes/Admin";
+import DefaultLayout from "./layouts/DefaultLayout";
 
 const App: React.FC<{ store }> = ({store}) => {
 	return (
 		<Provider store={store}>
 			<BrowserRouter>
-				<Header />
-				<div className={'appBody'}>
-					<AuthRequired>
-						<div className={'containerInner'}>
-							<Navigation />
-							<div className={'container'} id={'mainColumnLayout'}>
-								<main>
-									<Routes>
-										{WildlifeIdRoutes}
-										{AdminRoutes}
-										<Route path="/" element={<LandingPage />} />
-										<Route path="" element={<LandingPage />} />
-										<Route path="*" element={<NotFound />} />
-									</Routes>
-								</main>
-							</div>
-						</div>
-					</AuthRequired>
-				</div>
-
-				<Footer />
+				<Routes>
+					{WildlifeIdRoutes}
+					{AdminRoutes}
+					<Route path="/" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
+					<Route path="" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
+					<Route path="*" element={<DefaultLayout><NotFound/></DefaultLayout>}/>
+				</Routes>
 			</BrowserRouter>
 		</Provider>
 	);
