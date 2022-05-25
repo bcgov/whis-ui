@@ -1,0 +1,32 @@
+@import "colours";
+
+table.inventory_table {
+
+	min-width: 80%;
+
+	tbody {
+		tr {
+			line-height: 1;
+			padding: 0;
+
+			td {
+				padding: 0;
+				line-height: 1.5;
+			}
+		}
+
+		tr:nth-child(2n+1) {
+			background: rgb(200, 200, 200);
+
+			&:hover {
+				background: lighten($BCgovGold, 10) !important;
+			}
+		}
+
+		tr:nth-child(2n) {
+			&:hover {
+				background: lighten($BCgovGold, 15) !important;
+			}
+		}
+	}
+}

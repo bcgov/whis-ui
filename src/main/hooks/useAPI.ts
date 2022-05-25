@@ -8,22 +8,6 @@ export const useAPI = () => {
 	const configuration = useSelector(getConfiguration);
 
 	return {
-		getCodeTables: async (): Promise<any> => {
-			const res = await axios.get(`${configuration.API_BASE}/codes`, {
-				headers: {
-					...authHeaders
-				}
-			});
-			return res.data;
-		},
-		getCodeTable: async (id: string): Promise<any> => {
-			const res = await axios.get(`${configuration.API_BASE}/codes/${id}`, {
-				headers: {
-					...authHeaders
-				}
-			});
-			return res.data;
-		},
 		getYears: async (): Promise<any> => {
 			const res = await axios.get(`${configuration.API_BASE}/years`, {
 				headers: {
@@ -34,6 +18,14 @@ export const useAPI = () => {
 		},
 		getHealthIDs: async (): Promise<any> => {
 			const res = await axios.get(`${configuration.API_BASE}/ids`, {
+				headers: {
+					...authHeaders
+				}
+			});
+			return res.data;
+		},
+		getHealthID: async (id): Promise<any> => {
+			const res = await axios.get(`${configuration.API_BASE}/ids/${id}`, {
 				headers: {
 					...authHeaders
 				}
@@ -57,7 +49,7 @@ export const useAPI = () => {
 				});
 			return res.data;
 		},
-		generateIDs: async( r ): Promise<any> => {
+		generateIDs: async (r): Promise<any> => {
 			const res = await axios.post(`${configuration.API_BASE}/ids`, r,
 				{
 					headers: {

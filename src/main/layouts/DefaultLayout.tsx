@@ -15,8 +15,9 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({children, showNavigation =
 			<Header/>
 			<div className={'appBody'}>
 				<AuthRequired>
+					{showNavigation && <Navigation/>}
+
 					<div className={'containerInner'}>
-						{showNavigation && <Navigation/>}
 						<div className={'container'} id={'mainColumnLayout'}>
 							<main>
 								{children}

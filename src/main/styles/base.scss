@@ -49,6 +49,7 @@ h2 {
 	// display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
+	background: rgb(220, 220, 220);
 }
 
 .container {
@@ -61,7 +62,6 @@ h2 {
 .containerInner {
 	display: flex;
 	flex-direction: row;
-
 	main {
 		flex: 1 1 auto;
 	}

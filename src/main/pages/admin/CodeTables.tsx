@@ -1,41 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {useAPI} from "../../hooks/useAPI";
+import React from 'react';
+import {useSelector} from "../../../state/utilities/use_selector";
+import Loading from "../../components/util/Loading";
+import {CodeTable} from "../../../state/reducers/code_tables";
 
 const List: React.FC = () => {
-	const api = useAPI();
+	const loaded = useSelector(state => state.CodeTables.initialized);
+	const codeTables = useSelector(state => state.CodeTables.tables);
 
-	const [codeTables, setCodeTables] = useState([]);
-
-	useEffect(() => {
-
-		const doAPIRequest = async () => {
-			setCodeTables([]);
-
-			const data = await api.getCodeTables();
-
-			const expanded = data.map(async (ct) => {
-				return {
-					...ct,
-					items: await api.getCodeTable(ct.name)
-				};
-			});
-
-			Promise.all(expanded).then(v => {
-				setCodeTables(v);
-			});
-
-		};
-
-		doAPIRequest().catch(e => {
-			console.error(e)
-		});
-
-	}, []);
+	if (!loaded) {
+		return <Loading/>;
+	}
 
 	return (
 		<>
 			<h2>Available Code Tables</h2>
-			{codeTables.map((ct, i) => (
+			{Object.values(codeTables).map((ct: CodeTable, i) => (
 				<div key={i}>
 					<h3>{ct.name} ~ {ct.displayed_name}</h3>
 					<table>
@@ -49,7 +28,7 @@ const List: React.FC = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{ct.items.map(item => (
+							{ct.codes.map(item => (
 								<tr key={`${ct.name} - ${item.id}`}>
 									<td>{item.value}</td>
 									<td>{item.displayed_value}</td>

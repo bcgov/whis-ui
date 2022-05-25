@@ -5,12 +5,14 @@ class GenerationLock {
 
 	working: boolean;
 	initialized: boolean;
-	payload: any;
+	status: {
+		isSelf: boolean
+	};
 
 	constructor() {
 		this.working = false;
 		this.initialized = false;
-		this.payload = null;
+		this.status = null;
 	}
 }
 
@@ -27,12 +29,11 @@ function createGenerationLockReducer(configuration: AppConfig): (GenerationLock,
 			};
 		}
 		case TEST_GENERATION_LOCK_COMPLETE: {
-			const payload = action.payload;
 			return {
 				...state,
 				initialized: true,
 				working: false,
-				payload
+				status: action.payload
 			};
 		}
 		default:

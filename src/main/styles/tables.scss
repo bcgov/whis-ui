@@ -1,19 +1,23 @@
 table {
-	width: 100%;
+	//width: 100%;
 	table-layout: fixed;
-	background: #ffffff;
 	border-collapse: collapse;
 	font-size: 0.875rem;
+	line-height: 1.25;
+
 
 	th,
 	td {
-		padding: 1rem;
-		text-align: left;
-		border-top: 1px solid #cccccc;
-		border-bottom: 1px solid #cccccc;
+		padding: 0 0 1.25rem;
+
+		&:not(:last-child) {
+			padding-right: 1rem;
+		}
+		text-align: justify;
 	}
 
 	th {
-		background: #f7f8fa;
+		font-weight: 700;
+		font-size: 150%;
 	}
 }

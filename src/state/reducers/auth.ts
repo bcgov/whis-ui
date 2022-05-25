@@ -15,7 +15,13 @@ class AuthState {
 	error: boolean;
 	authenticated: true;
 
+	firstName: string;
+	lastName: string;
+
+	email: string;
+
 	bestName: string;
+
 	requestHeaders: {
 		authorization: string;
 	};
@@ -35,6 +41,9 @@ const initialState = new AuthState();
 function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfig): object {
 	let bestName = 'User';
 	const preferenceOrder = ['name', 'preferred_username', 'given_name', 'sub'];
+	let firstName = 'User';
+	let lastName = '';
+	let email = '';
 
 	for (const p of preferenceOrder) {
 		if (keycloakInstance.idTokenParsed) {
@@ -48,6 +57,9 @@ function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfi
 
 	if (keycloakInstance.idTokenParsed) {
 		username = keycloakInstance.idTokenParsed['preferred_username'];
+		firstName = keycloakInstance.idTokenParsed['given_name'];
+		lastName = keycloakInstance.idTokenParsed['family_name'];
+		email = keycloakInstance.idTokenParsed['email'];
 	}
 
 	const headers = {
@@ -57,7 +69,10 @@ function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfi
 	return {
 		bestName,
 		headers,
-		username
+		username,
+		firstName,
+		lastName,
+		email
 	};
 }
 

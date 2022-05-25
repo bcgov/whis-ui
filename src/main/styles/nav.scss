@@ -1,29 +1,53 @@
 @import 'colours';
 @import 'base';
 
-.sideNav {
-	margin-right: 2rem;
-	width: 12rem;
-	flex: 0 0 auto;
 
-	padding-left: 0.5em;
-	border-right: 2px solid darkgray;
+.topNavOuter {
+	background-color: rgb(56, 89, 138);
+	height: 2rem;
+	position: relative;
+
+}
+
+.topNav {
+	max-width: 1440px;
+	margin-left: auto;
+	margin-right: auto;
+
+	color: #ffff;
+
 
 	ul {
-		margin: 0 auto;
+		margin: 0;
 		padding: 0;
+
 		list-style-type: none;
+
+		position: absolute;
+		bottom: 0;
 	}
 
 	li {
-		position: relative;
+		display: inline-block;
+
+		padding: 0.25rem 0;
+		margin: 0;
 
 		a {
-			display: block;
-			padding: 0.125rem 0;
 			line-height: 1;
-			font-size: 0.875rem;
+			padding: 0;
+			margin: 0;
+			font-size: 1.25rem;
 			font-weight: 700;
+			color: white !important;
+		}
+
+		&:not(:last-child):after {
+			content: '：';
+			color: $BCgovGold;
+			padding-left: 0.5rem;
+			padding-right: 0.5rem;
 		}
 	}
 }
+

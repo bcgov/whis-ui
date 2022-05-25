@@ -7,7 +7,7 @@ import {
 	AUTH_REQUEST_COMPLETE,
 	AUTH_REQUEST_ERROR,
 	AUTH_SIGNIN_REQUEST,
-	AUTH_UPDATE_TOKEN_STATE
+	AUTH_UPDATE_TOKEN_STATE, CODE_TABLES_LOAD_REQUEST, EVENT_LOGGED_IN
 } from '../actions';
 import {AppConfig} from '../config';
 import {getConfiguration} from '../utilities/config_helper';
@@ -67,6 +67,8 @@ function* initializeAuthentication() {
 			authenticated: authStatus
 		}
 	});
+
+	yield put({ type: EVENT_LOGGED_IN });
 
 	if (authStatus) {
 		// schedule our refresh

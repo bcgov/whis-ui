@@ -1,33 +1,38 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch} from "react-redux";
 import {useSelector} from "../../../state/utilities/use_selector";
-import {
-	ACQUIRE_GENERATION_LOCK_REQUEST,
-	RELEASE_GENERATION_LOCK_REQUEST,
-	RENEW_GENERATION_LOCK_REQUEST,
-	TEST_GENERATION_LOCK_REQUEST
-} from "../../../state/actions";
-import {Button} from "@mui/material";
+import {ACQUIRE_GENERATION_LOCK_REQUEST, RELEASE_GENERATION_LOCK_REQUEST} from "../../../state/actions";
+import {Box, Typography} from "@mui/material";
+import {LockSharp} from "@mui/icons-material";
 
 const GenerationLockWidget: React.FC = () => {
 	const dispatch = useDispatch();
 
 	const lockStatus = useSelector(state => state.GenerationLock)
 
+	useEffect(() => {
+		dispatch({type: ACQUIRE_GENERATION_LOCK_REQUEST});
+		return () => {
+			dispatch({type: RELEASE_GENERATION_LOCK_REQUEST});
+		}
+	}, [dispatch]);
+
+	if (!lockStatus.initialized) {
+		return null;
+	}
+
+	if (!lockStatus.status?.lockHolder?.isSelf) {
+		return (
+			<Box>
+				<LockSharp color={'error'} fontSize={'large'}/>
+				<Typography color={'error'}>The lock is held by {lockStatus.status?.lockHolder?.email}</Typography>
+			</Box>);
+	}
+
 	return (
-		<>
-			<p>Generation Lock Status:</p>
-			<p>
-				{JSON.stringify(lockStatus)}
-			</p>
-			<Button variant={"contained"} onClick={() => dispatch({type: TEST_GENERATION_LOCK_REQUEST})}>Refresh Status</Button>
-			<Button variant={"contained"}  onClick={() => dispatch({type: ACQUIRE_GENERATION_LOCK_REQUEST})}>Acquire</Button>
-
-			<Button variant={"contained"}  onClick={() => dispatch({type: RENEW_GENERATION_LOCK_REQUEST})}>Renew</Button>
-
-			<Button variant={"contained"}  onClick={() => dispatch({type: RELEASE_GENERATION_LOCK_REQUEST})}>Release</Button>
-
-		</>
+		<Box>
+			<LockSharp color={'primary'} fontSize={'large'}/> Exclusive Lock Held
+		</Box>
 	);
 };
 

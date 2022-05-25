@@ -6,6 +6,7 @@ import logger from 'redux-logger';
 import authenticationSaga from './sagas/auth';
 import generationLockSaga from "./sagas/generation_lock";
 import {AppConfig} from './config';
+import codeTablesSaga from "./sagas/code_tables";
 
 const setupStore = (configuration: AppConfig) => {
 	const sagaMiddleware = createSagaMiddleware();
@@ -22,6 +23,7 @@ const setupStore = (configuration: AppConfig) => {
 	// run the sagas
 	sagaMiddleware.run(authenticationSaga);
 	sagaMiddleware.run(generationLockSaga);
+	sagaMiddleware.run(codeTablesSaga);
 
 	return store;
 };

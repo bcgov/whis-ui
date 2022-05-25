@@ -12,12 +12,9 @@ const Navigation: React.FC = () => {
 	const currentUserRoles = useSelector(state => state.Auth.roles);
 
 	const navs = [
-		nav('/wildlifeIds', 'Dashboard', ['BIOLOGIST'], 'Wildlife ID'),
-		nav('/wildlifeIds/list', 'List', ['BIOLOGIST'], 'Wildlife ID'),
-		nav('/wildlifeIds/generate', 'Generate', ['BIOLOGIST'], 'Wildlife ID'),
-		nav('/admin/years', 'Years', ['ADMIN', 'BIOLOGIST'], 'Code Tables'),
-		nav('/admin/codeTables', 'Code Tables', ['ADMIN',  'BIOLOGIST'], 'Code Tables')
-
+		nav('/wildlifeIds', 'My Dashboard', ['BIOLOGIST'], 'Wildlife ID'),
+		nav('/wildlifeIds/list', 'WLH ID Inventory', ['BIOLOGIST'], 'Wildlife ID'),
+		nav('/admin', 'Admin Dashboard', ['ADMIN', 'BIOLOGIST'], 'Admin'),
 	];
 
 	useEffect(() => {
@@ -43,30 +40,33 @@ const Navigation: React.FC = () => {
 	});
 
 	return (
-		<nav className={'sideNav'}>
-			{categoriesSeen.map(c => (
-				<>
-					<h3 key={`${c}-h3`}>{c}</h3>
-					<ul key={`${c}-ul`}>
-						{sortedNavs
-							.filter(n => n.category === c)
-							.map((n, i) => {
-								if (n.roles.length === 0 || (n.roles.length > 0 && userHasAnyRole(currentUserRoles, n.roles))) {
-									return (
-										<li key={i}>
-											<Link to={n.path} className={activeLink === n.path ? 'active' : ''}>
-												{n.name}
-											</Link>
-										</li>
-									);
-								} else {
-									return null;
-								}
-							})}
-					</ul>
-				</>
-			))}
-		</nav>
+		<div className={'topNavOuter'}>
+			<nav className={'topNav'}>
+				<ul>
+					{categoriesSeen.map(c => (
+						<>
+
+							{sortedNavs
+								.filter(n => n.category === c)
+								.map((n, i) => {
+									if (n.roles.length === 0 || (n.roles.length > 0 && userHasAnyRole(currentUserRoles, n.roles))) {
+										return (
+											<li key={i}>
+												<Link to={n.path} className={activeLink === n.path ? 'active' : ''}>
+													{n.name}
+												</Link>
+											</li>
+										);
+									} else {
+										return null;
+									}
+								})}
+
+						</>
+					))}
+				</ul>
+			</nav>
+		</div>
 	);
 };
 
