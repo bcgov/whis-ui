@@ -28,6 +28,7 @@ function* refreshRoles() {
 			headers: authHeaders
 		});
 		yield put({type: AUTH_REFRESH_ROLES_COMPLETE, payload: {roles: result.data.roles}});
+		yield put({type: EVENT_LOGGED_IN});
 	} catch (err) {
 		console.dir(err);
 		yield put({type: AUTH_REFRESH_ROLES_ERROR});
@@ -67,8 +68,6 @@ function* initializeAuthentication() {
 			authenticated: authStatus
 		}
 	});
-
-	yield put({ type: EVENT_LOGGED_IN });
 
 	if (authStatus) {
 		// schedule our refresh
