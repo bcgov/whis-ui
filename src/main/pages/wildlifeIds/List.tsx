@@ -4,6 +4,7 @@ import {paperStyle} from "../../../state/style_constants";
 import {Button, Paper, Typography} from "@mui/material";
 import '../../styles/inventory.scss';
 import {useNavigate} from "react-router-dom";
+import Search from '../../components/wildlifeIds/Search';
 
 const List: React.FC = () => {
 	const api = useAPI();
@@ -49,6 +50,7 @@ const List: React.FC = () => {
 				</tbody>
 			</table>
 
+			<Search/>
 		</Paper>
 	);
 };
