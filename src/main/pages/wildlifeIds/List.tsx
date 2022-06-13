@@ -5,6 +5,7 @@ import {Button, Paper, Typography} from "@mui/material";
 import '../../styles/inventory.scss';
 import {useNavigate} from "react-router-dom";
 import Search from '../../components/wildlifeIds/Search';
+import UpdateID from '../../components/wildlifeIds/UpdateID';
 
 const List: React.FC = () => {
 	const api = useAPI();
@@ -50,7 +51,8 @@ const List: React.FC = () => {
 				</tbody>
 			</table>
 
-			<Search/>
+			<UpdateID/>
+			
 		</Paper>
 	);
 };
