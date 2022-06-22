@@ -22,13 +22,7 @@ let lastMessageId = 1;
 function createFlashMessagesReducer() {
 
 	const initialState: FlashMessages = {
-		messages: [{
-			id: lastMessageId++,
-			title: 'Important',
-			body: 'An error occurred',
-			ttl: 10,
-			type: 'error'
-		}]
+		messages: []
 	}
 
 	return (state = initialState, action) => {
