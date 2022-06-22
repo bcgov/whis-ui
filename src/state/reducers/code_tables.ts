@@ -60,4 +60,6 @@ function createCodeTablesReducer() {
 	};
 }
 
-export {createCodeTablesReducer};
+const selectCodeTables: (state) => CodeTables = (state) => state.CodeTables;
+
+export {createCodeTablesReducer, selectCodeTables};

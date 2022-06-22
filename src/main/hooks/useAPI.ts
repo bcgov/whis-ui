@@ -1,11 +1,14 @@
 import {getAuthHeaders} from "../../state/utilities/authentication_helper";
 import {default as axios} from 'axios';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getConfiguration} from "../../state/utilities/config_helper";
+import {FLASH_MESSAGE_CREATE} from "../../state/actions";
 
 export const useAPI = () => {
 	const authHeaders = useSelector(getAuthHeaders);
 	const configuration = useSelector(getConfiguration);
+
+	const dispatch = useDispatch();
 
 	return {
 		getYears: async (): Promise<any> => {
@@ -28,6 +31,14 @@ export const useAPI = () => {
 			const res = await axios.get(`${configuration.API_BASE}/ids/${id}`, {
 				headers: {
 					...authHeaders
+				}
+			});
+			dispatch({
+				type: FLASH_MESSAGE_CREATE, payload: {
+					title: 'Health ID Loaded',
+					body: `ID ${id} loaded from database`,
+					type: 'information',
+					ttl: 3
 				}
 			});
 			return res.data;
@@ -56,6 +67,14 @@ export const useAPI = () => {
 						...authHeaders
 					}
 				});
+			dispatch({
+				type: FLASH_MESSAGE_CREATE, payload: {
+					title: 'ID Generation Request',
+					body: `IDs successfully generated`,
+					type: 'information',
+					ttl: 3,
+				}
+			});
 			return res.data;
 		}
 

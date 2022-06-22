@@ -5,7 +5,7 @@ import {Button, Paper, Typography} from "@mui/material";
 import '../../styles/inventory.scss';
 import {useNavigate} from "react-router-dom";
 import Search from '../../components/wildlifeIds/Search';
-import UpdateID from '../../components/wildlifeIds/UpdateID';
+import UpdateID from '../../components/wildlifeIds/EditForm';
 
 const List: React.FC = () => {
 	const api = useAPI();
@@ -14,7 +14,6 @@ const List: React.FC = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-
 		const doAPIRequest = async () => {
 			const data = await api.getHealthIDs();
 			setItems(data);
@@ -44,15 +43,17 @@ const List: React.FC = () => {
 						<td>{i.year}</td>
 						<td>{i.wlh_id}</td>
 						<td><a onClick={() => {
-							navigate(`/wildlifeIds/${i.id}`)
-						}}>Details</a></td>
+							navigate(`/wildlifeIds/edit/${i.id}`)
+						}}>Edit</a></td>
+						<td><a onClick={() => {
+							navigate(`/wildlifeIds/detail/${i.id}`)
+						}}>Details</a>
+						</td>
 					</tr>
 				))}
 				</tbody>
 			</table>
 
-			<UpdateID/>
-			
 		</Paper>
 	);
 };

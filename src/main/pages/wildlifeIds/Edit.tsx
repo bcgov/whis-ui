@@ -9,9 +9,9 @@ import {useNavigate} from "react-router-dom";
 import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
 import {paperStyle} from "../../../state/style_constants";
 import {useParams} from "react-router";
-import Display from "../../components/wildlifeIds/Display";
+import EditForm from "../../components/wildlifeIds/EditForm";
 
-const Detail: React.FC = () => {
+const Edit: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
 	const api = useAPI();
@@ -34,7 +34,7 @@ const Detail: React.FC = () => {
 
 			<Typography variant={'h3'}>WLH ID Details</Typography>
 
-			<Display wildlifeId={data}/>
+			<EditForm wildlifeId={data}/>
 
 			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
 				<Button variant={'contained'} color={'secondary'} onClick={() => {
@@ -46,4 +46,4 @@ const Detail: React.FC = () => {
 	);
 };
 
-export default Detail;
+export default Edit;
