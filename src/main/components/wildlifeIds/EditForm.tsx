@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Box,
 	Button,
@@ -22,6 +22,11 @@ import {
 	RadioGroup,
 	styled,
 	Switch,
+	Table,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
 	TextField,
 	Typography
 } from "@mui/material";
@@ -31,8 +36,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import {useSelector} from "../../../state/utilities/use_selector";
-import {selectCodeTables} from "../../../state/reducers/code_tables";
+import { useSelector } from "../../../state/utilities/use_selector";
+import { selectCodeTables } from "../../../state/reducers/code_tables";
+import IdentifierEntry from './IdentifierEntry';
+import LocationEntry from './LocationEntry';
 
 //Expand form
 interface ExpandMoreProps extends IconButtonProps {
@@ -40,9 +47,9 @@ interface ExpandMoreProps extends IconButtonProps {
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-	const {expand, ...other} = props;
+	const { expand, ...other } = props;
 	return <IconButton {...other} />;
-})(({theme, expand}) => ({
+})(({ theme, expand }) => ({
 	transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
 	marginLeft: 'auto',
 	transition: theme.transitions.create('transform', {
@@ -51,7 +58,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 
-const EditForm = ({wildlifeId}) => {
+const EditForm = ({ wildlifeId }) => {
 
 	const [validPurposes, setValidPurposes] = useState([]);
 	// const [validIdentifier, setValidIdentifier] = useState([]);
@@ -61,44 +68,11 @@ const EditForm = ({wildlifeId}) => {
 	const [validSex, setValidSex] = useState([]);
 	const [validAgeClass, setValidAgeClass] = useState([]);
 
-	const validIdentifier = [
-		{value: '+ Add Identifier Types', label: '+ Add Identifier Types'},
-		{value: 'UNKNOWN', label: 'Alternate Animal ID'},
-		{value: 'ANIMAL_ID', label: 'Alternate Animal ID'},
-		{value: 'COMPULSORY', label: 'Compulsory Inspection Number'},
-		{value: 'EAR_TAG', label: 'Ear Tag Number'},
-		{value: 'HUMAN_WILDLIFE', label: 'Human Wildlife Conflict Number'},
-		{value: 'COORS', label: 'COORS Number'},
-		{value: 'LEG_BAND', label: 'Leg Band'},
-		{value: 'MICROCHIP', label: 'Microchip'},
-		{value: 'NICKNAME', label: 'Nickname'},
-		{value: 'PIT_TAG', label: 'Pit Tag'},
-		{value: 'RAPP_TAG', label: 'RAPP Ear Tag'},
-		{value: 'RECAPTURE_ID', label: 'Recapture ID'},
-		{value: 'CWD', label: 'CWD Ear Card'},
-		{value: 'VAGINAL', label: 'Vaginal Implant Transmitter'},
-		{value: 'WING_BAND', label: 'Wing Band'},
-		{value: 'COLOR_ID', label: 'Color ID'}
-	];
-
-	const validLocation = [
-		{value: '+ Add Location', label: '+ Add Location'},
-		{value: 'REGION', label: 'Region'},
-		{value: 'MANAGEMENT_UNIT', label: 'Management Unit'},
-		{value: 'POPULATION_UNIT', label: 'Population Unit'},
-		{value: 'HERD_NAME', label: 'Herd Name'},
-		{value: 'LATITUDE', label: 'Latitude/ Longitude (in decimal degrees)'},
-		{value: 'NICKNAME', label: 'Nickname'},
-		{value: 'UTM_EASTING', label: 'UTM Easting Band'},
-		{value: 'URM_NORTHING', label: 'URM Northing'},
-		{value: 'CITY', label: 'City'},
-		{value: 'CIVIC_ADDRESS', label: 'Civic Address'}
-	];
 	const validOrganization = [
-		{value: 'ONE', label: 'Organization 1'},
-		{value: 'TWO', label: 'Organization 2'},
-		{value: 'THREE', label: 'Organization 3'},
-		{value: 'FOUR', label: 'Organization 4'}
+		{ value: 'ONE', label: 'Organization 1' },
+		{ value: 'TWO', label: 'Organization 2' },
+		{ value: 'THREE', label: 'Organization 3' },
+		{ value: 'FOUR', label: 'Organization 4' }
 	];
 
 	function codeToSelect(table: string): { label: string, value: string }[] {
@@ -136,47 +110,74 @@ const EditForm = ({wildlifeId}) => {
 	const [checked1, setSamplesChecked1] = useState(false);
 	const [checked2, setSamplesChecked2] = useState(false);
 	const [checked3, setSamplesChecked3] = useState(false);
-	const [showOptional, setShowOptional] = useState(false);
-	const [showInnerOption, setInnerOption] = useState(true);
-	const [identifier, setIdentifier] = useState('');
+
 	const [organization, setOrganization] = useState('');
 	const [purpose, setPurpose] = useState(formState.purpose);
 	const [sex, setSex] = useState('');
 	const [ageClass, setAgeClass] = useState('');
-	const [earTag, setEarTag] = useState('');
 	const [eventType, setEventType] = useState('');
-	const [inputFields, setInputFields] = useState([
-		{value: '', label: ''},
+	const [identifierOptions, setIdentifierOption] = useState([
+		{ value: '', label: '' },
+	]);
+	const [locationOptions, setLocationOption] = useState([
+		{ value: '', label: '' },
 	]);
 
 	const [expanded_purpose, setExpandedPurpose] = useState(false);
 	const [expanded_WLD, setExpandedWLD] = useState(false);
 	const [expanded_event, setExpandedEvent] = useState(false);
+	const [expanded_newEvent, setExpandedNewEvent] = useState(false);
+
 	const handleExpandClick = () => {
 		setExpandedPurpose(!expanded_purpose);
+		setShowDetail(!showDetail);
 	};
 	const handleExpandClick2 = () => {
 		setExpandedWLD(!expanded_WLD);
+		setShowDetail(!showDetail);
 	};
 	const handleExpandClick3 = () => {
 		setExpandedEvent(!expanded_event);
+		setShowDetail(!showDetail);
 	};
+	const handleExpandClick4 = () => {
+		setExpandedNewEvent(!expanded_newEvent);
+		setShowDetail(!showDetail);
+	};
+	const handleExpandAll = () => {
+		setExpandedPurpose(true);
+		setExpandedWLD(true);
+		setExpandedEvent(true);
+		setExpandedNewEvent(true);
+		setShowDetail(false);
+	};
+	const handleCollapseAll = () => {
+		setExpandedPurpose(false);
+		setExpandedWLD(false);
+		setExpandedEvent(false);
+		setExpandedNewEvent(false);
+		setShowDetail(true);
+	};
+
 	const handleSubmit = () => {
 	}
 	const handleUpdate = () => {
 	}
 
-	const handleShowOptional = (e) => {
-		if (e.target.value == 'EAR_TAG' || e.target.value == 'RAPP_TAG') {
-			setShowOptional(true);  //show options
-			setInnerOption(false);  //eartag
-		} else {
-			setShowOptional(true);  //show options
-			setInnerOption(true);  //eartag
-		}
-		console.log(e.target.value);
-	}
+	//Add new event
+	const [newEvent, setNewEvent] = useState(false);
+	const handleNewEvent = () => {
+		setNewEvent(true);
+	};
 
+	//show details
+	const [showDetail, setShowDetail] = useState(true);
+
+	//Submitter Checked
+	const [submitterChecked, setSubmitterChecked] = useState(false);
+	const handleSubmitterChecked = () => {
+		setSubmitterChecked(!submitterChecked);
+	};
 
 	//update requester dialog
 	const [open, setOpen] = useState(false);
@@ -187,15 +188,27 @@ const EditForm = ({wildlifeId}) => {
 		setOpen(false);
 	};
 
-	//Add Select element
-	const handleChangeSelect = (index, e) => {
-		const values = [...inputFields];
+	//handle identifier options
+	const handleSelectIdentifier = (index, e) => {
+		const values = [...identifierOptions];
 		values[index][e.target.value] = e.target.value;
-		setInputFields(values);
+		setIdentifierOption(values);
 	}
-	const handleAddFields = (index) => {
-		if (index === (inputFields.length - 1)) {
-			setInputFields([...inputFields, {value: '', label: ''}])
+	const handleAddIdentifier = (index) => {
+		if (index === (identifierOptions.length - 1)) {
+			setIdentifierOption([...identifierOptions, { value: '', label: '' }])
+		}
+	}
+
+	//handle location options
+	const handleSelectLocation = (index, e) => {
+		const values = [...locationOptions];
+		values[index][e.target.value] = e.target.value;
+		setLocationOption(values);
+	}
+	const handleAddLocation = (index) => {
+		if (index === (locationOptions.length - 1)) {
+			setLocationOption([...locationOptions, { value: '', label: '' }])
 		}
 	}
 
@@ -212,69 +225,103 @@ const EditForm = ({wildlifeId}) => {
 
 	return (
 
-		<Box sx={{display: 'flex', flexWrap: 'wrap', flexDirection: 'column'}}>
-			<Typography variant={'h4'}>Update WLH ID</Typography><br/>
-			<p>Update the WLH ID details and add one or more events.</p>
-
-			<Paper sx={{width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: '20px', alignItems: 'center', padding: '30px'}}>
+		<Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+			<Typography variant={'h4'}>Update WLH ID</Typography><br />
+			<Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+				<p>Update the WLH ID details and add one or more events.</p>
+				<Button variant={'contained'} sx={{ height: '40px' }} onClick={handleNewEvent}>+ Add New Event</Button>
+			</Box>
+			<Paper sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: '20px', alignItems: 'center', padding: '30px' }}>
 				<span>
 					<p>General</p>
 					<p>Information</p>
 				</span>
 				<span>
 					<Typography variant="body2" color="text.secondary">
-                        WLH ID Number
+						WLH ID Number
 					</Typography>
 					<Typography variant="body2" color="text.primary">
-                        22-00001
+						22-00001
 					</Typography>
 				</span>
 				<span>
 					<Typography variant="body2" color="text.secondary">
-                        Creator
+						Creator
 					</Typography>
 					<Typography variant="body2" color="text.primary">
-                        Jane Doe
+						Jane Doe
 					</Typography>
 				</span>
 				<span>
 					<Typography variant="body2" color="text.secondary">
-                        Generated Date
+						Generated Date
 					</Typography>
 					<Typography variant="body2" color="text.primary">
-                        2022-03-05
+						2022-03-05
 					</Typography>
 				</span>
 				<span>
 					<Typography variant="body2" color="text.secondary">
-                        Status
+						Status
 					</Typography>
 					<Typography variant="body2" color="text.white" className='assigned'>
-                        Assigned
+						Assigned
 					</Typography>
 				</span>
 			</Paper>
-			<Card sx={{marginTop: '20px', width: '100%', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-				<p>Purpose Update</p>
+			<Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '60px' }}>
+				<Button size='small' variant='outlined' onClick={handleExpandAll}>Expand All</Button>
+				<Button size='small' variant='outlined' onClick={handleCollapseAll} sx={{ marginLeft: '10px' }}>Collapse All</Button>
+			</Box>
+			<Card sx={{ marginTop: '20px', width: '100%', padding: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Box sx={{ width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+					<Typography variant={'subtitle1'} sx={{ width: '25%' }}>Purpose Update</Typography>
+					<Box sx={{ display: showDetail ? 'flex' : 'none', width: '100%', justifyContent: 'space-around' }}>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Primary Purpose
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Herd Health
+							</Typography>
+						</span>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Requester
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Sultana Majid
+							</Typography>
+						</span>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Organization
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Organization 1
+							</Typography>
+						</span>
+					</Box>
+				</Box>
 				<ExpandMore
 					expand={expanded_purpose}
 					onClick={handleExpandClick}
 					aria-expanded={expanded_purpose}
 				>
-					<KeyboardArrowDownIcon/>
+					<KeyboardArrowDownIcon />
 				</ExpandMore>
 			</Card>
 			<Collapse in={expanded_purpose}>
-				<Paper sx={{width: '100%', marginTop: '2px'}}>
-					<Box sx={{display: 'flex', flexDirection: 'column', flexWrap: 'wrap', alignContent: 'flex-end'}}>
-						<TextField sx={{m: 2, width: '40%'}}
-											 id="purpose1"
-											 select
-											 label="Primary Purpose"
-											 value={purpose}
-											 onChange={(e) => {
-												 setPurpose(e.target.value);
-											 }}
+				<Paper sx={{ width: '100%', marginTop: '2px' }}>
+					<Box sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', alignContent: 'flex-end' }}>
+						<TextField sx={{ m: 2, width: '40%', marginTop: '40px' }}
+							id="purpose1"
+							select
+							label="Primary Purpose"
+							value={purpose}
+							onChange={(e) => {
+								setPurpose(e.target.value);
+							}}
 						>
 							{validPurposes.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -282,14 +329,14 @@ const EditForm = ({wildlifeId}) => {
 								</MenuItem>
 							))}
 						</TextField>
-						<TextField sx={{m: 2, width: '40%'}}
-											 id="purpose2"
-											 select
-											 label="Secondary Purpose"
-											 value={purpose}
-											 onChange={(e) => {
-												 setPurpose(e.target.value);
-											 }}
+						<TextField sx={{ m: 2, width: '40%' }}
+							id="purpose2"
+							select
+							label="Secondary Purpose"
+							value={purpose}
+							onChange={(e) => {
+								setPurpose(e.target.value);
+							}}
 						>
 							{validPurposes.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -299,7 +346,7 @@ const EditForm = ({wildlifeId}) => {
 						</TextField>
 
 						<TextField
-							sx={{m: 2, width: '60%'}}
+							sx={{ m: 2, width: '60%' }}
 							label="Associated Project"
 							id="associatedProject"
 							defaultValue={formState.requesterRegion}
@@ -307,7 +354,7 @@ const EditForm = ({wildlifeId}) => {
 							onChange={handleUpdate}
 						/>
 						<TextField
-							sx={{m: 2, width: '60%'}}
+							sx={{ m: 2, width: '60%' }}
 							label="Reason"
 							id="reason"
 							name="reason"
@@ -317,109 +364,115 @@ const EditForm = ({wildlifeId}) => {
 							onChange={handleUpdate}
 						/>
 					</Box>
-					<Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: '15px'}}>
-						<Typography variant="h6" sx={{marginLeft: '10%'}}>
+					<Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: '15px' }}>
+						<Typography variant="subtitle1" sx={{ marginLeft: '10%' }}>
 							Requester
 						</Typography>
-						<Box sx={{width: '60%'}}>
-							<Paper elevation={2}
-										 sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: '10px'}}>
-								<p>Name</p>
-								<p>Family</p>
-								<p>Region</p>
-								<p>Organization</p>
-								<p>Role</p>
-								<p>Phone</p>
-								<p>Email</p>
-								<div>
-									<IconButton onClick={handleClickOpen}>
-										<EditIcon color='primary'/>
-									</IconButton>
-									<IconButton>
-										<DeleteIcon color='primary'/>
-									</IconButton>
+						<Box sx={{ width: '61%', display: 'flex', flexDirection: 'column' }}>
+							<TableContainer component={Paper}>
+								<Table size="small">
+									<TableHead>
+										<TableRow>
+											<TableCell sx={{ color: 'darkgrey' }}>Name</TableCell>
+											<TableCell sx={{ color: 'darkgrey' }}>Family</TableCell>
+											<TableCell sx={{ color: 'darkgrey' }}>Region</TableCell>
+											<TableCell sx={{ color: 'darkgrey' }}>Organization</TableCell>
+											<TableCell align="right" sx={{ color: 'darkgrey' }}>Role</TableCell>
+											<TableCell sx={{ color: 'darkgrey' }}>Phone</TableCell>
+											<TableCell sx={{ color: 'darkgrey' }}>Email</TableCell>
+											<Box sx={{ float: 'right', display: 'flex' }}>
+												<IconButton onClick={handleClickOpen}>
+													<EditIcon color='primary' />
+												</IconButton>
+												<IconButton>
+													<DeleteIcon color='primary' />
+												</IconButton>
 
-									<Dialog open={open} onClose={handleClose}>
-										<DialogTitle>Update Requester</DialogTitle>
-										<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-											<TextField sx={{m: 2, width: '40%'}}
-																 label="Submitter First Name"
-																 id="first_name"
-																 name="first_name"
-																 onChange={handleUpdate}
-											/>
-											<TextField sx={{m: 2, width: '40%'}}
-																 label="Submitter Last Name"
-																 id="last_name"
-																 name="last_name"
-																 onChange={handleUpdate}
-											/>
-											<TextField sx={{m: 2, width: '40%'}}
-																 id="organization-select"
-																 select
-																 label="Organization"
-																 value={organization}
-																 onChange={(e) => {
-																	 setOrganization(e.target.value);
-																 }}
-											>
-												{validOrganization.map((m, i) => (
-													<MenuItem key={i} value={m.value}>
-														{m.label}
-													</MenuItem>
-												))}
-											</TextField>
-											<TextField sx={{m: 2, width: '40%'}}
-																 id="role-select"
-																 select
-																 label="Role"
-																 value={organization}
-																 onChange={(e) => {
-																	 setOrganization(e.target.value);
-																 }}
-											>
-												{validOrganization.map((m, i) => (
-													<MenuItem key={i} value={m.value}>
-														{m.label}
-													</MenuItem>
-												))}
-											</TextField>
-											<TextField sx={{m: 2, width: '40%'}}
-																 label="Phone Number"
-																 id="phone"
-																 name="phone"
-																 onChange={handleUpdate}
-											/>
-											<TextField sx={{m: 2, width: '40%'}}
-																 label="Email"
-																 id="email"
-																 name="email"
-																 onChange={handleUpdate}
-											/>
-										</DialogContent>
-										<DialogActions>
-											<Button variant={'contained'} onClick={handleClose}>Update</Button>
-											<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-										</DialogActions>
-									</Dialog>
-								</div>
-							</Paper>
-							<Paper id={'line2'} elevation={2}
-										 sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', padding: '10px', marginTop: '1px'}}>
-								<p>Sultana</p>
-								<p>Majid</p>
-							</Paper>
+												<Dialog open={open} onClose={handleClose}>
+													<DialogTitle>Update Requester</DialogTitle>
+													<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+														<TextField sx={{ m: 2, width: '40%' }}
+															label="Submitter First Name"
+															id="first_name"
+															name="first_name"
+															onChange={handleUpdate}
+														/>
+														<TextField sx={{ m: 2, width: '40%' }}
+															label="Submitter Last Name"
+															id="last_name"
+															name="last_name"
+															onChange={handleUpdate}
+														/>
+														<TextField sx={{ m: 2, width: '40%' }}
+															id="organization-select"
+															select
+															label="Organization"
+															value={organization}
+															onChange={(e) => {
+																setOrganization(e.target.value);
+															}}
+														>
+															{validOrganization.map((m, i) => (
+																<MenuItem key={i} value={m.value}>
+																	{m.label}
+																</MenuItem>
+															))}
+														</TextField>
+														<TextField sx={{ m: 2, width: '40%' }}
+															id="role-select"
+															select
+															label="Role"
+															value={organization}
+															onChange={(e) => {
+																setOrganization(e.target.value);
+															}}
+														>
+															{validOrganization.map((m, i) => (
+																<MenuItem key={i} value={m.value}>
+																	{m.label}
+																</MenuItem>
+															))}
+														</TextField>
+														<TextField sx={{ m: 2, width: '40%' }}
+															label="Phone Number"
+															id="phone"
+															name="phone"
+															onChange={handleUpdate}
+														/>
+														<TextField sx={{ m: 2, width: '40%' }}
+															label="Email"
+															id="email"
+															name="email"
+															onChange={handleUpdate}
+														/>
+													</DialogContent>
+													<DialogActions>
+														<Button variant={'contained'} onClick={handleClose}>Update</Button>
+														<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
+													</DialogActions>
+												</Dialog>
+											</Box>
+										</TableRow>
+									</TableHead>
+									<TableHead>
+										<TableRow>
+											<TableCell sx={{ color: 'lightgray' }}>Sultana</TableCell>
+											<TableCell sx={{ color: 'lightgray' }}>Majid</TableCell>
+										</TableRow>
+									</TableHead>
+								</Table>
+							</TableContainer>
 						</Box>
 
 					</Box>
-					<Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
 						<Button variant={'contained'}
-										sx={{m: 3, marginRight: '10px', width: '140px', height: '60px'}}
+							sx={{ m: 3, marginRight: '10px', width: '140px', height: '60px' }}
 						>
 							Update
 						</Button>
 						<Button variant={'outlined'}
-										sx={{m: 3, width: '140px', height: '60px'}}
+							sx={{ m: 3, width: '140px', height: '60px' }}
 						>
 							Cancel
 						</Button>
@@ -428,43 +481,71 @@ const EditForm = ({wildlifeId}) => {
 			</Collapse>
 
 
-			<Card sx={{marginTop: '20px', width: '100%', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-				<p>WLH ID 220000-1</p>
+			<Card sx={{ marginTop: '20px', width: '100%', padding: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Box sx={{ width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+					<Typography variant={'subtitle1'} sx={{ width: '25%' }}>WLH ID 22-00001</Typography>
+					<Box sx={{ display: showDetail ? 'flex' : 'none', width: '100%', justifyContent: 'space-around' }}>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Species
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Animal 1
+							</Typography>
+						</span>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Gender
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Female
+							</Typography>
+						</span>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Identifier
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Identifier 1
+							</Typography>
+						</span>
+					</Box>
+				</Box>
 				<ExpandMore
 					expand={expanded_WLD}
 					onClick={handleExpandClick2}
 					aria-expanded={expanded_WLD}
 				>
-					<KeyboardArrowDownIcon/>
+					<KeyboardArrowDownIcon />
 				</ExpandMore>
 			</Card>
 			<Collapse in={expanded_WLD}>
-				<Paper sx={{width: '100%', marginTop: '2px', display: 'flex', flexDirection: 'column'}}>
-					<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-							<Typography variant="subtitle1" sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
+				<Paper sx={{ width: '100%', marginTop: '2px', display: 'flex', flexDirection: 'column' }}>
+					<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginTop: '40px' }}>
+							<Typography variant="subtitle1" sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
 								Identifier Type (s)
 							</Typography>
-							<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-								<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+								<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
 									<TextField
-										sx={{m: 2, width: '40%'}}
+										sx={{ m: 2, width: '40%' }}
 										label="Species"
 										id="species"
 										name="species"
 										onChange={handleUpdate}
 										InputProps={{
-											endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon/></InputAdornment>,
+											endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon /></InputAdornment>,
 										}}
 									/>
-									<TextField sx={{m: 2, width: '40%'}}
-														 id="sex"
-														 select
-														 label="Sex"
-														 value={sex}
-														 onChange={(e) => {
-															 setSex(e.target.value);
-														 }}
+									<TextField sx={{ m: 2, width: '40%' }}
+										id="sex"
+										select
+										label="Sex"
+										value={sex}
+										onChange={(e) => {
+											setSex(e.target.value);
+										}}
 									>
 										{validSex.map((m, i) => (
 											<MenuItem key={i} value={m.value}>
@@ -473,110 +554,84 @@ const EditForm = ({wildlifeId}) => {
 										))}
 									</TextField>
 								</Box>
-								{inputFields.map((inputField, index) => (
+								{identifierOptions.map((identifierOption, index) => (
 									<div>
-										<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
-											<Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-												<TextField sx={{m: 2, width: '40%'}}
-																	 id="identifier"
-																	 select
-																	 defaultValue={formState.identifier}
-																	 onChange={(e) => {
-																		 handleChangeSelect(index, e);
-																		 handleAddFields(index);
-																		 handleShowOptional(e);
-																	 }}
-												>
-													{validIdentifier.map((m, i) => (
-														<MenuItem key={i} value={m.value}>
-															{m.label}
-														</MenuItem>
-													))}
-												</TextField>
-												<Box sx={{width: '40%', display: 'flex', flexDirection: 'row'}}>
-													<Box sx={{display: showOptional ? 'auto' : 'none'}}>
-
-														<TextField
-															sx={{m: 2, width: '50%', display: showInnerOption ? 'auto' : 'none'}}
-															label="Identifier"
-															id="identifier"
-															name="identifier"
-															onChange={handleUpdate}
-														/>
-														<TextField
-															sx={{m: 2, width: '50%', display: showInnerOption ? 'none' : 'auto'}}
-															label="Identifier"
-															id="identifier"
-															name="identifier"
-															onChange={handleUpdate}
-														/>
-														<TextField sx={{m: 2, width: '25%', display: showInnerOption ? 'none' : 'auto'}}
-																			 id="sex"
-																			 select
-																			 label="Sex"
-																			 value={sex}
-																			 onChange={(e) => {
-																				 setSex(e.target.value);
-																			 }}
-														>
-															{validSex.map((m, i) => (
-																<MenuItem key={i} value={m.value}>
-																	{m.label}
-																</MenuItem>
-															))}
-														</TextField>
-														<RadioGroup
-															sx={{width: '25%', display: showInnerOption ? 'none' : 'auto'}}
-															name="controlled-radio-buttons-group"
-															value={earTag}
-															onChange={(e) => {
-																setEarTag(e.target.value);
-															}}
-														>
-															<FormControlLabel value="left" control={<Radio/>} label="Left"/>
-															<FormControlLabel value="right" control={<Radio/>} label="Right"/>
-														</RadioGroup>
-														<IconButton>
-															<DeleteIcon color='primary'/>
-														</IconButton>
-													</Box>
-												</Box>
-											</Box>
+										<Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+											<IdentifierEntry
+												key={index}
+												handleUpdate={(e) => {
+													handleSelectIdentifier(index, e);
+													handleAddIdentifier(index);
+												}}
+												handleDelete={() => {
+													console.log("delete");
+												}}
+											/>
 										</Box>
 									</div>
 								))}
+
+
 							</Box>
 						</Box>
 					</Box>
-					<Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
 						<Button variant={'contained'}
-										sx={{m: 3, marginRight: '10px', width: '140px', height: '60px'}}
+							sx={{ m: 3, marginRight: '10px', width: '140px', height: '60px' }}
 						>
 							Update
 						</Button>
 						<Button variant={'outlined'}
-										sx={{m: 3, width: '140px', height: '60px'}}
+							sx={{ m: 3, width: '140px', height: '60px' }}
 						>
 							Cancel
 						</Button>
 					</Box>
 				</Paper>
 			</Collapse>
-			<Card sx={{marginTop: '20px', width: '100%', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-				<p>Event Update</p>
+			<Card sx={{ marginTop: '20px', width: '100%', padding: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Box sx={{ width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+					<Typography variant={'subtitle1'} sx={{ width: '25%' }}>Event Update</Typography>
+					<Box sx={{ display: showDetail ? 'flex' : 'none', width: '100%', justifyContent: 'space-around' }}>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Event type
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Capture
+							</Typography>
+						</span>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Date
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								03/05/2022
+							</Typography>
+						</span>
+						<span>
+							<Typography variant="body2" color="text.secondary">
+								Location
+							</Typography>
+							<Typography variant="body2" color="text.primary">
+								Zone 11111
+							</Typography>
+						</span>
+					</Box>
+				</Box>
 				<ExpandMore
 					expand={expanded_event}
 					onClick={handleExpandClick3}
 					aria-expanded={expanded_event}
 				>
-					<KeyboardArrowDownIcon/>
+					<KeyboardArrowDownIcon />
 				</ExpandMore>
 			</Card>
 			<Collapse in={expanded_event}>
-				<Paper sx={{width: '100%', marginTop: '2px', display: 'flex', flexDirection: 'column'}}>
-					<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-						<FormControl sx={{width: '20%', margin: '3% 0 0 7%'}}>
-							<FormLabel id="demo-controlled-radio-buttons-group">Event Type</FormLabel>
+				<Paper sx={{ width: '100%', marginTop: '2px', display: 'flex', flexDirection: 'column' }}>
+					<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+						<FormControl sx={{ width: '30%', margin: '3% 0 0 7%' }}>
+							<FormLabel>Event Type</FormLabel>
 							<RadioGroup
 								row
 								aria-labelledby="demo-controlled-radio-buttons-group"
@@ -586,35 +641,35 @@ const EditForm = ({wildlifeId}) => {
 									setEventType(e.target.value);
 								}}
 							>
-								<FormControlLabel value="capture" control={<Radio/>} label="Capture"/>
-								<FormControlLabel value="mortality" control={<Radio/>} label="Mortality"/>
-								<FormControlLabel value="recapture" control={<Radio/>} label="Recapture"/>
+								<FormControlLabel value="capture" control={<Radio />} label="Capture" />
+								<FormControlLabel value="mortality" control={<Radio />} label="Mortality" />
+								<FormControlLabel value="recapture" control={<Radio />} label="Recapture" />
 							</RadioGroup>
 						</FormControl>
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-							<Typography variant="subtitle1" sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
+						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+							<Typography variant="subtitle1" sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
 								Location (s)
 							</Typography>
-							<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-								<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+								<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
 									<TextField
-										sx={{m: 2, width: '40%'}}
+										sx={{ m: 2, width: '40%' }}
 										label="Date(DD-MM-YYYY)"
 										id="date"
 										name="date"
 										onChange={handleUpdate}
 										InputProps={{
-											endAdornment: <InputAdornment position="end"><CalendarTodayIcon/></InputAdornment>,
+											endAdornment: <InputAdornment position="end"><CalendarTodayIcon /></InputAdornment>,
 										}}
 									/>
-									<TextField sx={{m: 2, width: '40%'}}
-														 id="ageClass"
-														 select
-														 label="Age Class"
-														 value={ageClass}
-														 onChange={(e) => {
-															 setAgeClass(e.target.value);
-														 }}
+									<TextField sx={{ m: 2, width: '40%' }}
+										id="ageClass"
+										select
+										label="Age Class"
+										value={ageClass}
+										onChange={(e) => {
+											setAgeClass(e.target.value);
+										}}
 									>
 										{validAgeClass.map((m, i) => (
 											<MenuItem key={i} value={m.value}>
@@ -623,116 +678,152 @@ const EditForm = ({wildlifeId}) => {
 										))}
 									</TextField>
 								</Box>
-								{inputFields.map((inputField, index) => (
+								{locationOptions.map((locationOption, index) => (
 									<div>
-										<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
-											<Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-												<TextField sx={{m: 2, width: '40%'}}
-																	 id="location"
-																	 select
-																	 defaultValue={formState.location}
-																	 onChange={(e) => {
-																		 handleChangeSelect(index, e);
-																		 handleAddFields(index);
-																		 handleShowOptional(e);
-																	 }}
-												>
-													{validLocation.map((m, i) => (
-														<MenuItem key={i} value={m.value}>
-															{m.label}
-														</MenuItem>
-													))}
-												</TextField>
-												<Box sx={{width: '40%', display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-													<Box sx={{display: showOptional ? 'auto' : 'none'}}>
-
-														<TextField
-															sx={{m: 2, width: '50%', display: showInnerOption ? 'auto' : 'none'}}
-															label="Identifier"
-															id="identifier"
-															name="identifier"
-															onChange={handleUpdate}
-														/>
-														<TextField
-															sx={{m: 2, width: '50%', display: showInnerOption ? 'none' : 'auto'}}
-															label="Identifier"
-															id="identifier"
-															name="identifier"
-															onChange={handleUpdate}
-														/>
-														<TextField sx={{m: 2, width: '25%', display: showInnerOption ? 'none' : 'auto'}}
-																			 id="sex"
-																			 select
-																			 label="Sex"
-																			 value={sex}
-																			 onChange={(e) => {
-																				 setSex(e.target.value);
-																			 }}
-														>
-															{validSex.map((m, i) => (
-																<MenuItem key={i} value={m.value}>
-																	{m.label}
-																</MenuItem>
-															))}
-														</TextField>
-														<RadioGroup
-															sx={{width: '25%', display: showInnerOption ? 'none' : 'auto'}}
-															name="controlled-radio-buttons-group"
-															value={earTag}
-															onChange={(e) => {
-																setEarTag(e.target.value);
-															}}
-														>
-															<FormControlLabel value="left" control={<Radio/>} label="Left"/>
-															<FormControlLabel value="right" control={<Radio/>} label="Right"/>
-														</RadioGroup>
-														<IconButton>
-															<DeleteIcon color='primary'/>
-														</IconButton>
-													</Box>
-												</Box>
-											</Box>
+										<Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+											<LocationEntry
+												key={index}
+												handleUpdate={(e) => {
+													handleSelectLocation(index, e);
+													handleAddLocation(index);
+												}}
+												handleDelete={() => {
+													console.log("delete");
+												}}
+											/>
 										</Box>
 									</div>
 								))}
 							</Box>
 						</Box>
 
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-							<Typography variant="subtitle1" sx={{width: '18%', textAlign: 'center', margin: '0 35px'}}>
+						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px' }}>
+							<Typography variant="subtitle1" sx={{ width: '18%', textAlign: 'center', margin: '0 35px' }}>
 								Submitter (s)
 							</Typography>
-							<Box sx={{width: '70%', display: 'flex', flexDirection: 'column'}}>
-								<FormGroup>
-									<FormControlLabel control={<Checkbox/>} label="Submitter is the same as the requester" sx={{width: '80%'}}/>
+							<Box sx={{ width: '60%', display: 'flex', flexDirection: 'column' }}>
+								<FormGroup >
+									<FormControlLabel control={<Checkbox onClick={handleSubmitterChecked} />} label="Submitter is the same as the requester" sx={{ width: '80%' }} />
 								</FormGroup>
+								<TableContainer component={Paper} sx={{ display: submitterChecked ? 'auto' : 'none' }}>
+									<Table sx={{ width: '100%' }} size="small">
+										<TableHead>
+											<TableRow>
+												<TableCell sx={{ color: 'darkgrey' }}>Name</TableCell>
+												<TableCell sx={{ color: 'darkgrey' }}>Family</TableCell>
+												<TableCell sx={{ color: 'darkgrey' }}>Region</TableCell>
+												<TableCell sx={{ color: 'darkgrey' }}>Organization</TableCell>
+												<TableCell align="center" sx={{ color: 'darkgrey' }}>Role</TableCell>
+												<TableCell sx={{ color: 'darkgrey' }}>Phone</TableCell>
+												<Box sx={{ float: 'right' }}>
+													<IconButton onClick={handleClickOpen}>
+														<EditIcon color='primary' />
+													</IconButton>
+													<IconButton>
+														<DeleteIcon color='primary' />
+													</IconButton>
+
+													<Dialog open={open} onClose={handleClose}>
+														<DialogTitle>Update Requester</DialogTitle>
+														<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+															<TextField sx={{ m: 2, width: '40%' }}
+																label="Submitter First Name"
+																id="first_name"
+																name="first_name"
+																onChange={handleUpdate}
+															/>
+															<TextField sx={{ m: 2, width: '40%' }}
+																label="Submitter Last Name"
+																id="last_name"
+																name="last_name"
+																onChange={handleUpdate}
+															/>
+															<TextField sx={{ m: 2, width: '40%' }}
+																id="organization-select"
+																select
+																label="Organization"
+																value={organization}
+																onChange={(e) => {
+																	setOrganization(e.target.value);
+																}}
+															>
+																{validOrganization.map((m, i) => (
+																	<MenuItem key={i} value={m.value}>
+																		{m.label}
+																	</MenuItem>
+																))}
+															</TextField>
+															<TextField sx={{ m: 2, width: '40%' }}
+																id="role-select"
+																select
+																label="Role"
+																value={organization}
+																onChange={(e) => {
+																	setOrganization(e.target.value);
+																}}
+															>
+																{validOrganization.map((m, i) => (
+																	<MenuItem key={i} value={m.value}>
+																		{m.label}
+																	</MenuItem>
+																))}
+															</TextField>
+															<TextField sx={{ m: 2, width: '40%' }}
+																label="Phone Number"
+																id="phone"
+																name="phone"
+																onChange={handleUpdate}
+															/>
+															<TextField sx={{ m: 2, width: '40%' }}
+																label="Email"
+																id="email"
+																name="email"
+																onChange={handleUpdate}
+															/>
+														</DialogContent>
+														<DialogActions>
+															<Button variant={'contained'} onClick={handleClose}>Update</Button>
+															<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
+														</DialogActions>
+													</Dialog>
+												</Box>
+											</TableRow>
+										</TableHead>
+										<TableHead>
+											<TableRow>
+												<TableCell sx={{ color: 'lightgray' }}>Sultana</TableCell>
+												<TableCell sx={{ color: 'lightgray' }}>Majid</TableCell>
+											</TableRow>
+										</TableHead>
+									</Table>
+								</TableContainer>
 							</Box>
-							<Button variant={'outlined'} sx={{m: 3, width: '12%', height: '50px'}} onClick={handleClickOpen}>
+							<Button variant={'outlined'} sx={{ margin: '10px', width: '20%' }} onClick={handleClickOpen}>
 								+ Add Submitter
 							</Button>
 							<Dialog open={open} onClose={handleClose}>
 								<DialogTitle>Update Requester</DialogTitle>
-								<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-									<TextField sx={{m: 2, width: '40%'}}
-														 label="Submitter First Name"
-														 id="first_name"
-														 name="first_name"
-														 onChange={handleUpdate}
+								<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+									<TextField sx={{ m: 2, width: '40%' }}
+										label="Submitter First Name"
+										id="first_name"
+										name="first_name"
+										onChange={handleUpdate}
 									/>
-									<TextField sx={{m: 2, width: '40%'}}
-														 label="Submitter Last Name"
-														 id="last_name"
-														 name="last_name"
-														 onChange={handleUpdate}
+									<TextField sx={{ m: 2, width: '40%' }}
+										label="Submitter Last Name"
+										id="last_name"
+										name="last_name"
+										onChange={handleUpdate}
 									/>
-									<TextField sx={{m: 2, width: '40%'}}
-														 id="organization-select"
-														 select
-														 label="Organization"
-														 value={organization}
-														 onChange={(e) => {
-															 setOrganization(e.target.value);
-														 }}
+									<TextField sx={{ m: 2, width: '40%' }}
+										id="organization-select"
+										select
+										label="Organization"
+										value={organization}
+										onChange={(e) => {
+											setOrganization(e.target.value);
+										}}
 									>
 										{validOrganization.map((m, i) => (
 											<MenuItem key={i} value={m.value}>
@@ -740,14 +831,14 @@ const EditForm = ({wildlifeId}) => {
 											</MenuItem>
 										))}
 									</TextField>
-									<TextField sx={{m: 2, width: '40%'}}
-														 id="role-select"
-														 select
-														 label="Role"
-														 value={organization}
-														 onChange={(e) => {
-															 setOrganization(e.target.value);
-														 }}
+									<TextField sx={{ m: 2, width: '40%' }}
+										id="role-select"
+										select
+										label="Role"
+										value={organization}
+										onChange={(e) => {
+											setOrganization(e.target.value);
+										}}
 									>
 										{validOrganization.map((m, i) => (
 											<MenuItem key={i} value={m.value}>
@@ -755,17 +846,17 @@ const EditForm = ({wildlifeId}) => {
 											</MenuItem>
 										))}
 									</TextField>
-									<TextField sx={{m: 2, width: '40%'}}
-														 label="Phone Number"
-														 id="phone"
-														 name="phone"
-														 onChange={handleUpdate}
+									<TextField sx={{ m: 2, width: '40%' }}
+										label="Phone Number"
+										id="phone"
+										name="phone"
+										onChange={handleUpdate}
 									/>
-									<TextField sx={{m: 2, width: '40%'}}
-														 label="Email"
-														 id="email"
-														 name="email"
-														 onChange={handleUpdate}
+									<TextField sx={{ m: 2, width: '40%' }}
+										label="Email"
+										id="email"
+										name="email"
+										onChange={handleUpdate}
 									/>
 								</DialogContent>
 								<DialogActions>
@@ -775,21 +866,21 @@ const EditForm = ({wildlifeId}) => {
 							</Dialog>
 						</Box>
 					</Box>
-					<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-						<Typography variant="subtitle1" sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
+					<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+						<Typography variant="subtitle1" sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
 							Samples
 						</Typography>
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-							<FormGroup sx={{width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%'}}>
+						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+							<FormGroup sx={{ width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%' }}>
 								<p>Samples Were Collected?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
+								<FormControlLabel control={<Switch onChange={toggleChecked1} />} label={`${checked1 ? 'Yes' : 'No'}`} />
 								<p>Samples Sent for Testing?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
+								<FormControlLabel control={<Switch onChange={toggleChecked2} />} label={`${checked2 ? 'Yes' : 'No'}`} />
 								<p>Test Results Received?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
+								<FormControlLabel control={<Switch onChange={toggleChecked3} />} label={`${checked3 ? 'Yes' : 'No'}`} />
 							</FormGroup>
 							<TextField
-								sx={{m: 2, width: '85%'}}
+								sx={{ m: 2, width: '85%' }}
 								label="History (Max 500 Characters)"
 								id="history"
 								name="history"
@@ -797,24 +888,345 @@ const EditForm = ({wildlifeId}) => {
 								rows={5}
 								defaultValue={formState.requesterRegion}
 								onChange={handleUpdate}
-								inputProps={{maxLength: 500}}
+								inputProps={{ maxLength: 500 }}
 							/>
 						</Box>
 					</Box>
-					<Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
 						<Button variant={'contained'}
-										sx={{m: 3, marginRight: '10px', width: '140px', height: '60px'}}
+							sx={{ m: 3, marginRight: '10px', width: '140px', height: '60px' }}
 						>
 							Update
 						</Button>
 						<Button variant={'outlined'}
-										sx={{m: 3, width: '140px', height: '60px'}}
+							sx={{ m: 3, width: '140px', height: '60px' }}
 						>
 							Cancel
 						</Button>
 					</Box>
 				</Paper>
 			</Collapse>
+			{/* Add new event */}
+			<Box sx={{ display: newEvent ? 'auto' : 'none' }}>
+				<Card sx={{ marginTop: '20px', width: '100%', padding: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
+					<Box sx={{ width: '85%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+						<Typography variant={'subtitle1'} sx={{ width: '25%' }}>New Event</Typography>
+						<Box sx={{ display: showDetail ? 'flex' : 'none', width: '100%', justifyContent: 'space-around' }}>
+							<span>
+								<Typography variant="body2" color="text.secondary">
+									Event type
+								</Typography>
+								<Typography variant="body2" color="text.primary">
+									Capture
+								</Typography>
+							</span>
+							<span>
+								<Typography variant="body2" color="text.secondary">
+									Date
+								</Typography>
+								<Typography variant="body2" color="text.primary">
+									03/05/2022
+								</Typography>
+							</span>
+							<span>
+								<Typography variant="body2" color="text.secondary">
+									Location
+								</Typography>
+								<Typography variant="body2" color="text.primary">
+									Zone 11111
+								</Typography>
+							</span>
+						</Box>
+					</Box>
+					<ExpandMore
+						expand={expanded_newEvent}
+						onClick={handleExpandClick4}
+						aria-expanded={expanded_newEvent}
+					>
+						<KeyboardArrowDownIcon />
+					</ExpandMore>
+				</Card>
+				<Collapse in={expanded_newEvent}>
+					<Paper sx={{ width: '100%', marginTop: '2px', display: 'flex', flexDirection: 'column' }}>
+						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+							<FormControl sx={{ width: '30%', margin: '3% 0 0 7%' }}>
+								<FormLabel>Event Type</FormLabel>
+								<RadioGroup
+									row
+									aria-labelledby="demo-controlled-radio-buttons-group"
+									name="controlled-radio-buttons-group"
+									value={eventType}
+									onChange={(e) => {
+										setEventType(e.target.value);
+									}}
+								>
+									<FormControlLabel value="capture" control={<Radio />} label="Capture" />
+									<FormControlLabel value="mortality" control={<Radio />} label="Mortality" />
+									<FormControlLabel value="recapture" control={<Radio />} label="Recapture" />
+								</RadioGroup>
+							</FormControl>
+							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+								<Typography variant="subtitle1" sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
+									Location (s)
+								</Typography>
+								<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+									<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+										<TextField
+											sx={{ m: 2, width: '40%' }}
+											label="Date(DD-MM-YYYY)"
+											id="date"
+											name="date"
+											onChange={handleUpdate}
+											InputProps={{
+												endAdornment: <InputAdornment position="end"><CalendarTodayIcon /></InputAdornment>,
+											}}
+										/>
+										<TextField sx={{ m: 2, width: '40%' }}
+											id="ageClass"
+											select
+											label="Age Class"
+											value={ageClass}
+											onChange={(e) => {
+												setAgeClass(e.target.value);
+											}}
+										>
+											{validAgeClass.map((m, i) => (
+												<MenuItem key={i} value={m.value}>
+													{m.label}
+												</MenuItem>
+											))}
+										</TextField>
+									</Box>
+									{locationOptions.map((locationOption, index) => (
+										<div>
+											<Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+												<LocationEntry
+													key={index}
+													handleUpdate={(e) => {
+														handleSelectLocation(index, e);
+														handleAddLocation(index);
+													}}
+													handleDelete={() => {
+														console.log("delete");
+													}}
+												/>
+											</Box>
+										</div>
+									))}
+								</Box>
+							</Box>
+
+							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px' }}>
+								<Typography variant="subtitle1" sx={{ width: '18%', textAlign: 'center', margin: '0 35px' }}>
+									Submitter (s)
+								</Typography>
+								<Box sx={{ width: '60%', display: 'flex', flexDirection: 'column' }}>
+									<FormGroup >
+										<FormControlLabel control={<Checkbox onClick={handleSubmitterChecked} />} label="Submitter is the same as the requester" sx={{ width: '80%' }} />
+									</FormGroup>
+									<TableContainer component={Paper} sx={{ display: submitterChecked ? 'auto' : 'none' }}>
+										<Table sx={{ width: '100%' }} size="small">
+											<TableHead>
+												<TableRow>
+													<TableCell sx={{ color: 'darkgrey' }}>Name</TableCell>
+													<TableCell sx={{ color: 'darkgrey' }}>Family</TableCell>
+													<TableCell sx={{ color: 'darkgrey' }}>Region</TableCell>
+													<TableCell sx={{ color: 'darkgrey' }}>Organization</TableCell>
+													<TableCell align="center" sx={{ color: 'darkgrey' }}>Role</TableCell>
+													<TableCell sx={{ color: 'darkgrey' }}>Phone</TableCell>
+													<Box sx={{ float: 'right' }}>
+														<IconButton onClick={handleClickOpen}>
+															<EditIcon color='primary' />
+														</IconButton>
+														<IconButton>
+															<DeleteIcon color='primary' />
+														</IconButton>
+
+														<Dialog open={open} onClose={handleClose}>
+															<DialogTitle>Update Requester</DialogTitle>
+															<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+																<TextField sx={{ m: 2, width: '40%' }}
+																	label="Submitter First Name"
+																	id="first_name"
+																	name="first_name"
+																	onChange={handleUpdate}
+																/>
+																<TextField sx={{ m: 2, width: '40%' }}
+																	label="Submitter Last Name"
+																	id="last_name"
+																	name="last_name"
+																	onChange={handleUpdate}
+																/>
+																<TextField sx={{ m: 2, width: '40%' }}
+																	id="organization-select"
+																	select
+																	label="Organization"
+																	value={organization}
+																	onChange={(e) => {
+																		setOrganization(e.target.value);
+																	}}
+																>
+																	{validOrganization.map((m, i) => (
+																		<MenuItem key={i} value={m.value}>
+																			{m.label}
+																		</MenuItem>
+																	))}
+																</TextField>
+																<TextField sx={{ m: 2, width: '40%' }}
+																	id="role-select"
+																	select
+																	label="Role"
+																	value={organization}
+																	onChange={(e) => {
+																		setOrganization(e.target.value);
+																	}}
+																>
+																	{validOrganization.map((m, i) => (
+																		<MenuItem key={i} value={m.value}>
+																			{m.label}
+																		</MenuItem>
+																	))}
+																</TextField>
+																<TextField sx={{ m: 2, width: '40%' }}
+																	label="Phone Number"
+																	id="phone"
+																	name="phone"
+																	onChange={handleUpdate}
+																/>
+																<TextField sx={{ m: 2, width: '40%' }}
+																	label="Email"
+																	id="email"
+																	name="email"
+																	onChange={handleUpdate}
+																/>
+															</DialogContent>
+															<DialogActions>
+																<Button variant={'contained'} onClick={handleClose}>Update</Button>
+																<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
+															</DialogActions>
+														</Dialog>
+													</Box>
+												</TableRow>
+											</TableHead>
+											<TableHead>
+												<TableRow>
+													<TableCell sx={{ color: 'lightgray' }}>Sultana</TableCell>
+													<TableCell sx={{ color: 'lightgray' }}>Majid</TableCell>
+												</TableRow>
+											</TableHead>
+
+										</Table>
+									</TableContainer>
+								</Box>
+								<Button variant={'outlined'} sx={{ margin: '10px', width: '20%' }} onClick={handleClickOpen}>
+									+ Add Submitter
+								</Button>
+								<Dialog open={open} onClose={handleClose}>
+									<DialogTitle>Update Requester</DialogTitle>
+									<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+										<TextField sx={{ m: 2, width: '40%' }}
+											label="Submitter First Name"
+											id="first_name"
+											name="first_name"
+											onChange={handleUpdate}
+										/>
+										<TextField sx={{ m: 2, width: '40%' }}
+											label="Submitter Last Name"
+											id="last_name"
+											name="last_name"
+											onChange={handleUpdate}
+										/>
+										<TextField sx={{ m: 2, width: '40%' }}
+											id="organization-select"
+											select
+											label="Organization"
+											value={organization}
+											onChange={(e) => {
+												setOrganization(e.target.value);
+											}}
+										>
+											{validOrganization.map((m, i) => (
+												<MenuItem key={i} value={m.value}>
+													{m.label}
+												</MenuItem>
+											))}
+										</TextField>
+										<TextField sx={{ m: 2, width: '40%' }}
+											id="role-select"
+											select
+											label="Role"
+											value={organization}
+											onChange={(e) => {
+												setOrganization(e.target.value);
+											}}
+										>
+											{validOrganization.map((m, i) => (
+												<MenuItem key={i} value={m.value}>
+													{m.label}
+												</MenuItem>
+											))}
+										</TextField>
+										<TextField sx={{ m: 2, width: '40%' }}
+											label="Phone Number"
+											id="phone"
+											name="phone"
+											onChange={handleUpdate}
+										/>
+										<TextField sx={{ m: 2, width: '40%' }}
+											label="Email"
+											id="email"
+											name="email"
+											onChange={handleUpdate}
+										/>
+									</DialogContent>
+									<DialogActions>
+										<Button variant={'contained'} onClick={handleClose}>Update</Button>
+										<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
+									</DialogActions>
+								</Dialog>
+							</Box>
+						</Box>
+						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+							<Typography variant="subtitle1" sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
+								Samples
+							</Typography>
+							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+								<FormGroup sx={{ width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%' }}>
+									<p>Samples Were Collected?</p>
+									<FormControlLabel control={<Switch onChange={toggleChecked1} />} label={`${checked1 ? 'Yes' : 'No'}`} />
+									<p>Samples Sent for Testing?</p>
+									<FormControlLabel control={<Switch onChange={toggleChecked2} />} label={`${checked2 ? 'Yes' : 'No'}`} />
+									<p>Test Results Received?</p>
+									<FormControlLabel control={<Switch onChange={toggleChecked3} />} label={`${checked3 ? 'Yes' : 'No'}`} />
+								</FormGroup>
+								<TextField
+									sx={{ m: 2, width: '85%' }}
+									label="History (Max 500 Characters)"
+									id="history"
+									name="history"
+									multiline
+									rows={5}
+									defaultValue={formState.requesterRegion}
+									onChange={handleUpdate}
+									inputProps={{ maxLength: 500 }}
+								/>
+							</Box>
+						</Box>
+						<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+							<Button variant={'contained'}
+								sx={{ m: 3, marginRight: '10px', width: '140px', height: '60px' }}
+							>
+								Update
+							</Button>
+							<Button variant={'outlined'}
+								sx={{ m: 3, width: '140px', height: '60px' }}
+							>
+								Cancel
+							</Button>
+						</Box>
+					</Paper>
+				</Collapse>
+			</Box>
 		</Box>
 	);
 };
