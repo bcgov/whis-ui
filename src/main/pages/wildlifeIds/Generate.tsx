@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
-import {useAPI} from "../../hooks/useAPI";
-import {Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Slider, Stack, TextField, Typography} from "@mui/material";
+import { useAPI } from "../../hooks/useAPI";
+import { Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Slider, Stack, TextField, Typography } from "@mui/material";
 import '../../styles/inventory.scss';
 import AddIcon from '@mui/icons-material/Add';
-import {useSelector} from "../../../state/utilities/use_selector";
-import {useNavigate} from "react-router-dom";
+import { useSelector } from "../../../state/utilities/use_selector";
+import { useNavigate } from "react-router-dom";
 import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
-import {paperStyle} from "../../../state/style_constants";
+import OneColumnForm from "../../components/wildlifeIds/OneColumnForm";
+import { paperStyle } from "../../../state/style_constants";
 
 const Generate: React.FC = () => {
 
@@ -16,19 +17,20 @@ const Generate: React.FC = () => {
 
 	const navigate = useNavigate();
 
-	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
+	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
 
 	const validPurposes = [
-		{value: 'UNKNOWN', label: 'Unknown'},
-		{value: 'HERD_HEALTH', label: 'Herd Health'},
-		{value: 'PASSIVE', label: 'Passive Surveillance'},
-		{value: 'TARGETED', label: 'Targeted Surveillance'}
+		{ value: 'PURPOSE', label: 'Purpose' },
+		{ value: 'UNKNOWN', label: 'Unknown' },
+		{ value: 'HERD_HEALTH', label: 'Herd Health' },
+		{ value: 'PASSIVE', label: 'Passive Surveillance' },
+		{ value: 'TARGETED', label: 'Targeted Surveillance' }
 	];
 
 	const [formState, setFormState] = useState({
 		quantity: 1,
 		year: '2022',
-		purpose: 'UNKNOWN',
+		purpose: 'PURPOSE',
 		species: '',
 		requesterFirstName: me.firstName,
 		requesterLastName: me.lastName,
@@ -43,7 +45,7 @@ const Generate: React.FC = () => {
 
 	const handleSubmit = () => {
 
-		api.generateIDs({quantity: formState.quantity}).then(result => {
+		api.generateIDs({ quantity: formState.quantity }).then(result => {
 			setGenerateStatus({
 				status: 'ok',
 				message: JSON.stringify(result)
@@ -75,23 +77,22 @@ const Generate: React.FC = () => {
 	return (
 		<Paper sx={paperStyle}>
 
-			<Typography variant={'h3'}>Generate WLH ID</Typography>
-
-			<p>Generate one or multiple WLH IDs by entering the information below.</p>
+			<Typography variant={'h5'} sx={{marginBlock:'10px'}}>Generate WLH ID</Typography>
+			<Typography variant={'subtitle1'} sx={{marginBottom:'50px'}}>Generate one or multiple WLH IDs by entering the information below.</Typography>
+			
 			<hr/>
-
 			<TwoColumnForm title={'WLH ID Information'}>
 
-				<TextField sx={{width: '100%'}} label="Year" id="year" defaultValue={formState.year} name="year"
-									 onChange={handleUpdate} required/>
+				<TextField sx={{ width: '100%' }} label="Year" id="year" defaultValue={formState.year} name="year"
+					onChange={handleUpdate} required />
 
-				<TextField sx={{width: '100%'}} label="Number of WLH IDs" id="wlh_id" defaultValue={formState.species} name="wlh_id"
-									 onChange={handleUpdate} required/>
+				<TextField sx={{ width: '100%' }} label="Number of WLH IDs" id="wlh_id" defaultValue={formState.species} name="wlh_id"
+					onChange={handleUpdate} required />
 
 				<>
-					<InputLabel id="label-purpose-select">Purpose</InputLabel>
-					<Select sx={{width: '100%'}} labelId="label-purpose-select" id="purpose-select" defaultValue={formState.purpose} name="modeOfTransport"
-									onChange={handleUpdate}>
+					{/* <InputLabel id="label-purpose-select">Purpose</InputLabel> */}
+					<Select sx={{ width: '100%' }} labelId="label-purpose-select" id="purpose-select" defaultValue={formState.purpose} name="modeOfTransport"
+						onChange={handleUpdate} required>
 						{validPurposes.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
@@ -100,36 +101,40 @@ const Generate: React.FC = () => {
 					</Select>
 				</>
 
-				<TextField sx={{width: '100%'}} label="Species"
-									 id="species"
-									 defaultValue={formState.species}
-									 name="species"
-									 onChange={handleUpdate}/>
-
-				<TextField sx={{width: '100%'}}
-									 label="Associated Project"
-									 id="associatedProject"
-									 defaultValue={formState.associatedProject}
-									 name="associatedProject"
-									 onChange={handleUpdate}
-				/>
-
-				<TextField sx={{width: '100%'}}
-									 label="Reason"
-									 id="reason"
-									 defaultValue={formState.reason}
-									 name="reason"
-									 onChange={handleUpdate}/>
+				<TextField sx={{ width: '100%' }} label="Species"
+					id="species"
+					defaultValue={formState.species}
+					name="species"
+					onChange={handleUpdate} />
 
 			</TwoColumnForm>
+			<OneColumnForm>
+				<TextField sx={{ width: '100%' }}
+					label="Associated Project"
+					id="associatedProject"
+					defaultValue={formState.associatedProject}
+					name="associatedProject"
+					onChange={handleUpdate}
+				/>
+
+				<TextField sx={{ width: '100%' }}
+					label="Reason"
+					id="reason"
+					defaultValue={formState.reason}
+					name="reason"
+					multiline
+					rows={3}
+					onChange={handleUpdate} />
+
+			</OneColumnForm>
 
 
-			<hr/>
+			<hr />
 
 			<TwoColumnForm title={'Requester'}>
 
 				<TextField
-					sx={{width: '100%'}}
+					sx={{ width: '100%' }}
 					label="First Name"
 					id="requesterFirstName"
 					defaultValue={formState.requesterFirstName}
@@ -139,7 +144,7 @@ const Generate: React.FC = () => {
 				/>
 
 				<TextField
-					sx={{width: '100%'}}
+					sx={{ width: '100%' }}
 					label="Last Name"
 					id="requesterLastName"
 					defaultValue={formState.requesterLastName}
@@ -150,12 +155,12 @@ const Generate: React.FC = () => {
 
 
 				<></>
-				<Button onClick={() => setShowOptional(!showOptional)}>
-					<AddIcon/>Requester Details (Optional)
+				<Button onClick={() => setShowOptional(!showOptional)} variant="outlined">
+					<AddIcon />Requester Details (Optional)
 				</Button>
 
 				<TextField
-					sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
+					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
 					label="Region"
 					id="requesterRegion"
 					defaultValue={formState.requesterRegion}
@@ -163,7 +168,7 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 				<TextField
-					sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
+					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
 					label="Organization"
 					id="requesterOrganization"
 					defaultValue={formState.requesterOrganization}
@@ -171,7 +176,7 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 				<TextField
-					sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
+					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
 					label="Phone"
 					id="requesterContactPhone"
 					defaultValue={formState.requesterContactPhone}
@@ -179,7 +184,7 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 				<TextField
-					sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
+					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
 					label="Email"
 					id="requesterContactEmail"
 					defaultValue={formState.requesterContactEmail}
@@ -187,7 +192,7 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 				<TextField
-					sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
+					sx={{ width: '100%', display: showOptional ? 'auto' : 'none', marginBottom:'50px' }}
 					label="Requester's Role"
 					id="requesterRole"
 					defaultValue={formState.requesterRole}
@@ -196,10 +201,10 @@ const Generate: React.FC = () => {
 				/>
 			</TwoColumnForm>
 
-			<hr/>
+			<hr />
 
 			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
-				<GenerationLockWidget/>
+				<GenerationLockWidget />
 
 				<Button variant={'contained'} color={'secondary'} onClick={() => {
 					navigate(-1)
