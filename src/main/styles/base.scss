@@ -18,7 +18,7 @@ body,
 }
 
 body {
-	font-size: 16px;
+	font-size: 14px;
 	font-family: $fontFamily;
 	color: $text;
 }
@@ -107,7 +107,6 @@ dd {
 
 .MuiButton-label {
 	text-transform: none;
-	font-family: $fontFamily;
 }
 
 a {
