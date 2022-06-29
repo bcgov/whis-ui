@@ -13,6 +13,16 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import {createTheme, ThemeOptions, ThemeProvider} from "@mui/material";
 
 export const themeOptions: ThemeOptions = {
+	typography: {
+		fontFamily: [
+			'BCSans',
+			'Arial',
+			'sans-serif',
+			'"Apple Color Emoji"',
+			'"Segoe UI Emoji"',
+			'"Segoe UI Symbol"',
+		].join(',')
+	},
 	palette: {
 		primary: {
 			main: '#003366',
