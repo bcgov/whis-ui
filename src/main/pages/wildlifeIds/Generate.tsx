@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
 import { useAPI } from "../../hooks/useAPI";
-import { Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Slider, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputAdornment, InputLabel, makeStyles, MenuItem, Paper, Select, Slider, Stack, TextField, Typography } from "@mui/material";
 import '../../styles/inventory.scss';
 import AddIcon from '@mui/icons-material/Add';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import { useSelector } from "../../../state/utilities/use_selector";
 import { useNavigate } from "react-router-dom";
 import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
 import OneColumnForm from "../../components/wildlifeIds/OneColumnForm";
 import { paperStyle } from "../../../state/style_constants";
+import CloseIcon from '@mui/icons-material/Close';
 
 const Generate: React.FC = () => {
 
@@ -20,11 +22,28 @@ const Generate: React.FC = () => {
 	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
 
 	const validPurposes = [
-		{ value: 'PURPOSE', label: 'Purpose' },
-		{ value: 'UNKNOWN', label: 'Unknown' },
 		{ value: 'HERD_HEALTH', label: 'Herd Health' },
 		{ value: 'PASSIVE', label: 'Passive Surveillance' },
-		{ value: 'TARGETED', label: 'Targeted Surveillance' }
+		{ value: 'TARGETED', label: 'Targeted Surveillance' },
+		{ value: 'UNKNOWN', label: 'Unknown' },
+	];
+	const validRegion = [
+		{ value: 'REGION1', label: 'Region1' },
+		{ value: 'REGION2', label: 'Region2' },
+		{ value: 'REGION3', label: 'Region3' },
+		{ value: 'REGION4', label: 'Region4' }
+	];
+	const validOrganization = [
+		{ value: 'ORGANIZATION1', label: 'Organization1' },
+		{ value: 'ORGANIZATION2', label: 'Organization' },
+		{ value: 'ORGANIZATION3', label: 'Organization3' },
+		{ value: 'ORGANIZATION4', label: 'Organization4' }
+	];
+	const validRole = [
+		{ value: 'ROLE1', label: 'Role1' },
+		{ value: 'ROLE2', label: 'Role2' },
+		{ value: 'ROLE3', label: 'Role3' },
+		{ value: 'ROLE4', label: 'Role4' }
 	];
 
 	const [formState, setFormState] = useState({
@@ -72,40 +91,85 @@ const Generate: React.FC = () => {
 		setFormState(currentState);
 	};
 
+	const handleOutofRange = (e) => {
+		const idNumber = e.target.value;
+		if (idNumber > 100) {
+			setAlertNumber(!alertNumber);
+		}
+	}
+
+	const [alertNumber, setAlertNumber] = useState(false);
 	const [showOptional, setShowOptional] = useState(false);
+	const [OptionalButton, setOptionalButton] = useState(true);
+
+	const handleClose = () => {
+		setAlertNumber(false);
+	};
 
 	return (
 		<Paper sx={paperStyle}>
-
-			<Typography variant={'h5'} sx={{marginBlock:'10px'}}>Generate WLH ID</Typography>
-			<Typography variant={'subtitle1'} sx={{marginBottom:'50px'}}>Generate one or multiple WLH IDs by entering the information below.</Typography>
-			
-			<hr/>
-			<TwoColumnForm title={'WLH ID Information'}>
+			<Typography variant={'h5'} sx={{ marginBlock: '10px' }}>Generate WLH ID</Typography>
+			<Typography variant={'subtitle1'} sx={{ marginBottom: '50px' }}>Generate one or multiple WLH IDs by entering the information below.</Typography>
+			<hr />
+			<TwoColumnForm title={'WLH ID information'}>
 
 				<TextField sx={{ width: '100%' }} label="Year" id="year" defaultValue={formState.year} name="year"
 					onChange={handleUpdate} required />
 
-				<TextField sx={{ width: '100%' }} label="Number of WLH IDs" id="wlh_id" defaultValue={formState.species} name="wlh_id"
-					onChange={handleUpdate} required />
-
+				<TextField
+					sx={{ width: '100%' }}
+					label="Number of WLH IDs"
+					id="wlh_id"
+					name="wlh_id"
+					type="tel"
+					inputProps={{ maxLength: 3 }}
+					onChange={(e) => { handleOutofRange(e) }}
+					required />
 				<>
-					{/* <InputLabel id="label-purpose-select">Purpose</InputLabel> */}
-					<Select sx={{ width: '100%' }} labelId="label-purpose-select" id="purpose-select" defaultValue={formState.purpose} name="modeOfTransport"
-						onChange={handleUpdate} required>
+					<TextField sx={{ width: '100%' }}
+						id="purpose-select"
+						select
+						label="Purpose"
+						placeholder='Purpose*'
+						onChange={handleUpdate}
+						required
+					>
 						{validPurposes.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}
-					</Select>
+					</TextField>
+					<Dialog open={alertNumber} onClose={handleClose}>
+						<DialogTitle>
+							Warning!
+							<IconButton
+								onClick={handleClose}
+								sx={{
+									position: 'absolute',
+									right: 8,
+									top: 8
+								}}
+							>
+								<CloseIcon />
+							</IconButton>
+						</DialogTitle>
+						<DialogContent>
+							The number is out of range! <br />
+							Please don't enter over 100.
+						</DialogContent>
+					</Dialog>
 				</>
 
 				<TextField sx={{ width: '100%' }} label="Species"
 					id="species"
 					defaultValue={formState.species}
 					name="species"
-					onChange={handleUpdate} />
+					onChange={handleUpdate}
+					InputProps={{
+						endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon /></InputAdornment>,
+					}}
+				/>
 
 			</TwoColumnForm>
 			<OneColumnForm>
@@ -153,28 +217,34 @@ const Generate: React.FC = () => {
 					required
 				/>
 
-
-				<></>
-				<Button onClick={() => setShowOptional(!showOptional)} variant="outlined">
-					<AddIcon />Requester Details (Optional)
-				</Button>
-
 				<TextField
 					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+					select
 					label="Region"
 					id="requesterRegion"
-					defaultValue={formState.requesterRegion}
-					name="requesterRegion"
+					placeholder='Region'
 					onChange={handleUpdate}
-				/>
+				>
+					{validRegion.map((m, i) => (
+						<MenuItem key={i} value={m.value}>
+							{m.label}
+						</MenuItem>
+					))}
+				</TextField>
 				<TextField
 					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+					select
 					label="Organization"
 					id="requesterOrganization"
-					defaultValue={formState.requesterOrganization}
-					name="requesterOrganization"
+					placeholder='Organization'
 					onChange={handleUpdate}
-				/>
+				>
+					{validOrganization.map((m, i) => (
+						<MenuItem key={i} value={m.value}>
+							{m.label}
+						</MenuItem>
+					))}
+				</TextField>
 				<TextField
 					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
 					label="Phone"
@@ -192,24 +262,35 @@ const Generate: React.FC = () => {
 					onChange={handleUpdate}
 				/>
 				<TextField
-					sx={{ width: '100%', display: showOptional ? 'auto' : 'none', marginBottom:'50px' }}
+					sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+					select
 					label="Requester's Role"
 					id="requesterRole"
-					defaultValue={formState.requesterRole}
-					name="requesterRole"
+					placeholder="Role"
 					onChange={handleUpdate}
-				/>
+				>
+					{validRole.map((m, i) => (
+						<MenuItem key={i} value={m.value}>
+							{m.label}
+						</MenuItem>
+					))}
+				</TextField>
 			</TwoColumnForm>
 
-			<hr />
+			<Button
+				sx={{ display: OptionalButton ? 'auto' : 'none', postion: 'relative', top: '-70px', left: '500px', textTransform: 'capitalize' }}
+				onClick={() => { setShowOptional(!showOptional); setOptionalButton(!OptionalButton); }} variant="outlined">
+				<AddIcon />Requester Details (Optional)
+			</Button>
+			<hr style={{ 'marginBlock': '50px' }} />
 
-			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
+			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{ paddingRight: '80px' }}>
 				<GenerationLockWidget />
 
-				<Button variant={'contained'} color={'secondary'} onClick={() => {
+				<Button sx={{ textTransform: 'capitalize' }} variant={'contained'} onClick={() => handleSubmit()}>Generate</Button>
+				<Button sx={{ textTransform: 'capitalize' }} variant={'outlined'} onClick={() => {
 					navigate(-1)
 				}}>Cancel</Button>
-				<Button variant={'contained'} onClick={() => handleSubmit()}>Generate</Button>
 			</Stack>
 
 		</Paper>
