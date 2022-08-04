@@ -11,7 +11,6 @@ import {
 } from '../actions';
 import {AppConfig} from '../config';
 import {getConfiguration} from '../utilities/config_helper';
-import {useSelector} from "react-redux";
 import {getAuthHeaders} from "../utilities/authentication_helper";
 import {default as axios} from "axios";
 

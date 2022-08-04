@@ -8,6 +8,7 @@ import generationLockSaga from "./sagas/generation_lock";
 import {AppConfig} from './config';
 import codeTablesSaga from "./sagas/code_tables";
 import flashMessagesSaga from "./sagas/flash_messages";
+import eventsSaga from "./sagas/events";
 
 const setupStore = (configuration: AppConfig) => {
 	const sagaMiddleware = createSagaMiddleware();
@@ -26,6 +27,7 @@ const setupStore = (configuration: AppConfig) => {
 	sagaMiddleware.run(generationLockSaga);
 	sagaMiddleware.run(codeTablesSaga);
 	sagaMiddleware.run(flashMessagesSaga);
+	sagaMiddleware.run(eventsSaga);
 
 	return store;
 };

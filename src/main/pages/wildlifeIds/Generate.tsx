@@ -33,6 +33,7 @@ import {paperStyle} from "../../../state/style_constants";
 import CloseIcon from '@mui/icons-material/Close';
 import {selectCodeTables} from "../../../state/reducers/code_tables";
 import Loading from "../../components/util/Loading";
+import {LockModal} from "../../components/wildlifeIds/LockModal";
 
 const Generate: React.FC = () => {
 
@@ -43,6 +44,16 @@ const Generate: React.FC = () => {
 	const api = useAPI();
 
 	const navigate = useNavigate();
+	const lockStatus = useSelector(state => state.GenerationLock);
+	const [lockModalOpen, setLockModalOpen] = useState(false);
+
+	useEffect(() => {
+		if (lockStatus.initialized && !lockStatus.working) {
+			if (!lockStatus.status?.lockHolder?.isSelf) {
+				setLockModalOpen(true);
+			}
+		}
+	}, [lockStatus, lockStatus.working]);
 
 	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
 
@@ -112,6 +123,7 @@ const Generate: React.FC = () => {
 
 	return (
 		<Paper sx={paperStyle}>
+			<LockModal open={lockModalOpen}/>
 			<Typography variant={'h5'} sx={{marginBlock: '10px'}}>Generate WLH ID</Typography>
 			<Typography variant={'subtitle1'} sx={{marginBottom: '50px'}}>Generate one or multiple WLH IDs by entering the information below.</Typography>
 			<hr/>
