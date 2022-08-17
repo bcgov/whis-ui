@@ -395,7 +395,7 @@ const Generate: React.FC = () => {
 					open={open}
 					onClose={handleClose}
 					PaperProps={{
-						sx: { overflowY: 'inherit', Width: '550px', height: '300px', borderRadius: '10px' }
+						sx: { overflowY: 'inherit', width: '550px', height: '300px', borderRadius: '10px' }
 					}}
 				>
 					<CheckCircleIcon sx={{ margin: 'auto', fontSize: '7rem', position: 'inherit', top: '-30px', fill: 'rgb(58, 219, 118)' }} />
