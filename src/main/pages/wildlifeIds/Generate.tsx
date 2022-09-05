@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
-import { useAPI } from "../../hooks/useAPI";
+import {useAPI} from "../../hooks/useAPI";
 import {
 	Box,
 	Button,
@@ -25,13 +25,13 @@ import {
 import '../../styles/inventory.scss';
 import AddIcon from '@mui/icons-material/Add';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import { useSelector } from "../../../state/utilities/use_selector";
-import { useNavigate } from "react-router-dom";
+import {useSelector} from "../../../state/utilities/use_selector";
+import {useNavigate} from "react-router-dom";
 import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
 import OneColumnForm from "../../components/wildlifeIds/OneColumnForm";
-import { paperStyle } from "../../../state/style_constants";
+import {paperStyle} from "../../../state/style_constants";
 import CloseIcon from '@mui/icons-material/Close';
-import { selectCodeTables } from "../../../state/reducers/code_tables";
+import {selectCodeTables} from "../../../state/reducers/code_tables";
 import Loading from "../../components/util/Loading";
 import {LockModal} from "../../components/wildlifeIds/LockModal";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -39,8 +39,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 const Generate: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
-	const { purposes, regions, organizations, roles } = useSelector(state => state.CodeTables.tables);
-	const { initialized: codeTablesInitialized } = useSelector(selectCodeTables);
+	const {purposes, regions, organizations, roles} = useSelector(state => state.CodeTables.tables);
+	const {initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
 	const api = useAPI();
 
@@ -49,14 +49,17 @@ const Generate: React.FC = () => {
 	const [lockModalOpen, setLockModalOpen] = useState(false);
 
 	useEffect(() => {
-		if (lockStatus.initialized && !lockStatus.working) {
-			if (!lockStatus.status?.lockHolder?.isSelf) {
-				setLockModalOpen(true);
-			}
+		console.dir(lockStatus);
+		if (lockStatus.initialized
+			&& !lockStatus.working
+			&& lockStatus.status
+			&& lockStatus.status.lockHolder
+			&& !lockStatus.status.lockHolder.isSelf) {
+			setLockModalOpen(true);
 		}
-	}, [lockStatus, lockStatus.working]);
+	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
 
-	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
+	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
 
 	const [formState, setFormState] = useState({
 		quantity: 1,
@@ -86,7 +89,7 @@ const Generate: React.FC = () => {
 
 	//handle direct
 	const handleSubmit = () => {
-		api.generateIDs({ quantity: formState.quantity }).then(result => {
+		api.generateIDs({quantity: formState.quantity}).then(result => {
 			setGenerateStatus({
 				status: 'ok',
 				message: JSON.stringify(result)
@@ -133,7 +136,7 @@ const Generate: React.FC = () => {
 	const [OptionalButton, setOptionalButton] = useState(true);
 
 	//handle required input
-	const inputInitState = { year: false, wlh_id: false, purpose: false, firstName: false, lastName: false };
+	const inputInitState = {year: false, wlh_id: false, purpose: false, firstName: false, lastName: false};
 	const [inputsState, setinputState] = useState(inputInitState);
 
 	//handle required onblur
@@ -143,19 +146,19 @@ const Generate: React.FC = () => {
 		if (value == "" || value == undefined || value == null) {
 			switch (name) {
 				case "year":
-					setinputState(state => ({ ...inputsState, year: true }));
+					setinputState(state => ({...inputsState, year: true}));
 					break;
 				case "wlh_id":
-					setinputState(state => ({ ...inputsState, wlh_id: true }));
+					setinputState(state => ({...inputsState, wlh_id: true}));
 					break;
 				case "purpose":
-					setinputState(state => ({ ...inputsState, purpose: true }));
+					setinputState(state => ({...inputsState, purpose: true}));
 					break;
 				case "requesterFirstName":
-					setinputState(state => ({ ...inputsState, firstName: true }));
+					setinputState(state => ({...inputsState, firstName: true}));
 					break;
 				case "requesterLastName":
-					setinputState(state => ({ ...inputsState, lastName: true }));
+					setinputState(state => ({...inputsState, lastName: true}));
 					break;
 				default:
 					break;
@@ -163,19 +166,19 @@ const Generate: React.FC = () => {
 		} else {
 			switch (name) {
 				case "year":
-					setinputState(state => ({ ...inputsState, year: false }));
+					setinputState(state => ({...inputsState, year: false}));
 					break;
 				case "wlh_id":
-					setinputState(state => ({ ...inputsState, wlh_id: false }));
+					setinputState(state => ({...inputsState, wlh_id: false}));
 					break;
 				case "purpose":
-					setinputState(state => ({ ...inputsState, purpose: false }));
+					setinputState(state => ({...inputsState, purpose: false}));
 					break;
 				case "requesterFirstName":
-					setinputState(state => ({ ...inputsState, firstName: false }));
+					setinputState(state => ({...inputsState, firstName: false}));
 					break;
 				case "requesterLastName":
-					setinputState(state => ({ ...inputsState, lastName: false }));
+					setinputState(state => ({...inputsState, lastName: false}));
 					break;
 				default:
 					break;
@@ -185,7 +188,7 @@ const Generate: React.FC = () => {
 
 
 	if (!codeTablesInitialized) {
-		return (<Loading />);
+		return (<Loading/>);
 	}
 
 	return (
@@ -193,45 +196,53 @@ const Generate: React.FC = () => {
 			<LockModal open={lockModalOpen}/>
 
 			<form onSubmit={handleRequiredSubmit}>
-				<Typography variant={'h5'} sx={{ marginBlock: '10px' }}>Generate WLH ID</Typography>
-				<Typography variant={'subtitle1'} sx={{ marginBottom: '50px' }}>Generate one or multiple WLH IDs by entering the information below.</Typography>
-				<hr />
+				<Typography variant={'h5'} sx={{marginBlock: '10px'}}>Generate WLH ID</Typography>
+				<Typography variant={'subtitle1'} sx={{marginBottom: '50px'}}>Generate one or multiple WLH IDs by entering the information below.</Typography>
+				<hr/>
 				<TwoColumnForm title={'WLH ID information'}>
 
 					<TextField
-						sx={{ width: '100%' }}
+						sx={{width: '100%'}}
 						label="Year"
 						id="year"
 						name="year"
 						defaultValue={formState.year}
 						error={inputsState.year}
-						onBlur={(e) => { handleOnblur(e) }}
+						onBlur={(e) => {
+							handleOnblur(e)
+						}}
 						onChange={handleUpdate}
 						required
 					/>
 
 					<TextField
-						sx={{ width: '100%' }}
+						sx={{width: '100%'}}
 						label="Number of WLH IDs"
 						id="wlh_id"
 						name="wlh_id"
 						type="tel"
 						error={inputsState.wlh_id}
-						inputProps={{ maxLength: 3 }}
-						onChange={(e) => { handleOutofRange(e) }}
-						onBlur={(e) => { handleOnblur(e) }}
+						inputProps={{maxLength: 3}}
+						onChange={(e) => {
+							handleOutofRange(e)
+						}}
+						onBlur={(e) => {
+							handleOnblur(e)
+						}}
 						required
 					/>
 					<>
-						<TextField sx={{ width: '100%' }}
-							id="purpose"
-							name="purpose"
-							select
-							label="Purpose"
-							placeholder='Purpose*'
-							error={inputsState.purpose}
-							onBlur={(e) => { handleOnblur(e) }}
-							required
+						<TextField sx={{width: '100%'}}
+											 id="purpose"
+											 name="purpose"
+											 select
+											 label="Purpose"
+											 placeholder='Purpose*'
+											 error={inputsState.purpose}
+											 onBlur={(e) => {
+												 handleOnblur(e)
+											 }}
+											 required
 						>
 							{purposes.codes.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -250,78 +261,82 @@ const Generate: React.FC = () => {
 										top: 8
 									}}
 								>
-									<CloseIcon />
+									<CloseIcon/>
 								</IconButton>
 							</DialogTitle>
 							<DialogContent>
-								The number is out of range! <br />
+								The number is out of range! <br/>
 								Please don't enter over 100.
 							</DialogContent>
 						</Dialog>
 					</>
 
-					<TextField sx={{ width: '100%' }} label="Species"
-						id="species"
-						defaultValue={formState.species}
-						name="species"
-						onChange={handleUpdate}
-						InputProps={{
-							endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon /></InputAdornment>,
-						}}
+					<TextField sx={{width: '100%'}} label="Species"
+										 id="species"
+										 defaultValue={formState.species}
+										 name="species"
+										 onChange={handleUpdate}
+										 InputProps={{
+											 endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon/></InputAdornment>,
+										 }}
 					/>
 
 				</TwoColumnForm>
 				<OneColumnForm>
-					<TextField sx={{ width: '100%' }}
-						label="Associated Project"
-						id="associatedProject"
-						defaultValue={formState.associatedProject}
-						name="associatedProject"
-						onChange={handleUpdate}
+					<TextField sx={{width: '100%'}}
+										 label="Associated Project"
+										 id="associatedProject"
+										 defaultValue={formState.associatedProject}
+										 name="associatedProject"
+										 onChange={handleUpdate}
 					/>
 
-					<TextField sx={{ width: '100%' }}
-						label="Reason"
-						id="reason"
-						defaultValue={formState.reason}
-						name="reason"
-						multiline
-						rows={3}
-						onChange={handleUpdate} />
+					<TextField sx={{width: '100%'}}
+										 label="Reason"
+										 id="reason"
+										 defaultValue={formState.reason}
+										 name="reason"
+										 multiline
+										 rows={3}
+										 onChange={handleUpdate}/>
 
 				</OneColumnForm>
 
 
-				<hr />
+				<hr/>
 
 				<TwoColumnForm title={'Requester'}>
 
 					<TextField
-						sx={{ width: '100%' }}
+						sx={{width: '100%'}}
 						label="First Name"
 						id="requesterFirstName"
 						defaultValue={formState.requesterFirstName}
 						name="requesterFirstName"
 						error={inputsState.firstName}
-						onBlur={(e) => { handleOnblur(e) }}
+						onBlur={(e) => {
+							handleOnblur(e)
+						}}
 						onChange={handleUpdate}
 						required
 					/>
 
 					<TextField
-						sx={{ width: '100%' }}
+						sx={{width: '100%'}}
 						label="Last Name"
 						id="requesterLastName"
 						defaultValue={formState.requesterLastName}
 						name="requesterLastName"
 						error={inputsState.lastName}
-						onBlur={(e) => { handleOnblur(e) }}
+						onBlur={(e) => {
+							handleOnblur(e)
+						}}
 						onChange={handleUpdate}
 						required
 					/>
 
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Region"
 						id="requesterRegion"
@@ -335,7 +350,7 @@ const Generate: React.FC = () => {
 						))}
 					</TextField>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Organization"
 						id="requesterOrganization"
@@ -349,7 +364,7 @@ const Generate: React.FC = () => {
 						))}
 					</TextField>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						label="Phone"
 						id="requesterContactPhone"
 						defaultValue={formState.requesterContactPhone}
@@ -357,7 +372,7 @@ const Generate: React.FC = () => {
 						onChange={handleUpdate}
 					/>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						label="Email"
 						id="requesterContactEmail"
 						defaultValue={formState.requesterContactEmail}
@@ -365,7 +380,7 @@ const Generate: React.FC = () => {
 						onChange={handleUpdate}
 					/>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Requester's Role"
 						id="requesterRole"
@@ -380,14 +395,14 @@ const Generate: React.FC = () => {
 					</TextField>
 				</TwoColumnForm>
 
-				<Box sx={{position:'relative'}}>
+				<Box sx={{position: 'relative'}}>
 					<Button
-						sx={{ display: OptionalButton ? 'auto' : 'none', textTransform: 'capitalize', position:'absolute', top:'-60px', left:'35.5%' }}
+						sx={{display: OptionalButton ? 'auto' : 'none', textTransform: 'capitalize', position: 'absolute', top: '-60px', left: '35.5%'}}
 						onClick={() => {
 							setShowOptional(!showOptional);
 							setOptionalButton(!OptionalButton);
 						}} variant="outlined">
-						<AddIcon />Requester Details (Optional)
+						<AddIcon/>Requester Details (Optional)
 					</Button>
 				</Box>
 
@@ -395,10 +410,10 @@ const Generate: React.FC = () => {
 					open={open}
 					onClose={handleClose}
 					PaperProps={{
-						sx: { overflowY: 'inherit', Width: '550px', height: '300px', borderRadius: '10px' }
+						sx: {overflowY: 'inherit', Width: '550px', height: '300px', borderRadius: '10px'}
 					}}
 				>
-					<CheckCircleIcon sx={{ margin: 'auto', fontSize: '7rem', position: 'inherit', top: '-30px', fill: 'rgb(58, 219, 118)' }} />
+					<CheckCircleIcon sx={{margin: 'auto', fontSize: '7rem', position: 'inherit', top: '-30px', fill: 'rgb(58, 219, 118)'}}/>
 					<IconButton
 						onClick={handleClose}
 						sx={{
@@ -407,25 +422,42 @@ const Generate: React.FC = () => {
 							top: 8
 						}}
 					>
-						<CloseIcon />
+						<CloseIcon/>
 					</IconButton>
-					<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center', position: 'relative', top: '-20px' }}>
-						<p style={{ color: 'rgb(102, 102, 102)', fontSize: '16px' }}>You have generated [N] WLH IDs: [number or range of numbers]</p>
-						<p style={{ color: 'rgb(102, 102, 102)', fontSize: '16px', marginTop: '25px' }}>Would you like to add more details to these IDs?</p>
+					<DialogContent sx={{margin: 'auto', padding: '0 24px', textAlign: 'center', position: 'relative', top: '-20px'}}>
+						<p style={{color: 'rgb(102, 102, 102)', fontSize: '16px'}}>You have generated [N] WLH IDs: [number or range of numbers]</p>
+						<p style={{color: 'rgb(102, 102, 102)', fontSize: '16px', marginTop: '25px'}}>Would you like to add more details to these IDs?</p>
 					</DialogContent>
-					<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
-						<Button onClick={() => { navigate('/wildlifeIds/list') }} sx={{ width: '110px', height: '45px', marginRight: '10px', backgroundColor: 'rgb(58, 219, 118)', color: '#fff', ":hover": { backgroundColor: 'rgb(58, 219, 118)' } }}>YES</Button>
-						<Button onClick={() => { navigate('/wildlifeIds') }} sx={{ width: '110px', height: '45px', border: '1px solid rgb(134, 142, 150)', color: 'rgb(102, 102, 102)', ":hover": { backgroundColor: '#fff' } }}>Later</Button>
+					<DialogActions sx={{margin: 'auto', marginBottom: '25px'}}>
+						<Button onClick={() => {
+							navigate('/wildlifeIds/list')
+						}} sx={{
+							width: '110px',
+							height: '45px',
+							marginRight: '10px',
+							backgroundColor: 'rgb(58, 219, 118)',
+							color: '#fff',
+							":hover": {backgroundColor: 'rgb(58, 219, 118)'}
+						}}>YES</Button>
+						<Button onClick={() => {
+							navigate('/wildlifeIds')
+						}} sx={{
+							width: '110px',
+							height: '45px',
+							border: '1px solid rgb(134, 142, 150)',
+							color: 'rgb(102, 102, 102)',
+							":hover": {backgroundColor: '#fff'}
+						}}>Later</Button>
 					</DialogActions>
 				</Dialog>
 
 
-				<hr style={{ 'marginBlock': '50px' }} />
+				<hr style={{'marginBlock': '50px'}}/>
 
-				<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{ paddingRight: '80px' }}>
-					<GenerationLockWidget />
-					<Button type='submit' sx={{ textTransform: 'capitalize' }} variant={'contained'}>Generate</Button>
-					<Button sx={{ textTransform: 'capitalize' }} variant={'outlined'} onClick={() => {
+				<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{paddingRight: '80px'}}>
+					<GenerationLockWidget/>
+					<Button type='submit' sx={{textTransform: 'capitalize'}} variant={'contained'}>Generate</Button>
+					<Button sx={{textTransform: 'capitalize'}} variant={'outlined'} onClick={() => {
 						navigate(-1)
 					}}>Cancel</Button>
 				</Stack>
