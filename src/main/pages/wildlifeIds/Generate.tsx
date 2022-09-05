@@ -107,8 +107,8 @@ const Generate: React.FC = () => {
 	const handleUpdate = event => {
 		const currentState = formState;
 		switch (event.target.name) {
-			default:
-				currentState[event.target.name] = event.target.value;
+		default:
+			currentState[event.target.name] = event.target.value;
 		}
 		setFormState(currentState);
 		console.log(event.target.name + ":" + event.target.value);
@@ -144,43 +144,43 @@ const Generate: React.FC = () => {
 		const value = e.target.value;
 		if (value == "" || value == undefined || value == null) {
 			switch (name) {
-				case "year":
-					setinputState(state => ({...inputsState, year: true}));
-					break;
-				case "wlh_id":
-					setinputState(state => ({...inputsState, wlh_id: true}));
-					break;
-				case "purpose":
-					setinputState(state => ({...inputsState, purpose: true}));
-					break;
-				case "requesterFirstName":
-					setinputState(state => ({...inputsState, firstName: true}));
-					break;
-				case "requesterLastName":
-					setinputState(state => ({...inputsState, lastName: true}));
-					break;
-				default:
-					break;
+			case "year":
+				setinputState(state => ({...inputsState, year: true}));
+				break;
+			case "wlh_id":
+				setinputState(state => ({...inputsState, wlh_id: true}));
+				break;
+			case "purpose":
+				setinputState(state => ({...inputsState, purpose: true}));
+				break;
+			case "requesterFirstName":
+				setinputState(state => ({...inputsState, firstName: true}));
+				break;
+			case "requesterLastName":
+				setinputState(state => ({...inputsState, lastName: true}));
+				break;
+			default:
+				break;
 			}
 		} else {
 			switch (name) {
-				case "year":
-					setinputState(state => ({...inputsState, year: false}));
-					break;
-				case "wlh_id":
-					setinputState(state => ({...inputsState, wlh_id: false}));
-					break;
-				case "purpose":
-					setinputState(state => ({...inputsState, purpose: false}));
-					break;
-				case "requesterFirstName":
-					setinputState(state => ({...inputsState, firstName: false}));
-					break;
-				case "requesterLastName":
-					setinputState(state => ({...inputsState, lastName: false}));
-					break;
-				default:
-					break;
+			case "year":
+				setinputState(state => ({...inputsState, year: false}));
+				break;
+			case "wlh_id":
+				setinputState(state => ({...inputsState, wlh_id: false}));
+				break;
+			case "purpose":
+				setinputState(state => ({...inputsState, purpose: false}));
+				break;
+			case "requesterFirstName":
+				setinputState(state => ({...inputsState, firstName: false}));
+				break;
+			case "requesterLastName":
+				setinputState(state => ({...inputsState, lastName: false}));
+				break;
+			default:
+				break;
 			}
 		}
 	}
