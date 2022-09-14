@@ -31,10 +31,10 @@ import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
 import OneColumnForm from "../../components/wildlifeIds/OneColumnForm";
 import { paperStyle } from "../../../state/style_constants";
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 import { selectCodeTables } from "../../../state/reducers/code_tables";
 import Loading from "../../components/util/Loading";
-import {LockModal} from "../../components/wildlifeIds/LockModal";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { LockModal } from "../../components/wildlifeIds/LockModal";
 
 const Generate: React.FC = () => {
 
@@ -190,11 +190,12 @@ const Generate: React.FC = () => {
 
 	return (
 		<Paper sx={paperStyle}>
-			<LockModal open={lockModalOpen}/>
+			<LockModal open={lockModalOpen} />
 
 			<form onSubmit={handleRequiredSubmit}>
-				<Typography variant={'h5'} sx={{ marginBlock: '10px' }}>Generate WLH ID</Typography>
-				<Typography variant={'subtitle1'} sx={{ marginBottom: '50px' }}>Generate one or multiple WLH IDs by entering the information below.</Typography>
+
+				<Typography fontFamily={'BCSans-Bold'} sx={{ margin: '10px', fontSize: '32px' }}>Generate WLH ID</Typography>
+				<Typography sx={{ margin: '0 0 50px 12px' }}>Generate one or multiple WLH IDs by entering the information below.</Typography>
 				<hr />
 				<TwoColumnForm title={'WLH ID information'}>
 
@@ -239,24 +240,19 @@ const Generate: React.FC = () => {
 								</MenuItem>
 							))}
 						</TextField>
-						<Dialog open={alertNumber} onClose={handleClose}>
-							<DialogTitle>
-								Warning!
-								<IconButton
-									onClick={handleClose}
-									sx={{
-										position: 'absolute',
-										right: 8,
-										top: 8
-									}}
-								>
-									<CloseIcon />
-								</IconButton>
-							</DialogTitle>
-							<DialogContent>
-								The number is out of range! <br />
-								Please don't enter over 100.
+						<Dialog open={alertNumber} onClose={handleClose}
+							PaperProps={{
+								sx: { overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px' }
+							}}
+						>
+							<DialogTitle fontFamily={'BCSans-Bold'}>Confirmation</DialogTitle>
+							<DialogContent sx={{ margin: '40px auto', fontSize:'16px' }}>
+								Please enter between 1 - 100.
 							</DialogContent>
+							<DialogActions>
+								<Button variant={'contained'} onClick={handleClose}>OK</Button>
+								<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
+							</DialogActions>
 						</Dialog>
 					</>
 
@@ -380,14 +376,14 @@ const Generate: React.FC = () => {
 					</TextField>
 				</TwoColumnForm>
 
-				<Box sx={{position:'relative'}}>
+				<Box sx={{ position: 'relative' }}>
 					<Button
-						sx={{ display: OptionalButton ? 'auto' : 'none', textTransform: 'capitalize', position:'absolute', top:'-60px', left:'35.5%' }}
+						sx={{ display: OptionalButton ? 'auto' : 'none', textTransform: 'capitalize', position: 'absolute', top: '-60px', left: '35.5%', fontSize: '16px' }}
 						onClick={() => {
 							setShowOptional(!showOptional);
 							setOptionalButton(!OptionalButton);
 						}} variant="outlined">
-						<AddIcon />Requester Details (Optional)
+						<AddIcon color='primary' />Requester Details (Optional)
 					</Button>
 				</Box>
 
@@ -395,10 +391,10 @@ const Generate: React.FC = () => {
 					open={open}
 					onClose={handleClose}
 					PaperProps={{
-						sx: { overflowY: 'inherit', width: '550px', height: '300px', borderRadius: '10px' }
+						sx: { overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px' }
 					}}
 				>
-					<CheckCircleIcon sx={{ margin: 'auto', fontSize: '7rem', position: 'inherit', top: '-30px', fill: 'rgb(58, 219, 118)' }} />
+					<Box className='checkIcon'><CheckIcon sx={{ position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#EEF2F6', }} /></Box>
 					<IconButton
 						onClick={handleClose}
 						sx={{
@@ -409,23 +405,23 @@ const Generate: React.FC = () => {
 					>
 						<CloseIcon />
 					</IconButton>
-					<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center', position: 'relative', top: '-20px' }}>
-						<p style={{ color: 'rgb(102, 102, 102)', fontSize: '16px' }}>You have generated [N] WLH IDs: [number or range of numbers]</p>
-						<p style={{ color: 'rgb(102, 102, 102)', fontSize: '16px', marginTop: '25px' }}>Would you like to add more details to these IDs?</p>
+					<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
+						<p style={{ color: '#666666', fontSize: '15px' }}>You have generated [N] WLH IDs: [number or range of numbers]</p>
+						<p style={{ color: '#666666', fontSize: '15px', marginTop: '25px' }}>Would you like to add more details to these IDs?</p>
 					</DialogContent>
 					<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
-						<Button onClick={() => { navigate('/wildlifeIds/list') }} sx={{ width: '110px', height: '45px', marginRight: '10px', backgroundColor: 'rgb(58, 219, 118)', color: '#fff', ":hover": { backgroundColor: 'rgb(58, 219, 118)' } }}>YES</Button>
-						<Button onClick={() => { navigate('/wildlifeIds') }} sx={{ width: '110px', height: '45px', border: '1px solid rgb(134, 142, 150)', color: 'rgb(102, 102, 102)', ":hover": { backgroundColor: '#fff' } }}>Later</Button>
+						<Button onClick={() => { navigate('/wildlifeIds/list') }} sx={{ width: '110px', height: '42px', borderRadius: '6px', marginRight: '10px', backgroundColor: 'rgb(58, 219, 118)', color: '#fff', fontSize: '16px', ":hover": { backgroundColor: 'rgb(58, 219, 118)' } }}>YES</Button>
+						<Button onClick={() => { navigate('/wildlifeIds') }} sx={{ width: '110px', height: '42px', border: '1px solid rgb(134, 142, 150)', borderRadius: '6px', color: 'rgb(102, 102, 102)', fontSize: '16px', ":hover": { backgroundColor: '#fff' } }}>Later</Button>
 					</DialogActions>
 				</Dialog>
 
 
-				<hr style={{ 'marginBlock': '50px' }} />
+				<hr style={{ 'marginBlock': '50px 40px' }} />
 
-				<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{ paddingRight: '80px' }}>
+				<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{ paddingRight: '5%', marginBottom: '30px' }}>
 					<GenerationLockWidget />
-					<Button type='submit' sx={{ textTransform: 'capitalize' }} variant={'contained'}>Generate</Button>
-					<Button sx={{ textTransform: 'capitalize' }} variant={'outlined'} onClick={() => {
+					<Button type='submit' sx={{ textTransform: 'capitalize', padding: '9px 35px' }} variant={'contained'}>Generate</Button>
+					<Button sx={{ textTransform: 'capitalize', padding: '8px 28px' }} variant={'outlined'} onClick={() => {
 						navigate(-1)
 					}}>Cancel</Button>
 				</Stack>

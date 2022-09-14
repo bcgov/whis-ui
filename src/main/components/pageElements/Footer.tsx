@@ -17,7 +17,13 @@ const Footer: React.FC = () => {
 		roles
 	});
 
-	const navs = [nav('/', 'Home', [])];
+	const navs = [
+		nav('/', 'Home', []),
+		nav('/', 'Disclaimer', []),
+		nav('/', 'Privacy', []),
+		nav('/', 'Accessibility', []),
+		nav('/', 'Copyright', []),
+	];
 
 	const [activeLink, setActiveLink] = useState(null);
 

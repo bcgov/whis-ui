@@ -50,58 +50,67 @@ const Dashboard: React.FC = () => {
 				</IconButton>
 				<CardHeader
 					title={'Profile'}
-					titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666' } }}
+					titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666', fontSize: '20px', fontFamily: 'BCSans-Bold' } }}
 					sx={{ textAlign: 'center', paddingTop: '30px' }}
 				/>
 
 				<CardContent className={'profile_card'}>
 
 					<Box className='card_user_icon'>
-						<AccountCircleIcon color={'primary'} sx={{ fontSize: '140px' }} />
+						<AccountCircleIcon sx={{ fontSize: '200px', color: 'rgb(26, 90, 150)' }} />
 					</Box>
 
 					<Box className={'name'}>
 
-						<PersonIcon color={'primary'} /><Typography>{me.bestName}</Typography>
+						<PersonIcon color={'primary'} /><Typography sx={{ fontSize: '16px' }}>{me.bestName}</Typography>
 
-						<Typography color='textSecondary' sx={{ gridColumn: '2', paddingBottom: '1.5rem' }}>{me.roles.join(', ')}</Typography>
+						<Typography color='textSecondary' sx={{ gridColumn: '2', paddingBottom: '1.5rem', fontSize: '13px' }}>{me.roles.join(', ')}</Typography>
 
-						<LocalPhoneIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography variant='subtitle2'>phone_placeholder</Typography>
+						<LocalPhoneIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>phone_placeholder</Typography>
 
-						<EmailIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography variant='subtitle2'>{me.email}</Typography>
+						<EmailIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>{me.email}</Typography>
 
-						<BusinessIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography variant='subtitle2'>org_placeholder</Typography>
+						<BusinessIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>org_placeholder</Typography>
 					</Box>
 
 					<Box className={'quick_access'} sx={{ marginTop: '2rem' }}>
 						<Divider variant="middle" sx={{ position: 'relative', top: '-175px' }} />
 						<Divider variant="middle" sx={{ marginBottom: '25px' }} />
-						<Typography variant={'h6'} sx={{ marginBottom: '10px' }}>
+						<Typography sx={{ marginBottom: '10px', fontSize: '16px' }}>
 							Quick Access
 						</Typography>
 						<Box className={'actions'}>
-							<IconButton>
-								<AddCircleOutlineIcon color={'primary'} />
-							</IconButton>
-							<IconButton>
-								<ManageSearchIcon color={'primary'} />
-							</IconButton>
-							<IconButton>
-								<NotificationsNoneIcon color={'primary'} />
-							</IconButton>
+							<Box className='generateBtn'>
+								<IconButton className='generateBtn' onClick={() => navigate('/wildlifeIds/generate')}>
+									<AddCircleOutlineIcon color={'primary'} />
+								</IconButton>
+								<p>Generate IDs</p>
+							</Box>
+							<Box className='searchBtn'>
+								<IconButton className='searchBtn'>
+									<ManageSearchIcon color={'primary'} />
+								</IconButton>
+								<p>Search IDs</p>
+							</Box>
+							<Box className='actionBtn'>
+								<IconButton className='actionBtn' onClick={() => navigate('actionManagement')} >
+									<NotificationsNoneIcon color={'primary'} />
+								</IconButton>
+								<p>Actions & Notifications</p>
+							</Box>
 						</Box>
 					</Box>
 				</CardContent>
 			</Card>
-			
+
 			<Card sx={{ gridArea: 'welcome', borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px' }}>
 
 				<CardHeader
 					title={`Welcome, ${me.bestName}`}
-					titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666' } }}
-					subheaderTypographyProps={{ variant: 'subtitle1', sx: { paddingTop: '10px', color: 'black' } }}
+					titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666', fontSize: '20px', fontFamily: 'BCSans-Bold' } }}
+					subheaderTypographyProps={{ variant: 'subtitle1', sx: { paddingTop: '20px', color: 'black' } }}
 					subheader={'Here are a few actions that you can take...'}
-					sx={{ padding: '30px 0px 10px 40px' }}
+					sx={{ padding: '30px 0px 10px 35px' }}
 				/>
 
 				<CardContent>
@@ -118,18 +127,18 @@ const Dashboard: React.FC = () => {
 			</Card>
 
 			<Card sx={{ gridArea: 'actions', borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px' }}>
-				<Stack direction="row" spacing={2} sx={{ padding: '20px 50px 10px 40px', alignItems: 'center' }}>
-					<NotificationsIcon color={'primary'} />
-					<Link onClick={() => navigate('actionManagement')} sx={{ cursor: 'pointer', textDecoration: 'none', fontSize:'20px' }}>{'Actions'}</Link>
+				<Stack direction="row" spacing={2} sx={{ padding: '30px 50px 10px 30px', alignItems: 'center' }}>
+					<NotificationsIcon color={'primary'} sx={{fontSize:'30px'}}/>
+					<Link onClick={() => navigate('actionManagement')} sx={{ cursor: 'pointer', textDecoration: 'none', fontSize: '20px', fontFamily: 'BCSans-Bold' }}>{'Actions'}</Link>
 				</Stack>
 
-				<CardContent sx={{ paddingLeft: '40px' }}>
+				<CardContent sx={{ paddingLeft: '33px' }}>
 					<table>
 						<tbody>
 							{actions.map((action, i) => (
 								<tr key={`actions-${i}`}>
 									<td>{action.text}</td>
-									<td style={{ textAlign: 'right', paddingLeft: '40px' }}><a href={'#'}>View Details</a></td>
+									<td style={{ textAlign: 'right', paddingLeft: '40px' }}><a href={'#'} className={'a_link'}>View Details</a></td>
 								</tr>
 							))}
 						</tbody>
@@ -138,18 +147,18 @@ const Dashboard: React.FC = () => {
 			</Card>
 
 			<Card sx={{ gridArea: 'reports', borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px' }}>
-				<Stack direction="row" spacing={2} sx={{ padding: '20px 50px 10px 40px', alignItems: 'center' }}>
-					<FlagIcon color={'primary'} />
-					<Link sx={{ cursor: 'pointer', textDecoration: 'none', fontSize:'20px' }}>{'Reports'}</Link>
+				<Stack direction="row" spacing={2} sx={{ padding: '30px 50px 10px 30px', alignItems: 'center' }}>
+					<FlagIcon color={'primary'} sx={{fontSize:'30px'}}/>
+					<Link sx={{ cursor: 'pointer', textDecoration: 'none', fontSize: '20px', fontFamily: 'BCSans-Bold' }}>{'Reports'}</Link>
 				</Stack>
-				<CardContent sx={{ paddingLeft: '40px' }}>
+				<CardContent sx={{ paddingLeft: '33px' }}>
 					<table>
 						<tbody>
 							{reports.map((report, i) => (
 								<tr key={`actions-${i}`}>
-									<td style={{ textAlign: 'right' }}>{report.count}</td>
+									<td style={{ textAlign: 'right', color: '#FCBA19' }}>{report.count}</td>
 									<td>{report.event}</td>
-									<td>{report.discriminator}</td>
+									<td style={{ fontSize: '12px', color: '#495057' }}>{report.discriminator}</td>
 								</tr>
 							))}
 						</tbody>
