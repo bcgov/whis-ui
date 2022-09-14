@@ -1,12 +1,17 @@
 .dash_grid {
 	display: grid;
 	grid-template-areas:
-            "profile welcome welcome"
-						"profile actions reports";
-	grid-template-columns: 350px 550px 400px;
+		"profile welcome welcome"
+		"profile actions reports";
+	grid-template-columns: 330px 600px 410px;
 	// 380px repeat(2, 1fr)
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
+
+	td {
+		font-size: 16px;
+		padding: 0 0 1.43rem;
+	}
 }
 
 .profile_card {
@@ -32,32 +37,68 @@
 		width: 100%;
 
 		.actions {
-			svg button{
-				&:not(:last-child) {
-					margin-right: 16px;
-				}
+			display: flex;
+			justify-content: space-evenly;
+			margin-bottom: 10px;
 
+			p {
+				font-size: 10px;
+				margin: 0;
+				opacity: 0;
+				position: absolute;
 			}
+
+			.generateBtn:hover {
+				p {
+					left: 60px;
+					opacity: 1;
+					color: #495057;
+				}
+			}
+
+			.searchBtn:hover {
+				p {
+					left: 150px;
+					opacity: 1;
+					color: #495057;
+				}
+			}
+
+			.actionBtn:hover {
+				p {
+					left: 210px;
+					opacity: 1;
+					color: #495057;
+				}
+			}
+
+			// svg button {
+			// 	&:not(:last-child) {
+			// 		margin-right: 16px;
+			// 	}
+
+			// }
+
 		}
 	}
 }
 
 .welcome_buttons {
 	display: flex;
-	padding-left: 25px;
+	padding: 13px 0px 45px 20px;
 
 	button {
-		// &:not(:last-child) {
-			// margin-right: 16px;
-			box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
-			border-radius: 15px;
-			background-color: rgb(56, 89, 138);
-			text-transform: capitalize;
-			padding: 10px;
-			font-size: 16px;
-			margin-right: 6%;
-			width:30%;
-		// }
+		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+		border-radius: 15px;
+		background-color: rgb(56, 89, 138);
+		text-transform: capitalize;
+		padding: 10px;
+		font-size: 16px;
+		margin-right: 6%;
+		font-family: 'BCSans-Bold';
+		width: 470px;
+		height: 58px;
+
 	}
 }
 
@@ -65,3 +106,24 @@
 	color: #fcba19;
 }
 
+.a_link:visited {
+	color: #1A5A96
+}
+
+//action management
+
+.checkIcon {
+	margin: auto;
+	width: 78px;
+	height: 78px;
+	border-radius: 999rem;
+	background-color: #3ADB76;
+	position: relative;
+	top: -35px;
+}
+.okBtn{
+	width: 110px;
+	height: 45px;
+	font-size: 16px;
+	border-radius: 6px;
+}

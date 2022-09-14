@@ -9,11 +9,11 @@ import EmailIcon from '@mui/icons-material/Email';
 import BusinessIcon from '@mui/icons-material/Business';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CloseIcon from '@mui/icons-material/Close';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckIcon from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SpeedIcon from '@mui/icons-material/Speed';
 import { useSelector } from "../../../state/utilities/use_selector";
 import { Box, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, Divider, FormControlLabel, IconButton, InputAdornment, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import { LocalizationProvider, MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
@@ -60,9 +60,8 @@ const ActionManagement: React.FC = () => {
     return (
         <Box sx={{ width: 'inherit' }}>
             <Stack direction="row" spacing={1}>
-                <Card sx={{ borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', marginRight: '2%', width: '350px' }}>
+                <Card sx={{ borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', marginRight: '2%', width: '330px' }}>
                     <IconButton
-                        // onClick={handleClose}
                         sx={{
                             position: 'absolute',
                             left: 70,
@@ -74,45 +73,54 @@ const ActionManagement: React.FC = () => {
                     </IconButton>
                     <CardHeader
                         title={'Profile'}
-                        titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666' } }}
+                        titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666', fontSize: '20px', fontFamily: 'BCSans-Bold' } }}
                         sx={{ textAlign: 'center', paddingTop: '30px' }}
                     />
 
                     <CardContent className={'profile_card'}>
 
                         <Box className='card_user_icon'>
-                            <AccountCircleIcon color={'primary'} sx={{ fontSize: '140px' }} />
+                            <AccountCircleIcon sx={{ fontSize: '200px', color: 'rgb(26, 90, 150)' }} />
                         </Box>
 
                         <Box className={'name'}>
 
-                            <PersonIcon color={'primary'} /><Typography>{me.bestName}</Typography>
+                            <PersonIcon color={'primary'} /><Typography sx={{ fontSize: '16px' }}>{me.bestName}</Typography>
 
-                            <Typography color='textSecondary' sx={{ gridColumn: '2', paddingBottom: '1.5rem' }}>{me.roles.join(', ')}</Typography>
+                            <Typography color='textSecondary' sx={{ gridColumn: '2', paddingBottom: '1.5rem', fontSize: '13px' }}>{me.roles.join(', ')}</Typography>
 
-                            <LocalPhoneIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography variant='subtitle2'>phone_placeholder</Typography>
+                            <LocalPhoneIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>phone_placeholder</Typography>
 
-                            <EmailIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography variant='subtitle2'>{me.email}</Typography>
+                            <EmailIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>{me.email}</Typography>
 
-                            <BusinessIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography variant='subtitle2'>org_placeholder</Typography>
+                            <BusinessIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>org_placeholder</Typography>
                         </Box>
 
                         <Box className={'quick_access'} sx={{ marginTop: '2rem' }}>
-                            <Divider variant="middle" sx={{ position:'relative', top:'-175px' }} />
+                            <Divider variant="middle" sx={{ position: 'relative', top: '-175px' }} />
                             <Divider variant="middle" sx={{ marginBottom: '25px' }} />
-                            <Typography variant={'h6'} sx={{ marginBottom: '10px' }}>
+                            <Typography sx={{ marginBottom: '10px', fontSize: '16px' }}>
                                 Quick Access
                             </Typography>
                             <Box className={'actions'}>
-                                <IconButton>
-                                    <AddCircleOutlineIcon color={'primary'} />
-                                </IconButton>
-                                <IconButton>
-                                    <ManageSearchIcon color={'primary'} />
-                                </IconButton>
-                                <IconButton>
-                                    <NotificationsNoneIcon color={'primary'} />
-                                </IconButton>
+                                <Box className='generateBtn'>
+                                    <IconButton className='generateBtn' onClick={() => navigate('/wildlifeIds/generate')} >
+                                        <AddCircleOutlineIcon color={'primary'} />
+                                    </IconButton>
+                                    <p>Generate IDs</p>
+                                </Box>
+                                <Box className='searchBtn'>
+                                    <IconButton className='searchBtn'>
+                                        <ManageSearchIcon color={'primary'} />
+                                    </IconButton>
+                                    <p>Search IDs</p>
+                                </Box>
+                                <Box className='actionBtn'>
+                                    <IconButton className='actionBtn' onClick={() => navigate('/wildlifeIds')} >
+                                        <SpeedIcon color={'primary'} />
+                                    </IconButton>
+                                    <p style={{ left: '230px' }}>Dashboard</p>
+                                </Box>
                             </Box>
                         </Box>
                     </CardContent>
@@ -121,9 +129,9 @@ const ActionManagement: React.FC = () => {
                 <Card sx={{ borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', width: '850px' }} >
                     <CardHeader
                         title={'Action & Notification Management'}
-                        titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666' } }}
+                        titleTypographyProps={{ sx: { paddingTop: '10px', color: '#666666', fontSize: '20px', fontFamily: 'BCSans-Bold' } }}
                         subheader={'You may set some actions that you need reminders for them'}
-                        subheaderTypographyProps={{ variant: 'subtitle1', sx: { paddingTop: '10px', color: 'black' } }}
+                        subheaderTypographyProps={{ variant: 'subtitle1', sx: { paddingTop: '15px', color: 'black' } }}
                         sx={{ padding: '30px 0px 10px 50px' }}
                     />
                     <CardContent sx={{ paddingLeft: '50px' }}>
@@ -214,10 +222,10 @@ const ActionManagement: React.FC = () => {
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
-                    sx: { overflowY: 'inherit', width: '450px', height: '280px', borderRadius: '15px' }
+                    sx: { overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px' }
                 }}
             >
-                <CheckCircleIcon sx={{ margin: 'auto', fontSize: '7rem', position: 'inherit', top: '-30px', fill: 'rgb(58, 219, 118)' }} />
+                <Box className='checkIcon'><CheckIcon sx={{ position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#EEF2F6', }} /></Box>
                 <IconButton
                     onClick={handleClose}
                     sx={{
@@ -229,10 +237,12 @@ const ActionManagement: React.FC = () => {
                     <CloseIcon />
                 </IconButton>
                 <DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
-                    <p style={{ color: 'rgb(102, 102, 102)', fontSize: '16px' }}>You have successfully set a reminder</p>
+                    <p style={{ color: '#666666', fontSize: '16px', margin:'5px 0' }}>You have successfully set a reminder</p>
                 </DialogContent>
-                <DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
-                    <Button sx={{ width: '110px', height: '45px', backgroundColor: 'rgb(58, 219, 118)', color: '#fff', ":hover": { backgroundColor: 'rgb(58, 219, 118)' } }}>OK</Button>
+                <DialogActions sx={{ margin: 'auto', marginBottom: '20px' }}>
+                    <Button className='okBtn' sx={{ backgroundColor: '#3ADB76', color: '#EEF2F6', ":hover": { backgroundColor: '#3ADB76' } }}>
+                        OK
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Box>

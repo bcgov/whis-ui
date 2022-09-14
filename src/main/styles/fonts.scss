@@ -1,5 +1,11 @@
 $woff2: './assets/fonts/BCSans/BCSans-Regular.woff2';
 $woff: './assets/fonts/BCSans/BCSans-Regular.woff';
+$bold: './assets/fonts/BCSans/BCSans-Bold.woff';
+$bold2: './assets/fonts/BCSans/BCSans-Bold.woff2';
+$italic: './assets/fonts/BCSans/BCSans-Italic.woff';
+$italic2: './assets/fonts/BCSans/BCSans-Italic.woff2';
+$boldItalic: './assets/fonts/BCSans/BCSans-BoldItalic.woff';
+$boldItalic2: './assets/fonts/BCSans/BCSans-BoldItalic.woff2';
 
 @font-face {
 	font-family: 'BCSans';
@@ -10,24 +16,24 @@ $woff: './assets/fonts/BCSans/BCSans-Regular.woff';
 }
 
 @font-face {
-	font-family: 'BCSans';
+	font-family: 'BCSans-Bold';
+	font-weight: 700;
+	src: url($bold2) format('woff2'), /* Optimized for very modern browsers */ url($bold) format('woff'), local('BCSans'); /* Modern Browsers */
+	font-display: swap;
+}
+
+
+@font-face {
+	font-family: 'BCSans-Italic';
 	font-style: italic;
-	src: url($woff2) format('woff2'), /* Optimized for very modern browsers */ url($woff) format('woff'), local('BCSans'); /* Modern Browsers */
+	src: url($italic2) format('woff2'), /* Optimized for very modern browsers */ url($italic) format('woff'), local('BCSans'); /* Modern Browsers */
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'BCSans';
-	font-weight: 700;
-	src: url($woff2) format('woff2'), /* Optimized for very modern browsers */ url($woff) format('woff'), local('BCSans'); /* Modern Browsers */
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'BCSans';
+	font-family: 'BCSans-BoldItalic';
 	font-style: italic;
-	font-weight: 700;
-	src: url($woff2) format('woff2'), /* Optimized for very modern browsers */ url($woff) format('woff'), local('BCSans'); /* Modern Browsers */
+	src: url($boldItalic2) format('woff2'), /* Optimized for very modern browsers */ url($boldItalic) format('woff'), local('BCSans'); /* Modern Browsers */
 	font-display: swap;
 }
 
