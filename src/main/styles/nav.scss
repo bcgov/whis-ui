@@ -4,7 +4,7 @@
 
 .topNavOuter {
 	background-color: rgb(56, 89, 138);
-	height: 2rem;
+	height: 55px;
 	position: relative;
 
 }
@@ -19,11 +19,11 @@
 
 	ul {
 		margin: 0;
-		padding: 0;
+		padding: 16px 0;
 
 		list-style-type: none;
 
-		position: absolute;
+		position: relative;
 		bottom: 0;
 	}
 
@@ -35,15 +35,15 @@
 
 		a {
 			line-height: 1;
-			padding: 0;
+			padding: 16px;
 			margin: 0;
-			font-size: 1.25rem;
-			font-weight: 700;
-			color: white !important;
+			font-size: 16px;
+			font-weight: 400;
+			color: $navText;
 		}
 
 		&:not(:last-child):after {
-			content: '：';
+			// content: '：';
 			color: $BCgovGold;
 			padding-left: 0.5rem;
 			padding-right: 0.5rem;

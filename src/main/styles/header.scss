@@ -2,7 +2,7 @@
 @import 'colours';
 
 .header {
-	border-bottom: 2px solid $BCgovGold;
+	border-bottom: 2px solid $BCgovOrange;
 	background-color: $BCgovBlue;
 
 	.container {
@@ -26,15 +26,19 @@
 		margin-bottom: 4px;
 	}
 
-	font-size: 1.5rem;
+	font-size: 22px;
 	font-weight: 700;
-	text-transform: uppercase;
+	text-transform: capitalize;
 }
 
 button.logout {
-	color: $darkBackgroundText;
 	font-family: $fontFamily;
-	font-size: 1rem;
+	font-size: 16px;
+	text-transform: inherit;
+	color: $navText;
+}
+button.help{
+	color: $navText;
 }
 
 .profile {
@@ -59,7 +63,7 @@ button.logout {
 		margin-right: 0.75rem;
 		padding-right: 1rem;
 		border-right: 1px solid $darkBackgroundText;
-
+		color: $navText;
 		span {
 			margin-left: 0.25rem;
 		}

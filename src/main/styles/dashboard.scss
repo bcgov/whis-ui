@@ -1,3 +1,5 @@
+@import "colours";
+
 .dash_grid {
 	display: grid;
 	grid-template-areas:
@@ -11,7 +13,18 @@
 	td {
 		font-size: 16px;
 		padding: 0 0 1.43rem;
+		color: $text;
 	}
+
+	svg,
+	a {
+		&:not(.setting) {
+			color: $link;
+		}
+	}
+
+
+
 }
 
 .profile_card {
@@ -19,12 +32,29 @@
 	flex-direction: column;
 	align-items: center;
 
+	// svg {
+	// 	color: $link;
+	// }
+
+	// p {
+	// 	color: $text;
+	// }
+
 	.name {
 		margin: 1rem auto;
 		display: grid;
 		grid-template-columns: 64px auto;
 		grid-template-rows: auto 70px;
 		text-align: left;
+
+		.role {
+			color: #ADB5BD;
+			grid-column: 2;
+			padding-bottom: 1.5rem;
+			font-size: 13px;
+			position: relative;
+			left: 8px;
+		}
 
 	}
 
@@ -73,9 +103,9 @@
 			}
 
 			// svg button {
-			// 	&:not(:last-child) {
-			// 		margin-right: 16px;
-			// 	}
+			// 	// &:not(:last-child) {
+			// 	// 	margin-right: 16px;
+			// 	// }
 
 			// }
 
@@ -90,7 +120,7 @@
 	button {
 		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 		border-radius: 15px;
-		background-color: rgb(56, 89, 138);
+		background-color: $link;
 		text-transform: capitalize;
 		padding: 10px;
 		font-size: 16px;
@@ -102,13 +132,19 @@
 	}
 }
 
+// .action_area{
+// 	svg, a{
+// 		color: $link;
+// 	}
+// 	td{
+// 		color: $text;
+// 	}
+// }
+
 .count_num {
 	color: #fcba19;
 }
 
-.a_link:visited {
-	color: #1A5A96
-}
 
 //action management
 
@@ -121,9 +157,23 @@
 	position: relative;
 	top: -35px;
 }
-.okBtn{
+
+.okBtn {
 	width: 110px;
 	height: 45px;
 	font-size: 16px;
 	border-radius: 6px;
 }
+
+.MuiPickersToolbar-content{
+	// color: $link;
+
+	.MuiPickersToolbar-penIconButton{
+		display: none;
+	}
+}
+//toolbar action color
+button[class^="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e0vxdt-MuiButtonBase-root-MuiButton-root"], button[class*="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e0vxdt-MuiButtonBase-root-MuiButton-root"] { color: $link; }
+
+//selected day's color
+// button[class^="MuiButtonBase-root MuiPickersDay-root Mui-selected MuiPickersDay-dayWithMargin css-qr3n4k-MuiButtonBase-root-MuiPickersDay-root"], button[class*="MuiButtonBase-root MuiPickersDay-root Mui-selected MuiPickersDay-dayWithMargin css-qr3n4k-MuiButtonBase-root-MuiPickersDay-root"] { background-color: $link !important; }

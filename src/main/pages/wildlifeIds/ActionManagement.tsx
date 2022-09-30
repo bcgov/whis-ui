@@ -15,17 +15,17 @@ import CheckIcon from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SpeedIcon from '@mui/icons-material/Speed';
 import { useSelector } from "../../../state/utilities/use_selector";
-import { Box, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, Divider, FormControlLabel, IconButton, InputAdornment, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, Divider, FormControlLabel, IconButton, InputAdornment, makeStyles, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import { LocalizationProvider, MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-
 
 const ActionManagement: React.FC = () => {
     const me = useSelector(state => state.Auth);
     const navigate = useNavigate();
 
-    const [date, setDate] = React.useState<Date | null>(new Date());
-    const [time, setTime] = React.useState<Date | null>(new Date());
+    const [date, setDate] = useState(null);
+    const [time, setTime] = useState(null);
+    // const [toolTitle, setTitle] = useState(true);
 
     const receivers = [
         { label: 'Shari', value: 'Shari' },
@@ -33,9 +33,13 @@ const ActionManagement: React.FC = () => {
         { label: 'Maeve', value: 'Maeve' },
         { label: 'Sultana', value: 'Sultana' },
     ]
-    const [checked1, setSamplesChecked1] = useState(false);
+    const [checked1, setChecked1] = useState(false);
     const toggleChecked1 = () => {
-        setSamplesChecked1((prev) => !prev);
+        setChecked1((prev) => !prev);
+    }
+    const [checked2, setChecked2] = useState(false);
+    const toggleChecked2 = () => {
+        setChecked2((prev) => !prev);
     }
 
     //handle blur
@@ -57,10 +61,13 @@ const ActionManagement: React.FC = () => {
         setOpen(false);
     };
 
+    //date & time
+    // const toolbarTitle = toolTitle ? "Select a date" : "Enter a Date";
+
     return (
         <Box sx={{ width: 'inherit' }}>
             <Stack direction="row" spacing={1}>
-                <Card sx={{ borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', marginRight: '2%', width: '330px' }}>
+                <Card sx={{ borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', marginRight: '15px', width: '330px' }}>
                     <IconButton
                         sx={{
                             position: 'absolute',
@@ -87,7 +94,7 @@ const ActionManagement: React.FC = () => {
 
                             <PersonIcon color={'primary'} /><Typography sx={{ fontSize: '16px' }}>{me.bestName}</Typography>
 
-                            <Typography color='textSecondary' sx={{ gridColumn: '2', paddingBottom: '1.5rem', fontSize: '13px' }}>{me.roles.join(', ')}</Typography>
+                            <Typography className='role'>{me.roles.join(', ')}</Typography>
 
                             <LocalPhoneIcon color={'primary'} sx={{ marginBottom: '20px' }} /><Typography sx={{ fontSize: '13px' }}>phone_placeholder</Typography>
 
@@ -150,16 +157,23 @@ const ActionManagement: React.FC = () => {
                                     <MobileDatePicker
                                         label="Date"
                                         value={date}
+                                        toolbarTitle='Select a date'
+                                        componentsProps={{
+                                            actionBar: { actions: ["clear", "today"] },
+                                        }}
+                                        closeOnSelect={true}
                                         onChange={(newValue) => {
                                             setDate(newValue);
                                         }}
                                         renderInput={(params) =>
                                             <TextField {...params}
-                                                sx={{ width: '45%', marginRight: '50px' }}
+                                                sx={{ minWidth: '45%', marginRight: '50px' }}
                                                 InputProps={{
-                                                    endAdornment: <InputAdornment position="end"><CalendarTodayIcon color='primary' /></InputAdornment>,
+                                                    endAdornment: <InputAdornment position="end"><CalendarTodayIcon /></InputAdornment>,
                                                 }}
-                                            />}
+                                                placeholder='mm/dd/yyyy'
+                                            />
+                                        }
                                     />
                                     <MobileTimePicker
                                         label="Time"
@@ -171,8 +185,9 @@ const ActionManagement: React.FC = () => {
                                             <TextField {...params}
                                                 sx={{ width: '45%' }}
                                                 InputProps={{
-                                                    endAdornment: <InputAdornment position="end"><CalendarTodayIcon color='primary' /></InputAdornment>,
+                                                    endAdornment: <InputAdornment position="end"><CalendarTodayIcon /></InputAdornment>,
                                                 }}
+                                                placeholder='hh:mm (a|p)m'
                                             />}
                                     />
                                 </Box>
@@ -201,8 +216,8 @@ const ActionManagement: React.FC = () => {
                                 />
                                 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', color: 'rgb(140, 140, 140)' }}>
                                     <Typography variant='subtitle1' sx={{ marginRight: '15%' }}>Notification Method (s)</Typography>
-                                    <FormControlLabel control={<Switch />} label='Dashboard' sx={{ marginRight: '8%' }} />
-                                    <FormControlLabel control={<Switch onChange={toggleChecked1} />} label='Email' />
+                                    <FormControlLabel control={<Switch onChange={toggleChecked1}/>} label='Dashboard' sx={{ marginRight: '8%', color: checked1?'#313132':''}} />
+                                    <FormControlLabel control={<Switch onChange={toggleChecked2} />} label='Email' sx={{color: checked2 ? '#313132':''}}/>
                                 </Box>
                             </Stack>
                             <Button
@@ -237,7 +252,7 @@ const ActionManagement: React.FC = () => {
                     <CloseIcon />
                 </IconButton>
                 <DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
-                    <p style={{ color: '#666666', fontSize: '16px', margin:'5px 0' }}>You have successfully set a reminder</p>
+                    <p style={{ color: '#666666', fontSize: '16px', margin: '5px 0' }}>You have successfully set a reminder</p>
                 </DialogContent>
                 <DialogActions sx={{ margin: 'auto', marginBottom: '20px' }}>
                     <Button className='okBtn' sx={{ backgroundColor: '#3ADB76', color: '#EEF2F6', ":hover": { backgroundColor: '#3ADB76' } }}>
