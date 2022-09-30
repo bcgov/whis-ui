@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
-import { useAPI } from "../../hooks/useAPI";
+import {useAPI} from "../../hooks/useAPI";
 import {
 	Box,
 	Button,
@@ -25,11 +25,11 @@ import {
 import '../../styles/inventory.scss';
 import AddIcon from '@mui/icons-material/Add';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import { useSelector } from "../../../state/utilities/use_selector";
-import { useNavigate } from "react-router-dom";
+import {useSelector} from "../../../state/utilities/use_selector";
+import {useNavigate} from "react-router-dom";
 import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
 import OneColumnForm from "../../components/wildlifeIds/OneColumnForm";
-import { paperStyle } from "../../../state/style_constants";
+import {paperStyle} from "../../../state/style_constants";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -41,8 +41,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 const Generate: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
-	const { purposes, regions, organizations, roles } = useSelector(state => state.CodeTables.tables);
-	const { initialized: codeTablesInitialized } = useSelector(selectCodeTables);
+	const {purposes, regions, organizations, roles} = useSelector(state => state.CodeTables.tables);
+	const {initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
 	const api = useAPI();
 
@@ -51,14 +51,16 @@ const Generate: React.FC = () => {
 	const [lockModalOpen, setLockModalOpen] = useState(false);
 
 	useEffect(() => {
-		if (lockStatus.initialized && !lockStatus.working) {
-			if (!lockStatus.status?.lockHolder?.isSelf) {
-				setLockModalOpen(true);
-			}
+		if (lockStatus.initialized
+			&& !lockStatus.working
+			&& lockStatus.status
+			&& lockStatus.status.lockHolder
+			&& !lockStatus.status.lockHolder.isSelf) {
+			setLockModalOpen(true);
 		}
-	}, [lockStatus, lockStatus.working]);
+	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
 
-	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
+	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
 
 	const [formState, setFormState] = useState({
 		quantity: 1,
@@ -91,7 +93,7 @@ const Generate: React.FC = () => {
 
 	//handle direct
 	const handleSubmit = () => {
-		api.generateIDs({ quantity: formState.quantity }).then(result => {
+		api.generateIDs({quantity: formState.quantity}).then(result => {
 			setGenerateStatus({
 				status: 'ok',
 				message: JSON.stringify(result)
@@ -110,8 +112,8 @@ const Generate: React.FC = () => {
 	const handleUpdate = event => {
 		const currentState = formState;
 		switch (event.target.name) {
-			default:
-				currentState[event.target.name] = event.target.value;
+		default:
+			currentState[event.target.name] = event.target.value;
 		}
 		setFormState(currentState);
 		console.log(event.target.name + ":" + event.target.value);
@@ -138,7 +140,7 @@ const Generate: React.FC = () => {
 	const [OptionalButton, setOptionalButton] = useState(true);
 
 	//handle required input
-	const inputInitState = { year: false, wlh_id: false, purpose: false, firstName: false, lastName: false };
+	const inputInitState = {year: false, wlh_id: false, purpose: false, firstName: false, lastName: false};
 	const [inputsState, setinputState] = useState(inputInitState);
 
 	//handle required onblur
@@ -147,50 +149,50 @@ const Generate: React.FC = () => {
 		const value = e.target.value;
 		if (value == "" || value == undefined || value == null) {
 			switch (name) {
-				case "year":
-					setinputState(state => ({ ...inputsState, year: true }));
-					break;
-				case "wlh_id":
-					setinputState(state => ({ ...inputsState, wlh_id: true }));
-					break;
-				case "purpose":
-					setinputState(state => ({ ...inputsState, purpose: true }));
-					break;
-				case "requesterFirstName":
-					setinputState(state => ({ ...inputsState, firstName: true }));
-					break;
-				case "requesterLastName":
-					setinputState(state => ({ ...inputsState, lastName: true }));
-					break;
-				default:
-					break;
+			case "year":
+				setinputState(state => ({...inputsState, year: true}));
+				break;
+			case "wlh_id":
+				setinputState(state => ({...inputsState, wlh_id: true}));
+				break;
+			case "purpose":
+				setinputState(state => ({...inputsState, purpose: true}));
+				break;
+			case "requesterFirstName":
+				setinputState(state => ({...inputsState, firstName: true}));
+				break;
+			case "requesterLastName":
+				setinputState(state => ({...inputsState, lastName: true}));
+				break;
+			default:
+				break;
 			}
 		} else {
 			switch (name) {
-				case "year":
-					setinputState(state => ({ ...inputsState, year: false }));
-					break;
-				case "wlh_id":
-					setinputState(state => ({ ...inputsState, wlh_id: false }));
-					break;
-				case "purpose":
-					setinputState(state => ({ ...inputsState, purpose: false }));
-					break;
-				case "requesterFirstName":
-					setinputState(state => ({ ...inputsState, firstName: false }));
-					break;
-				case "requesterLastName":
-					setinputState(state => ({ ...inputsState, lastName: false }));
-					break;
-				default:
-					break;
+			case "year":
+				setinputState(state => ({...inputsState, year: false}));
+				break;
+			case "wlh_id":
+				setinputState(state => ({...inputsState, wlh_id: false}));
+				break;
+			case "purpose":
+				setinputState(state => ({...inputsState, purpose: false}));
+				break;
+			case "requesterFirstName":
+				setinputState(state => ({...inputsState, firstName: false}));
+				break;
+			case "requesterLastName":
+				setinputState(state => ({...inputsState, lastName: false}));
+				break;
+			default:
+				break;
 			}
 		}
 	}
 
 
 	if (!codeTablesInitialized) {
-		return (<Loading />);
+		return (<Loading/>);
 	}
 
 	return (
@@ -205,17 +207,6 @@ const Generate: React.FC = () => {
 				<LocalizationProvider dateAdapter={AdapterDateFns}>
 					<TwoColumnForm title={'WLH ID information'}>
 
-						{/* <TextField
-						sx={{ width: '100%' }}
-						label="Year"
-						id="year"
-						name="year"
-						// defaultValue={formState.year}
-						error={inputsState.year}
-						onBlur={(e) => { handleOnblur(e) }}
-						onChange={handleUpdate}
-						required
-					/> */}
 
 						<DatePicker
 							views={['year']}
@@ -292,56 +283,60 @@ const Generate: React.FC = () => {
 					</TwoColumnForm>
 				</LocalizationProvider>
 				<OneColumnForm>
-					<TextField sx={{ width: '100%' }}
-						label="Associated Project"
-						id="associatedProject"
-						defaultValue={formState.associatedProject}
-						name="associatedProject"
-						onChange={handleUpdate}
+					<TextField sx={{width: '100%'}}
+										 label="Associated Project"
+										 id="associatedProject"
+										 defaultValue={formState.associatedProject}
+										 name="associatedProject"
+										 onChange={handleUpdate}
 					/>
 
-					<TextField sx={{ width: '100%' }}
-						label="Reason"
-						id="reason"
-						defaultValue={formState.reason}
-						name="reason"
-						multiline
-						rows={3}
-						onChange={handleUpdate} />
+					<TextField sx={{width: '100%'}}
+										 label="Reason"
+										 id="reason"
+										 defaultValue={formState.reason}
+										 name="reason"
+										 multiline
+										 rows={3}
+										 onChange={handleUpdate}/>
 
 				</OneColumnForm>
 
 
-				<hr />
+				<hr/>
 
 				<TwoColumnForm title={'Requester'}>
 
 					<TextField
-						sx={{ width: '100%' }}
+						sx={{width: '100%'}}
 						label="First Name"
 						id="requesterFirstName"
 						defaultValue={formState.requesterFirstName}
 						name="requesterFirstName"
 						error={inputsState.firstName}
-						onBlur={(e) => { handleOnblur(e) }}
+						onBlur={(e) => {
+							handleOnblur(e)
+						}}
 						onChange={handleUpdate}
 						required
 					/>
 
 					<TextField
-						sx={{ width: '100%' }}
+						sx={{width: '100%'}}
 						label="Last Name"
 						id="requesterLastName"
 						defaultValue={formState.requesterLastName}
 						name="requesterLastName"
 						error={inputsState.lastName}
-						onBlur={(e) => { handleOnblur(e) }}
+						onBlur={(e) => {
+							handleOnblur(e)
+						}}
 						onChange={handleUpdate}
 						required
 					/>
 
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Region"
 						id="requesterRegion"
@@ -355,7 +350,7 @@ const Generate: React.FC = () => {
 						))}
 					</TextField>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Organization"
 						id="requesterOrganization"
@@ -369,7 +364,7 @@ const Generate: React.FC = () => {
 						))}
 					</TextField>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						label="Phone"
 						id="requesterContactPhone"
 						defaultValue={formState.requesterContactPhone}
@@ -377,7 +372,7 @@ const Generate: React.FC = () => {
 						onChange={handleUpdate}
 					/>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						label="Email"
 						id="requesterContactEmail"
 						defaultValue={formState.requesterContactEmail}
@@ -385,7 +380,7 @@ const Generate: React.FC = () => {
 						onChange={handleUpdate}
 					/>
 					<TextField
-						sx={{ width: '100%', display: showOptional ? 'auto' : 'none' }}
+						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Requester's Role"
 						id="requesterRole"
@@ -427,7 +422,7 @@ const Generate: React.FC = () => {
 							top: 8
 						}}
 					>
-						<CloseIcon />
+						<CloseIcon/>
 					</IconButton>
 					<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
 						<p style={{ color: '#666666', fontSize: '15px' }}>You have generated [N] WLH IDs: [number or range of numbers]</p>
@@ -446,6 +441,7 @@ const Generate: React.FC = () => {
 					<GenerationLockWidget />
 					<Button type='submit' sx={{ textTransform: 'capitalize', padding: '9px 35px' }} variant={'contained'}>Generate</Button>
 					<Button sx={{ textTransform: 'capitalize', padding: '8px 28px' }} variant={'outlined'} onClick={() => {
+
 						navigate(-1)
 					}}>Cancel</Button>
 				</Stack>
