@@ -32,10 +32,12 @@ import OneColumnForm from "../../components/wildlifeIds/OneColumnForm";
 import { paperStyle } from "../../../state/style_constants";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { selectCodeTables } from "../../../state/reducers/code_tables";
 import Loading from "../../components/util/Loading";
 import { LockModal } from "../../components/wildlifeIds/LockModal";
-
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 const Generate: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
@@ -73,6 +75,9 @@ const Generate: React.FC = () => {
 		associatedProject: '',
 		reason: ''
 	});
+
+	//date picker
+	const [value, setValue] = useState(null);
 
 	//update dialog
 	const [open, setOpen] = useState(false);
@@ -197,76 +202,95 @@ const Generate: React.FC = () => {
 				<Typography fontFamily={'BCSans-Bold'} sx={{ margin: '10px', fontSize: '32px' }}>Generate WLH ID</Typography>
 				<Typography sx={{ margin: '0 0 50px 12px' }}>Generate one or multiple WLH IDs by entering the information below.</Typography>
 				<hr />
-				<TwoColumnForm title={'WLH ID information'}>
+				<LocalizationProvider dateAdapter={AdapterDateFns}>
+					<TwoColumnForm title={'WLH ID information'}>
 
-					<TextField
+						{/* <TextField
 						sx={{ width: '100%' }}
 						label="Year"
 						id="year"
 						name="year"
-						defaultValue={formState.year}
+						// defaultValue={formState.year}
 						error={inputsState.year}
 						onBlur={(e) => { handleOnblur(e) }}
 						onChange={handleUpdate}
 						required
-					/>
+					/> */}
 
-					<TextField
-						sx={{ width: '100%' }}
-						label="Number of WLH IDs"
-						id="wlh_id"
-						name="wlh_id"
-						type="tel"
-						error={inputsState.wlh_id}
-						inputProps={{ maxLength: 3 }}
-						onChange={(e) => { handleOutofRange(e) }}
-						onBlur={(e) => { handleOnblur(e) }}
-						required
-					/>
-					<>
-						<TextField sx={{ width: '100%' }}
-							id="purpose"
-							name="purpose"
-							select
-							label="Purpose"
-							placeholder='Purpose*'
-							error={inputsState.purpose}
+						<DatePicker
+							views={['year']}
+							label="Year *"
+							value={value}
+							components={{
+								OpenPickerIcon: ArrowDropDownIcon
+							}}
+							onChange={(newValue) => {
+								setValue(newValue);
+							}}
+							renderInput={(params) =>
+								<TextField {...params}
+									sx={{ width: '100%' }}
+									placeholder='yyyy'
+								/>}
+						/>
+
+						<TextField
+							sx={{ width: '100%' }}
+							label="Number of WLH IDs"
+							id="wlh_id"
+							name="wlh_id"
+							type="tel"
+							error={inputsState.wlh_id}
+							inputProps={{ maxLength: 3 }}
+							onChange={(e) => { handleOutofRange(e) }}
 							onBlur={(e) => { handleOnblur(e) }}
 							required
-						>
-							{purposes.codes.map((m, i) => (
-								<MenuItem key={i} value={m.value}>
-									{m.displayed_value}
-								</MenuItem>
-							))}
-						</TextField>
-						<Dialog open={alertNumber} onClose={handleClose}
-							PaperProps={{
-								sx: { overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px' }
+						/>
+						<>
+							<TextField sx={{ width: '100%' }}
+								id="purpose"
+								name="purpose"
+								select
+								label="Purpose"
+								placeholder='Purpose*'
+								error={inputsState.purpose}
+								onBlur={(e) => { handleOnblur(e) }}
+								required
+							>
+								{purposes.codes.map((m, i) => (
+									<MenuItem key={i} value={m.value}>
+										{m.displayed_value}
+									</MenuItem>
+								))}
+							</TextField>
+							<Dialog open={alertNumber} onClose={handleClose}
+								PaperProps={{
+									sx: { overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px' }
+								}}
+							>
+								<DialogTitle fontFamily={'BCSans-Bold'}>Error</DialogTitle>
+								<DialogContent sx={{ margin: '40px auto', fontSize: '16px' }}>
+									Please enter a number between 1 - 100.
+								</DialogContent>
+								<DialogActions>
+									<Button variant={'contained'} onClick={handleClose} sx={{ width: '85px' }}>OK</Button>
+									<Button variant={'outlined'} onClick={handleClose} sx={{ width: '85px' }}>Cancel</Button>
+								</DialogActions>
+							</Dialog>
+						</>
+
+						<TextField sx={{ width: '100%' }} label="Species"
+							id="species"
+							defaultValue={formState.species}
+							name="species"
+							onChange={handleUpdate}
+							InputProps={{
+								endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon /></InputAdornment>,
 							}}
-						>
-							<DialogTitle fontFamily={'BCSans-Bold'}>Confirmation</DialogTitle>
-							<DialogContent sx={{ margin: '40px auto', fontSize:'16px' }}>
-								Please enter between 1 - 100.
-							</DialogContent>
-							<DialogActions>
-								<Button variant={'contained'} onClick={handleClose}>OK</Button>
-								<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-							</DialogActions>
-						</Dialog>
-					</>
+						/>
 
-					<TextField sx={{ width: '100%' }} label="Species"
-						id="species"
-						defaultValue={formState.species}
-						name="species"
-						onChange={handleUpdate}
-						InputProps={{
-							endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon /></InputAdornment>,
-						}}
-					/>
-
-				</TwoColumnForm>
+					</TwoColumnForm>
+				</LocalizationProvider>
 				<OneColumnForm>
 					<TextField sx={{ width: '100%' }}
 						label="Associated Project"

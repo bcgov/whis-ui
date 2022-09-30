@@ -6,7 +6,8 @@ import '../../styles/header.scss';
 import {keycloakInstance} from '../../../state/sagas/auth';
 import GovLogo from '../../styles/assets/images/gov3_bc_logo.png';
 import {useSelector} from '../../../state/utilities/use_selector';
-import {Button} from "@mui/material";
+import {Button, IconButton} from "@mui/material";
+import HelpIcon from '@mui/icons-material/Help';
 
 const Header: React.FC = () => {
 	const bestName = useSelector(state => state.Auth.bestName);
@@ -29,6 +30,11 @@ const Header: React.FC = () => {
 						<Button className={'logout'} color="primary" onClick={() => keycloakInstance.logout()}>
 							Log out
 						</Button>
+					</li>
+					<li>
+						<IconButton className={'help'} color="primary">
+							<HelpIcon/>
+						</IconButton>
 					</li>
 				</nav>
 			</div>
