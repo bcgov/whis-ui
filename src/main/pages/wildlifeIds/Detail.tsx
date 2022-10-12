@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
 import {useAPI} from "../../hooks/useAPI";
-import {Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Slider, Stack, TextField, Typography} from "@mui/material";
+import {Button, Paper, Stack, Typography} from "@mui/material";
 import '../../styles/inventory.scss';
-import AddIcon from '@mui/icons-material/Add';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useNavigate} from "react-router-dom";
-import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
 import {paperStyle} from "../../../state/style_constants";
 import {useParams} from "react-router";
 import Display from "../../components/wildlifeIds/Display";
@@ -37,9 +34,15 @@ const Detail: React.FC = () => {
 			<Display wildlifeId={data}/>
 
 			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
-				<Button variant={'contained'} color={'secondary'} onClick={() => {
-					navigate(-1)
-				}}>Back</Button>
+				<Button
+					variant={'contained'}
+					color={'secondary'}
+					onClick={() => {
+						navigate(-1)
+					}}
+				>
+					Back
+				</Button>
 			</Stack>
 
 		</Paper>

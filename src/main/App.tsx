@@ -1,8 +1,5 @@
 import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
-import AuthRequired from './components/auth/AuthRequired';
-import Footer from './components/pageElements/Footer';
-import Header from './components/pageElements/Header';
 import {Provider} from 'react-redux';
 import {Route, Routes} from 'react-router';
 import LandingPage from './pages/LandingPage';
@@ -45,9 +42,9 @@ const App: React.FC<{ store }> = ({store}) => {
 					<Routes>
 						{WildlifeIdRoutes}
 						{AdminRoutes}
-						<Route path="/" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
-						<Route path="" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
-						<Route path="*" element={<DefaultLayout><NotFound/></DefaultLayout>}/>
+						<Route path='/' element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
+						<Route path='' element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
+						<Route path='*' element={<DefaultLayout><NotFound/></DefaultLayout>}/>
 					</Routes>
 				</BrowserRouter>
 			</ThemeProvider>

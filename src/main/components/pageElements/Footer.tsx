@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
 	}, [location.pathname]);
 
 	return (
-		<footer id="footer">
+		<footer id='footer'>
 			<nav>
 				<ul className={'container'}>
 					{navs.map((n, i) => {

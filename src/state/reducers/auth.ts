@@ -2,13 +2,13 @@ import {keycloakInstance} from '../sagas/auth';
 import {
 	AUTH_CLEAR_ROLES,
 	AUTH_INITIALIZE_COMPLETE,
-	AUTH_REFRESH_ROLES_COMPLETE, AUTH_REFRESH_ROLES_ERROR,
+	AUTH_REFRESH_ROLES_COMPLETE,
+	AUTH_REFRESH_ROLES_ERROR,
 	AUTH_REFRESH_ROLES_REQUEST,
 	AUTH_REQUEST_COMPLETE,
 	AUTH_UPDATE_TOKEN_STATE
 } from '../actions';
 import {AppConfig} from '../config';
-import {createRootReducer} from './index';
 
 class AuthState {
 	initialized: boolean;

@@ -107,8 +107,8 @@ const Generate: React.FC = () => {
 	const handleUpdate = event => {
 		const currentState = formState;
 		switch (event.target.name) {
-			default:
-				currentState[event.target.name] = event.target.value;
+		default:
+			currentState[event.target.name] = event.target.value;
 		}
 		setFormState(currentState);
 		console.log(event.target.name + ":" + event.target.value);
@@ -144,43 +144,43 @@ const Generate: React.FC = () => {
 		const value = e.target.value;
 		if (value == "" || value == undefined || value == null) {
 			switch (name) {
-				case "year":
-					setinputState(state => ({...inputsState, year: true}));
-					break;
-				case "wlh_id":
-					setinputState(state => ({...inputsState, wlh_id: true}));
-					break;
-				case "purpose":
-					setinputState(state => ({...inputsState, purpose: true}));
-					break;
-				case "requesterFirstName":
-					setinputState(state => ({...inputsState, firstName: true}));
-					break;
-				case "requesterLastName":
-					setinputState(state => ({...inputsState, lastName: true}));
-					break;
-				default:
-					break;
+			case "year":
+				setinputState(state => ({...inputsState, year: true}));
+				break;
+			case "wlh_id":
+				setinputState(state => ({...inputsState, wlh_id: true}));
+				break;
+			case "purpose":
+				setinputState(state => ({...inputsState, purpose: true}));
+				break;
+			case "requesterFirstName":
+				setinputState(state => ({...inputsState, firstName: true}));
+				break;
+			case "requesterLastName":
+				setinputState(state => ({...inputsState, lastName: true}));
+				break;
+			default:
+				break;
 			}
 		} else {
 			switch (name) {
-				case "year":
-					setinputState(state => ({...inputsState, year: false}));
-					break;
-				case "wlh_id":
-					setinputState(state => ({...inputsState, wlh_id: false}));
-					break;
-				case "purpose":
-					setinputState(state => ({...inputsState, purpose: false}));
-					break;
-				case "requesterFirstName":
-					setinputState(state => ({...inputsState, firstName: false}));
-					break;
-				case "requesterLastName":
-					setinputState(state => ({...inputsState, lastName: false}));
-					break;
-				default:
-					break;
+			case "year":
+				setinputState(state => ({...inputsState, year: false}));
+				break;
+			case "wlh_id":
+				setinputState(state => ({...inputsState, wlh_id: false}));
+				break;
+			case "purpose":
+				setinputState(state => ({...inputsState, purpose: false}));
+				break;
+			case "requesterFirstName":
+				setinputState(state => ({...inputsState, firstName: false}));
+				break;
+			case "requesterLastName":
+				setinputState(state => ({...inputsState, lastName: false}));
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -205,7 +205,7 @@ const Generate: React.FC = () => {
 
 						<DatePicker
 							views={['year']}
-							label="Year *"
+							label='Year *'
 							value={value}
 							components={{
 								OpenPickerIcon: ArrowDropDownIcon
@@ -214,18 +214,19 @@ const Generate: React.FC = () => {
 								setValue(newValue);
 							}}
 							renderInput={(params) =>
-								<TextField {...params}
-													 sx={{width: '100%'}}
-													 placeholder='yyyy'
+								<TextField
+									sx={{width: '100%'}}
+									placeholder='yyyy'
+									{...params}
 								/>}
 						/>
 
 						<TextField
 							sx={{width: '100%'}}
-							label="Number of WLH IDs"
-							id="wlh_id"
-							name="wlh_id"
-							type="tel"
+							label='Number of WLH IDs'
+							id='wlh_id'
+							name='wlh_id'
+							type='tel'
 							error={inputsState.wlh_id}
 							inputProps={{maxLength: 3}}
 							onChange={(e) => {
@@ -237,17 +238,18 @@ const Generate: React.FC = () => {
 							required
 						/>
 						<>
-							<TextField sx={{width: '100%'}}
-												 id="purpose"
-												 name="purpose"
-												 select
-												 label="Purpose"
-												 placeholder='Purpose*'
-												 error={inputsState.purpose}
-												 onBlur={(e) => {
-													 handleOnblur(e)
-												 }}
-												 required
+							<TextField
+								sx={{width: '100%'}}
+								id='purpose'
+								name='purpose'
+								select
+								label='Purpose'
+								placeholder='Purpose*'
+								error={inputsState.purpose}
+								onBlur={(e) => {
+									handleOnblur(e)
+								}}
+								required
 							>
 								{purposes.codes.map((m, i) => (
 									<MenuItem key={i} value={m.value}>
@@ -255,10 +257,11 @@ const Generate: React.FC = () => {
 									</MenuItem>
 								))}
 							</TextField>
-							<Dialog open={alertNumber} onClose={handleClose}
-											PaperProps={{
-												sx: {overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px'}
-											}}
+							<Dialog
+								open={alertNumber} onClose={handleClose}
+								PaperProps={{
+									sx: {overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px'}
+								}}
 							>
 								<DialogTitle fontFamily={'BCSans-Bold'}>Error</DialogTitle>
 								<DialogContent sx={{margin: '40px auto', fontSize: '16px'}}>
@@ -271,35 +274,39 @@ const Generate: React.FC = () => {
 							</Dialog>
 						</>
 
-						<TextField sx={{width: '100%'}} label="Species"
-											 id="species"
-											 defaultValue={formState.species}
-											 name="species"
-											 onChange={handleUpdate}
-											 InputProps={{
-												 endAdornment: <InputAdornment position="end"><AccountTreeOutlinedIcon/></InputAdornment>,
-											 }}
+						<TextField
+							sx={{width: '100%'}} label='Species'
+							id='species'
+							defaultValue={formState.species}
+							name='species'
+							onChange={handleUpdate}
+							InputProps={{
+								endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon/></InputAdornment>,
+							}}
 						/>
 
 					</TwoColumnForm>
 				</LocalizationProvider>
 				<OneColumnForm>
-					<TextField sx={{width: '100%'}}
-										 label="Associated Project"
-										 id="associatedProject"
-										 defaultValue={formState.associatedProject}
-										 name="associatedProject"
-										 onChange={handleUpdate}
+					<TextField
+						sx={{width: '100%'}}
+						label='Associated Project'
+						id='associatedProject'
+						defaultValue={formState.associatedProject}
+						name='associatedProject'
+						onChange={handleUpdate}
 					/>
 
-					<TextField sx={{width: '100%'}}
-										 label="Reason"
-										 id="reason"
-										 defaultValue={formState.reason}
-										 name="reason"
-										 multiline
-										 rows={3}
-										 onChange={handleUpdate}/>
+					<TextField
+						sx={{width: '100%'}}
+						label='Reason'
+						id='reason'
+						defaultValue={formState.reason}
+						name='reason'
+						multiline
+						rows={3}
+						onChange={handleUpdate}
+					/>
 
 				</OneColumnForm>
 
@@ -310,10 +317,10 @@ const Generate: React.FC = () => {
 
 					<TextField
 						sx={{width: '100%'}}
-						label="First Name"
-						id="requesterFirstName"
+						label='First Name'
+						id='requesterFirstName'
 						defaultValue={formState.requesterFirstName}
-						name="requesterFirstName"
+						name='requesterFirstName'
 						error={inputsState.firstName}
 						onBlur={(e) => {
 							handleOnblur(e)
@@ -324,10 +331,10 @@ const Generate: React.FC = () => {
 
 					<TextField
 						sx={{width: '100%'}}
-						label="Last Name"
-						id="requesterLastName"
+						label='Last Name'
+						id='requesterLastName'
 						defaultValue={formState.requesterLastName}
-						name="requesterLastName"
+						name='requesterLastName'
 						error={inputsState.lastName}
 						onBlur={(e) => {
 							handleOnblur(e)
@@ -339,8 +346,8 @@ const Generate: React.FC = () => {
 					<TextField
 						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
-						label="Region"
-						id="requesterRegion"
+						label='Region'
+						id='requesterRegion'
 						placeholder='Region'
 						onChange={handleUpdate}
 					>
@@ -353,8 +360,8 @@ const Generate: React.FC = () => {
 					<TextField
 						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
-						label="Organization"
-						id="requesterOrganization"
+						label='Organization'
+						id='requesterOrganization'
 						placeholder='Organization'
 						onChange={handleUpdate}
 					>
@@ -366,26 +373,26 @@ const Generate: React.FC = () => {
 					</TextField>
 					<TextField
 						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
-						label="Phone"
-						id="requesterContactPhone"
+						label='Phone'
+						id='requesterContactPhone'
 						defaultValue={formState.requesterContactPhone}
-						name="requesterContactPhone"
+						name='requesterContactPhone'
 						onChange={handleUpdate}
 					/>
 					<TextField
 						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
-						label="Email"
-						id="requesterContactEmail"
+						label='Email'
+						id='requesterContactEmail'
 						defaultValue={formState.requesterContactEmail}
-						name="requesterContactEmail"
+						name='requesterContactEmail'
 						onChange={handleUpdate}
 					/>
 					<TextField
 						sx={{width: '100%', display: showOptional ? 'auto' : 'none'}}
 						select
 						label="Requester's Role"
-						id="requesterRole"
-						placeholder="Role"
+						id='requesterRole'
+						placeholder='Role'
 						onChange={handleUpdate}
 					>
 						{roles.codes.map((m, i) => (
@@ -402,7 +409,8 @@ const Generate: React.FC = () => {
 						onClick={() => {
 							setShowOptional(!showOptional);
 							setOptionalButton(!OptionalButton);
-						}} variant="outlined">
+						}} variant='outlined'
+					>
 						<AddIcon color='primary'/>Requester Details (Optional)
 					</Button>
 				</Box>
@@ -430,31 +438,35 @@ const Generate: React.FC = () => {
 						<p style={{color: '#666666', fontSize: '15px', marginTop: '25px'}}>Would you like to add more details to these IDs?</p>
 					</DialogContent>
 					<DialogActions sx={{margin: 'auto', marginBottom: '25px'}}>
-						<Button onClick={() => {
-							navigate('/wildlifeIds/list')
-						}}
-										sx={{
-											width: '110px',
-											height: '42px',
-											borderRadius: '6px',
-											marginRight: '10px',
-											backgroundColor: 'rgb(58, 219, 118)',
-											color: '#fff',
-											fontSize: '16px',
-											":hover": {backgroundColor: 'rgb(58, 219, 118)'}
-										}}>YES</Button>
-						<Button onClick={() => {
-							navigate('/wildlifeIds')
-						}}
-										sx={{
-											width: '110px',
-											height: '42px',
-											border: '1px solid rgb(134, 142, 150)',
-											borderRadius: '6px',
-											color: 'rgb(102, 102, 102)',
-											fontSize: '16px',
-											":hover": {backgroundColor: '#fff'}
-										}}>Later</Button>
+						<Button
+							onClick={() => {
+								navigate('/wildlifeIds/list')
+							}}
+							sx={{
+								width: '110px',
+								height: '42px',
+								borderRadius: '6px',
+								marginRight: '10px',
+								backgroundColor: 'rgb(58, 219, 118)',
+								color: '#fff',
+								fontSize: '16px',
+								":hover": {backgroundColor: 'rgb(58, 219, 118)'}
+							}}
+						>YES</Button>
+						<Button
+							onClick={() => {
+								navigate('/wildlifeIds')
+							}}
+							sx={{
+								width: '110px',
+								height: '42px',
+								border: '1px solid rgb(134, 142, 150)',
+								borderRadius: '6px',
+								color: 'rgb(102, 102, 102)',
+								fontSize: '16px',
+								":hover": {backgroundColor: '#fff'}
+							}}
+						>Later</Button>
 					</DialogActions>
 				</Dialog>
 
@@ -464,10 +476,12 @@ const Generate: React.FC = () => {
 				<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{paddingRight: '5%', marginBottom: '30px'}}>
 					<GenerationLockWidget/>
 					<Button type='submit' sx={{textTransform: 'capitalize', padding: '9px 35px'}} variant={'contained'}>Generate</Button>
-					<Button sx={{textTransform: 'capitalize', padding: '8px 28px'}} variant={'outlined'} onClick={() => {
+					<Button
+						sx={{textTransform: 'capitalize', padding: '8px 28px'}} variant={'outlined'} onClick={() => {
 
 						navigate(-1)
-					}}>Cancel</Button>
+					}}
+					>Cancel</Button>
 				</Stack>
 			</form>
 		</Paper>

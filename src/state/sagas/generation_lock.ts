@@ -1,8 +1,12 @@
 import {all, put, select, takeLatest} from 'redux-saga/effects';
 import {
-	ACQUIRE_GENERATION_LOCK_COMPLETE, ACQUIRE_GENERATION_LOCK_REQUEST,
-	GENERATION_LOCK_ERROR, RELEASE_GENERATION_LOCK_COMPLETE, RELEASE_GENERATION_LOCK_REQUEST,
-	RENEW_GENERATION_LOCK_COMPLETE, RENEW_GENERATION_LOCK_REQUEST,
+	ACQUIRE_GENERATION_LOCK_COMPLETE,
+	ACQUIRE_GENERATION_LOCK_REQUEST,
+	GENERATION_LOCK_ERROR,
+	RELEASE_GENERATION_LOCK_COMPLETE,
+	RELEASE_GENERATION_LOCK_REQUEST,
+	RENEW_GENERATION_LOCK_COMPLETE,
+	RENEW_GENERATION_LOCK_REQUEST,
 	TEST_GENERATION_LOCK_COMPLETE,
 	TEST_GENERATION_LOCK_REQUEST
 } from '../actions';
@@ -31,10 +35,10 @@ function* acquireLock() {
 			headers: authHeaders
 		});
 		yield put({type: ACQUIRE_GENERATION_LOCK_COMPLETE, payload: result.data});
-		yield put({ type: TEST_GENERATION_LOCK_REQUEST });
+		yield put({type: TEST_GENERATION_LOCK_REQUEST});
 	} catch (err) {
 		yield put({type: GENERATION_LOCK_ERROR});
-		yield put({ type: TEST_GENERATION_LOCK_REQUEST });
+		yield put({type: TEST_GENERATION_LOCK_REQUEST});
 	}
 }
 
@@ -46,10 +50,10 @@ function* renewLock() {
 			headers: authHeaders
 		});
 		yield put({type: RENEW_GENERATION_LOCK_COMPLETE, payload: result.data});
-		yield put({ type: TEST_GENERATION_LOCK_REQUEST });
+		yield put({type: TEST_GENERATION_LOCK_REQUEST});
 	} catch (err) {
 		yield put({type: GENERATION_LOCK_ERROR});
-		yield put({ type: TEST_GENERATION_LOCK_REQUEST });
+		yield put({type: TEST_GENERATION_LOCK_REQUEST});
 	}
 }
 
@@ -61,10 +65,10 @@ function* releaseLock() {
 			headers: authHeaders
 		});
 		yield put({type: RELEASE_GENERATION_LOCK_COMPLETE, payload: result.data});
-		yield put({ type: TEST_GENERATION_LOCK_REQUEST });
+		yield put({type: TEST_GENERATION_LOCK_REQUEST});
 	} catch (err) {
 		yield put({type: GENERATION_LOCK_ERROR});
-		yield put({ type: TEST_GENERATION_LOCK_REQUEST });
+		yield put({type: TEST_GENERATION_LOCK_REQUEST});
 	}
 }
 

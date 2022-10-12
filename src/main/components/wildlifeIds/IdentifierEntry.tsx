@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {TextField, MenuItem, FormControlLabel, IconButton, Radio, RadioGroup, Box} from '@mui/material';
+import React, {useState} from 'react';
+import {Box, FormControlLabel, IconButton, MenuItem, Radio, RadioGroup, TextField} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const IdentifierEntry = ({handleUpdate, handleDelete}) => {
@@ -53,9 +53,9 @@ const IdentifierEntry = ({handleUpdate, handleDelete}) => {
 				<Box sx={{display: 'flex', width: '55%'}}>
 					<TextField
 						sx={{m: 2, width: '80%'}}
-						label="Identifier"
-						id="identifier"
-						name="identifier"
+						label='Identifier'
+						id='identifier'
+						name='identifier'
 					/>
 					<IconButton sx={{width: '20%'}}>
 						<DeleteIcon color='primary'/>
@@ -68,18 +68,19 @@ const IdentifierEntry = ({handleUpdate, handleDelete}) => {
 			return (<Box sx={{display: 'flex', width: '55%'}}>
 				<TextField
 					sx={{m: 2, width: '30%'}}
-					label="Identifier"
-					id="identifier"
-					name="identifier"
+					label='Identifier'
+					id='identifier'
+					name='identifier'
 				/>
-				<TextField sx={{m: 2, width: '30%'}}
-										 id="sex"
-										 select
-										 label="Color"
-										 value={sex}
-										 onChange={(e) => {
-											 setSex(e.target.value);
-										 }}
+				<TextField
+					sx={{m: 2, width: '30%'}}
+					id='sex'
+					select
+					label='Color'
+					value={sex}
+					onChange={(e) => {
+						setSex(e.target.value);
+					}}
 				>
 					{validSex.map((m, i) => (
 						<MenuItem key={i} value={m.value}>
@@ -89,14 +90,14 @@ const IdentifierEntry = ({handleUpdate, handleDelete}) => {
 				</TextField>
 				<RadioGroup
 					sx={{width: '20%'}}
-					name="controlled-radio-buttons-group"
+					name='controlled-radio-buttons-group'
 					value={earTag}
 					onChange={(e) => {
 						setEarTag(e.target.value);
 					}}
 				>
-					<FormControlLabel value="left" control={<Radio/>} label="Left"/>
-					<FormControlLabel value="right" control={<Radio/>} label="Right"/>
+					<FormControlLabel value='left' control={<Radio/>} label='Left'/>
+					<FormControlLabel value='right' control={<Radio/>} label='Right'/>
 				</RadioGroup>
 				<IconButton sx={{width: '20%'}}>
 					<DeleteIcon color='primary'/>
@@ -111,15 +112,16 @@ const IdentifierEntry = ({handleUpdate, handleDelete}) => {
 	return (
 		<>
 			<Box sx={{display: 'flex', width: '100%'}}>
-				<TextField sx={{m: 2, width: '40%'}}
-									 id="identifier"
-									 name="identifier"
-									 select
-									 defaultValue={"+ Add Identifier Types"}
-									 onChange={(e) => {
-										 setIdentifier(e.target.value);
-										 handleUpdate(e);
-									 }}
+				<TextField
+					sx={{m: 2, width: '40%'}}
+					id='identifier'
+					name='identifier'
+					select
+					defaultValue={"+ Add Identifier Types"}
+					onChange={(e) => {
+						setIdentifier(e.target.value);
+						handleUpdate(e);
+					}}
 				>
 					{validIdentifier.map((m, i) => (
 						<MenuItem key={i} value={m.value}>

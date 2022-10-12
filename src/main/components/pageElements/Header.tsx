@@ -13,26 +13,26 @@ const Header: React.FC = () => {
 	const bestName = useSelector(state => state.Auth.bestName);
 
 	return (
-		<header id="header" className={'header'}>
+		<header id='header' className={'header'}>
 			<div className={'container'}>
-				<Link to="/" className={'homeLink'}>
-					<img src={GovLogo} alt={'BC Government Logo'} id="logo" />
+				<Link to='/' className={'homeLink'}>
+					<img src={GovLogo} alt={'BC Government Logo'} id='logo'/>
 					Wildlife Health Information System
 				</Link>
-				<nav className="profile">
+				<nav className='profile'>
 					<li>
 						<div className={'username'}>
-							<Icon path={mdiAccountCircle} title="User Profile" size={1}></Icon>
+							<Icon path={mdiAccountCircle} title='User Profile' size={1}></Icon>
 							<span>{bestName}</span>
 						</div>
 					</li>
 					<li>
-						<Button className={'logout'} color="primary" onClick={() => keycloakInstance.logout()}>
+						<Button className={'logout'} color='primary' onClick={() => keycloakInstance.logout()}>
 							Log out
 						</Button>
 					</li>
 					<li>
-						<IconButton className={'help'} color="primary">
+						<IconButton className={'help'} color='primary'>
 							<HelpIcon/>
 						</IconButton>
 					</li>

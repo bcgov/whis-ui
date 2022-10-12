@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useNavigate} from "react-router-dom";
 
@@ -12,35 +12,54 @@ const LockModal = ({open}) => {
 		if (userWantsNotification) {
 			return (
 				<>
-					<Button variant={'contained'} onClick={() => {
-						navigate('/wildlifeIds')
-					}} color="secondary">
+					<Button
+						color='secondary'
+						variant={'contained'}
+						onClick={() => {
+							navigate('/wildlifeIds')
+						}}
+					>
 						Okay
 					</Button>
 				</>
 			)
 		} else {
-			return (<>
-				<Button variant={'contained'} onClick={() => {
-					navigate('/wildlifeIds')
-				}} color="secondary">
+			return (
+				<>
+					<Button
+						variant={'contained'}
+						color='secondary'
+						onClick={() => {
+							navigate('/wildlifeIds')
+						}}
+					>
 						No
-				</Button>
-				<Button variant={'contained'} onClick={() => {
-					setUserWantsNotification(true);
-				}} color="primary">
+					</Button>
+					<Button
+						variant={'contained'}
+						color='primary'
+						onClick={() => {
+							setUserWantsNotification(true);
+						}}
+					>
 						Yes
-				</Button>
-			</>
+					</Button>
+				</>
 			)
 		}
 	}
 
 	return (
-		<Dialog open={open} onClose={() => {
-			navigate('/wildlifeIds')
-		}} aria-labelledby="form-dialog-title" maxWidth={'md'} fullWidth={true}>
-			<DialogTitle id="form-dialog-title">Locked</DialogTitle>
+		<Dialog
+			open={open}
+			aria-labelledby='form-dialog-title'
+			maxWidth={'md'}
+			fullWidth={true}
+			onClose={() => {
+				navigate('/wildlifeIds')
+			}}
+		>
+			<DialogTitle id='form-dialog-title'>Locked</DialogTitle>
 			<DialogContent>
 				{userWantsNotification && <>
 					You will be notified within the application when the generation function becomes available.

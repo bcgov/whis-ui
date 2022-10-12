@@ -9,11 +9,11 @@ import Edit from "../pages/wildlifeIds/Edit";
 import ActionManagement from '../pages/wildlifeIds/ActionManagement';
 
 const WildlifeIdRoutes = [
-	<Route path="/wildlifeIds" element={<DefaultLayout showNavigation={true}><Dashboard/></DefaultLayout>}/>,
-	<Route path="/wildlifeIds/list" element={<DefaultLayout><List/></DefaultLayout>}/>,
-	<Route path="/wildlifeIds/generate" element={<DefaultLayout><Generate/></DefaultLayout>}/>,
-	<Route path="/wildlifeIds/detail/:id" element={<DefaultLayout><Detail/></DefaultLayout>}/>,
-	<Route path="/wildlifeIds/edit/:id" element={<DefaultLayout><Edit/></DefaultLayout>}/>,
-	<Route path="/wildlifeIds/actionManagement" element={<DefaultLayout><ActionManagement/></DefaultLayout>}/>
+	<Route path='/wildlifeIds' element={<DefaultLayout showNavigation={true}><Dashboard/></DefaultLayout>}/>,
+	<Route path='/wildlifeIds/list' element={<DefaultLayout><List/></DefaultLayout>}/>,
+	<Route path='/wildlifeIds/generate' element={<DefaultLayout><Generate/></DefaultLayout>}/>,
+	<Route path='/wildlifeIds/detail/:id' element={<DefaultLayout><Detail/></DefaultLayout>}/>,
+	<Route path='/wildlifeIds/edit/:id' element={<DefaultLayout><Edit/></DefaultLayout>}/>,
+	<Route path='/wildlifeIds/actionManagement' element={<DefaultLayout><ActionManagement/></DefaultLayout>}/>
 ];
 export default WildlifeIdRoutes;

@@ -1,8 +1,5 @@
-import {all, call, delay, put, select, take, takeEvery, takeLatest} from 'redux-saga/effects';
-import {
-	FLASH_MESSAGE_CREATE,
-	FLASH_MESSAGE_TTL_TICK
-} from '../actions';
+import {all, call, delay, put, select, takeLatest} from 'redux-saga/effects';
+import {FLASH_MESSAGE_CREATE, FLASH_MESSAGE_TTL_TICK} from '../actions';
 import {selectFlashMessages} from "../reducers/flash_messages";
 
 

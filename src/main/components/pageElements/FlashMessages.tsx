@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import '../../styles/alert.scss';
 
 import {useSelector} from '../../../state/utilities/use_selector';
@@ -17,9 +17,11 @@ const FlashMessages: React.FC = () => {
 			<div className={'alertList'}>
 				{messages.map((m) => (
 					<div className={`alertMessage ${m.type}`}>
-						<Button onClick={() => {
-							dispatch({type: FLASH_MESSAGE_DISMISS, payload: {id: m.id}})
-						}} className={'dismiss'}><Close/></Button>
+						<Button
+							onClick={() => {
+								dispatch({type: FLASH_MESSAGE_DISMISS, payload: {id: m.id}})
+							}} className={'dismiss'}
+						><Close/></Button>
 						<span className={'title'}>{m.title}</span>
 						<span className={'body'}>{m.body}</span>
 					</div>

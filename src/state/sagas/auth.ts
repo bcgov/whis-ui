@@ -2,12 +2,16 @@ import {all, delay, put, select, takeLatest} from 'redux-saga/effects';
 import Keycloak from 'keycloak-js';
 import {
 	AUTH_INITIALIZE_COMPLETE,
-	AUTH_INITIALIZE_REQUEST, AUTH_REFRESH_ROLES_COMPLETE, AUTH_REFRESH_ROLES_ERROR, AUTH_REFRESH_ROLES_REQUEST,
+	AUTH_INITIALIZE_REQUEST,
+	AUTH_REFRESH_ROLES_COMPLETE,
+	AUTH_REFRESH_ROLES_ERROR,
+	AUTH_REFRESH_ROLES_REQUEST,
 	AUTH_REFRESH_TOKEN,
 	AUTH_REQUEST_COMPLETE,
 	AUTH_REQUEST_ERROR,
 	AUTH_SIGNIN_REQUEST,
-	AUTH_UPDATE_TOKEN_STATE, CODE_TABLES_LOAD_REQUEST, EVENT_LOGGED_IN
+	AUTH_UPDATE_TOKEN_STATE,
+	EVENT_LOGGED_IN
 } from '../actions';
 import {AppConfig} from '../config';
 import {getConfiguration} from '../utilities/config_helper';
@@ -32,7 +36,6 @@ function* refreshRoles() {
 		console.dir(err);
 		yield put({type: AUTH_REFRESH_ROLES_ERROR});
 	}
-
 }
 
 function* keepTokenFresh() {

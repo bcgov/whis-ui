@@ -5,7 +5,7 @@ import {mdiLoading} from '@mdi/js';
 
 const Loading: React.FC = () => (
 	<div>
-		<Icon path={mdiLoading} title="Loading" spin size={2} />
+		<Icon path={mdiLoading} title='Loading' spin size={2}/>
 		<span>Loading...</span>
 	</div>
 );

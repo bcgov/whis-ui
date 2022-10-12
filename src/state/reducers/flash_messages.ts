@@ -1,11 +1,4 @@
-import CodeTables from "../../main/pages/admin/CodeTables";
-import {
-	CODE_TABLES_LOAD_REQUEST,
-	CODE_TABLES_LOAD_REQUEST_COMPLETE,
-	CODE_TABLES_LOAD_REQUEST_ERROR,
-	FLASH_MESSAGE_CREATE,
-	FLASH_MESSAGE_DISMISS, FLASH_MESSAGE_TTL_TICK
-} from "../actions";
+import {FLASH_MESSAGE_CREATE, FLASH_MESSAGE_DISMISS, FLASH_MESSAGE_TTL_TICK} from "../actions";
 
 export interface FlashMessages {
 	messages: {

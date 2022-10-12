@@ -5,7 +5,7 @@ import Icon from '@mdi/react';
 const NotFound = () => {
 	return (
 		<div>
-			<Icon path={mdiEmoticonConfused} title="Confused Icon" size={2} />
+			<Icon path={mdiEmoticonConfused} title='Confused Icon' size={2}/>
 			<span>Not Found</span>
 		</div>
 	);

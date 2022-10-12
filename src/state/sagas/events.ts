@@ -18,7 +18,7 @@ function* reactToEvent() {
 			headers: authHeaders
 		});
 		for (const e of receivedEvents) {
-			yield put ({type: EVENT_REMOTE_EVENT, payload: e})
+			yield put({type: EVENT_REMOTE_EVENT, payload: e})
 		}
 
 		yield put({type: EVENT_POLL});

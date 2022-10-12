@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, Card, TextField, Typography, InputAdornment, FormControl, Checkbox, FormControlLabel, FormGroup, MenuItem, FormLabel} from "@mui/material";
+import {Box, Button, Card, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, InputAdornment, MenuItem, TextField, Typography} from "@mui/material";
 import '../../styles/search.scss';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';

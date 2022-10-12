@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useAPI} from "../../hooks/useAPI";
 import {paperStyle} from "../../../state/style_constants";
-import {Button, Paper, Typography} from "@mui/material";
+import {Paper, Typography} from "@mui/material";
 import '../../styles/inventory.scss';
 import {useNavigate} from "react-router-dom";
-import Search from '../../components/wildlifeIds/Search';
-import UpdateID from '../../components/wildlifeIds/EditForm';
 
 const List: React.FC = () => {
 	const api = useAPI();
@@ -31,26 +29,30 @@ const List: React.FC = () => {
 
 			<table className={'inventory_table'}>
 				<thead>
-				<tr>
-					<th>Year</th>
-					<th>WLH ID</th>
-					<th></th>
-				</tr>
+					<tr>
+						<th>Year</th>
+						<th>WLH ID</th>
+						<th></th>
+					</tr>
 				</thead>
 				<tbody>
-				{items.map((i, j) => (
-					<tr key={j}>
-						<td>{i.year}</td>
-						<td>{i.wlh_id}</td>
-						<td><a onClick={() => {
-							navigate(`/wildlifeIds/edit/${i.id}`)
-						}}>Edit</a></td>
-						<td><a onClick={() => {
-							navigate(`/wildlifeIds/detail/${i.id}`)
-						}}>Details</a>
-						</td>
-					</tr>
-				))}
+					{items.map((i, j) => (
+						<tr key={j}>
+							<td>{i.year}</td>
+							<td>{i.wlh_id}</td>
+							<td><a
+								onClick={() => {
+									navigate(`/wildlifeIds/edit/${i.id}`)
+								}}
+							>Edit</a></td>
+							<td><a
+								onClick={() => {
+									navigate(`/wildlifeIds/detail/${i.id}`)
+								}}
+							>Details</a>
+							</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
 

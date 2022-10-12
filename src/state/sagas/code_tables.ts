@@ -1,4 +1,4 @@
-import {all, delay, put, select, take, takeEvery, takeLatest} from 'redux-saga/effects';
+import {all, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import {CODE_TABLES_LOAD_REQUEST, CODE_TABLES_LOAD_REQUEST_COMPLETE, CODE_TABLES_LOAD_REQUEST_ERROR, EVENT_LOGGED_IN} from '../actions';
 import {getConfiguration} from '../utilities/config_helper';
 import {getAuthHeaders} from "../utilities/authentication_helper";
