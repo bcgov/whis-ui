@@ -1,14 +1,36 @@
-span>p{
+.container {
+    width: 1344px;
+}
+
+.addEvent {
+    height: 41px;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+.status {
+    width: 1344px;
+    height: 158px;
+    border-radius: 4px;
+    fill: #ffffff;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+
+span>p {
     margin: 0;
 }
-#line2>p{
+
+#line2>p {
     margin-right: 5%;
 }
-.identifierSelect{
+
+.identifierSelect {
     display: flex;
     flex-direction: row;
 }
-.assigned{
+
+.assigned {
     border: 5px solid rgb(76, 175, 80);
     background-color: rgb(76, 175, 80);
     border-radius: 30px;
@@ -16,6 +38,7 @@ span>p{
     text-align: center;
     color: white;
 }
-.requesterTable{
-    color:darkgrey;
+
+.requesterTable {
+    color: darkgrey;
 }

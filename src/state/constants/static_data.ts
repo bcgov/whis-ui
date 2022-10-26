@@ -29,10 +29,15 @@ export const staticData = {
 		name: 'regions',
 		displayed_name: 'Valid Regions',
 		codes: [
-			validCodeFromLabelAndValue({value: 'REGION1', label: 'Region1'}),
-			validCodeFromLabelAndValue({value: 'REGION2', label: 'Region2'}),
-			validCodeFromLabelAndValue({value: 'REGION3', label: 'Region3'}),
-			validCodeFromLabelAndValue({value: 'REGION4', label: 'Region4'})
+			validCodeFromLabelAndValue({value: 'VANCOUVER_ISLAND', label: 'Vancouver Island'}),
+			validCodeFromLabelAndValue({value: 'LOWER_MAINLAND', label: 'Lower Mainland'}),
+			validCodeFromLabelAndValue({value: 'THOMPSON', label: 'Thompson'}),
+			validCodeFromLabelAndValue({value: 'KOOTENAY', label: 'Kootenay'}),
+			validCodeFromLabelAndValue({value: 'CARIBOO', label: 'Cariboo'}),
+			validCodeFromLabelAndValue({value: 'SKEENA', label: 'Skeena'}),
+			validCodeFromLabelAndValue({value: 'OMINECA', label: 'Omineca'}),
+			validCodeFromLabelAndValue({value: 'OKANAGAN', label: 'Okanagan'}),
+			validCodeFromLabelAndValue({value: 'PEACE', label: 'Peace'}),
 		]
 	},
 	'organizations': {
@@ -40,7 +45,7 @@ export const staticData = {
 		displayed_name: 'Valid Organizations',
 		codes: [
 			validCodeFromLabelAndValue({value: 'ORGANIZATION1', label: 'Organization1'}),
-			validCodeFromLabelAndValue({value: 'ORGANIZATION2', label: 'Organization'}),
+			validCodeFromLabelAndValue({value: 'ORGANIZATION2', label: 'Organization2'}),
 			validCodeFromLabelAndValue({value: 'ORGANIZATION3', label: 'Organization3'}),
 			validCodeFromLabelAndValue({value: 'ORGANIZATION4', label: 'Organization4'})
 		]
@@ -49,10 +54,15 @@ export const staticData = {
 		name: 'roles',
 		displayed_name: 'Valid Roles',
 		codes: [
-			validCodeFromLabelAndValue({value: 'ROLE1', label: 'Role1'}),
-			validCodeFromLabelAndValue({value: 'ROLE2', label: 'Role2'}),
-			validCodeFromLabelAndValue({value: 'ROLE3', label: 'Role3'}),
-			validCodeFromLabelAndValue({value: 'ROLE4', label: 'Role4'})
+			validCodeFromLabelAndValue({value: 'CONSERVATION_OFFICER', label: 'Conservation Officer'}),
+			validCodeFromLabelAndValue({value: 'CONTRACTOR', label: 'Contractor'}),
+			validCodeFromLabelAndValue({value: 'COMPULSORY_INSPECTOR', label: 'Compulsory Inspector'}),
+			validCodeFromLabelAndValue({value: 'FIRST_NATION', label: 'First Nation'}),
+			validCodeFromLabelAndValue({value: 'GOVERNMENT_BIOLOGIST', label: 'Government Biologist'}),
+			validCodeFromLabelAndValue({value: 'HIGHWAY_CREW', label: 'Highway Crew'}),
+			validCodeFromLabelAndValue({value: 'HUNTER', label: 'Hunter'}),
+			validCodeFromLabelAndValue({value: 'PUBLIC', label: 'Public'}),
+			validCodeFromLabelAndValue({value: 'TRAPPER', label: 'Trapper'}),
 		]
 	}
 };

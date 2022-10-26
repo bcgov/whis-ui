@@ -3,14 +3,15 @@ import React from "react";
 
 const TwoColumnForm = ({title, children}) => {
 	return (
-		<Grid container sx={{marginTop:'50px', marginInline:'30px'}}>
-			<Grid item xs={4}>
-				<Typography fontFamily={'BCSans-Bold'} sx={{display: 'inline-block', fontSize:'24px'}}>{title}</Typography>
+		// marginLeft:'145px', 
+		<Grid container sx={{ flexDirection:'column'}}>
+			<Grid item >
+				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize:'18px', margin:'32px 0 21px 145px' }}>{title}</Typography>
 			</Grid>
-			<Grid item xs={7}>
-				<Grid container spacing={4} alignItems={'flex-end'}>
+			<Grid item xs={10} sx={{marginInline:'145px'}}>
+				<Grid container spacing={4} alignItems={'baseline'}>
 					{children.map((c, i) => (
-						<Grid item xs={6}>
+						<Grid item xs={6} >
 							{c}
 						</Grid>
 					))

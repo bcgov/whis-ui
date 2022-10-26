@@ -3,10 +3,10 @@ import React from "react";
 
 const OneColumnForm = ({children}) => {
 	return (
-		<Grid container sx={{marginTop:'32px', marginBottom:'50px', marginInline:'30px'}}>
-			<Grid item xs={4}>
+		<Grid container sx={{marginTop:'32px', marginBottom:'50px', marginInline:'145px', flexDirection:'column'}}>
+			{/* <Grid item xs={4}>
 				<Typography variant={'subtitle1'} sx={{display: 'inline-block'}}>&nbsp;</Typography>
-			</Grid>
+			</Grid> */}
 			<Grid item xs={7}>
 				<Grid container spacing={4} alignItems={'flex-end'}>
 					{children.map((c, i) => (

@@ -82,7 +82,7 @@ const EditForm = ({ wildlifeId }) => {
 		}));
 	}
 
-	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
+	const { tables, initialized: codeTablesInitialized } = useSelector(selectCodeTables);
 	useEffect(() => {
 		if (!codeTablesInitialized) {
 			return;
@@ -224,14 +224,16 @@ const EditForm = ({ wildlifeId }) => {
 	};
 
 	return (
+		<Box className='container'>
 
-		<Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
-			<Typography variant={'h4'}>Update WLH ID</Typography><br />
-			<Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-				<p>Update the WLH ID details and add one or more events.</p>
-				<Button variant={'contained'} sx={{ height: '40px' }} onClick={handleNewEvent}>+ Add New Event</Button>
-			</Box>
-			<Paper sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: '20px', alignItems: 'center', padding: '30px' }}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '32px' }}>WLH ID [Number]</Typography>
+			<Typography sx={{ marginBottom: '28px', fontSize: '16px', color: '#787f81' }}>Update the WLH ID details and events.</Typography>
+
+			<Button variant={'contained'}  sx={{ height: '41px', textTransform:'capitalize', fontSize:'14px' }} onClick={handleNewEvent}>+ Add New Event</Button>
+
+
+
+			<Paper className='status' sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: '20px', alignItems: 'center', padding: '30px' }}>
 				<span>
 					<p>General</p>
 					<p>Information</p>
@@ -1227,6 +1229,7 @@ const EditForm = ({ wildlifeId }) => {
 					</Paper>
 				</Collapse>
 			</Box>
+			{/* </Box> */}
 		</Box>
 	);
 };

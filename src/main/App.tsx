@@ -6,6 +6,7 @@ import Header from './components/pageElements/Header';
 import {Provider} from 'react-redux';
 import {Route, Routes} from 'react-router';
 import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/wildlifeIds/Dashboard';
 import NotFound from './pages/NotFound';
 import WildlifeIdRoutes from './routes/wildlifeIds';
 import AdminRoutes from "./routes/Admin";
@@ -45,8 +46,10 @@ const App: React.FC<{ store }> = ({store}) => {
 					<Routes>
 						{WildlifeIdRoutes}
 						{AdminRoutes}
-						<Route path="/" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
-						<Route path="" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
+						{/* <Route path="/" element={<DefaultLayout><LandingPage/></DefaultLayout>}/>
+						<Route path="" element={<DefaultLayout><LandingPage/></DefaultLayout>}/> */}
+						<Route path="/" element={<DefaultLayout><Dashboard/></DefaultLayout>}/>
+						<Route path="" element={<DefaultLayout><Dashboard/></DefaultLayout>}/>
 						<Route path="*" element={<DefaultLayout><NotFound/></DefaultLayout>}/>
 					</Routes>
 				</BrowserRouter>

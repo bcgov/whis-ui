@@ -40,9 +40,30 @@ table.inventory_table {
 	position: relative;
 	top: -35px;
 }
+.alertIcon {
+	margin: auto;
+	width: 78px;
+	height: 78px;
+	border-radius: 999rem;
+	background-color: #ffae00;
+	position: relative;
+	top: -30px;
+}
+
 .okBtn{
 	width: 110px;
 	height: 45px;
 	font-size: 16px;
 	border-radius: 6px;
 }
+
+.MuiTextField-root > p{
+	margin-left: 0;
+}
+
+// input:invalid ~ .MuiTextField-root > p{
+	
+// 		display: block;
+// 		color: red;
+	
+// }
