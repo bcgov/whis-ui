@@ -1,18 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import {useAPI} from "../../hooks/useAPI";
 import {Button, Paper, Stack, Typography} from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
+import { useAPI } from "../../hooks/useAPI";
+import { Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, Paper, Select, Slider, Stack, TextField, Typography } from "@mui/material";
 import '../../styles/inventory.scss';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useNavigate} from "react-router-dom";
 import {paperStyle} from "../../../state/style_constants";
 import {useParams} from "react-router";
+import AddIcon from '@mui/icons-material/Add';
+import { useSelector } from "../../../state/utilities/use_selector";
+import { useNavigate } from "react-router-dom";
+import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
+import { paperStyle } from "../../../state/style_constants";
+import { useParams } from "react-router";
 import EditForm from "../../components/wildlifeIds/EditForm";
 
 const Edit: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
 	const api = useAPI();
-	const {id} = useParams();
+	const { id } = useParams();
 	const [data, setData] = useState(null);
 	const [loading, setLoading] = useState(false);
 
@@ -27,11 +37,12 @@ const Edit: React.FC = () => {
 	const navigate = useNavigate();
 
 	return (
-		<Paper sx={paperStyle}>
+		// <Paper sx={paperStyle}>
 
-			<Typography variant={'h3'}>WLH ID Details</Typography>
+		// 	<Typography variant={'h3'}>WLH ID Details</Typography>
+		<>
 
-			<EditForm wildlifeId={data}/>
+			<EditForm wildlifeId={data} />
 
 			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
 				<Button
@@ -44,8 +55,9 @@ const Edit: React.FC = () => {
 					Back
 				</Button>
 			</Stack>
+		</>
 
-		</Paper>
+		// </Paper>
 	);
 };
 

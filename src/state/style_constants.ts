@@ -1,5 +1,6 @@
 export const paperStyle =
-	{
-		width: '75vw',
-		padding: '16px'
-	};
+{
+	width: '1376px',
+	padding:'4px',
+	paddingTop:'32px'
+};

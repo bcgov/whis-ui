@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import '../../styles/dashboard.scss';
@@ -14,6 +14,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import FlagIcon from '@mui/icons-material/Flag';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useSelector } from "../../../state/utilities/use_selector";
+import { LockModal } from "../../components/wildlifeIds/LockModal";
 import { Box, Button, Card, CardContent, CardHeader, Divider, IconButton, Typography, Link, Stack } from "@mui/material";
 
 
@@ -35,8 +36,23 @@ const Dashboard: React.FC = () => {
 		{ text: '10 recently generated IDs do not have detailed info', link: '' }
 	];
 
+	const lockStatus = useSelector(state => state.GenerationLock);
+	const [lockModalOpen, setLockModalOpen] = useState(false);
+	const [testOpen, setTestOpen] = useState(false);
+
+	useEffect(() => {
+		if (lockStatus.initialized
+			&& !lockStatus.working
+			&& lockStatus.status
+			&& lockStatus.status.lockHolder
+			&& !lockStatus.status.lockHolder.isSelf) {
+			setLockModalOpen(true);
+		}
+	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
+
 	return (
 		<Box className={'dash_grid'}>
+			<LockModal open={testOpen} />
 			<Card sx={{ gridArea: 'profile', gridRow: 'span 2', borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px' }}>
 				<IconButton
 					sx={{
@@ -81,7 +97,7 @@ const Dashboard: React.FC = () => {
 						</Typography>
 						<Box className={'actions'}>
 							<Box className='generateBtn'>
-								<IconButton className='generateBtn' onClick={() => navigate('/wildlifeIds/generate')}>
+								<IconButton className='generateBtn' onClick={() => {setTestOpen(true)}}>
 									<AddCircleOutlineIcon />
 								</IconButton>
 								<p>Generate IDs</p>
@@ -93,7 +109,7 @@ const Dashboard: React.FC = () => {
 								<p>Search IDs</p>
 							</Box>
 							<Box className='actionBtn'>
-								<IconButton className='actionBtn' onClick={() => navigate('actionManagement')} >
+								<IconButton className='actionBtn' onClick={() => navigate('/wildlifeIds/actionManagement')} >
 									<NotificationsNoneIcon />
 								</IconButton>
 								<p>Actions & Notifications</p>
@@ -116,11 +132,13 @@ const Dashboard: React.FC = () => {
 				<CardContent>
 					<Box className={'welcome_buttons'}>
 						<Button variant={'contained'}
-							onClick={() => navigate('generate')}
+							onClick={() => {
+								navigate('/wildlifeIds/generate');
+							}}
 						>
 							Generate Wildlife Health ID
 						</Button>
-						<Button variant={'contained'} onClick={() => navigate('list')}>View WLH ID Inventory</Button>
+						<Button variant={'contained'} onClick={() => navigate('/wildlifeIds/list')}>View WLH ID Inventory</Button>
 						<Button disabled variant={'contained'}>Future Function</Button>
 					</Box>
 				</CardContent>
@@ -129,7 +147,7 @@ const Dashboard: React.FC = () => {
 			<Card className='action_area' sx={{ gridArea: 'actions', borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px' }}>
 				<Stack direction="row" spacing={2} sx={{ padding: '30px 50px 10px 30px', alignItems: 'center' }}>
 					<NotificationsIcon sx={{fontSize:'30px'}}/>
-					<Link onClick={() => navigate('actionManagement')} sx={{ cursor: 'pointer', textDecoration: 'none', fontSize: '20px', fontFamily: 'BCSans-Bold' }}>{'Actions'}</Link>
+					<Link onClick={() => navigate('/wildlifeIds/actionManagement')} sx={{ cursor: 'pointer', textDecoration: 'none', fontSize: '20px', fontFamily: 'BCSans-Bold' }}>{'Actions'}</Link>
 				</Stack>
 
 				<CardContent sx={{ paddingLeft: '33px' }}>
