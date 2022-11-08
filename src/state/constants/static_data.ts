@@ -25,6 +25,14 @@ export const staticData = {
 			validCodeFromLabelAndValue({value: 'UNKNOWN', label: 'Unknown'})
 		]
 	},
+	'status': {
+		name: 'status',
+		displayed_name: 'Valid Status',
+		codes: [
+			validCodeFromLabelAndValue({value: 'ASSIGNED', label: 'Assigned'}),
+			validCodeFromLabelAndValue({value: 'UNASSIGNED', label: 'Unassigned'})
+		]
+	},
 	'regions': {
 		name: 'regions',
 		displayed_name: 'Valid Regions',

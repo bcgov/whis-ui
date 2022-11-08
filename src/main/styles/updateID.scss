@@ -1,5 +1,13 @@
+@import "colours";
+
 .container {
     width: 1344px;
+
+    .css-bhp9pd-MuiPaper-root-MuiCard-root {
+        border-radius: 4px;
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
 }
 
 .addEvent {
@@ -8,17 +16,92 @@
     text-transform: capitalize;
 }
 
-.status {
-    width: 1344px;
-    height: 158px;
-    border-radius: 4px;
-    fill: #ffffff;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+.MuiButton-root.expand_btn {
+    width: 108px;
+    height: 32px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #ffffff;
+    background-size: cover;
+    font-size: 14px;
+    color: #868e96;
+    text-decoration: none solid rgb(134, 142, 150);
+    text-transform: capitalize;
 }
 
+.card {
+    margin: 0 auto;
+    margin-top: 9px;
+    width: 1296px;
+    height: 152px;
+    display: flex;
+    align-items: center;
+    padding-left: 58px;
+    padding-right: 40px;
 
-span>p {
-    margin: 0;
+    .MuiTypography-body1 {
+        color: $text;
+    }
+
+    .MuiTypography-body2 {
+        color: $body2;
+    }
+
+    span:nth-child(1) {
+        width: 200px;
+        margin-right: 105px;
+        flex-shrink: 0;
+    }
+
+
+    .info {
+        span {
+            width: 166px;
+        }
+
+        span:nth-child(1) {
+            margin-right: 93px;
+        }
+
+        span:nth-child(2) {
+            margin-right: 125px;
+        }
+
+        span:nth-child(3) {
+            margin-right: 137px;
+        }
+    }
+}
+
+.expand_papper {
+    margin: 0 auto;
+    width: 1296px;
+    display: flex;
+    flex-direction: column;
+    // position: relative;
+    // top: -19px;
+}
+
+.MuiButton-root.update_btn {
+    width: 132px;
+    height: 36px;
+    text-transform: capitalize;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.requester {
+    .tablehead {
+        background-color: #f8f9fa;
+    }
+
+    .MuiTableCell-root {
+        color: $text;
+    }
+
+    .MuiTableContainer-root {
+        width: 1091px;
+    }
 }
 
 #line2>p {
@@ -31,12 +114,27 @@ span>p {
 }
 
 .assigned {
-    border: 5px solid rgb(76, 175, 80);
-    background-color: rgb(76, 175, 80);
-    border-radius: 30px;
+    background-color: #4caf50;
     width: 90px;
     text-align: center;
-    color: white;
+    height: 25px;
+    border-radius: 50px;
+}
+
+.unassigned {
+    background-color: #fcba19;
+    width: 90px;
+    text-align: center;
+    height: 25px;
+    border-radius: 50px;
+}
+
+.retired {
+    background-color: #868e96;
+    width: 90px;
+    text-align: center;
+    height: 25px;
+    border-radius: 50px;
 }
 
 .requesterTable {
