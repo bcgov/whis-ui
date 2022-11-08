@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
-import {useAPI} from "../../hooks/useAPI";
+import { useAPI } from "../../hooks/useAPI";
 import {
 	Box,
 	Button,
@@ -19,26 +19,26 @@ import {
 import '../../styles/inventory.scss';
 import AddIcon from '@mui/icons-material/Add';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import {useSelector} from "../../../state/utilities/use_selector";
-import {useNavigate} from "react-router-dom";
+import { useSelector } from "../../../state/utilities/use_selector";
+import { useNavigate } from "react-router-dom";
 import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
-import {paperStyle} from "../../../state/style_constants";
+import { paperStyle } from "../../../state/style_constants";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import {selectCodeTables} from "../../../state/reducers/code_tables";
+import { selectCodeTables } from "../../../state/reducers/code_tables";
 import Loading from "../../components/util/Loading";
-import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {useForm} from "react-hook-form";
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { useForm } from "react-hook-form";
 
 const Generate: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
-	const {purposes, regions, organizations, roles} = useSelector(state => state.CodeTables.tables);
-	const {initialized: codeTablesInitialized} = useSelector(selectCodeTables);
+	const { purposes, status, regions, organizations, roles } = useSelector(state => state.CodeTables.tables);
+	const { initialized: codeTablesInitialized } = useSelector(selectCodeTables);
 
 	const api = useAPI();
 
@@ -56,7 +56,7 @@ const Generate: React.FC = () => {
 		}
 	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
 
-	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''})
+	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
 
 	const [formState, setFormState] = useState({
 		quantity: 1,
@@ -79,7 +79,7 @@ const Generate: React.FC = () => {
 	});
 
 	//handle form error
-	const {register, handleSubmit, control, formState: {errors}} = useForm({mode: "onChange"});
+	const { register, handleSubmit, control, formState: { errors } } = useForm({ mode: "onChange" });
 
 
 	//year picker
@@ -111,7 +111,7 @@ const Generate: React.FC = () => {
 		if (!validateYear())
 			return;
 
-		api.generateIDs({quantity: formState.quantity}).then(result => {
+		api.generateIDs({ quantity: formState.quantity }).then(result => {
 			setGenerateStatus({
 				status: 'ok',
 				message: JSON.stringify(result)
@@ -129,8 +129,8 @@ const Generate: React.FC = () => {
 	const handleUpdate = event => {
 		const currentState = formState;
 		switch (event.target.name) {
-		default:
-			currentState[event.target.name] = event.target.value;
+			default:
+				currentState[event.target.name] = event.target.value;
 		}
 		console.dir(formState);
 		console.log(event.target.name + ":" + event.target.value);
@@ -153,14 +153,14 @@ const Generate: React.FC = () => {
 	}
 
 	if (!codeTablesInitialized) {
-		return (<Loading/>);
+		return (<Loading />);
 	}
 
 	return (
 		<>
-			<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>Generate WLH ID</Typography>
-			<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>Generate one or multiple WLH IDs by entering the information
-																																									below.</Typography>
+			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '32px' }}>Generate WLH ID</Typography>
+			<Typography sx={{ marginBottom: '28px', fontSize: '16px', color: '#787f81' }}>Generate one or multiple WLH IDs by entering the information
+				below.</Typography>
 
 			<Paper sx={paperStyle}>
 				{/* <LockModal open={lockModalOpen} /> */}
@@ -170,7 +170,7 @@ const Generate: React.FC = () => {
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<TwoColumnForm title={'WLH ID information'}>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								id='wlh_id'
 								name='wlh_id'
 								label='Number of WLH IDs*'
@@ -206,14 +206,14 @@ const Generate: React.FC = () => {
 								maxDate={new Date(2099, 1, 1)}
 								onError={(e, value) => {
 									switch (e) {
-									case 'minDate':
-									case "invalidDate":
-									case 'maxDate':
-										setYearSelectError('❗Please enter a number between 2020 - 2099.');
-										break;
-									case null:
-										setYearSelectError(null);
-										break;
+										case 'minDate':
+										case "invalidDate":
+										case 'maxDate':
+											setYearSelectError('❗Please enter a number between 2020 - 2099.');
+											break;
+										case null:
+											setYearSelectError(null);
+											break;
 									}
 								}}
 								onChange={(y) => {
@@ -227,7 +227,7 @@ const Generate: React.FC = () => {
 
 								renderInput={(params) => (
 									<TextField
-										sx={{width: '100%'}}
+										sx={{ width: '100%' }}
 										name='year'
 										error={yearSelectError}
 										helperText={yearSelectError}
@@ -235,42 +235,42 @@ const Generate: React.FC = () => {
 									/>
 								)}
 							/>
-							<>
-								<TextField
-									sx={{width: '100%'}}
-									id='purpose'
-									label='Purpose*'
-									name='purpose'
-									select
-									// value={formState.purpose}
-									{...register("purpose", {
-										required: "❗Select the purpose.",
-									})}
-									error={!!errors?.purpose}
-									helperText={errors.purpose ? errors.purpose.message : null}
-									onChange={handleUpdate}
-									onSelect={handleUpdate}
-								>
-									{purposes.codes.map((m) => (
-										<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
-											{m.displayed_value}
-										</MenuItem>
-									))}
-								</TextField>
-							</>
 
 							<TextField
-								sx={{width: '100%'}} label='Species'
+								sx={{ width: '100%' }}
+								id='purpose'
+								label='Purpose*'
+								name='purpose'
+								select
+								// value={formState.purpose}
+								{...register("purpose", {
+									required: "❗Select the purpose.",
+								})}
+								error={!!errors?.purpose}
+								helperText={errors.purpose ? errors.purpose.message : null}
+								onChange={handleUpdate}
+								onSelect={handleUpdate}
+							>
+								{purposes.codes.map((m) => (
+									<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
+										{m.displayed_value}
+									</MenuItem>
+								))}
+							</TextField>
+
+
+							<TextField
+								sx={{ width: '100%' }} label='Species'
 								id='species'
 								defaultValue={formState.species}
 								name='species'
 								onChange={handleUpdate}
 								InputProps={{
-									endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon/></InputAdornment>,
+									endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon /></InputAdornment>,
 								}}
 							/>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								label='Associated Project'
 								id='associatedProject'
 								defaultValue={formState.associatedProject}
@@ -279,20 +279,52 @@ const Generate: React.FC = () => {
 							/>
 
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								label='Home Region'
 								id='homeRegion'
 								name='homeRegion'
 								onChange={handleUpdate}
 							/>
 
+							<TextField
+								sx={{ width: '100%' }}
+								id='idStatus'
+								label='WLH ID Status*'
+								name='idStatus'
+								select
+								{...register("idStatus", {
+									required: "❗Select the status.",
+								})}
+								error={!!errors?.idStatus}
+								helperText={errors.idStatus ? errors.idStatus.message : null}
+								onChange={handleUpdate}
+								onSelect={handleUpdate}
+							>
+								{status.codes.map((m) => (
+									<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
+										{m.displayed_value}
+									</MenuItem>
+								))}
+							</TextField>
+
+
 						</TwoColumnForm>
 					</LocalizationProvider>
+
+					<TextField
+						sx={{ minWidth: '1078px', marginInline: '145px', marginTop: '32px' }}
+						label='Project Detail'
+						id='projectDetail'
+						name='projectDetail'
+						multiline
+						rows={3}
+						onChange={handleUpdate}
+					/>
 
 					<TwoColumnForm title={'Requester'}>
 
 						<TextField
-							sx={{width: '100%'}}
+							sx={{ width: '100%' }}
 							label='First Name*'
 							id='firstName'
 							name='firstName'
@@ -308,7 +340,7 @@ const Generate: React.FC = () => {
 						/>
 
 						<TextField
-							sx={{width: '100%'}}
+							sx={{ width: '100%' }}
 							label='Last Name*'
 							id='lastName'
 							name='lastName'
@@ -325,19 +357,10 @@ const Generate: React.FC = () => {
 						/>
 					</TwoColumnForm>
 
-					<TextField
-						sx={{minWidth: '1078px', marginInline: '145px', marginTop: '32px'}}
-						label='Project Detail'
-						id='projectDetail'
-						name='projectDetail'
-						multiline
-						rows={3}
-						onChange={handleUpdate}
-					/>
-					<Box sx={{display: showOptional ? 'auto' : 'none'}}>
+					<Box sx={{ display: showOptional ? 'auto' : 'none' }}>
 						<TwoColumnForm title={'Requester details'}>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								select
 								label='Region'
 								id='requesterRegion'
@@ -352,7 +375,7 @@ const Generate: React.FC = () => {
 								))}
 							</TextField>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								select
 								label='Organization'
 								id='requesterOrganization'
@@ -366,7 +389,7 @@ const Generate: React.FC = () => {
 								))}
 							</TextField>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								label='Phone Number (---) --- ---'
 								id='phone'
 								name='phone'
@@ -381,7 +404,7 @@ const Generate: React.FC = () => {
 								helperText={errors.phone ? errors.phone.message : null}
 							/>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								label='Email'
 								id='email'
 								name='email'
@@ -395,7 +418,7 @@ const Generate: React.FC = () => {
 								helperText={errors.email ? errors.email.message : null}
 							/>
 							<TextField
-								sx={{width: '100%'}}
+								sx={{ width: '100%' }}
 								select
 								label="Requester's Role"
 								id='requesterRole'
@@ -412,7 +435,7 @@ const Generate: React.FC = () => {
 						</TwoColumnForm>
 					</Box>
 
-					<Box sx={{position: 'relative'}}>
+					<Box sx={{ position: 'relative' }}>
 						<Button
 							sx={{
 								display: OptionalButton ? 'auto' : 'none',
@@ -427,7 +450,7 @@ const Generate: React.FC = () => {
 								setOptionalButton(!OptionalButton);
 							}} variant='outlined'
 						>
-							<AddIcon color='primary' sx={{marginRight: '8px'}}/>Add Requester Details
+							<AddIcon color='primary' sx={{ marginRight: '8px' }} />Add Requester Details
 						</Button>
 						<Button
 							sx={{
@@ -445,7 +468,7 @@ const Generate: React.FC = () => {
 								// setFormState(formState.year:'')
 							}} variant='outlined'
 						>
-							<DeleteForeverOutlinedIcon color='primary' sx={{marginRight: '8px'}}/>Remove Requester Details
+							<DeleteForeverOutlinedIcon color='primary' sx={{ marginRight: '8px' }} />Remove Requester Details
 						</Button>
 					</Box>
 
@@ -453,10 +476,10 @@ const Generate: React.FC = () => {
 						open={openGenerateDialog}
 						onClose={handleClose}
 						PaperProps={{
-							sx: {overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px'}
+							sx: { overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px' }
 						}}
 					>
-						<Box className='checkIcon'><CheckIcon sx={{position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#EEF2F6',}}/></Box>
+						<Box className='checkIcon'><CheckIcon sx={{ position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#EEF2F6', }} /></Box>
 						<IconButton
 							onClick={handleClose}
 							sx={{
@@ -465,13 +488,13 @@ const Generate: React.FC = () => {
 								top: 8
 							}}
 						>
-							<CloseIcon/>
+							<CloseIcon />
 						</IconButton>
-						<DialogContent sx={{margin: 'auto', padding: '0 24px', textAlign: 'center'}}>
-							<p style={{color: '#666666', fontSize: '15px'}}>You have generated {numOfIDs} WLH IDs: (range of numbers)</p>
-							<p style={{color: '#666666', fontSize: '15px', marginTop: '25px'}}>Would you like to add more details to these IDs?</p>
+						<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
+							<p style={{ color: '#666666', fontSize: '15px' }}>You have generated {numOfIDs} WLH IDs: (range of numbers)</p>
+							<p style={{ color: '#666666', fontSize: '15px', marginTop: '25px' }}>Would you like to add more details to these IDs?</p>
 						</DialogContent>
-						<DialogActions sx={{margin: 'auto', marginBottom: '25px'}}>
+						<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
 							<Button
 								onClick={() => {
 									navigate('/wildlifeIds/edit/:id')
@@ -484,7 +507,7 @@ const Generate: React.FC = () => {
 									backgroundColor: 'rgb(58, 219, 118)',
 									color: '#fff',
 									fontSize: '16px',
-									":hover": {backgroundColor: 'rgb(58, 219, 118)'}
+									":hover": { backgroundColor: 'rgb(58, 219, 118)' }
 								}}
 							>YES</Button>
 							<Button
@@ -498,7 +521,7 @@ const Generate: React.FC = () => {
 									borderRadius: '6px',
 									color: 'rgb(102, 102, 102)',
 									fontSize: '16px',
-									":hover": {backgroundColor: '#fff'}
+									":hover": { backgroundColor: '#fff' }
 								}}
 							>Later</Button>
 						</DialogActions>
@@ -507,10 +530,10 @@ const Generate: React.FC = () => {
 						open={openCancelDialog}
 						onClose={handleClose}
 						PaperProps={{
-							sx: {overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px'}
+							sx: { overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px' }
 						}}
 					>
-						<Box className='alertIcon'><PriorityHighIcon sx={{position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#ffffff'}}/></Box>
+						<Box className='alertIcon'><PriorityHighIcon sx={{ position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#ffffff' }} /></Box>
 						<IconButton
 							onClick={handleClose}
 							sx={{
@@ -519,14 +542,14 @@ const Generate: React.FC = () => {
 								top: 8
 							}}
 						>
-							<CloseIcon/>
+							<CloseIcon />
 						</IconButton>
-						<DialogTitle sx={{margin: '0 auto', padding: '0px', fontSize: '16px', color: '#666666'}}>Cancel WLH ID Generation</DialogTitle>
-						<DialogContent sx={{margin: 'auto', padding: '0 24px', textAlign: 'center'}}>
-							<p style={{color: '#313132', fontSize: '14px', margin: '25px 0 5px 0'}}>You have NOT generated any IDs! Are you sure you want</p>
-							<p style={{color: '#313132', fontSize: '14px', textAlign: 'left', margin: '0'}}> to leave this page?</p>
+						<DialogTitle sx={{ margin: '0 auto', padding: '0px', fontSize: '16px', color: '#666666' }}>Cancel WLH ID Generation</DialogTitle>
+						<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
+							<p style={{ color: '#313132', fontSize: '14px', margin: '25px 0 5px 0' }}>You have NOT generated any IDs! Are you sure you want</p>
+							<p style={{ color: '#313132', fontSize: '14px', textAlign: 'left', margin: '0' }}> to leave this page?</p>
 						</DialogContent>
-						<DialogActions sx={{margin: 'auto', marginBottom: '25px'}}>
+						<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
 							<Button
 								onClick={() => {
 									navigate('/wildlifeIds/')
@@ -539,7 +562,7 @@ const Generate: React.FC = () => {
 									backgroundColor: '#ffae00',
 									color: '#fff',
 									fontSize: '16px',
-									":hover": {backgroundColor: '#ffae00'}
+									":hover": { backgroundColor: '#ffae00' }
 								}}
 							>YES</Button>
 							<Button
@@ -553,18 +576,18 @@ const Generate: React.FC = () => {
 									borderRadius: '6px',
 									color: 'rgb(102, 102, 102)',
 									fontSize: '16px',
-									":hover": {backgroundColor: '#fff'}
+									":hover": { backgroundColor: '#fff' }
 								}}
 							>NO</Button>
 						</DialogActions>
 					</Dialog>
 
 
-					<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{paddingRight: '145px', marginBottom: '88px'}}>
-						<GenerationLockWidget/>
-						<Button type='submit' sx={{textTransform: 'capitalize', width: '130px'}} variant={'contained'}>Generate</Button>
+					<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{ paddingRight: '145px', marginBottom: '88px' }}>
+						<GenerationLockWidget />
+						<Button type='submit' sx={{ textTransform: 'capitalize', width: '130px' }} variant={'contained'}>Generate</Button>
 						<Button
-							sx={{textTransform: 'capitalize', width: '130px'}}
+							sx={{ textTransform: 'capitalize', width: '130px' }}
 							variant={'outlined'}
 							onClick={() => {
 								setCancelDialog(true)
