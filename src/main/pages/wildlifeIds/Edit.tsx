@@ -28,18 +28,6 @@ const Edit: React.FC = () => {
 	return (
 		<>
 			<EditForm wildlifeId={data}/>
-
-			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
-				<Button
-					variant={'contained'}
-					color={'secondary'}
-					onClick={() => {
-						navigate(-1)
-					}}
-				>
-					Back
-				</Button>
-			</Stack>
 		</>
 	);
 };
