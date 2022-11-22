@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
 	Box,
 	Button,
@@ -31,57 +31,24 @@ import {
 	Typography
 } from "@mui/material";
 import '../../styles/updateID.scss';
-import TwoColumnForm from "./TwoColumnForm";
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { useSelector } from "../../../state/utilities/use_selector";
-import { selectCodeTables } from "../../../state/reducers/code_tables";
+import {useSelector} from "../../../state/utilities/use_selector";
+import {selectCodeTables} from "../../../state/reducers/code_tables";
 import IdentifierEntry from './IdentifierEntry';
 import LocationEntry from './LocationEntry';
-
-//Expand form
-interface ExpandMoreProps extends IconButtonProps {
-	expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-	const { expand, ...other } = props;
-	return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-	transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-	marginLeft: 'auto',
-	transition: theme.transitions.create('transform', {
-		duration: theme.transitions.duration.shortest,
-	}),
-}));
+import Expandable, {ExpansionOverrideEvent} from "../pageElements/Expandable";
 
 
-const EditForm = ({ wildlifeId }) => {
+const EditForm = ({wildlifeId}) => {
 
 	const [validPurposes, setValidPurposes] = useState([]);
-	// const [validIdentifier, setValidIdentifier] = useState([]);
-	// const [validLocation, setValidLocation] = useState([]);
-	// const [validOrganization, setValidOrganization] = useState([]);
-
 	const [validSex, setValidSex] = useState([]);
 	const [validAgeClass, setValidAgeClass] = useState([]);
-
-	const validOrganization = [
-		{ value: 'ONE', label: 'Organization 1' },
-		{ value: 'TWO', label: 'Organization 2' },
-		{ value: 'THREE', label: 'Organization 3' },
-		{ value: 'FOUR', label: 'Organization 4' }
-	];
-
-	const [singleIdStatus, setSingleIdStatus] = useState();
-	const validSingleIdStatus = [
-		{ value: 'ASSIGNED', label: 'Assigned' },
-		{ value: 'RETIRED', label: 'Retired' },
-		{ value: 'UNASSIGNED', label: 'Unassigned' }
-	];
+	const [validSingleIdStatus, setValidSingleIdStatus] = useState([]);
+	const [validOrganization, setValidOrganization] = useState([]);
 
 	function codeToSelect(table: string): { label: string, value: string }[] {
 		return tables[table].codes.map(c => ({
@@ -90,7 +57,7 @@ const EditForm = ({ wildlifeId }) => {
 		}));
 	}
 
-	const { tables, initialized: codeTablesInitialized } = useSelector(selectCodeTables);
+	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 	useEffect(() => {
 		if (!codeTablesInitialized) {
 			return;
@@ -98,8 +65,10 @@ const EditForm = ({ wildlifeId }) => {
 		setValidAgeClass(codeToSelect('animal_age'));
 		setValidSex(codeToSelect('animal_gender'))
 		setValidPurposes(codeToSelect('wlh_id_purpose'));
+		setValidOrganization(codeToSelect('organizations'));
+		setValidSingleIdStatus(codeToSelect('status'));
 
-	}, [tables]);
+	}, [tables, codeTablesInitialized]);
 
 	const [formState, setFormState] = useState({
 		quantity: 1,
@@ -126,55 +95,21 @@ const EditForm = ({ wildlifeId }) => {
 	const [ageClass, setAgeClass] = useState('');
 	const [eventType, setEventType] = useState('');
 	const [identifierOptions, setIdentifierOption] = useState([
-		{ value: '', label: '' },
+		{value: '', label: ''},
 	]);
 	const [locationOptions, setLocationOption] = useState([
-		{ value: '', label: '' },
+		{value: '', label: ''},
 	]);
 
-	//handle expand
-	const [expanded_status, setExpandedStatus] = useState(false);
-	const [expanded_purpose, setExpandedPurpose] = useState(false);
-	const [expanded_WLD, setExpandedWLD] = useState(false);
-	const [expanded_event, setExpandedEvent] = useState(false);
-	const [expanded_newEvent, setExpandedNewEvent] = useState(false);
+	const [expansionEvent, setExpansionEvent] = useState<ExpansionOverrideEvent>({
+		event: 'none',
+		id: 0
+	});
 
-	const handleExpandClick = () => {
-		setExpandedStatus(!expanded_status);
-	};
-	const handleExpandClick1 = () => {
-		setExpandedPurpose(!expanded_purpose);
-		setShowDetail(!showDetail);
-	};
-	const handleExpandClick2 = () => {
-		setExpandedWLD(!expanded_WLD);
-		setShowDetail(!showDetail);
-	};
-	const handleExpandClick3 = () => {
-		setExpandedEvent(!expanded_event);
-		setShowDetail(!showDetail);
-	};
-	const handleExpandClick4 = () => {
-		setExpandedNewEvent(!expanded_newEvent);
-		setShowDetail(!showDetail);
-	};
-	const handleExpandAll = () => {
-		setExpandedPurpose(true);
-		setExpandedWLD(true);
-		setExpandedEvent(true);
-		setExpandedNewEvent(true);
-		setShowDetail(false);
-	};
-	const handleCollapseAll = () => {
-		setExpandedPurpose(false);
-		setExpandedWLD(false);
-		setExpandedEvent(false);
-		setExpandedNewEvent(false);
-		setShowDetail(true);
-	};
 
 	const handleSubmit = () => {
 	}
+
 	const handleUpdate = () => {
 
 	}
@@ -184,9 +119,6 @@ const EditForm = ({ wildlifeId }) => {
 	const handleNewEvent = () => {
 		setNewEvent(true);
 	};
-
-	//show details
-	const [showDetail, setShowDetail] = useState(true);
 
 	//Submitter Checked
 	const [submitterChecked, setSubmitterChecked] = useState(false);
@@ -211,7 +143,7 @@ const EditForm = ({ wildlifeId }) => {
 	}
 	const handleAddIdentifier = (index) => {
 		if (index === (identifierOptions.length - 1)) {
-			setIdentifierOption([...identifierOptions, { value: '', label: '' }])
+			setIdentifierOption([...identifierOptions, {value: '', label: ''}])
 		}
 	}
 
@@ -223,7 +155,7 @@ const EditForm = ({ wildlifeId }) => {
 	}
 	const handleAddLocation = (index) => {
 		if (index === (locationOptions.length - 1)) {
-			setLocationOption([...locationOptions, { value: '', label: '' }])
+			setLocationOption([...locationOptions, {value: '', label: ''}])
 		}
 	}
 
@@ -240,67 +172,66 @@ const EditForm = ({ wildlifeId }) => {
 
 	return (
 		<Box className='container'>
-			<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+			<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
 				<Box>
-					<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '32px' }}>WLH ID [Number]</Typography>
-					<Typography sx={{ marginBottom: '28px', fontSize: '16px', color: '#787f81' }}>Update the WLH ID details and events.</Typography>
+					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>WLH ID [Number]</Typography>
+					<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>Update the WLH ID details and events.</Typography>
 				</Box>
 
-				<Button variant={'contained'} sx={{ height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px' }} onClick={handleNewEvent}>+ Add New Event</Button>
+				<Button variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}} onClick={handleNewEvent}>+ Add
+					New Event</Button>
 
 			</Box>
 
-			<Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '70px', margin: '70px 8px 0 0' }}>
-				<Button variant='outlined' className='expand_btn' onClick={handleExpandAll}>Expand All</Button>
-				<Button variant='outlined' className='expand_btn' onClick={handleCollapseAll} sx={{ marginLeft: '8px' }}>Collapse All</Button>
+			<Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: '70px', margin: '70px 8px 0 0'}}>
+				<Button variant='outlined' className='expand_btn' onClick={() => {
+					setExpansionEvent({event: 'expandAll', id: expansionEvent.id + 1});
+				}}>Expand All</Button>
+				<Button variant='outlined' className='expand_btn' onClick={() => {
+					setExpansionEvent({event: 'collapseAll', id: expansionEvent.id + 1});
+				}
+				} sx={{marginLeft: '8px'}}>Collapse All</Button>
 			</Box>
 
-			<Card className='card'>
-				<span>
-					<Typography sx={{ fontSize: '18px' }}>Status</Typography>
-					<Typography className='unassigned' sx={{ color: 'white', fontSize: '13px' }} variant='subtitle1'>
+			<Expandable expansionEvent={expansionEvent}>
+				<Expandable.Title>
+					<span>
+						<Typography sx={{fontSize: '18px'}}>Status</Typography>
+						<Typography className='unassigned' sx={{color: 'white', fontSize: '13px'}} variant='subtitle1'>
 						Unassigned
-					</Typography>
-				</span>
-				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
-					<span>
-						<Typography variant='body2'>
+						</Typography>
+					</span>
+					<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+						<span>
+							<Typography variant='body2'>
 							WLH ID Number
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							22-00001
-						</Typography>
-					</span>
-					<span>
-						<Typography variant='body2'>
+							</Typography>
+						</span>
+						<span>
+							<Typography variant='body2'>
 							WLH ID Genrated  Date
-						</Typography>
-						<Typography variant='body1' >
+							</Typography>
+							<Typography variant='body1'>
 							21-01-2021
-						</Typography>
-					</span>
-					<span>
-						<Typography variant='body2' >
+							</Typography>
+						</span>
+						<span>
+							<Typography variant='body2'>
 							WLH ID Creator
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Jane Hill
-						</Typography>
-					</span>
-				</Box>
-				<ExpandMore
-					expand={expanded_status}
-					onClick={handleExpandClick}
-					aria-expanded={expanded_status}
-				>
-					<KeyboardArrowDownIcon sx={{ fontSize: '41px', color: '#1a5a96' }} />
-				</ExpandMore>
-			</Card>
-			<Collapse in={expanded_status}>
-				<Paper className='expand_papper'>
-					<Box sx={{ width: '1091px', margin: '48px auto' }}>
+							</Typography>
+						</span>
+					</Box>
+				</Expandable.Title>
+				<Expandable.Detail>
+					<Box sx={{width: '1091px', margin: '48px auto'}}>
 						<TextField
-							sx={{ width: '529px', marginTop: '8px' }}
+							sx={{width: '529px', marginTop: '8px'}}
 							id='idStatus'
 							label='WLH ID Status*'
 							name='idStatus'
@@ -315,7 +246,7 @@ const EditForm = ({ wildlifeId }) => {
 							))}
 						</TextField>
 						<TextField
-							sx={{ minWidth: '1091px', marginTop: '28px' }}
+							sx={{minWidth: '1091px', marginTop: '28px'}}
 							label='Reason (Enter a reason why you are changing the WLH ID status)'
 							id='reason'
 							name='reason'
@@ -324,7 +255,7 @@ const EditForm = ({ wildlifeId }) => {
 						/>
 					</Box>
 
-					<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
+					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 						<Button
 							variant={'contained'}
 							className='update_btn'
@@ -338,53 +269,46 @@ const EditForm = ({ wildlifeId }) => {
 							Cancel
 						</Button>
 					</Box>
-				</Paper>
-			</Collapse>
+				</Expandable.Detail>
+			</Expandable>
 
-			<Card className='card'>
-				<span>
-					<Typography sx={{ fontSize: '18px', width: '90px' }}>Purpose</Typography>
-				</span>
-				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+			<Expandable expansionEvent={expansionEvent}>
+				<Expandable.Title>
 					<span>
-						<Typography variant='body2'>
+						<Typography sx={{fontSize: '18px', width: '90px'}}>Purpose</Typography>
+					</span>
+					<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+						<span>
+							<Typography variant='body2'>
 							Primary Purpose
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Herd Health
-						</Typography>
-					</span>
-					<span>
-						<Typography variant='body2'>
+							</Typography>
+						</span>
+						<span>
+							<Typography variant='body2'>
 							Requester
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Sultana Majid
-						</Typography>
-					</span>
-					<span>
-						<Typography variant='body2'>
+							</Typography>
+						</span>
+						<span>
+							<Typography variant='body2'>
 							Organization
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Organization 1
-						</Typography>
-					</span>
-				</Box>
-				<ExpandMore
-					expand={expanded_purpose}
-					onClick={handleExpandClick1}
-					aria-expanded={expanded_purpose}
-				>
-					<KeyboardArrowDownIcon sx={{ fontSize: '41px', color: '#1a5a96' }} />
-				</ExpandMore>
-			</Card>
-			<Collapse in={expanded_purpose}>
-				<Paper className='expand_papper'>
-					<Box sx={{ width: '1091px', margin: '0 auto' }}>
-						<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '32px 0 21px 0' }}>WLH ID information</Typography>
+							</Typography>
+						</span>
+					</Box>
+				</Expandable.Title>
+				<Expandable.Detail>
+					<Box sx={{width: '1091px', margin: '0 auto'}}>
+						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '32px 0 21px 0'}}>WLH ID information</Typography>
 						<TextField
-							sx={{ width: '529px' }}
+							sx={{width: '529px'}}
 							id='purpose1'
 							select
 							label='Primary Purpose'
@@ -400,7 +324,7 @@ const EditForm = ({ wildlifeId }) => {
 							))}
 						</TextField>
 						<TextField
-							sx={{ width: '529px', marginLeft: '32px' }}
+							sx={{width: '529px', marginLeft: '32px'}}
 							id='purpose2'
 							select
 							label='Secondary Purpose'
@@ -417,14 +341,14 @@ const EditForm = ({ wildlifeId }) => {
 						</TextField>
 
 						<TextField
-							sx={{ minWidth: '1091px', marginTop: '32px' }}
+							sx={{minWidth: '1091px', marginTop: '32px'}}
 							label='Associated Project'
 							id='associatedProject'
 							name='associatedProject'
 							onChange={handleUpdate}
 						/>
 						<TextField
-							sx={{ minWidth: '1091px', marginTop: '32px' }}
+							sx={{minWidth: '1091px', marginTop: '32px'}}
 							label='Project Details'
 							id='projectDetails'
 							name='projectDetails'
@@ -434,7 +358,7 @@ const EditForm = ({ wildlifeId }) => {
 						/>
 
 						<Box className='requester'>
-							<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '32px 0 21px 0' }}>
+							<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '32px 0 21px 0'}}>
 								Requester(1)
 							</Typography>
 
@@ -450,7 +374,6 @@ const EditForm = ({ wildlifeId }) => {
 											<TableCell>Phone</TableCell>
 											<TableCell>Email</TableCell>
 											<TableCell>Action</TableCell>
-
 										</TableRow>
 									</TableHead>
 									<TableHead>
@@ -464,32 +387,32 @@ const EditForm = ({ wildlifeId }) => {
 											<TableCell></TableCell>
 											<TableCell>
 												<IconButton onClick={handleClickOpen}>
-													<EditIcon color='primary' />
+													<EditIcon color='primary'/>
 												</IconButton>
 												<IconButton>
-													<DeleteIcon color='primary' />
+													<DeleteIcon color='primary'/>
 												</IconButton>
 											</TableCell>
 
 											<Dialog open={open} onClose={handleClose}>
 												<DialogTitle>Update Requester</DialogTitle>
-												<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+												<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
 													<TextField
-														sx={{ m: 2, width: '40%' }}
+														sx={{m: 2, width: '40%'}}
 														label='Submitter First Name'
 														id='first_name'
 														name='first_name'
 														onChange={handleUpdate}
 													/>
 													<TextField
-														sx={{ m: 2, width: '40%' }}
+														sx={{m: 2, width: '40%'}}
 														label='Submitter Last Name'
 														id='last_name'
 														name='last_name'
 														onChange={handleUpdate}
 													/>
 													<TextField
-														sx={{ m: 2, width: '40%' }}
+														sx={{m: 2, width: '40%'}}
 														id='organization-select'
 														select
 														label='Organization'
@@ -505,7 +428,7 @@ const EditForm = ({ wildlifeId }) => {
 														))}
 													</TextField>
 													<TextField
-														sx={{ m: 2, width: '40%' }}
+														sx={{m: 2, width: '40%'}}
 														id='role-select'
 														select
 														label='Role'
@@ -521,14 +444,14 @@ const EditForm = ({ wildlifeId }) => {
 														))}
 													</TextField>
 													<TextField
-														sx={{ m: 2, width: '40%' }}
+														sx={{m: 2, width: '40%'}}
 														label='Phone Number'
 														id='phone'
 														name='phone'
 														onChange={handleUpdate}
 													/>
 													<TextField
-														sx={{ m: 2, width: '40%' }}
+														sx={{m: 2, width: '40%'}}
 														label='Email'
 														id='email'
 														name='email'
@@ -546,7 +469,7 @@ const EditForm = ({ wildlifeId }) => {
 							</TableContainer>
 						</Box>
 					</Box>
-					<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
+					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 						<Button
 							variant={'contained'}
 							className='update_btn'
@@ -560,73 +483,66 @@ const EditForm = ({ wildlifeId }) => {
 							Cancel
 						</Button>
 					</Box>
-				</Paper>
-			</Collapse>
+				</Expandable.Detail>
+			</Expandable>
 
 
-			<Card className='card'>
-				<span>
-					<Typography sx={{ fontSize: '18px' }}>Animal Details</Typography>
-				</span>
-				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+			<Expandable expansionEvent={expansionEvent}>
+				<Expandable.Title>
 					<span>
-						<Typography variant='body2'>
+						<Typography sx={{fontSize: '18px'}}>Animal Details</Typography>
+					</span>
+					<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+						<span>
+							<Typography variant='body2'>
 							Species
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Moose
-						</Typography>
-					</span>
-					<span>
-						<Typography variant='body2'>
+							</Typography>
+						</span>
+						<span>
+							<Typography variant='body2'>
 							Gender
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Female
-						</Typography>
-					</span>
-					<span>
-						<Typography variant='body2'>
+							</Typography>
+						</span>
+						<span>
+							<Typography variant='body2'>
 							Home Region
-						</Typography>
-						<Typography variant='body1'>
+							</Typography>
+							<Typography variant='body1'>
 							Home Region1
-						</Typography>
-					</span>
-				</Box>
-				<ExpandMore
-					expand={expanded_WLD}
-					onClick={handleExpandClick2}
-					aria-expanded={expanded_WLD}
-				>
-					<KeyboardArrowDownIcon sx={{ fontSize: '41px', color: '#1a5a96' }} />
-				</ExpandMore>
-			</Card>
-			<Collapse in={expanded_WLD}>
-				<Paper className='expand_papper'>
-					<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-						<Box sx={{ width: '1091px', margin: '0 auto' }}>
+							</Typography>
+						</span>
+					</Box>
+				</Expandable.Title>
+				<Expandable.Detail>
+					<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+						<Box sx={{width: '1091px', margin: '0 auto'}}>
 
 							<TextField
-								sx={{ minWidth: '1091px', marginTop: '57px' }}
+								sx={{minWidth: '1091px', marginTop: '57px'}}
 								label='Species'
 								id='species'
 								name='species'
 								InputProps={{
-									endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon /></InputAdornment>,
+									endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon/></InputAdornment>,
 								}}
 								onChange={handleUpdate}
 							/>
 
 							<TextField
-								sx={{ width: '529px', marginRight: '32px', marginTop: '32px' }}
+								sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
 								label='Home Region'
 								id='homeRegion'
 								onChange={handleUpdate}
 							/>
 							<TextField
 								select
-								sx={{ width: '529px', marginTop: '32px' }}
+								sx={{width: '529px', marginTop: '32px'}}
 								id='sex'
 								label='Sex'
 								value={sex}
@@ -642,7 +558,7 @@ const EditForm = ({ wildlifeId }) => {
 							</TextField>
 							{identifierOptions.map((identifierOption, index) => (
 								<div>
-									<Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+									<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
 										<IdentifierEntry
 											key={index}
 											handleUpdate={(e) => {
@@ -658,7 +574,7 @@ const EditForm = ({ wildlifeId }) => {
 							))}
 						</Box>
 					</Box>
-					<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
+					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 						<Button
 							variant={'contained'}
 							className='update_btn'
@@ -672,14 +588,14 @@ const EditForm = ({ wildlifeId }) => {
 							Cancel
 						</Button>
 					</Box>
-				</Paper>
-			</Collapse>
+				</Expandable.Detail>
+			</Expandable>
 
-			<Card className='card'>
-				<span>
-					<Typography sx={{ fontSize: '18px', width: '90px' }}>Event</Typography>
+			<Expandable expansionEvent={expansionEvent}>
+				<Expandable.Title>	<span>
+					<Typography sx={{fontSize: '18px', width: '90px'}}>Event</Typography>
 				</span>
-				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+					<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
 					<span>
 						<Typography variant='body2'>
 							Event type
@@ -688,7 +604,7 @@ const EditForm = ({ wildlifeId }) => {
 							Capture
 						</Typography>
 					</span>
-					<span>
+						<span>
 						<Typography variant='body2'>
 							Date
 						</Typography>
@@ -696,7 +612,7 @@ const EditForm = ({ wildlifeId }) => {
 							21-01-2021
 						</Typography>
 					</span>
-					<span>
+						<span>
 						<Typography variant='body2'>
 							Location
 						</Typography>
@@ -704,19 +620,11 @@ const EditForm = ({ wildlifeId }) => {
 							ZoneZone Zone 1
 						</Typography>
 					</span>
-				</Box>
-				<ExpandMore
-					expand={expanded_event}
-					onClick={handleExpandClick3}
-					aria-expanded={expanded_event}
-				>
-					<KeyboardArrowDownIcon sx={{ fontSize: '41px', color: '#1a5a96' }} />
-				</ExpandMore>
-			</Card>
-			<Collapse in={expanded_event}>
-				<Paper className='expand_papper'>
-					<Box sx={{ width: '1091px', margin: '0 auto' }}>
-						<FormControl sx={{ width: '380px', marginTop: '62px' }}>
+					</Box>
+				</Expandable.Title>
+				<Expandable.Detail>
+					<Box sx={{width: '1091px', margin: '0 auto'}}>
+						<FormControl sx={{width: '380px', marginTop: '62px'}}>
 							<FormLabel>Event Type</FormLabel>
 							<RadioGroup
 								row
@@ -727,25 +635,25 @@ const EditForm = ({ wildlifeId }) => {
 									setEventType(e.target.value);
 								}}
 							>
-								<FormControlLabel value='capture' control={<Radio />} label='Capture' />
-								<FormControlLabel value='mortality' control={<Radio />} label='Mortality' />
-								<FormControlLabel value='recapture' control={<Radio />} label='Recapture' />
+								<FormControlLabel value='capture' control={<Radio/>} label='Capture'/>
+								<FormControlLabel value='mortality' control={<Radio/>} label='Mortality'/>
+								<FormControlLabel value='recapture' control={<Radio/>} label='Recapture'/>
 							</RadioGroup>
 						</FormControl>
 
-						<Box sx={{ width: 'inherit', display: 'flex', flexDirection: 'row', marginTop: '37px' }}>
+						<Box sx={{width: 'inherit', display: 'flex', flexDirection: 'row', marginTop: '37px'}}>
 							<TextField
-								sx={{ width: '529px' }}
+								sx={{width: '529px'}}
 								label='Event Start Date(DD-MM-YYYY)'
 								id='date'
 								name='date'
 								onChange={handleUpdate}
 								InputProps={{
-									endAdornment: <InputAdornment position='end'><CalendarTodayIcon /></InputAdornment>,
+									endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
 								}}
 							/>
 							<TextField
-								sx={{ width: '529px', marginLeft: '32px' }}
+								sx={{width: '529px', marginLeft: '32px'}}
 								id='ageClass'
 								select
 								label='Age Class'
@@ -762,10 +670,10 @@ const EditForm = ({ wildlifeId }) => {
 							</TextField>
 						</Box>
 
-						<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '49px 0 0 0' }}>Location</Typography>
+						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '49px 0 0 0'}}>Location</Typography>
 						{locationOptions.map((locationOption, index) => (
 							<div>
-								<Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+								<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
 									<LocationEntry
 										key={index}
 										handleUpdate={(e) => {
@@ -780,51 +688,51 @@ const EditForm = ({ wildlifeId }) => {
 							</div>
 						))}
 
-						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px' }}>
-							<Typography variant='subtitle1' sx={{ width: '18%', textAlign: 'center', margin: '0 35px' }}>
+						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px'}}>
+							<Typography variant='subtitle1' sx={{width: '18%', textAlign: 'center', margin: '0 35px'}}>
 								Submitter (s)
 							</Typography>
-							<Box sx={{ width: '60%', display: 'flex', flexDirection: 'column' }}>
+							<Box sx={{width: '60%', display: 'flex', flexDirection: 'column'}}>
 								<FormGroup>
-									<FormControlLabel control={<Checkbox onClick={handleSubmitterChecked} />} label='Submitter is the same as the requester' sx={{ width: '80%' }} />
+									<FormControlLabel control={<Checkbox onClick={handleSubmitterChecked}/>} label='Submitter is the same as the requester' sx={{width: '80%'}}/>
 								</FormGroup>
-								<TableContainer component={Paper} sx={{ display: submitterChecked ? 'auto' : 'none' }}>
-									<Table sx={{ width: '100%' }} size='small'>
+								<TableContainer component={Paper} sx={{display: submitterChecked ? 'auto' : 'none'}}>
+									<Table sx={{width: '100%'}} size='small'>
 										<TableHead>
 											<TableRow>
-												<TableCell sx={{ color: 'darkgrey' }}>Name</TableCell>
-												<TableCell sx={{ color: 'darkgrey' }}>Family</TableCell>
-												<TableCell sx={{ color: 'darkgrey' }}>Region</TableCell>
-												<TableCell sx={{ color: 'darkgrey' }}>Organization</TableCell>
-												<TableCell align='center' sx={{ color: 'darkgrey' }}>Role</TableCell>
-												<TableCell sx={{ color: 'darkgrey' }}>Phone</TableCell>
-												<Box sx={{ float: 'right' }}>
+												<TableCell sx={{color: 'darkgrey'}}>Name</TableCell>
+												<TableCell sx={{color: 'darkgrey'}}>Family</TableCell>
+												<TableCell sx={{color: 'darkgrey'}}>Region</TableCell>
+												<TableCell sx={{color: 'darkgrey'}}>Organization</TableCell>
+												<TableCell align='center' sx={{color: 'darkgrey'}}>Role</TableCell>
+												<TableCell sx={{color: 'darkgrey'}}>Phone</TableCell>
+												<Box sx={{float: 'right'}}>
 													<IconButton onClick={handleClickOpen}>
-														<EditIcon color='primary' />
+														<EditIcon color='primary'/>
 													</IconButton>
 													<IconButton>
-														<DeleteIcon color='primary' />
+														<DeleteIcon color='primary'/>
 													</IconButton>
 
 													<Dialog open={open} onClose={handleClose}>
 														<DialogTitle>Update Requester</DialogTitle>
-														<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+														<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
 															<TextField
-																sx={{ m: 2, width: '40%' }}
+																sx={{m: 2, width: '40%'}}
 																label='Submitter First Name'
 																id='first_name'
 																name='first_name'
 																onChange={handleUpdate}
 															/>
 															<TextField
-																sx={{ m: 2, width: '40%' }}
+																sx={{m: 2, width: '40%'}}
 																label='Submitter Last Name'
 																id='last_name'
 																name='last_name'
 																onChange={handleUpdate}
 															/>
 															<TextField
-																sx={{ m: 2, width: '40%' }}
+																sx={{m: 2, width: '40%'}}
 																id='organization-select'
 																select
 																label='Organization'
@@ -840,7 +748,7 @@ const EditForm = ({ wildlifeId }) => {
 																))}
 															</TextField>
 															<TextField
-																sx={{ m: 2, width: '40%' }}
+																sx={{m: 2, width: '40%'}}
 																id='role-select'
 																select
 																label='Role'
@@ -856,14 +764,14 @@ const EditForm = ({ wildlifeId }) => {
 																))}
 															</TextField>
 															<TextField
-																sx={{ m: 2, width: '40%' }}
+																sx={{m: 2, width: '40%'}}
 																label='Phone Number'
 																id='phone'
 																name='phone'
 																onChange={handleUpdate}
 															/>
 															<TextField
-																sx={{ m: 2, width: '40%' }}
+																sx={{m: 2, width: '40%'}}
 																label='Email'
 																id='email'
 																name='email'
@@ -880,35 +788,35 @@ const EditForm = ({ wildlifeId }) => {
 										</TableHead>
 										<TableHead>
 											<TableRow>
-												<TableCell sx={{ color: 'lightgray' }}>Sultana</TableCell>
-												<TableCell sx={{ color: 'lightgray' }}>Majid</TableCell>
+												<TableCell sx={{color: 'lightgray'}}>Sultana</TableCell>
+												<TableCell sx={{color: 'lightgray'}}>Majid</TableCell>
 											</TableRow>
 										</TableHead>
 									</Table>
 								</TableContainer>
 							</Box>
-							<Button variant={'outlined'} sx={{ margin: '10px', width: '20%' }} onClick={handleClickOpen}>
+							<Button variant={'outlined'} sx={{margin: '10px', width: '20%'}} onClick={handleClickOpen}>
 								+ Add Submitter
 							</Button>
 							<Dialog open={open} onClose={handleClose}>
 								<DialogTitle>Update Requester</DialogTitle>
-								<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+								<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
 									<TextField
-										sx={{ m: 2, width: '40%' }}
+										sx={{m: 2, width: '40%'}}
 										label='Submitter First Name'
 										id='first_name'
 										name='first_name'
 										onChange={handleUpdate}
 									/>
 									<TextField
-										sx={{ m: 2, width: '40%' }}
+										sx={{m: 2, width: '40%'}}
 										label='Submitter Last Name'
 										id='last_name'
 										name='last_name'
 										onChange={handleUpdate}
 									/>
 									<TextField
-										sx={{ m: 2, width: '40%' }}
+										sx={{m: 2, width: '40%'}}
 										id='organization-select'
 										select
 										label='Organization'
@@ -924,7 +832,7 @@ const EditForm = ({ wildlifeId }) => {
 										))}
 									</TextField>
 									<TextField
-										sx={{ m: 2, width: '40%' }}
+										sx={{m: 2, width: '40%'}}
 										id='role-select'
 										select
 										label='Role'
@@ -940,14 +848,14 @@ const EditForm = ({ wildlifeId }) => {
 										))}
 									</TextField>
 									<TextField
-										sx={{ m: 2, width: '40%' }}
+										sx={{m: 2, width: '40%'}}
 										label='Phone Number'
 										id='phone'
 										name='phone'
 										onChange={handleUpdate}
 									/>
 									<TextField
-										sx={{ m: 2, width: '40%' }}
+										sx={{m: 2, width: '40%'}}
 										label='Email'
 										id='email'
 										name='email'
@@ -961,21 +869,21 @@ const EditForm = ({ wildlifeId }) => {
 							</Dialog>
 						</Box>
 					</Box>
-					<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-						<Typography variant='subtitle1' sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
+					<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+						<Typography variant='subtitle1' sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
 							Samples
 						</Typography>
-						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-							<FormGroup sx={{ width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%' }}>
+						<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+							<FormGroup sx={{width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%'}}>
 								<p>Samples Were Collected?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked1} />} label={`${checked1 ? 'Yes' : 'No'}`} />
+								<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
 								<p>Samples Sent for Testing?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked2} />} label={`${checked2 ? 'Yes' : 'No'}`} />
+								<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
 								<p>Test Results Received?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked3} />} label={`${checked3 ? 'Yes' : 'No'}`} />
+								<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
 							</FormGroup>
 							<TextField
-								sx={{ m: 2, width: '85%' }}
+								sx={{m: 2, width: '85%'}}
 								label='History (Max 500 Characters)'
 								id='history'
 								name='history'
@@ -983,11 +891,11 @@ const EditForm = ({ wildlifeId }) => {
 								rows={5}
 								defaultValue={formState.requesterRegion}
 								onChange={handleUpdate}
-								inputProps={{ maxLength: 500 }}
+								inputProps={{maxLength: 500}}
 							/>
 						</Box>
 					</Box>
-					<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
+					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 						<Button
 							variant={'contained'}
 							className='update_btn'
@@ -1007,26 +915,19 @@ const EditForm = ({ wildlifeId }) => {
 							Cancel
 						</Button>
 					</Box>
-				</Paper>
-			</Collapse>
-			{/* Add new event */}
-			<Box sx={{ display: newEvent ? 'auto' : 'none' }}>
-				<Card className='card'>
-					<span>
-						<Typography sx={{ fontSize: '18px', width: '90px' }}>New Event</Typography>
-					</span>
-					<ExpandMore
-						expand={expanded_newEvent}
-						onClick={handleExpandClick4}
-						aria-expanded={expanded_newEvent}
-					>
-						<KeyboardArrowDownIcon sx={{ fontSize: '41px', color: '#1a5a96' }} />
-					</ExpandMore>
-				</Card>
-				<Collapse in={expanded_newEvent}>
-					<Paper className='expand_papper'>
-						<Box sx={{ width: '1091px', margin: '0 auto' }}>
-							<FormControl sx={{ width: '380px', marginTop: '62px' }}>
+				</Expandable.Detail>
+			</Expandable>
+
+			{newEvent &&
+				<Expandable expansionEvent={expansionEvent}>
+					<Expandable.Title>
+						<span>
+							<Typography sx={{fontSize: '18px', width: '90px'}}>New Event</Typography>
+						</span>
+					</Expandable.Title>
+					<Expandable.Detail>
+						<Box sx={{width: '1091px', margin: '0 auto'}}>
+							<FormControl sx={{width: '380px', marginTop: '62px'}}>
 								<FormLabel>Event Type</FormLabel>
 								<RadioGroup
 									row
@@ -1037,30 +938,30 @@ const EditForm = ({ wildlifeId }) => {
 										setEventType(e.target.value);
 									}}
 								>
-									<FormControlLabel value='capture' control={<Radio />} label='Capture' />
-									<FormControlLabel value='mortality' control={<Radio />} label='Mortality' />
-									<FormControlLabel value='recapture' control={<Radio />} label='Recapture' />
-									<FormControlLabel value='release' control={<Radio />} label='Release' />
+									<FormControlLabel value='capture' control={<Radio/>} label='Capture'/>
+									<FormControlLabel value='mortality' control={<Radio/>} label='Mortality'/>
+									<FormControlLabel value='recapture' control={<Radio/>} label='Recapture'/>
+									<FormControlLabel value='release' control={<Radio/>} label='Release'/>
 								</RadioGroup>
 							</FormControl>
-							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-								<Typography variant='subtitle1' sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
+							<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+								<Typography variant='subtitle1' sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
 									Location (s)
 								</Typography>
-								<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-									<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+								<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+									<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											label='Date(DD-MM-YYYY)'
 											id='date'
 											name='date'
 											onChange={handleUpdate}
 											InputProps={{
-												endAdornment: <InputAdornment position='end'><CalendarTodayIcon /></InputAdornment>,
+												endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
 											}}
 										/>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											id='ageClass'
 											select
 											label='Age Class'
@@ -1078,7 +979,7 @@ const EditForm = ({ wildlifeId }) => {
 									</Box>
 									{locationOptions.map((locationOption, index) => (
 										<div>
-											<Box sx={{ display: 'flex', flexDirection: 'column' }} key={index}>
+											<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
 												<LocationEntry
 													key={index}
 													handleUpdate={(e) => {
@@ -1095,55 +996,55 @@ const EditForm = ({ wildlifeId }) => {
 								</Box>
 							</Box>
 
-							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px' }}>
-								<Typography variant='subtitle1' sx={{ width: '18%', textAlign: 'center', margin: '0 35px' }}>
+							<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px'}}>
+								<Typography variant='subtitle1' sx={{width: '18%', textAlign: 'center', margin: '0 35px'}}>
 									Submitter (s)
 								</Typography>
-								<Box sx={{ width: '60%', display: 'flex', flexDirection: 'column' }}>
+								<Box sx={{width: '60%', display: 'flex', flexDirection: 'column'}}>
 									<FormGroup>
 										<FormControlLabel
-											control={<Checkbox onClick={handleSubmitterChecked} />}
+											control={<Checkbox onClick={handleSubmitterChecked}/>}
 											label='Submitter is the same as the requester'
-											sx={{ width: '80%' }}
+											sx={{width: '80%'}}
 										/>
 									</FormGroup>
-									<TableContainer component={Paper} sx={{ display: submitterChecked ? 'auto' : 'none' }}>
-										<Table sx={{ width: '100%' }} size='small'>
+									<TableContainer component={Paper} sx={{display: submitterChecked ? 'auto' : 'none'}}>
+										<Table sx={{width: '100%'}} size='small'>
 											<TableHead>
 												<TableRow>
-													<TableCell sx={{ color: 'darkgrey' }}>Name</TableCell>
-													<TableCell sx={{ color: 'darkgrey' }}>Family</TableCell>
-													<TableCell sx={{ color: 'darkgrey' }}>Region</TableCell>
-													<TableCell sx={{ color: 'darkgrey' }}>Organization</TableCell>
-													<TableCell align='center' sx={{ color: 'darkgrey' }}>Role</TableCell>
-													<TableCell sx={{ color: 'darkgrey' }}>Phone</TableCell>
-													<Box sx={{ float: 'right' }}>
+													<TableCell sx={{color: 'darkgrey'}}>Name</TableCell>
+													<TableCell sx={{color: 'darkgrey'}}>Family</TableCell>
+													<TableCell sx={{color: 'darkgrey'}}>Region</TableCell>
+													<TableCell sx={{color: 'darkgrey'}}>Organization</TableCell>
+													<TableCell align='center' sx={{color: 'darkgrey'}}>Role</TableCell>
+													<TableCell sx={{color: 'darkgrey'}}>Phone</TableCell>
+													<Box sx={{float: 'right'}}>
 														<IconButton onClick={handleClickOpen}>
-															<EditIcon color='primary' />
+															<EditIcon color='primary'/>
 														</IconButton>
 														<IconButton>
-															<DeleteIcon color='primary' />
+															<DeleteIcon color='primary'/>
 														</IconButton>
 
 														<Dialog open={open} onClose={handleClose}>
 															<DialogTitle>Update Requester</DialogTitle>
-															<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+															<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
 																<TextField
-																	sx={{ m: 2, width: '40%' }}
+																	sx={{m: 2, width: '40%'}}
 																	label='Submitter First Name'
 																	id='first_name'
 																	name='first_name'
 																	onChange={handleUpdate}
 																/>
 																<TextField
-																	sx={{ m: 2, width: '40%' }}
+																	sx={{m: 2, width: '40%'}}
 																	label='Submitter Last Name'
 																	id='last_name'
 																	name='last_name'
 																	onChange={handleUpdate}
 																/>
 																<TextField
-																	sx={{ m: 2, width: '40%' }}
+																	sx={{m: 2, width: '40%'}}
 																	id='organization-select'
 																	select
 																	label='Organization'
@@ -1159,7 +1060,7 @@ const EditForm = ({ wildlifeId }) => {
 																	))}
 																</TextField>
 																<TextField
-																	sx={{ m: 2, width: '40%' }}
+																	sx={{m: 2, width: '40%'}}
 																	id='role-select'
 																	select
 																	label='Role'
@@ -1175,14 +1076,14 @@ const EditForm = ({ wildlifeId }) => {
 																	))}
 																</TextField>
 																<TextField
-																	sx={{ m: 2, width: '40%' }}
+																	sx={{m: 2, width: '40%'}}
 																	label='Phone Number'
 																	id='phone'
 																	name='phone'
 																	onChange={handleUpdate}
 																/>
 																<TextField
-																	sx={{ m: 2, width: '40%' }}
+																	sx={{m: 2, width: '40%'}}
 																	label='Email'
 																	id='email'
 																	name='email'
@@ -1199,36 +1100,36 @@ const EditForm = ({ wildlifeId }) => {
 											</TableHead>
 											<TableHead>
 												<TableRow>
-													<TableCell sx={{ color: 'lightgray' }}>Sultana</TableCell>
-													<TableCell sx={{ color: 'lightgray' }}>Majid</TableCell>
+													<TableCell sx={{color: 'lightgray'}}>Sultana</TableCell>
+													<TableCell sx={{color: 'lightgray'}}>Majid</TableCell>
 												</TableRow>
 											</TableHead>
 
 										</Table>
 									</TableContainer>
 								</Box>
-								<Button variant={'outlined'} sx={{ margin: '10px', width: '20%' }} onClick={handleClickOpen}>
+								<Button variant={'outlined'} sx={{margin: '10px', width: '20%'}} onClick={handleClickOpen}>
 									+ Add Submitter
 								</Button>
 								<Dialog open={open} onClose={handleClose}>
 									<DialogTitle>Update Requester</DialogTitle>
-									<DialogContent sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+									<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											label='Submitter First Name'
 											id='first_name'
 											name='first_name'
 											onChange={handleUpdate}
 										/>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											label='Submitter Last Name'
 											id='last_name'
 											name='last_name'
 											onChange={handleUpdate}
 										/>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											id='organization-select'
 											select
 											label='Organization'
@@ -1244,7 +1145,7 @@ const EditForm = ({ wildlifeId }) => {
 											))}
 										</TextField>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											id='role-select'
 											select
 											label='Role'
@@ -1260,14 +1161,14 @@ const EditForm = ({ wildlifeId }) => {
 											))}
 										</TextField>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											label='Phone Number'
 											id='phone'
 											name='phone'
 											onChange={handleUpdate}
 										/>
 										<TextField
-											sx={{ m: 2, width: '40%' }}
+											sx={{m: 2, width: '40%'}}
 											label='Email'
 											id='email'
 											name='email'
@@ -1281,21 +1182,21 @@ const EditForm = ({ wildlifeId }) => {
 								</Dialog>
 							</Box>
 						</Box>
-						<Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
-							<Typography variant='subtitle1' sx={{ width: '20%', textAlign: 'center', margin: '0 35px' }}>
+						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+							<Typography variant='subtitle1' sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
 								Samples
 							</Typography>
-							<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-								<FormGroup sx={{ width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%' }}>
+							<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
+								<FormGroup sx={{width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%'}}>
 									<p>Samples Were Collected?</p>
-									<FormControlLabel control={<Switch onChange={toggleChecked1} />} label={`${checked1 ? 'Yes' : 'No'}`} />
+									<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
 									<p>Samples Sent for Testing?</p>
-									<FormControlLabel control={<Switch onChange={toggleChecked2} />} label={`${checked2 ? 'Yes' : 'No'}`} />
+									<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
 									<p>Test Results Received?</p>
-									<FormControlLabel control={<Switch onChange={toggleChecked3} />} label={`${checked3 ? 'Yes' : 'No'}`} />
+									<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
 								</FormGroup>
 								<TextField
-									sx={{ m: 2, width: '85%' }}
+									sx={{m: 2, width: '85%'}}
 									label='History (Max 500 Characters)'
 									id='history'
 									name='history'
@@ -1303,34 +1204,33 @@ const EditForm = ({ wildlifeId }) => {
 									rows={5}
 									defaultValue={formState.requesterRegion}
 									onChange={handleUpdate}
-									inputProps={{ maxLength: 500 }}
+									inputProps={{maxLength: 500}}
 								/>
 							</Box>
 						</Box>
-						<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
-						<Button
-							variant={'contained'}
-							className='update_btn'
-						>
-							Save
-						</Button>
-						<Button
-							variant={'outlined'}
-							className='update_btn'
-						>
-							Add New Event
-						</Button>
-						<Button
-							variant={'outlined'}
-							className='update_btn'
-						>
-							Cancel
-						</Button>
-					</Box>
-					</Paper>
-				</Collapse>
-			</Box>
-			{/* </Box> */}
+						<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
+							<Button
+								variant={'contained'}
+								className='update_btn'
+							>
+								Save
+							</Button>
+							<Button
+								variant={'outlined'}
+								className='update_btn'
+							>
+								Add New Event
+							</Button>
+							<Button
+								variant={'outlined'}
+								className='update_btn'
+							>
+								Cancel
+							</Button>
+						</Box>
+					</Expandable.Detail>
+				</Expandable>
+			}
 		</Box>
 	);
 };

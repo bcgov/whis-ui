@@ -15,7 +15,7 @@ const Navigation: React.FC = () => {
 		nav('/wildlifeIds', 'My Dashboard', ['BIOLOGIST'], 'Wildlife ID'),
 		nav('/wildlifeIds/generate', 'WLH ID Generation', ['BIOLOGIST'], 'Wildlife ID'),
 		nav('/wildlifeIds/list', 'WLH ID Inventory', ['BIOLOGIST'], 'Wildlife ID'),
-		// nav('/admin', 'Admin Dashboard', ['ADMIN', 'BIOLOGIST'], 'Admin'),
+		nav('/admin', 'Admin Dashboard', ['ADMIN'], 'Admin'),
 	];
 
 	useEffect(() => {

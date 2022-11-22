@@ -4,6 +4,7 @@ import Navigation from "../components/pageElements/Navigation";
 import AuthRequired from "../components/auth/AuthRequired";
 import Footer from "../components/pageElements/Footer";
 import FlashMessages from "../components/pageElements/FlashMessages";
+import {ErrorBoundary} from "../components/pageElements/ErrorBoundary";
 
 interface DefaultLayoutProps {
 	children: ReactElement | ReactElement[],
@@ -21,7 +22,9 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({children, showNavigation =
 					<div className={'containerInner'}>
 						<div className={'container'} id={'mainColumnLayout'}>
 							<main>
-								{children}
+								<ErrorBoundary>
+									{children}
+								</ErrorBoundary>
 							</main>
 						</div>
 					</div>
