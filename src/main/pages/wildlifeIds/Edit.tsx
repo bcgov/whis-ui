@@ -5,7 +5,7 @@ import '../../styles/inventory.scss';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useNavigate} from "react-router-dom";
 import {useParams} from "react-router";
-import EditForm from "../../components/wildlifeIds/EditForm";
+import EditForm from "../../components/wildlifeIds/edit/EditForm";
 
 const Edit: React.FC = () => {
 
