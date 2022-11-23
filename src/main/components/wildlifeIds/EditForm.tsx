@@ -2,9 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
 	Box,
 	Button,
-	Card,
-	Checkbox,
-	Collapse,
 	Dialog,
 	DialogActions,
 	DialogContent,
@@ -14,13 +11,11 @@ import {
 	FormGroup,
 	FormLabel,
 	IconButton,
-	IconButtonProps,
 	InputAdornment,
 	MenuItem,
 	Paper,
 	Radio,
 	RadioGroup,
-	styled,
 	Switch,
 	Table,
 	TableCell,
@@ -34,9 +29,11 @@ import '../../styles/updateID.scss';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {selectCodeTables} from "../../../state/reducers/code_tables";
+import StatusForm from './StatusForm';
 import IdentifierEntry from './IdentifierEntry';
 import LocationEntry from './LocationEntry';
 import Expandable, {ExpansionOverrideEvent} from "../pageElements/Expandable";
@@ -49,6 +46,16 @@ const EditForm = ({wildlifeId}) => {
 	const [validAgeClass, setValidAgeClass] = useState([]);
 	const [validSingleIdStatus, setValidSingleIdStatus] = useState([]);
 	const [validOrganization, setValidOrganization] = useState([]);
+
+	//@todo codetable this
+	const validRole = [
+		{value: 'HUNTER', label: 'Hunter'},
+		{value: 'TRAPPER', label: 'Trapper'},
+		{value: 'CONSERVATION_OFFICER', label: 'Conservation Officer'},
+		{value: 'WILDLIFE_BIOLOGIST', label: 'Wildlife Biologist'},
+		{value: 'PUBLIC', label: 'Public'},
+		{value: 'OTHER', label: 'Other'}
+	];
 
 	function codeToSelect(table: string): { label: string, value: string }[] {
 		return tables[table].codes.map(c => ({
@@ -90,6 +97,7 @@ const EditForm = ({wildlifeId}) => {
 
 
 	const [organization, setOrganization] = useState('');
+	const [role, setRole] = useState('');
 	const [purpose, setPurpose] = useState(formState.purpose);
 	const [sex, setSex] = useState('');
 	const [ageClass, setAgeClass] = useState('');
@@ -106,13 +114,13 @@ const EditForm = ({wildlifeId}) => {
 		id: 0
 	});
 
-
-	const handleSubmit = () => {
-	}
-
-	const handleUpdate = () => {
+	const handleSubmit = (e) => {
 
 	}
+	const handleUpdate = (e) => {
+
+	}
+
 
 	//Add new event
 	const [newEvent, setNewEvent] = useState(false);
@@ -126,13 +134,30 @@ const EditForm = ({wildlifeId}) => {
 		setSubmitterChecked(!submitterChecked);
 	};
 
-	//update requester dialog
-	const [open, setOpen] = useState(false);
-	const handleClickOpen = () => {
-		setOpen(true);
+	//edit requester dialog
+	const [openEditRequester, setOpenEditRequester] = useState(false);
+	const handleOpenEditRequester = () => {
+		setOpenEditRequester(true);
 	};
-	const handleClose = () => {
-		setOpen(false);
+	const handleCloseEditRequester = () => {
+		setOpenEditRequester(false);
+	};
+	//add requester dialog
+	const [openAddRequester, setOpenAddRequester] = useState(false);
+	const handleOpenAddRequester = () => {
+		setOpenAddRequester(true);
+	};
+	const handleCloseAddRequester = () => {
+		setOpenAddRequester(false);
+	};
+
+	//requester delete confirmation
+	const [DeleteConfirmation, setDeleteConfirmation] = useState(false);
+	const handleDeleteConfirmation = () => {
+		setDeleteConfirmation(true);
+	};
+	const handleCloseDeleteConfirmation = () => {
+		setDeleteConfirmation(false);
 	};
 
 	//handle identifier options
@@ -229,31 +254,11 @@ const EditForm = ({wildlifeId}) => {
 					</Box>
 				</Expandable.Title>
 				<Expandable.Detail>
-					<Box sx={{width: '1091px', margin: '48px auto'}}>
-						<TextField
-							sx={{width: '529px', marginTop: '8px'}}
-							id='idStatus'
-							label='WLH ID Status*'
-							name='idStatus'
-							select
-							onChange={handleUpdate}
-							onSelect={handleUpdate}
-						>
-							{validSingleIdStatus.map((m) => (
-								<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
-									{m.label}
-								</MenuItem>
-							))}
-						</TextField>
-						<TextField
-							sx={{minWidth: '1091px', marginTop: '28px'}}
-							label='Reason (Enter a reason why you are changing the WLH ID status)'
-							id='reason'
-							name='reason'
-							multiline
-							rows={3}
-						/>
-					</Box>
+					<StatusForm
+						handleUpdate={(e) => {
+						}}
+						IdStatus={'RETIRED'}
+					/>
 
 					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 						<Button
@@ -362,111 +367,99 @@ const EditForm = ({wildlifeId}) => {
 								Requester(1)
 							</Typography>
 
-							<TableContainer component={Paper}>
-								<Table>
-									<TableHead>
-										<TableRow className='tablehead'>
-											<TableCell>Family</TableCell>
-											<TableCell>Name</TableCell>
-											<TableCell>Region</TableCell>
-											<TableCell>Organization</TableCell>
-											<TableCell>Role</TableCell>
-											<TableCell>Phone</TableCell>
-											<TableCell>Email</TableCell>
-											<TableCell>Action</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableHead>
-										<TableRow>
-											<TableCell>Sultana</TableCell>
-											<TableCell>Majid</TableCell>
-											<TableCell></TableCell>
-											<TableCell></TableCell>
-											<TableCell></TableCell>
-											<TableCell></TableCell>
-											<TableCell></TableCell>
-											<TableCell>
-												<IconButton onClick={handleClickOpen}>
-													<EditIcon color='primary'/>
-												</IconButton>
-												<IconButton>
-													<DeleteIcon color='primary'/>
-												</IconButton>
-											</TableCell>
-
-											<Dialog open={open} onClose={handleClose}>
-												<DialogTitle>Update Requester</DialogTitle>
-												<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-													<TextField
-														sx={{m: 2, width: '40%'}}
-														label='Submitter First Name'
-														id='first_name'
-														name='first_name'
-														onChange={handleUpdate}
-													/>
-													<TextField
-														sx={{m: 2, width: '40%'}}
-														label='Submitter Last Name'
-														id='last_name'
-														name='last_name'
-														onChange={handleUpdate}
-													/>
-													<TextField
-														sx={{m: 2, width: '40%'}}
-														id='organization-select'
-														select
-														label='Organization'
-														value={organization}
-														onChange={(e) => {
-															setOrganization(e.target.value);
-														}}
-													>
-														{validOrganization.map((m, i) => (
-															<MenuItem key={i} value={m.value}>
-																{m.label}
-															</MenuItem>
-														))}
-													</TextField>
-													<TextField
-														sx={{m: 2, width: '40%'}}
-														id='role-select'
-														select
-														label='Role'
-														value={organization}
-														onChange={(e) => {
-															setOrganization(e.target.value);
-														}}
-													>
-														{validOrganization.map((m, i) => (
-															<MenuItem key={i} value={m.value}>
-																{m.label}
-															</MenuItem>
-														))}
-													</TextField>
-													<TextField
-														sx={{m: 2, width: '40%'}}
-														label='Phone Number'
-														id='phone'
-														name='phone'
-														onChange={handleUpdate}
-													/>
-													<TextField
-														sx={{m: 2, width: '40%'}}
-														label='Email'
-														id='email'
-														name='email'
-														onChange={handleUpdate}
-													/>
-												</DialogContent>
-												<DialogActions>
-													<Button variant={'contained'} onClick={handleClose}>Update</Button>
-													<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-												</DialogActions>
-											</Dialog>
-										</TableRow>
-									</TableHead>
-								</Table>
-							</TableContainer>
+							<Button variant={'outlined'} sx={{marginTop: '7px', width: '128px', height: '32px', fontSize: '14px', padding: '0', textTransform: 'capitalize'}}
+								onClick={handleOpenAddRequester}
+							>
+								+ Add Requester
+							</Button>
+							<Dialog
+								open={openAddRequester}
+								onClose={handleCloseAddRequester}
+								maxWidth={false}
+								PaperProps={{
+									sx: {width: '975px', maxHeight: '432px'}
+								}}
+							>
+								<IconButton
+									onClick={handleCloseAddRequester}
+									sx={{
+										position: 'absolute',
+										right: 8,
+										top: 8
+									}}
+								>
+									<CloseIcon/>
+								</IconButton>
+								<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 5px 31px'}}>Add Requester</DialogTitle>
+								<DialogContent sx={{display: 'block', padding: ' 0 15px'}}>
+									<TextField
+										className='requesterFormInput'
+										label='First Name'
+										id='first_name'
+										name='first_name'
+										required
+										onChange={handleUpdate}
+									/>
+									<TextField
+										className='requesterFormInput'
+										label='Last Name'
+										id='last_name'
+										name='last_name'
+										required
+										onChange={handleUpdate}
+									/>
+									<TextField
+										className='requesterFormInput'
+										id='organization-select'
+										select
+										label='Organization'
+										value={organization}
+										onChange={(e) => {
+											setOrganization(e.target.value);
+										}}
+									>
+										{validOrganization.map((m, i) => (
+											<MenuItem key={i} value={m.value}>
+												{m.label}
+											</MenuItem>
+										))}
+									</TextField>
+									<TextField
+										className='requesterFormInput'
+										id='role-select'
+										select
+										label='Role'
+										value={role}
+										onChange={(e) => {
+											setRole(e.target.value);
+										}}
+									>
+										{validRole.map((m, i) => (
+											<MenuItem key={i} value={m.value}>
+												{m.label}
+											</MenuItem>
+										))}
+									</TextField>
+									<TextField
+										className='requesterFormInput'
+										label='Phone Number'
+										id='phone'
+										name='phone'
+										onChange={handleUpdate}
+									/>
+									<TextField
+										className='requesterFormInput'
+										label='Email'
+										id='email'
+										name='email'
+										onChange={handleUpdate}
+									/>
+								</DialogContent>
+								<DialogActions sx={{padding: '29px 32px 32px 0'}}>
+									<Button variant={'contained'} onClick={handleCloseAddRequester} className='requesterFormBtn'>Add</Button>
+									<Button variant={'outlined'} onClick={handleCloseAddRequester} className='requesterFormBtn' sx={{marginLeft: '11px'}}>Cancel</Button>
+								</DialogActions>
+							</Dialog>
 						</Box>
 					</Box>
 					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
@@ -595,7 +588,7 @@ const EditForm = ({wildlifeId}) => {
 				<Expandable.Title>	<span>
 					<Typography sx={{fontSize: '18px', width: '90px'}}>Event</Typography>
 				</span>
-					<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+				<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
 					<span>
 						<Typography variant='body2'>
 							Event type
@@ -604,7 +597,7 @@ const EditForm = ({wildlifeId}) => {
 							Capture
 						</Typography>
 					</span>
-						<span>
+					<span>
 						<Typography variant='body2'>
 							Date
 						</Typography>
@@ -612,7 +605,7 @@ const EditForm = ({wildlifeId}) => {
 							21-01-2021
 						</Typography>
 					</span>
-						<span>
+					<span>
 						<Typography variant='body2'>
 							Location
 						</Typography>
@@ -620,7 +613,7 @@ const EditForm = ({wildlifeId}) => {
 							ZoneZone Zone 1
 						</Typography>
 					</span>
-					</Box>
+				</Box>
 				</Expandable.Title>
 				<Expandable.Detail>
 					<Box sx={{width: '1091px', margin: '0 auto'}}>
@@ -688,213 +681,143 @@ const EditForm = ({wildlifeId}) => {
 							</div>
 						))}
 
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px'}}>
-							<Typography variant='subtitle1' sx={{width: '18%', textAlign: 'center', margin: '0 35px'}}>
-								Submitter (s)
-							</Typography>
-							<Box sx={{width: '60%', display: 'flex', flexDirection: 'column'}}>
-								<FormGroup>
-									<FormControlLabel control={<Checkbox onClick={handleSubmitterChecked}/>} label='Submitter is the same as the requester' sx={{width: '80%'}}/>
-								</FormGroup>
-								<TableContainer component={Paper} sx={{display: submitterChecked ? 'auto' : 'none'}}>
-									<Table sx={{width: '100%'}} size='small'>
-										<TableHead>
-											<TableRow>
-												<TableCell sx={{color: 'darkgrey'}}>Name</TableCell>
-												<TableCell sx={{color: 'darkgrey'}}>Family</TableCell>
-												<TableCell sx={{color: 'darkgrey'}}>Region</TableCell>
-												<TableCell sx={{color: 'darkgrey'}}>Organization</TableCell>
-												<TableCell align='center' sx={{color: 'darkgrey'}}>Role</TableCell>
-												<TableCell sx={{color: 'darkgrey'}}>Phone</TableCell>
-												<Box sx={{float: 'right'}}>
-													<IconButton onClick={handleClickOpen}>
-														<EditIcon color='primary'/>
-													</IconButton>
-													<IconButton>
-														<DeleteIcon color='primary'/>
-													</IconButton>
+						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '100px 0 0 0'}}>Submitter</Typography>
+						<FormGroup sx={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+							<Typography sx={{fontSize: '16px', margin: '16px 50px 20px 0', color: '#868e96'}}>Is submitter same as the requester?</Typography>
+							<FormControlLabel control={<Switch onClick={handleSubmitterChecked}/>} label={`${submitterChecked ? 'Yes' : 'No'}`}/>
+						</FormGroup>
 
-													<Dialog open={open} onClose={handleClose}>
-														<DialogTitle>Update Requester</DialogTitle>
-														<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-															<TextField
-																sx={{m: 2, width: '40%'}}
-																label='Submitter First Name'
-																id='first_name'
-																name='first_name'
-																onChange={handleUpdate}
-															/>
-															<TextField
-																sx={{m: 2, width: '40%'}}
-																label='Submitter Last Name'
-																id='last_name'
-																name='last_name'
-																onChange={handleUpdate}
-															/>
-															<TextField
-																sx={{m: 2, width: '40%'}}
-																id='organization-select'
-																select
-																label='Organization'
-																value={organization}
-																onChange={(e) => {
-																	setOrganization(e.target.value);
-																}}
-															>
-																{validOrganization.map((m, i) => (
-																	<MenuItem key={i} value={m.value}>
-																		{m.label}
-																	</MenuItem>
-																))}
-															</TextField>
-															<TextField
-																sx={{m: 2, width: '40%'}}
-																id='role-select'
-																select
-																label='Role'
-																value={organization}
-																onChange={(e) => {
-																	setOrganization(e.target.value);
-																}}
-															>
-																{validOrganization.map((m, i) => (
-																	<MenuItem key={i} value={m.value}>
-																		{m.label}
-																	</MenuItem>
-																))}
-															</TextField>
-															<TextField
-																sx={{m: 2, width: '40%'}}
-																label='Phone Number'
-																id='phone'
-																name='phone'
-																onChange={handleUpdate}
-															/>
-															<TextField
-																sx={{m: 2, width: '40%'}}
-																label='Email'
-																id='email'
-																name='email'
-																onChange={handleUpdate}
-															/>
-														</DialogContent>
-														<DialogActions>
-															<Button variant={'contained'} onClick={handleClose}>Update</Button>
-															<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-														</DialogActions>
-													</Dialog>
-												</Box>
-											</TableRow>
-										</TableHead>
-										<TableHead>
-											<TableRow>
-												<TableCell sx={{color: 'lightgray'}}>Sultana</TableCell>
-												<TableCell sx={{color: 'lightgray'}}>Majid</TableCell>
-											</TableRow>
-										</TableHead>
-									</Table>
-								</TableContainer>
-							</Box>
-							<Button variant={'outlined'} sx={{margin: '10px', width: '20%'}} onClick={handleClickOpen}>
-								+ Add Submitter
-							</Button>
-							<Dialog open={open} onClose={handleClose}>
-								<DialogTitle>Update Requester</DialogTitle>
-								<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-									<TextField
-										sx={{m: 2, width: '40%'}}
-										label='Submitter First Name'
-										id='first_name'
-										name='first_name'
-										onChange={handleUpdate}
-									/>
-									<TextField
-										sx={{m: 2, width: '40%'}}
-										label='Submitter Last Name'
-										id='last_name'
-										name='last_name'
-										onChange={handleUpdate}
-									/>
-									<TextField
-										sx={{m: 2, width: '40%'}}
-										id='organization-select'
-										select
-										label='Organization'
-										value={organization}
-										onChange={(e) => {
-											setOrganization(e.target.value);
-										}}
-									>
-										{validOrganization.map((m, i) => (
-											<MenuItem key={i} value={m.value}>
-												{m.label}
-											</MenuItem>
-										))}
-									</TextField>
-									<TextField
-										sx={{m: 2, width: '40%'}}
-										id='role-select'
-										select
-										label='Role'
-										value={organization}
-										onChange={(e) => {
-											setOrganization(e.target.value);
-										}}
-									>
-										{validOrganization.map((m, i) => (
-											<MenuItem key={i} value={m.value}>
-												{m.label}
-											</MenuItem>
-										))}
-									</TextField>
-									<TextField
-										sx={{m: 2, width: '40%'}}
-										label='Phone Number'
-										id='phone'
-										name='phone'
-										onChange={handleUpdate}
-									/>
-									<TextField
-										sx={{m: 2, width: '40%'}}
-										label='Email'
-										id='email'
-										name='email'
-										onChange={handleUpdate}
-									/>
-								</DialogContent>
-								<DialogActions>
-									<Button variant={'contained'} onClick={handleClose}>Update</Button>
-									<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-								</DialogActions>
-							</Dialog>
-						</Box>
+						<TableContainer component={Paper} sx={{display: submitterChecked ? 'auto' : 'none'}}>
+							<Table>
+								<TableHead>
+									<TableRow className='tablehead'>
+										<TableCell>Name</TableCell>
+										<TableCell>Family</TableCell>
+										<TableCell>Region</TableCell>
+										<TableCell>Organization</TableCell>
+										<TableCell>Role</TableCell>
+										<TableCell>Phone</TableCell>
+										<TableCell>Email</TableCell>
+										<TableCell>Action</TableCell>
+
+									</TableRow>
+								</TableHead>
+								<TableHead>
+									<TableRow>
+										<TableCell>Sultana</TableCell>
+										<TableCell>Majid</TableCell>
+										<TableCell></TableCell>
+										<TableCell></TableCell>
+										<TableCell></TableCell>
+										<TableCell></TableCell>
+										<TableCell></TableCell>
+										<TableCell>
+											<IconButton onClick={handleOpenEditRequester}>
+												<EditIcon color='primary'/>
+											</IconButton>
+											<IconButton onClick={handleDeleteConfirmation}>
+												<DeleteIcon color='primary'/>
+											</IconButton>
+										</TableCell>
+										<Dialog
+											open={DeleteConfirmation}
+											onClose={handleCloseDeleteConfirmation}
+											maxWidth={false}
+											PaperProps={{
+												sx: {width: '615px', maxHeight: '279px', height: '279px'}
+											}}
+										>
+											<IconButton
+												onClick={handleCloseDeleteConfirmation}
+												sx={{
+													position: 'absolute',
+													right: 8,
+													top: 8
+												}}
+											>
+												<CloseIcon/>
+											</IconButton>
+											<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '47px 0 35px 39px'}}>
+												{"Delete Confirmation"}
+											</DialogTitle>
+											<DialogContent sx={{padding: '40px 39px', fontSize: '16px'}}>
+												Are you sure you want to delete this requester?<br/>
+												There is no Undo for this action.
+											</DialogContent>
+											<DialogActions sx={{padding: '0 32px 48px 0'}}>
+												<Button variant={'contained'} onClick={handleCloseDeleteConfirmation} className='requesterFormBtn'
+													sx={{backgroundColor: '#d8292f'}}>Delete</Button>
+												<Button variant={'outlined'} onClick={handleCloseDeleteConfirmation} className='requesterFormBtn'
+													sx={{marginLeft: '11px'}}>Cancel</Button>
+											</DialogActions>
+										</Dialog>
+
+										<Dialog
+											open={openEditRequester}
+											onClose={handleCloseEditRequester}
+											maxWidth={false}
+											PaperProps={{
+												sx: {width: '975px', maxHeight: '432px'}
+											}}
+										>
+											<IconButton
+												onClick={handleCloseEditRequester}
+												sx={{
+													position: 'absolute',
+													right: 8,
+													top: 8
+												}}
+											>
+												<CloseIcon/>
+											</IconButton>
+											<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 5px 31px'}}>Update Requester</DialogTitle>
+											<DialogContent sx={{display: 'block', padding: ' 0 15px'}}>
+											</DialogContent>
+										</Dialog>
+
+
+									</TableRow>
+								</TableHead>
+							</Table>
+						</TableContainer>
+
+						<Button variant={'outlined'} sx={{
+							width: '128px',
+							height: '32px',
+							fontSize: '14px',
+							padding: '0',
+							textTransform: 'capitalize',
+							display: submitterChecked ? 'none' : 'auto'
+						}}
+						onClick={handleOpenAddRequester}
+						>
+							+ Add Submitter
+						</Button>
+
+						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '35px 0 16px 0'}}>Samples</Typography>
+
+						<FormGroup sx={{width: '400px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline'}}>
+							<Typography variant='body1' sx={{color: '#868e96'}}>Samples Were Collected?</Typography>
+							<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
+							<Typography variant='body1' sx={{color: '#868e96'}}>Samples Sent for Testing?</Typography>
+							<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
+							<Typography variant='body1' sx={{color: '#868e96'}}>Test Results Received?</Typography>
+							<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
+						</FormGroup>
+
+						<TextField
+							sx={{width: '1079px', marginTop: '29px'}}
+							label='History (Max 500 Characters)'
+							id='history'
+							name='history'
+							multiline
+							rows={5}
+							onChange={handleUpdate}
+							inputProps={{maxLength: 500}}
+						/>
+
 					</Box>
-					<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-						<Typography variant='subtitle1' sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
-							Samples
-						</Typography>
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-							<FormGroup sx={{width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%'}}>
-								<p>Samples Were Collected?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
-								<p>Samples Sent for Testing?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
-								<p>Test Results Received?</p>
-								<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
-							</FormGroup>
-							<TextField
-								sx={{m: 2, width: '85%'}}
-								label='History (Max 500 Characters)'
-								id='history'
-								name='history'
-								multiline
-								rows={5}
-								defaultValue={formState.requesterRegion}
-								onChange={handleUpdate}
-								inputProps={{maxLength: 500}}
-							/>
-						</Box>
-					</Box>
+
 					<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 						<Button
 							variant={'contained'}
@@ -905,6 +828,7 @@ const EditForm = ({wildlifeId}) => {
 						<Button
 							variant={'outlined'}
 							className='update_btn'
+							onClick={handleNewEvent}
 						>
 							Add New Event
 						</Button>
@@ -944,269 +868,142 @@ const EditForm = ({wildlifeId}) => {
 									<FormControlLabel value='release' control={<Radio/>} label='Release'/>
 								</RadioGroup>
 							</FormControl>
-							<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-								<Typography variant='subtitle1' sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
-									Location (s)
-								</Typography>
-								<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-									<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											label='Date(DD-MM-YYYY)'
-											id='date'
-											name='date'
-											onChange={handleUpdate}
-											InputProps={{
-												endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
-											}}
-										/>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											id='ageClass'
-											select
-											label='Age Class'
-											value={ageClass}
-											onChange={(e) => {
-												setAgeClass(e.target.value);
-											}}
-										>
-											{validAgeClass.map((m, i) => (
-												<MenuItem key={i} value={m.value}>
-													{m.label}
-												</MenuItem>
-											))}
-										</TextField>
-									</Box>
-									{locationOptions.map((locationOption, index) => (
-										<div>
-											<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
-												<LocationEntry
-													key={index}
-													handleUpdate={(e) => {
-														handleSelectLocation(index, e);
-														handleAddLocation(index);
-													}}
-													handleDelete={() => {
-														console.log("delete");
-													}}
-												/>
-											</Box>
-										</div>
-									))}
-								</Box>
-							</Box>
 
-							<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginBlock: '20px'}}>
-								<Typography variant='subtitle1' sx={{width: '18%', textAlign: 'center', margin: '0 35px'}}>
-									Submitter (s)
-								</Typography>
-								<Box sx={{width: '60%', display: 'flex', flexDirection: 'column'}}>
-									<FormGroup>
-										<FormControlLabel
-											control={<Checkbox onClick={handleSubmitterChecked}/>}
-											label='Submitter is the same as the requester'
-											sx={{width: '80%'}}
-										/>
-									</FormGroup>
-									<TableContainer component={Paper} sx={{display: submitterChecked ? 'auto' : 'none'}}>
-										<Table sx={{width: '100%'}} size='small'>
-											<TableHead>
-												<TableRow>
-													<TableCell sx={{color: 'darkgrey'}}>Name</TableCell>
-													<TableCell sx={{color: 'darkgrey'}}>Family</TableCell>
-													<TableCell sx={{color: 'darkgrey'}}>Region</TableCell>
-													<TableCell sx={{color: 'darkgrey'}}>Organization</TableCell>
-													<TableCell align='center' sx={{color: 'darkgrey'}}>Role</TableCell>
-													<TableCell sx={{color: 'darkgrey'}}>Phone</TableCell>
-													<Box sx={{float: 'right'}}>
-														<IconButton onClick={handleClickOpen}>
-															<EditIcon color='primary'/>
-														</IconButton>
-														<IconButton>
-															<DeleteIcon color='primary'/>
-														</IconButton>
+							<TextField
+								sx={{width: '529px', marginTop: '24px'}}
+								id='ageClass'
+								select
+								label='Age Class'
+								value={ageClass}
+								onChange={(e) => {
+									setAgeClass(e.target.value);
+								}}
+							>
+								{validAgeClass.map((m, i) => (
+									<MenuItem key={i} value={m.value}>
+										{m.label}
+									</MenuItem>
+								))}
+							</TextField>
 
-														<Dialog open={open} onClose={handleClose}>
-															<DialogTitle>Update Requester</DialogTitle>
-															<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-																<TextField
-																	sx={{m: 2, width: '40%'}}
-																	label='Submitter First Name'
-																	id='first_name'
-																	name='first_name'
-																	onChange={handleUpdate}
-																/>
-																<TextField
-																	sx={{m: 2, width: '40%'}}
-																	label='Submitter Last Name'
-																	id='last_name'
-																	name='last_name'
-																	onChange={handleUpdate}
-																/>
-																<TextField
-																	sx={{m: 2, width: '40%'}}
-																	id='organization-select'
-																	select
-																	label='Organization'
-																	value={organization}
-																	onChange={(e) => {
-																		setOrganization(e.target.value);
-																	}}
-																>
-																	{validOrganization.map((m, i) => (
-																		<MenuItem key={i} value={m.value}>
-																			{m.label}
-																		</MenuItem>
-																	))}
-																</TextField>
-																<TextField
-																	sx={{m: 2, width: '40%'}}
-																	id='role-select'
-																	select
-																	label='Role'
-																	value={organization}
-																	onChange={(e) => {
-																		setOrganization(e.target.value);
-																	}}
-																>
-																	{validOrganization.map((m, i) => (
-																		<MenuItem key={i} value={m.value}>
-																			{m.label}
-																		</MenuItem>
-																	))}
-																</TextField>
-																<TextField
-																	sx={{m: 2, width: '40%'}}
-																	label='Phone Number'
-																	id='phone'
-																	name='phone'
-																	onChange={handleUpdate}
-																/>
-																<TextField
-																	sx={{m: 2, width: '40%'}}
-																	label='Email'
-																	id='email'
-																	name='email'
-																	onChange={handleUpdate}
-																/>
-															</DialogContent>
-															<DialogActions>
-																<Button variant={'contained'} onClick={handleClose}>Update</Button>
-																<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-															</DialogActions>
-														</Dialog>
-													</Box>
-												</TableRow>
-											</TableHead>
-											<TableHead>
-												<TableRow>
-													<TableCell sx={{color: 'lightgray'}}>Sultana</TableCell>
-													<TableCell sx={{color: 'lightgray'}}>Majid</TableCell>
-												</TableRow>
-											</TableHead>
-
-										</Table>
-									</TableContainer>
-								</Box>
-								<Button variant={'outlined'} sx={{margin: '10px', width: '20%'}} onClick={handleClickOpen}>
-									+ Add Submitter
-								</Button>
-								<Dialog open={open} onClose={handleClose}>
-									<DialogTitle>Update Requester</DialogTitle>
-									<DialogContent sx={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											label='Submitter First Name'
-											id='first_name'
-											name='first_name'
-											onChange={handleUpdate}
-										/>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											label='Submitter Last Name'
-											id='last_name'
-											name='last_name'
-											onChange={handleUpdate}
-										/>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											id='organization-select'
-											select
-											label='Organization'
-											value={organization}
-											onChange={(e) => {
-												setOrganization(e.target.value);
-											}}
-										>
-											{validOrganization.map((m, i) => (
-												<MenuItem key={i} value={m.value}>
-													{m.label}
-												</MenuItem>
-											))}
-										</TextField>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											id='role-select'
-											select
-											label='Role'
-											value={organization}
-											onChange={(e) => {
-												setOrganization(e.target.value);
-											}}
-										>
-											{validOrganization.map((m, i) => (
-												<MenuItem key={i} value={m.value}>
-													{m.label}
-												</MenuItem>
-											))}
-										</TextField>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											label='Phone Number'
-											id='phone'
-											name='phone'
-											onChange={handleUpdate}
-										/>
-										<TextField
-											sx={{m: 2, width: '40%'}}
-											label='Email'
-											id='email'
-											name='email'
-											onChange={handleUpdate}
-										/>
-									</DialogContent>
-									<DialogActions>
-										<Button variant={'contained'} onClick={handleClose}>Update</Button>
-										<Button variant={'outlined'} onClick={handleClose}>Cancel</Button>
-									</DialogActions>
-								</Dialog>
-							</Box>
-						</Box>
-						<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
-							<Typography variant='subtitle1' sx={{width: '20%', textAlign: 'center', margin: '0 35px'}}>
-								Samples
-							</Typography>
-							<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-								<FormGroup sx={{width: '35%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft: '2%'}}>
-									<p>Samples Were Collected?</p>
-									<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
-									<p>Samples Sent for Testing?</p>
-									<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
-									<p>Test Results Received?</p>
-									<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
-								</FormGroup>
+							<Box sx={{width: 'inherit', display: 'flex', flexDirection: 'row', marginTop: '24px'}}>
 								<TextField
-									sx={{m: 2, width: '85%'}}
-									label='History (Max 500 Characters)'
-									id='history'
-									name='history'
-									multiline
-									rows={5}
-									defaultValue={formState.requesterRegion}
+									sx={{width: '529px'}}
+									label='Event Start Date(DD-MM-YYYY)'
+									id='start_date'
+									name='start_date'
 									onChange={handleUpdate}
-									inputProps={{maxLength: 500}}
+									InputProps={{
+										endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
+									}}
+								/>
+								<TextField
+									sx={{width: '529px', marginLeft: '32px'}}
+									label='Event End Date(DD-MM-YYYY)'
+									id='end_date'
+									name='end_date'
+									onChange={handleUpdate}
+									InputProps={{
+										endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
+									}}
 								/>
 							</Box>
+
+							<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '49px 0 0 0'}}>Location</Typography>
+							{locationOptions.map((locationOption, index) => (
+								<div>
+									<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
+										<LocationEntry
+											key={index}
+											handleUpdate={(e) => {
+												handleSelectLocation(index, e);
+												handleAddLocation(index);
+											}}
+											handleDelete={() => {
+												console.log("delete");
+											}}
+										/>
+									</Box>
+								</div>
+							))}
+
+							<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '100px 0 0 0'}}>Submitter</Typography>
+							<FormGroup sx={{display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+								<Typography sx={{fontSize: '16px', margin: '16px 50px 20px 0', color: '#868e96'}}>Is submitter same as the requester?</Typography>
+								<FormControlLabel control={<Switch onClick={handleSubmitterChecked}/>} label={`${submitterChecked ? 'Yes' : 'No'}`}/>
+							</FormGroup>
+
+							<TableContainer component={Paper} sx={{display: submitterChecked ? 'auto' : 'none'}}>
+								<Table>
+									<TableHead>
+										<TableRow className='tablehead'>
+											<TableCell>Name</TableCell>
+											<TableCell>Family</TableCell>
+											<TableCell>Region</TableCell>
+											<TableCell>Organization</TableCell>
+											<TableCell>Role</TableCell>
+											<TableCell>Phone</TableCell>
+											<TableCell>Email</TableCell>
+											<TableCell>Action</TableCell>
+
+										</TableRow>
+									</TableHead>
+									<TableHead>
+										<TableRow>
+											<TableCell>Sultana</TableCell>
+											<TableCell>Majid</TableCell>
+											<TableCell></TableCell>
+											<TableCell></TableCell>
+											<TableCell></TableCell>
+											<TableCell></TableCell>
+											<TableCell></TableCell>
+											<TableCell>
+												<IconButton onClick={handleOpenEditRequester}>
+													<EditIcon color='primary'/>
+												</IconButton>
+												<IconButton onClick={handleDeleteConfirmation}>
+													<DeleteIcon color='primary'/>
+												</IconButton>
+											</TableCell>
+										</TableRow>
+									</TableHead>
+								</Table>
+							</TableContainer>
+
+							<Button variant={'outlined'} sx={{
+								width: '128px',
+								height: '32px',
+								fontSize: '14px',
+								padding: '0',
+								textTransform: 'capitalize',
+								display: submitterChecked ? 'none' : 'auto'
+							}}
+							onClick={handleOpenAddRequester}
+							>
+								+ Add Submitter
+							</Button>
+
+							<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '35px 0 16px 0'}}>Samples</Typography>
+
+							<FormGroup sx={{width: '400px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline'}}>
+								<Typography variant='body1' sx={{color: '#868e96'}}>Samples Were Collected?</Typography>
+								<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label={`${checked1 ? 'Yes' : 'No'}`}/>
+								<Typography variant='body1' sx={{color: '#868e96'}}>Samples Sent for Testing?</Typography>
+								<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label={`${checked2 ? 'Yes' : 'No'}`}/>
+								<Typography variant='body1' sx={{color: '#868e96'}}>Test Results Received?</Typography>
+								<FormControlLabel control={<Switch onChange={toggleChecked3}/>} label={`${checked3 ? 'Yes' : 'No'}`}/>
+							</FormGroup>
+
+							<TextField
+								sx={{width: '1079px', marginTop: '29px'}}
+								label='History (Max 500 Characters)'
+								id='history'
+								name='history'
+								multiline
+								rows={5}
+								onChange={handleUpdate}
+								inputProps={{maxLength: 500}}
+							/>
 						</Box>
 						<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
 							<Button
