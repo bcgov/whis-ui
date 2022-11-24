@@ -129,12 +129,9 @@ const Generate: React.FC = () => {
 	const handleUpdate = event => {
 		const currentState = formState;
 		switch (event.target.name) {
-			default:
-				currentState[event.target.name] = event.target.value;
+		default:
+			currentState[event.target.name] = event.target.value;
 		}
-		console.dir(formState);
-		console.log(event.target.name + ":" + event.target.value);
-
 	};
 
 	const [showOptional, setShowOptional] = useState(false);
@@ -206,14 +203,14 @@ const Generate: React.FC = () => {
 								maxDate={new Date(2099, 1, 1)}
 								onError={(e, value) => {
 									switch (e) {
-										case 'minDate':
-										case "invalidDate":
-										case 'maxDate':
-											setYearSelectError('❗Please enter a number between 2020 - 2099.');
-											break;
-										case null:
-											setYearSelectError(null);
-											break;
+									case 'minDate':
+									case "invalidDate":
+									case 'maxDate':
+										setYearSelectError('❗Please enter a number between 2020 - 2099.');
+										break;
+									case null:
+										setYearSelectError(null);
+										break;
 									}
 								}}
 								onChange={(y) => {
