@@ -2,12 +2,13 @@ const Webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 require('dotenv').config();
 
 // configurationSource may be 'Webpack', 'Caddy', or 'Hardcoded' depending on environment
 
-commonConfig = (htmlWebpackOptions, configurationSource) => {
+commonConfig = (devBuild, htmlWebpackOptions, configurationSource) => {
 	const buildPath = path.resolve(__dirname, 'public', 'build');
 	const mainPath = path.resolve(__dirname, 'src', 'main/entry.tsx');
 
@@ -63,11 +64,12 @@ commonConfig = (htmlWebpackOptions, configurationSource) => {
 						options: {
 							presets: ['@babel/preset-env', '@babel/preset-typescript', '@babel/preset-react'],
 							plugins: [
+								(devBuild && 'react-refresh/babel'),
 								'@babel/proposal-class-properties',
 								'@babel/proposal-object-rest-spread',
 								'@babel/plugin-proposal-nullish-coalescing-operator',
 								'@babel/plugin-proposal-optional-chaining'
-							]
+							].filter(Boolean)
 						}
 					}
 				},
@@ -132,8 +134,9 @@ commonConfig = (htmlWebpackOptions, configurationSource) => {
 			new HtmlWebpackPlugin({
 				chunks: ['mainBundle'],
 				...htmlWebpackOptions
-			})
-		]
+			}),
+			(devBuild && new ReactRefreshWebpackPlugin())
+		].filter(Boolean)
 	};
 };
 

@@ -4,6 +4,7 @@ const {commonConfig} = require('./webpack.common');
 
 const config = merge(
 	commonConfig(
+		true,
 		{
 			filename: 'index.html',
 			templateParameters: {},

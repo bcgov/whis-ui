@@ -9,6 +9,7 @@ import {AppConfig} from './config';
 import codeTablesSaga from "./sagas/code_tables";
 import flashMessagesSaga from "./sagas/flash_messages";
 import eventsSaga from "./sagas/events";
+import wildlifeHealthIdSaga from "./sagas/wildlife_health_id";
 
 const setupStore = (configuration: AppConfig) => {
 	const sagaMiddleware = createSagaMiddleware();
@@ -25,6 +26,7 @@ const setupStore = (configuration: AppConfig) => {
 	// run the sagas
 	sagaMiddleware.run(authenticationSaga);
 	sagaMiddleware.run(generationLockSaga);
+	sagaMiddleware.run(wildlifeHealthIdSaga);
 	sagaMiddleware.run(codeTablesSaga);
 	sagaMiddleware.run(flashMessagesSaga);
 	sagaMiddleware.run(eventsSaga);

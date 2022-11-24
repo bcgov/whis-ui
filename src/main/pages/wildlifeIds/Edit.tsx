@@ -1,33 +1,38 @@
-import React, {useEffect, useState} from 'react';
-import {useAPI} from "../../hooks/useAPI";
-import {Button, Stack} from "@mui/material";
-import '../../styles/inventory.scss';
-import {useSelector} from "../../../state/utilities/use_selector";
-import {useNavigate} from "react-router-dom";
+import React, {useEffect} from 'react';
 import {useParams} from "react-router";
 import EditForm from "../../components/wildlifeIds/edit/EditForm";
+import {useDispatch} from "react-redux";
+import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
+
+import '../../styles/inventory.scss';
+import {useSelector} from "../../../state/utilities/use_selector";
+import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
 
 const Edit: React.FC = () => {
-
-	const me = useSelector(state => state.Auth);
-	const api = useAPI();
 	const {id} = useParams();
-	const [data, setData] = useState(null);
-	const [loading, setLoading] = useState(false);
+
+	const dispatch = useDispatch();
+	const data = useSelector(getWildlifeHealthId);
 
 	useEffect(() => {
-		setLoading(true);
-		api.getHealthID(id).then(data => {
-			setData(data);
-			setLoading(false);
+		dispatch({
+			type: WILDLIFE_HEALTH_ID_LOAD_REQUEST, payload: {
+				id
+			}
 		});
-	}, [id]);
+		return () => {
+			dispatch({
+				type: WILDLIFE_HEALTH_ID_CLEAR
+			}
+			);
+		}
 
-	const navigate = useNavigate();
+
+	}, [id]);
 
 	return (
 		<>
-			<EditForm wildlifeId={data}/>
+			<EditForm wildlifeHealthId={data}/>
 		</>
 	);
 };

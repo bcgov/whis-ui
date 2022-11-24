@@ -5,11 +5,17 @@ import {useSelector} from '../../../state/utilities/use_selector';
 import {userHasAnyRole} from '../../../state/utilities/authentication_helper';
 import {nav} from '../../../state/utilities/nav';
 import {useLocation} from 'react-router';
+import {getConfiguration, getDevMode} from "../../../state/utilities/config_helper";
+import {useDispatch} from "react-redux";
+import {DEVMODE_SET_STATE} from "../../../state/actions";
 
 const Navigation: React.FC = () => {
 	const location = useLocation();
 
 	const currentUserRoles = useSelector(state => state.Auth.roles);
+	const devMode = useSelector(getDevMode);
+	const currentConfiguration = useSelector(getConfiguration);
+	const dispatch = useDispatch();
 
 	const navs = [
 		nav('/wildlifeIds', 'My Dashboard', ['BIOLOGIST'], 'Wildlife ID'),
@@ -65,6 +71,13 @@ const Navigation: React.FC = () => {
 
 						</>
 					))}
+					{currentConfiguration.DEBUG &&
+						<li className={'devModeToggle'}>
+							<input checked={devMode} type='checkbox' onChange={(e) => {
+								dispatch({type: DEVMODE_SET_STATE, payload: e.target.checked});
+							}}/> Enable developer-friendly features
+						</li>
+					}
 				</ul>
 			</nav>
 		</div>

@@ -2,7 +2,6 @@ import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {Route, Routes} from 'react-router';
-import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/wildlifeIds/Dashboard';
 import NotFound from './pages/NotFound';
 import WildlifeIdRoutes from './routes/wildlifeIds';

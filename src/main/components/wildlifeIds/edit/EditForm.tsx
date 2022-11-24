@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {Box, Button, Typography} from "@mui/material";
 import '../../../styles/updateID.scss';
 import {useSelector} from "../../../../state/utilities/use_selector";
@@ -9,9 +9,50 @@ import CreateEvent from "./CreateEvent";
 import Purpose from "./Purpose";
 import AnimalDetails from "./AnimalDetails";
 import EventDetails from "./EventDetails";
+import {getDevMode} from "../../../../state/utilities/config_helper";
 
 
-const EditForm = ({wildlifeId}) => {
+const EditForm = ({wildlifeHealthId}) => {
+
+	const devMode = useSelector(getDevMode);
+
+	function formReducerInit(initialState) {
+		return {
+			status: {
+				status: 'RETIRED'
+			},
+			quantity: 1,
+			year: '2022',
+			purpose: 'UNKNOWN',
+			species: '',
+			identifier: '+ Add Identifier Types',
+			other_identifier: '',
+			organization: '',
+			requesterRegion: '',
+			associatedProject: '',
+			reason: '',
+			location: '+ Add Location'
+		}
+	}
+
+	function formReducer(state, action) {
+
+		switch (action.type) {
+		case 'status.statusChange':
+			return {
+				...state,
+				status: {
+					...state.status,
+					status: action.payload
+				},
+			}
+			break;
+		}
+
+		return state;
+	}
+
+	const [formState, formDispatch] = useReducer(formReducer, null, formReducerInit);
 
 	const [validPurposes, setValidPurposes] = useState([]);
 	const [validSex, setValidSex] = useState([]);
@@ -37,6 +78,7 @@ const EditForm = ({wildlifeId}) => {
 	}
 
 	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
+
 	useEffect(() => {
 		if (!codeTablesInitialized) {
 			return;
@@ -49,19 +91,7 @@ const EditForm = ({wildlifeId}) => {
 
 	}, [tables, codeTablesInitialized]);
 
-	const [formState, setFormState] = useState({
-		quantity: 1,
-		year: '2022',
-		purpose: 'UNKNOWN',
-		species: '',
-		identifier: '+ Add Identifier Types',
-		other_identifier: '',
-		organization: '',
-		requesterRegion: '',
-		associatedProject: '',
-		reason: '',
-		location: '+ Add Location'
-	});
+
 	const [organization, setOrganization] = useState('');
 	const [role, setRole] = useState('');
 	const [purpose, setPurpose] = useState(formState.purpose);
@@ -166,7 +196,18 @@ const EditForm = ({wildlifeId}) => {
 			</Box>
 
 
-			<Status expansionEvent={expansionEvent}/>
+			{devMode && (<>
+				<strong>Redux Store State</strong>
+				<pre>
+					{JSON.stringify(wildlifeHealthId, '\t', 1)}
+				</pre>
+				<strong>Form Store State</strong>
+				<pre>
+					{JSON.stringify(formState, '\t', 1)}
+				</pre>
+			</>)}
+
+			<Status expansionEvent={expansionEvent} dispatch={formDispatch} state={formState}/>
 
 			<Purpose
 				expansionEvent={expansionEvent}
