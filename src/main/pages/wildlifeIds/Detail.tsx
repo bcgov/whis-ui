@@ -1,18 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {useAPI} from "../../hooks/useAPI";
-import {Button, Paper, Stack, Typography} from "@mui/material";
+import React, { useEffect, useState, useReducer } from 'react';
+import { useAPI } from "../../hooks/useAPI";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import '../../styles/inventory.scss';
-import {useSelector} from "../../../state/utilities/use_selector";
-import {useNavigate} from "react-router-dom";
-import {paperStyle} from "../../../state/style_constants";
-import {useParams} from "react-router";
-import Display from "../../components/wildlifeIds/Display";
+import { useSelector } from "../../../state/utilities/use_selector";
+import { useNavigate } from "react-router-dom";
+import { paperStyle } from "../../../state/style_constants";
+import { useParams } from "react-router";
+import Status from "../../components/wildlifeIds/detail/Status";
+import Purpose from "../../components/wildlifeIds/detail/Purpose";
+import AnimalDetails from "../../components/wildlifeIds/detail/AnimalDetails";
+import Event from "../../components/wildlifeIds/detail/Event";
 
 const Detail: React.FC = () => {
 
 	const me = useSelector(state => state.Auth);
 	const api = useAPI();
-	const {id} = useParams();
+	const { id } = useParams();
 	const [data, setData] = useState(null);
 	const [loading, setLoading] = useState(false);
 
@@ -26,26 +29,68 @@ const Detail: React.FC = () => {
 
 	const navigate = useNavigate();
 
+
+	const [formState, formDispatch] = useReducer(formReducer, null, formReducerInit);
+
+	function formReducerInit(initialState) {
+		return {
+			status: {
+				status: 'RETIRED'
+			},
+			quantity: 1,
+			year: '2022',
+			purpose: 'UNKNOWN',
+			species: '',
+			identifier: '+ Add Identifier Types',
+			other_identifier: '',
+			organization: '',
+			requesterRegion: '',
+			associatedProject: '',
+			reason: '',
+			location: '+ Add Location'
+		}
+	}
+
+	function formReducer(state, action) {
+
+		switch (action.type) {
+			case 'status.statusChange':
+				return {
+					...state,
+					status: {
+						...state.status,
+						status: action.payload
+					},
+				}
+				break;
+		}
+
+		return state;
+	}
+
 	return (
-		<Paper sx={paperStyle}>
+		<Box className='container'>
+			<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+				<Box>
+					<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '32px' }}>WLH ID [Number]</Typography>
+					<Typography sx={{ marginBottom: '28px', fontSize: '16px', color: '#787f81' }}>View the WLH ID details and events.</Typography>
+				</Box>
 
-			<Typography variant={'h3'}>WLH ID Details</Typography>
-
-			<Display wildlifeId={data}/>
-
-			<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'}>
-				<Button
-					variant={'contained'}
-					color={'secondary'}
-					onClick={() => {
-						navigate(-1)
-					}}
-				>
-					Back
+				<Button variant={'contained'} sx={{ height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px' }} >
+					Update WLH ID
 				</Button>
-			</Stack>
+			</Box>
+			<Status />
+			<Purpose />
+			<AnimalDetails />
+			<Event />
+			<Button variant={'contained'} sx={{ height: '41px', textTransform: 'capitalize', fontSize: '14px', float:'right' }} >
+					Update WLH ID
+			</Button>
+		</Box>
 
-		</Paper>
+
+
 	);
 };
 
