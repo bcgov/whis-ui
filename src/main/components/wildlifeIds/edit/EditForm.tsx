@@ -10,6 +10,8 @@ import Purpose from "./Purpose";
 import AnimalDetails from "./AnimalDetails";
 import EventDetails from "./EventDetails";
 import {getDevMode} from "../../../../state/utilities/config_helper";
+import useCodeTable from "../../../hooks/useCodeTable";
+import Loading from "../../util/Loading";
 
 
 const EditForm = ({wildlifeHealthId}) => {
@@ -54,7 +56,7 @@ const EditForm = ({wildlifeHealthId}) => {
 
 	const [formState, formDispatch] = useReducer(formReducer, null, formReducerInit);
 
-	const [validPurposes, setValidPurposes] = useState([]);
+	const {mappedCodes: validPurposes} = useCodeTable('wlh_id_purpose');
 	const [validSex, setValidSex] = useState([]);
 	const [validAgeClass, setValidAgeClass] = useState([]);
 	const [validSingleIdStatus, setValidSingleIdStatus] = useState([]);
@@ -83,11 +85,7 @@ const EditForm = ({wildlifeHealthId}) => {
 		if (!codeTablesInitialized) {
 			return;
 		}
-		setValidAgeClass(codeToSelect('animal_age'));
-		setValidSex(codeToSelect('animal_gender'))
-		setValidPurposes(codeToSelect('wlh_id_purpose'));
-		setValidOrganization(codeToSelect('organizations'));
-		setValidSingleIdStatus(codeToSelect('status'));
+
 
 	}, [tables, codeTablesInitialized]);
 
@@ -173,6 +171,10 @@ const EditForm = ({wildlifeHealthId}) => {
 	}
 
 
+	if (!codeTablesInitialized) {
+		return <Loading/>;
+	}
+
 	return (
 		<Box className='container'>
 			<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -182,17 +184,22 @@ const EditForm = ({wildlifeHealthId}) => {
 				</Box>
 
 				<Button variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}} onClick={handleNewEvent}>+ Add
-					New Event</Button>
+																																																																												New
+																																																																												Event</Button>
 			</Box>
 
 			<Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: '70px', margin: '70px 8px 0 0'}}>
-				<Button variant='outlined' className='expand_btn' onClick={() => {
+				<Button
+					variant='outlined' className='expand_btn' onClick={() => {
 					setExpansionEvent({event: 'expandAll', id: expansionEvent.id + 1});
-				}}>Expand All</Button>
-				<Button variant='outlined' className='expand_btn' onClick={() => {
+				}}
+				>Expand All</Button>
+				<Button
+					variant='outlined' className='expand_btn' onClick={() => {
 					setExpansionEvent({event: 'collapseAll', id: expansionEvent.id + 1});
 				}
-				} sx={{marginLeft: '8px'}}>Collapse All</Button>
+				} sx={{marginLeft: '8px'}}
+				>Collapse All</Button>
 			</Box>
 
 
