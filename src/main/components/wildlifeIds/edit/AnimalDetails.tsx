@@ -1,10 +1,14 @@
 import Expandable from "../../pageElements/Expandable";
-import {Box, Button, InputAdornment, MenuItem, TextField, Typography} from "@mui/material";
+import {Box, Button, InputAdornment, MenuItem, Select, TextField, Typography} from "@mui/material";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
-import IdentifierEntry from "../IdentifierEntry";
+import IdentifierEntry from "./IdentifierEntry";
 import React from "react";
+import useCodeTable from "../../../hooks/useCodeTable";
 
-const AnimalDetails = ({expansionEvent, handleUpdate, sex, setSex, validSex, identifierOptions, handleSelectIdentifier, handleAddIdentifier}) => {
+const AnimalDetails = ({expansionEvent, dispatch, state}) => {
+
+	const {mappedCodes: validSex} = useCodeTable('animal_gender');
+
 	return (
 		<Expandable expansionEvent={expansionEvent}>
 			<Expandable.Title>
@@ -17,7 +21,7 @@ const AnimalDetails = ({expansionEvent, handleUpdate, sex, setSex, validSex, ide
 							Species
 						</Typography>
 						<Typography variant='body1'>
-							Moose
+							{state.animalDetails.species.displayName}
 						</Typography>
 					</span>
 					<span>
@@ -25,7 +29,7 @@ const AnimalDetails = ({expansionEvent, handleUpdate, sex, setSex, validSex, ide
 							Gender
 						</Typography>
 						<Typography variant='body1'>
-							Female
+							{state.animalDetails.sex}
 						</Typography>
 					</span>
 					<span>
@@ -33,7 +37,7 @@ const AnimalDetails = ({expansionEvent, handleUpdate, sex, setSex, validSex, ide
 							Home Region
 						</Typography>
 						<Typography variant='body1'>
-							Home Region1
+							{state.animalDetails.homeRegion.displayName}
 						</Typography>
 					</span>
 				</Box>
@@ -50,47 +54,71 @@ const AnimalDetails = ({expansionEvent, handleUpdate, sex, setSex, validSex, ide
 							InputProps={{
 								endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon/></InputAdornment>,
 							}}
-							onChange={handleUpdate}
+							onChange={(e) => {
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'animalDetails.species.displayName',
+										value: e.target.value
+									}
+								})
+							}}
+							value={state.animalDetails.species.displayName}
 						/>
 
 						<TextField
 							sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
 							label='Home Region'
 							id='homeRegion'
-							onChange={handleUpdate}
+							value={state.animalDetails.homeRegion.displayName}
+							onChange={(e) => {
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'animalDetails.homeRegion.displayName',
+										value: e.target.value
+									}
+								})
+							}}
 						/>
-						<TextField
-							select
+						<Select
 							sx={{width: '529px', marginTop: '32px'}}
 							id='sex'
 							label='Sex'
-							value={sex}
+							value={state.animalDetails.sex}
 							onChange={(e) => {
-								setSex(e.target.value);
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'animalDetails.sex',
+										value: e.target.value
+									}
+								})
 							}}
 						>
-							{validSex.map((m, i) => (
-								<MenuItem key={i} value={m.value}>
+							{validSex.map((m) => (
+								<MenuItem key={m.value} value={m.value}>
 									{m.label}
 								</MenuItem>
 							))}
-						</TextField>
-						{identifierOptions.map((identifierOption, index) => (
-							<div>
-								<Box sx={{display: 'flex', flexDirection: 'column'}} key={index}>
-									<IdentifierEntry
-										key={index}
-										handleUpdate={(e) => {
-											handleSelectIdentifier(index, e);
-											handleAddIdentifier(index);
-										}}
-										handleDelete={() => {
-											console.log("delete");
-										}}
-									/>
-								</Box>
-							</div>
+						</Select>
+						{state.animalDetails.identifiers.map((identifier, index) => (
+
+							<IdentifierEntry
+								identifier={identifier}
+								index={index}
+								dispatch={dispatch}
+							/>
+
 						))}
+						<Button onClick={() => {
+							dispatch({
+								type: 'animalDetails.identifiers.add'
+							});
+						}
+						}>
+							+ Add Identifier Types
+						</Button>
 					</Box>
 				</Box>
 				<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>

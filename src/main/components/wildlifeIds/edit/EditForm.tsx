@@ -12,7 +12,7 @@ import EventDetails from "./EventDetails";
 import {getDevMode} from "../../../../state/utilities/config_helper";
 import useCodeTable from "../../../hooks/useCodeTable";
 import Loading from "../../util/Loading";
-
+import _ from 'lodash';
 
 const EditForm = ({wildlifeHealthId}) => {
 
@@ -33,33 +33,69 @@ const EditForm = ({wildlifeHealthId}) => {
 			requesterRegion: '',
 			associatedProject: '',
 			reason: '',
-			location: '+ Add Location'
+			location: '+ Add Location',
+			"animalDetails": {
+				"species": {
+					"displayName": "Deer",
+					"id": -1
+				},
+				"homeRegion": {
+					"id": -1,
+					"displayName": "Region1"
+				},
+				"sex": "male",
+				"identifiers": [
+					{
+						"id": -1,
+						"type": "NICKNAME",
+						"identifier": "APLSADF",
+						"additionalAttributes": {}
+					}
+				]
+			}
 		}
 	}
 
 	function formReducer(state, action) {
+		const updatedState = {...state};
 
 		switch (action.type) {
+		case 'fieldChange':
+			// for simple field changes
+			_.set(updatedState, action.payload.field, action.payload.value);
+			return updatedState;
 		case 'status.statusChange':
-			return {
-				...state,
-				status: {
-					...state.status,
-					status: action.payload
-				},
-			}
+			updatedState.status.status = action.payload;
+			break;
+		case 'animalDetails.identifiers.typeChange':
+			updatedState.animalDetails.identifiers[action.payload.index].type = action.payload.newType;
+			break;
+		case 'animalDetails.identifiers.valueChange':
+			updatedState.animalDetails.identifiers[action.payload.index].identifier = action.payload.newValue;
+			break;
+		case 'animalDetails.identifiers.additionalAttributesChange':
+			// some types of identifier (eg. ear tags have additional attributes beyond identifier)
+			updatedState.animalDetails.identifiers[action.payload.index].additionalAttributes = action.payload.newAttributes;
+			break;
+		case 'animalDetails.identifiers.delete':
+			updatedState.animalDetails.identifiers.splice(action.payload.index, 1);
+			break;
+		case 'animalDetails.identifiers.add':
+			updatedState.animalDetails.identifiers.push({
+				type: '',
+				identifier: '',
+				additionalAttributes: {}
+			});
 			break;
 		}
 
-		return state;
+		return updatedState;
 	}
 
 	const [formState, formDispatch] = useReducer(formReducer, null, formReducerInit);
 
 	const {mappedCodes: validPurposes} = useCodeTable('wlh_id_purpose');
-	const [validSex, setValidSex] = useState([]);
 	const [validAgeClass, setValidAgeClass] = useState([]);
-	const [validSingleIdStatus, setValidSingleIdStatus] = useState([]);
 	const [validOrganization, setValidOrganization] = useState([]);
 
 	//@todo codetable this
@@ -71,13 +107,6 @@ const EditForm = ({wildlifeHealthId}) => {
 		{value: 'PUBLIC', label: 'Public'},
 		{value: 'OTHER', label: 'Other'}
 	];
-
-	function codeToSelect(table: string): { label: string, value: string }[] {
-		return tables[table].codes.map(c => ({
-			value: c.value,
-			label: c.displayed_value
-		}));
-	}
 
 	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
@@ -93,12 +122,9 @@ const EditForm = ({wildlifeHealthId}) => {
 	const [organization, setOrganization] = useState('');
 	const [role, setRole] = useState('');
 	const [purpose, setPurpose] = useState(formState.purpose);
-	const [sex, setSex] = useState('');
 	const [ageClass, setAgeClass] = useState('');
 	const [eventType, setEventType] = useState('');
-	const [identifierOptions, setIdentifierOption] = useState([
-		{value: '', label: ''},
-	]);
+
 	const [locationOptions, setLocationOption] = useState([
 		{value: '', label: ''},
 	]);
@@ -146,18 +172,6 @@ const EditForm = ({wildlifeHealthId}) => {
 		setDeleteConfirmation(false);
 	};
 
-	//handle identifier options
-	const handleSelectIdentifier = (index, e) => {
-		const values = [...identifierOptions];
-		values[index][e.target.value] = e.target.value;
-		setIdentifierOption(values);
-	}
-	const handleAddIdentifier = (index) => {
-		if (index === (identifierOptions.length - 1)) {
-			setIdentifierOption([...identifierOptions, {value: '', label: ''}])
-		}
-	}
-
 	//handle location options
 	const handleSelectLocation = (index, e) => {
 		const values = [...locationOptions];
@@ -184,8 +198,8 @@ const EditForm = ({wildlifeHealthId}) => {
 				</Box>
 
 				<Button variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}} onClick={handleNewEvent}>+ Add
-																																																																												New
-																																																																												Event</Button>
+					New
+					Event</Button>
 			</Box>
 
 			<Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: '70px', margin: '70px 8px 0 0'}}>
@@ -228,15 +242,11 @@ const EditForm = ({wildlifeHealthId}) => {
 				validOrganization={validOrganization}
 				role={role}
 			/>
+
 			<AnimalDetails
 				expansionEvent={expansionEvent}
-				handleUpdate={handleUpdate}
-				sex={sex}
-				setSex={setSex}
-				validSex={validSex}
-				identifierOptions={identifierOptions}
-				handleSelectIdentifier={handleSelectIdentifier}
-				handleAddIdentifier={handleAddIdentifier}
+				dispatch={formDispatch}
+				state={formState}
 			/>
 
 			<EventDetails
