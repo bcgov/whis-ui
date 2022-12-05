@@ -2,29 +2,19 @@ import Expandable from "../../pageElements/Expandable";
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TextField, Typography} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React, {useState} from "react";
+import useCodeTable from "../../../hooks/useCodeTable";
+import PersonnelTable from "./PersonnelTable";
+import PersonnelDialog from "./PersonnelDialog";
 
 const Purpose = ({
 	expansionEvent,
-	handleUpdate,
-	setRole,
-	validRole,
-	setPurpose,
-	validPurposes,
-	organization,
-	setOrganization,
-	validOrganization,
-	role
+	dispatch,
+	state
 }) => {
 
-	//add requester dialog
-	const [openAddRequester, setOpenAddRequester] = useState(false);
-	const handleOpenAddRequester = () => {
-		setOpenAddRequester(true);
-	};
-	const handleCloseAddRequester = () => {
-		setOpenAddRequester(false);
-	};
+	const [addRequesterDialogOpen, setAddRequesterDialogOpen] = useState(false);
 
+	const {mappedCodes: purposes} = useCodeTable('purposes');
 
 	return (
 		<Expandable expansionEvent={expansionEvent}>
@@ -38,7 +28,7 @@ const Purpose = ({
 							Primary Purpose
 						</Typography>
 						<Typography variant='body1'>
-							Herd Health
+							{state.purpose.primaryPurpose}
 						</Typography>
 					</span>
 					<span>
@@ -46,7 +36,7 @@ const Purpose = ({
 							Requester
 						</Typography>
 						<Typography variant='body1'>
-							Sultana Majid
+							{state.purpose.requester && `${state.purpose.requester.firstName} ${state.purpose.requester.lastName}` || 'unset'}
 						</Typography>
 					</span>
 					<span>
@@ -54,7 +44,7 @@ const Purpose = ({
 							Organization
 						</Typography>
 						<Typography variant='body1'>
-							Organization 1
+							{state.purpose.requester && `${state.purpose.requester.organization}` || 'unset'}
 						</Typography>
 					</span>
 				</Box>
@@ -64,15 +54,20 @@ const Purpose = ({
 					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '32px 0 21px 0'}}>WLH ID information</Typography>
 					<TextField
 						sx={{width: '529px'}}
-						id='purpose1'
 						select
 						label='Primary Purpose'
-						// value={purpose}
+						value={state.purpose.primaryPurpose}
 						onChange={(e) => {
-							setPurpose(e.target.value);
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'purpose.primaryPurpose',
+									value: e.target.value
+								}
+							})
 						}}
 					>
-						{validPurposes.map((m, i) => (
+						{purposes.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
@@ -80,15 +75,20 @@ const Purpose = ({
 					</TextField>
 					<TextField
 						sx={{width: '529px', marginLeft: '32px'}}
-						id='purpose2'
 						select
 						label='Secondary Purpose'
-						// value={purpose}
+						value={state.purpose.secondaryPurpose}
 						onChange={(e) => {
-							setPurpose(e.target.value);
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'purpose.secondaryPurpose',
+									value: e.target.value
+								}
+							})
 						}}
 					>
-						{validPurposes.map((m, i) => (
+						{purposes.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
@@ -100,7 +100,16 @@ const Purpose = ({
 						label='Associated Project'
 						id='associatedProject'
 						name='associatedProject'
-						onChange={handleUpdate}
+						value={state.purpose.associatedProject}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'purpose.associatedProject',
+									value: e.target.value
+								}
+							})
+						}}
 					/>
 					<TextField
 						sx={{minWidth: '1091px', marginTop: '32px'}}
@@ -109,107 +118,72 @@ const Purpose = ({
 						name='projectDetails'
 						multiline
 						rows={3}
-						onChange={handleUpdate}
+						value={state.purpose.projectDetails}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'purpose.projectDetails',
+									value: e.target.value
+								}
+							})
+						}}
 					/>
 
 					<Box className='requester'>
 						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '32px 0 21px 0'}}>
-							Requester(1)
+							Requester
 						</Typography>
 
-						<Button variant={'outlined'} sx={{marginTop: '7px', width: '128px', height: '32px', fontSize: '14px', padding: '0', textTransform: 'capitalize'}}
-										onClick={handleOpenAddRequester}
-						>
-							+ Add Requester
-						</Button>
-						<Dialog
-							open={openAddRequester}
-							onClose={handleCloseAddRequester}
-							maxWidth={false}
-							PaperProps={{
-								sx: {width: '975px', maxHeight: '432px'}
+						{state.purpose.requester && <PersonnelTable people={[
+							{
+								...state.purpose.requester,
+								editAction: (updatedPerson) => {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: 'purpose.requester',
+											value: updatedPerson
+										}
+									})
+								},
+								deleteAction: () => {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: 'purpose.requester',
+											value: null
+										}
+									})
+								}
+							}
+						]}/>}
+
+						{state.purpose.requester === null &&
+							<Button variant={'outlined'} sx={{marginTop: '7px', width: '128px', height: '32px', fontSize: '14px', padding: '0', textTransform: 'capitalize'}}
+											onClick={() => {
+												setAddRequesterDialogOpen(true)
+											}}>+ Add Requester</Button>}
+
+						<PersonnelDialog
+							open={addRequesterDialogOpen}
+							acceptAction={(p) => {
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'purpose.requester',
+										value: p
+									}
+								});
+								setAddRequesterDialogOpen(false);
 							}}
-						>
-							<IconButton
-								onClick={handleCloseAddRequester}
-								sx={{
-									position: 'absolute',
-									right: 8,
-									top: 8
-								}}
-							>
-								<CloseIcon/>
-							</IconButton>
-							<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 5px 31px'}}>Add Requester</DialogTitle>
-							<DialogContent sx={{display: 'block', padding: ' 0 15px'}}>
-								<TextField
-									className='requesterFormInput'
-									label='First Name'
-									id='first_name'
-									name='first_name'
-									required
-									onChange={handleUpdate}
-								/>
-								<TextField
-									className='requesterFormInput'
-									label='Last Name'
-									id='last_name'
-									name='last_name'
-									required
-									onChange={handleUpdate}
-								/>
-								<TextField
-									className='requesterFormInput'
-									id='organization-select'
-									select
-									label='Organization'
-									value={organization}
-									onChange={(e) => {
-										setOrganization(e.target.value);
-									}}
-								>
-									{validOrganization.map((m, i) => (
-										<MenuItem key={i} value={m.value}>
-											{m.label}
-										</MenuItem>
-									))}
-								</TextField>
-								<TextField
-									className='requesterFormInput'
-									id='role-select'
-									select
-									label='Role'
-									value={role}
-									onChange={(e) => {
-										setRole(e.target.value);
-									}}
-								>
-									{validRole.map((m, i) => (
-										<MenuItem key={i} value={m.value}>
-											{m.label}
-										</MenuItem>
-									))}
-								</TextField>
-								<TextField
-									className='requesterFormInput'
-									label='Phone Number'
-									id='phone'
-									name='phone'
-									onChange={handleUpdate}
-								/>
-								<TextField
-									className='requesterFormInput'
-									label='Email'
-									id='email'
-									name='email'
-									onChange={handleUpdate}
-								/>
-							</DialogContent>
-							<DialogActions sx={{padding: '29px 32px 32px 0'}}>
-								<Button variant={'contained'} onClick={handleCloseAddRequester} className='requesterFormBtn'>Add</Button>
-								<Button variant={'outlined'} onClick={handleCloseAddRequester} className='requesterFormBtn' sx={{marginLeft: '11px'}}>Cancel</Button>
-							</DialogActions>
-						</Dialog>
+							cancelAction={() => {
+								setAddRequesterDialogOpen(false);
+							}}
+							initialState={null}
+						/>
+
+
 					</Box>
 				</Box>
 				<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>

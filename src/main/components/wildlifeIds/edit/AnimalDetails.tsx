@@ -8,6 +8,7 @@ import useCodeTable from "../../../hooks/useCodeTable";
 const AnimalDetails = ({expansionEvent, dispatch, state}) => {
 
 	const {mappedCodes: validSex} = useCodeTable('animal_gender');
+	const {mappedCodes: regions} = useCodeTable('regions');
 
 	return (
 		<Expandable expansionEvent={expansionEvent}>
@@ -21,7 +22,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state}) => {
 							Species
 						</Typography>
 						<Typography variant='body1'>
-							{state.animalDetails.species.displayName}
+							{state.animalDetails.species}
 						</Typography>
 					</span>
 					<span>
@@ -37,7 +38,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state}) => {
 							Home Region
 						</Typography>
 						<Typography variant='body1'>
-							{state.animalDetails.homeRegion.displayName}
+							{state.animalDetails.homeRegion}
 						</Typography>
 					</span>
 				</Box>
@@ -58,7 +59,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state}) => {
 								dispatch({
 									type: 'fieldChange',
 									payload: {
-										field: 'animalDetails.species.displayName',
+										field: 'animalDetails.species',
 										value: e.target.value
 									}
 								})
@@ -66,21 +67,27 @@ const AnimalDetails = ({expansionEvent, dispatch, state}) => {
 							value={state.animalDetails.species.displayName}
 						/>
 
-						<TextField
+						<Select
 							sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
 							label='Home Region'
 							id='homeRegion'
-							value={state.animalDetails.homeRegion.displayName}
+							value={state.animalDetails.homeRegion}
 							onChange={(e) => {
 								dispatch({
 									type: 'fieldChange',
 									payload: {
-										field: 'animalDetails.homeRegion.displayName',
+										field: 'animalDetails.homeRegion',
 										value: e.target.value
 									}
 								})
 							}}
-						/>
+						>
+							{regions.map((r) => (
+								<MenuItem key={r.value} value={r.value}>
+									{r.label}
+								</MenuItem>
+							))}
+						</Select>
 						<Select
 							sx={{width: '529px', marginTop: '32px'}}
 							id='sex'

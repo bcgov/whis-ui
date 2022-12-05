@@ -21,7 +21,7 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 
 const Status = ({expansionEvent, dispatch, state}) => {
 
-	const validSingleIdStatus = [
+	const statuses = [
 		{value: 'ASSIGNED', label: 'Assigned'},
 		{value: 'RETIRED', label: 'Retired'},
 		{value: 'UNASSIGNED', label: 'Unassigned'}
@@ -46,6 +46,16 @@ const Status = ({expansionEvent, dispatch, state}) => {
 					id='reason'
 					name='reason'
 					multiline
+					onChange={(e) => {
+						dispatch({
+							type: 'fieldChange',
+							payload: {
+								field: 'status.reason',
+								value: e.target.value
+							}
+						})
+					}}
+					value={state.status.reason}
 					rows={3}
 				/>
 			);
@@ -55,19 +65,48 @@ const Status = ({expansionEvent, dispatch, state}) => {
 				<>
 					<FormGroup sx={{width: '330px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '28px'}}>
 						<Typography variant='body1'>Recapture Kits Returned</Typography>
-						<FormControlLabel control={<Switch onChange={() => dispatch({type: 'status.recaptureReturnedChange'})} sx={{marginInline: '20px'}}/>}
-															label={`${state.recaptureReturned ? 'Yes' : 'No'}`}/>
+						<FormControlLabel control={<Switch onChange={(e) => dispatch(
+							{
+								type: 'fieldChange',
+								payload: {
+									field: 'status.additionalAttributes.recaptureKitsReturned',
+									value: e.target.checked
+								}
+							}
+						)}
+						sx={{marginInline: '20px'}}/>}
+						checked={state.status.additionalAttributes.recaptureKitsReturned}
+						label={`${state.status.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}/>
 						<Typography variant='body1'>Recapture Status</Typography>
-						<FormControlLabel control={<Switch onChange={() => dispatch({type: 'status.recaptureStatusChange'})} onClick={() => {/*handleIdConfirmation*/
-						}} sx={{marginInline: '20px'}}/>}
-															label={`${state.recaptureStatus ? 'On' : 'Off'}`} sx={{marginTop: '20px'}}/>
+						<FormControlLabel control={<Switch onChange={(e) => dispatch(
+							{
+								type: 'fieldChange',
+								payload: {
+									field: 'status.additionalAttributes.recaptureStatus',
+									value: e.target.checked
+								}
+							}
+						)}
+						checked={state.status.additionalAttributes.recaptureStatus}
+						sx={{marginInline: '20px'}}/>}
+						label={`${state.status.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{marginTop: '20px'}}/>
 					</FormGroup>
 
 					<TextField
-						sx={{width: '529px', marginTop: '28px', display: state.recaptureStatus ? 'auto' : 'none'}}
+						sx={{width: '529px', marginTop: '28px'}}
 						id='correctIdNumber'
 						name='correctIdNumber'
 						label='Correct WLH ID Number'
+						value={state.status.additionalAttributes.correctIdNumber || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'status.additionalAttributes.correctIdNumber',
+									value: e.target.value
+								}
+							})
+						}}
 						defaultValue='Pending'
 					/>
 
@@ -78,6 +117,16 @@ const Status = ({expansionEvent, dispatch, state}) => {
 						name='reason'
 						multiline
 						rows={3}
+						value={state.status.reason}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'status.reason',
+									value: e.target.value
+								}
+							})
+						}}
 					/>
 
 					<Dialog
@@ -99,7 +148,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 							<CloseIcon/>
 						</IconButton>
 						<DialogTitle sx={{fontSize: '16px', padding: '50px 0 20px 72px'}}>
-							{"Please enter the Correct WL ID below"}
+							{"Please enter the Correct WLH ID below"}
 						</DialogTitle>
 						<DialogContent sx={{padding: '0 72px', overflowY: 'unset'}}>
 							<TextField
@@ -109,7 +158,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 								label='Correct WLH ID'
 							/>
 							<Tooltip
-								title="Flag it if the ID is not availabe as a to do list for the future"
+								title="Flag it if the ID is not available as a to do list for the future"
 								arrow
 								placement="right"
 								componentsProps={{
@@ -159,7 +208,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 				<span>
 					<Typography sx={{fontSize: '18px'}}>Status</Typography>
 					<Typography className='unassigned' sx={{color: 'white', fontSize: '13px'}} variant='subtitle1'>
-						Unassigned
+						{state.metadata.status}
 					</Typography>
 				</span>
 				<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
@@ -168,7 +217,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 							WLH ID Number
 						</Typography>
 						<Typography variant='body1'>
-							22-00001
+							{state.metadata.wildlifeHealthId}
 						</Typography>
 					</span>
 					<span>
@@ -176,7 +225,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 							WLH ID Generated  Date
 						</Typography>
 						<Typography variant='body1'>
-							21-01-2021
+							{state.metadata.generationDate}
 						</Typography>
 					</span>
 					<span>
@@ -184,7 +233,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 							WLH ID Creator
 						</Typography>
 						<Typography variant='body1'>
-							Jane Hill
+							{state.metadata.creator.name}
 						</Typography>
 					</span>
 				</Box>
@@ -195,7 +244,6 @@ const Status = ({expansionEvent, dispatch, state}) => {
 						sx={{width: '529px', marginTop: '8px'}}
 						id='idStatus'
 						label='Change WLH Status *'
-						name='idStatus'
 						defaultValue={state.status.status}
 						select
 						onChange={(e) => {
@@ -203,10 +251,8 @@ const Status = ({expansionEvent, dispatch, state}) => {
 								type: 'status.statusChange', payload: e.target.value
 							});
 						}}
-						onSelect={() => {
-						}}
 					>
-						{validSingleIdStatus.map((m) => (
+						{statuses.map((m) => (
 							<MenuItem key={m.value} value={m.value}>
 								{m.label}
 							</MenuItem>

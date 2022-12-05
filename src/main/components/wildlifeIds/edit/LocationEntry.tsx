@@ -1,11 +1,26 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, IconButton, MenuItem, TextField} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const LocationEntry = ({handleUpdate, handleDelete}) => {
+const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 
-	const validLocation = [
-		{value: '+ Add Location', label: '+ Add Location'},
+	const [path, setPath] = useState(`events[${eventIndex}].locations[${locationIndex}]`);
+
+	useEffect(() => {
+		setPath(`events[${eventIndex}].locations[${locationIndex}]`);
+	}, [eventIndex, locationIndex]);
+
+	function deleteAction() {
+		dispatch({
+			type: 'locations.delete',
+			payload: {
+				eventIndex,
+				locationIndex
+			}
+		});
+	}
+
+	const locationTypes = [
 		{value: 'REGION', label: 'Region'},
 		{value: 'MANAGEMENT_UNIT', label: 'Management Unit'},
 		{value: 'POPULATION_UNIT', label: 'Population Unit'},
@@ -17,45 +32,31 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 		{value: 'CITY', label: 'City'},
 		{value: 'CIVIC_ADDRESS', label: 'Civic Address'}
 	];
-	const validManagementUnit = [
+
+	const managementUnits = [
 		{value: 'M_UNIT1', label: 'Management Unit 1'},
 		{value: 'M_UNIT2', label: 'Management Unit 2'},
 		{value: 'M_UNIT3', label: 'Management Unit 3'},
 		{value: 'M_UNIT4', label: 'Management Unit 4'},
 		{value: 'M_UNIT5', label: 'Management Unit 5'}
 	];
-	const validPopulationUnit = [
+	const populationUnits = [
 		{value: 'P_UNIT1', label: 'Population Unit 1'},
 		{value: 'P_UNIT2', label: 'Population Unit 2'},
 		{value: 'P_UNIT3', label: 'Population Unit 3'},
 		{value: 'P_UNIT4', label: 'Population Unit 4'},
 		{value: 'P_UNIT5', label: 'Population Unit 5'}
 	];
-	const validCity = [
+	const cities = [
 		{value: 'CITY1', label: 'City 1'},
 		{value: 'CITY2', label: 'City 2'},
 		{value: 'CITY3', label: 'City 3'},
 		{value: 'CITY4', label: 'City 4'},
 		{value: 'CITY5', label: 'City 5'}
 	];
-	const validCivicAddress = [
-		{value: 'ADDR1', label: 'City 1'},
-		{value: 'ADDR2', label: 'City 2'},
-		{value: 'ADDR3', label: 'City 3'},
-		{value: 'ADDR4', label: 'City 4'},
-		{value: 'ADDR5', label: 'City 5'}
-	];
-
-
-	const [locations, setLocation] = useState('+ Add Location');
-	const [management, setManagement] = useState('');
-	const [population, setPopulation] = useState('');
-	const [city, setCity] = useState('');
-	const [civicCity, setCivicCity] = useState('');
-
 
 	function renderDetailed() {
-		switch (locations) {
+		switch (location.type) {
 		case "REGION":
 			return (
 				<Box sx={{width: '529px', display: 'flex', alignItems: 'center', marginTop: '32px'}}>
@@ -63,15 +64,32 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 						sx={{width: '235px', marginRight: '16px'}}
 						label='Region Number'
 						id='regionNumber'
-						name='regionNumber'
+						value={location.attributes.regionNumber || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.regionNumber`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
 					<TextField
 						sx={{width: '235px', marginRight: '4px'}}
 						label='Region Name'
 						id='regionName'
-						name='regionName'
-					/>
-					<IconButton>
+						value={location.attributes.regionName || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.regionName`,
+									value: e.target.value
+								}
+							});
+						}}/>
+					<IconButton onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -84,18 +102,24 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 						id='m_unit'
 						select
 						label='Management Unit'
-						value={management}
+						value={location.attributes.managementUnit || ''}
 						onChange={(e) => {
-							setManagement(e.target.value);
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.managementUnit`,
+									value: e.target.value
+								}
+							});
 						}}
 					>
-						{validManagementUnit.map((m, i) => (
+						{managementUnits.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}
 					</TextField>
-					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}}>
+					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}} onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -108,18 +132,24 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 						id='p_unit'
 						select
 						label='Population Unit'
-						value={population}
+						value={location.attributes.populationUnit || ''}
 						onChange={(e) => {
-							setPopulation(e.target.value);
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.populationUnit`,
+									value: e.target.value
+								}
+							});
 						}}
 					>
-						{validPopulationUnit.map((m, i) => (
+						{populationUnits.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}
 					</TextField>
-					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}}>
+					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}} onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -130,10 +160,17 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					<TextField
 						sx={{width: '486px', marginTop: '32px'}}
 						label='Herd Name'
-						id='herdname'
-						name='herdname'
-					/>
-					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}}>
+						value={location.attributes.herdName || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.herdName`,
+									value: e.target.value
+								}
+							});
+						}}/>
+					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}} onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -144,22 +181,46 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					<TextField
 						sx={{width: '151px', marginRight: '16px'}}
 						label='Unit'
-						id='unit'
-						name='unit'
+						value={location.attributes.unit || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.unit`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
 					<TextField
 						sx={{width: '151px', marginRight: '16px'}}
 						label='Latitude'
-						id='latitude'
-						name='latitude'
+						value={location.attributes.latitude || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.latitude`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
 					<TextField
 						sx={{width: '151px', marginRight: '4px'}}
-						label='Longtitude'
-						id='longtitude'
-						name='longtitude'
+						label='Longitude'
+						value={location.attributes.longitude || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.longitude`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
-					<IconButton>
+					<IconButton onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -170,10 +231,18 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					<TextField
 						sx={{width: '486px', marginTop: '32px'}}
 						label='Nickname'
-						id='nickname'
-						name='nickname'
+						value={location.attributes.nickName || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.nickName`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
-					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}}>
+					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}} onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -184,22 +253,46 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					<TextField
 						sx={{width: '151px', marginRight: '16px'}}
 						label='Zone'
-						id='zone'
-						name='zone'
+						value={location.attributes.zone || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.zone`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
 					<TextField
 						sx={{width: '151px', marginRight: '16px'}}
 						label='Easting'
-						id='easting'
-						name='easting'
+						value={location.attributes.easting || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.easting`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
 					<TextField
 						sx={{width: '151px', marginRight: '4px'}}
 						label='Northing'
-						id='northing'
-						name='northing'
+						value={location.attributes.northing || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.northing`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
-					<IconButton>
+					<IconButton onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -210,16 +303,32 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					<TextField
 						sx={{width: '235px', marginRight: '16px'}}
 						label='Value 1'
-						id='value1'
-						name='value1'
+						value={location.attributes.value1 || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.value1`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
 					<TextField
 						sx={{width: '235px', marginRight: '4px'}}
 						label='Value 2'
-						id='value2'
-						name='value2'
+						value={location.attributes.value2 || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.value2`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
-					<IconButton>
+					<IconButton onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -232,18 +341,24 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 						id='cities'
 						select
 						label='BC Cities'
-						value={city}
+						value={location.attributes.city || ''}
 						onChange={(e) => {
-							setCity(e.target.value);
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.city`,
+									value: e.target.value
+								}
+							});
 						}}
 					>
-						{validCity.map((m, i) => (
+						{cities.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}
 					</TextField>
-					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}}>
+					<IconButton sx={{position: 'relative', top: '40px', marginLeft: '4px'}} onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -256,12 +371,18 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 						id='civic_city'
 						select
 						label='City'
-						value={civicCity}
+						value={location.attributes.city || ''}
 						onChange={(e) => {
-							setCivicCity(e.target.value);
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.city`,
+									value: e.target.value
+								}
+							});
 						}}
 					>
-						{validCivicAddress.map((m, i) => (
+						{cities.map((m, i) => (
 							<MenuItem key={i} value={m.value}>
 								{m.label}
 							</MenuItem>
@@ -270,10 +391,18 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					<TextField
 						sx={{width: '235px', marginRight: '4px'}}
 						label='Street Address'
-						id='address'
-						name='address'
+						value={location.attributes.streetAddress || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: `${path}.attributes.streetAddress`,
+									value: e.target.value
+								}
+							});
+						}}
 					/>
-					<IconButton>
+					<IconButton onClick={deleteAction}>
 						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
 					</IconButton>
 				</Box>);
@@ -291,13 +420,18 @@ const LocationEntry = ({handleUpdate, handleDelete}) => {
 					id='location'
 					name='location'
 					select
-					defaultValue={"+ Add Location"}
+					value={location.type}
 					onChange={(e) => {
-						setLocation(e.target.value);
-						handleUpdate(e);
+						dispatch({
+							type: 'fieldChange',
+							payload: {
+								field: `${path}.type`,
+								value: e.target.value
+							}
+						});
 					}}
 				>
-					{validLocation.map((m, i) => (
+					{locationTypes.map((m, i) => (
 						<MenuItem key={i} value={m.value}>
 							{m.label}
 						</MenuItem>

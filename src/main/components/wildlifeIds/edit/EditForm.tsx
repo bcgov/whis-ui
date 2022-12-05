@@ -5,14 +5,12 @@ import {useSelector} from "../../../../state/utilities/use_selector";
 import {selectCodeTables} from "../../../../state/reducers/code_tables";
 import {ExpansionOverrideEvent} from "../../pageElements/Expandable";
 import Status from "./Status";
-import CreateEvent from "./CreateEvent";
 import Purpose from "./Purpose";
 import AnimalDetails from "./AnimalDetails";
-import EventDetails from "./EventDetails";
 import {getDevMode} from "../../../../state/utilities/config_helper";
-import useCodeTable from "../../../hooks/useCodeTable";
 import Loading from "../../util/Loading";
 import _ from 'lodash';
+import EventsContainer from "./EventsContainer";
 
 const EditForm = ({wildlifeHealthId}) => {
 
@@ -20,39 +18,93 @@ const EditForm = ({wildlifeHealthId}) => {
 
 	function formReducerInit(initialState) {
 		return {
-			status: {
-				status: 'RETIRED'
+			"metadata": {
+				"year": "2022",
+				"id": 2041,
+				"wildlifeHealthId": "22-0002",
+				"generationDate": "2021-12-01",
+				"creator": {
+					"name": "Sample Creator",
+				},
+				"status": "Unassigned",
 			},
-			quantity: 1,
-			year: '2022',
-			purpose: 'UNKNOWN',
-			species: '',
-			identifier: '+ Add Identifier Types',
-			other_identifier: '',
-			organization: '',
-			requesterRegion: '',
-			associatedProject: '',
-			reason: '',
-			location: '+ Add Location',
-			"animalDetails": {
-				"species": {
-					"displayName": "Deer",
-					"id": -1
-				},
-				"homeRegion": {
-					"id": -1,
-					"displayName": "Region1"
-				},
-				"sex": "male",
-				"identifiers": [
+			"status": {
+				"history": [
 					{
-						"id": -1,
-						"type": "NICKNAME",
-						"identifier": "APLSADF",
+						"status": "Assigned",
+						"reason": "Sent to field",
+						"date": "2022-04-01",
+						"additionalAttributes": {}
+					},
+					{
+						"status": "Unassigned",
+						"reason": "Newly generated",
+						"date": "2022-01-01",
 						"additionalAttributes": {}
 					}
-				]
-			}
+				],
+				"status": "RETIRED",
+				"reason": "Not in use",
+				"additionalAttributes": {
+					"recaptureKitsReturned": false
+				}
+			},
+			"purpose":
+					{
+						"primaryPurpose": "HERD_HEALTH",
+						"secondaryPurpose": "TARGETED",
+						"associatedProject": "Sample project",
+						"projectDetails":
+							"Sample detail text",
+						"requester":
+							{
+								"region": "THOMPSON",
+								"firstName": "Sample",
+								"lastName": "Persion",
+								"organization": "ORGANIZATION2",
+								"role": "TRAPPER",
+								"phoneNumber": "5551234",
+								"email": "test@email"
+							}
+					}
+			,
+			"animalDetails":
+					{
+						"species": "Deer",
+						"homeRegion": "THOMPSON",
+						"sex":
+							"male",
+						"identifiers":
+							[
+								{
+									"id": -1,
+									"type": "NICKNAME",
+									"identifier": "Steve",
+									"additionalAttributes": {}
+								}
+							]
+					}
+			,
+			"events":
+					[
+						{
+							"type": "capture",
+							"ageClass": "juvenile",
+							"startDate": null,
+							"endDate": null,
+							"submitter": null,
+							"locations": [
+								{
+									"type": "HERD_NAME",
+									"attributes": {
+										"herdName": "Sample Herd"
+									}
+								}
+							],
+							"additionalAttributes": {},
+							"history": "Sample history entry"
+						}
+					]
 		}
 	}
 
@@ -87,6 +139,32 @@ const EditForm = ({wildlifeHealthId}) => {
 				additionalAttributes: {}
 			});
 			break;
+		case 'events.copyFromRequester':
+			_.set(updatedState, action.payload.destinationField, state.purpose.requester);
+			break;
+		case 'events.add':
+			updatedState.events.push(
+				{
+					"type": 'capture',
+					"ageClass": '',
+					"startDate": '',
+					"endDate": '',
+					"submitter": null,
+					"locations": [],
+					"additionalAttributes": {},
+					"history": ''
+				}
+			);
+			break;
+		case 'locations.add':
+			updatedState.events[action.payload.eventIndex].locations.push({
+				"type": '',
+				"attributes": {}
+			});
+			break;
+		case 'locations.delete':
+			updatedState.events[action.payload.eventIndex].locations.splice(action.payload.locationIndex, 1);
+			break;
 		}
 
 		return updatedState;
@@ -94,96 +172,19 @@ const EditForm = ({wildlifeHealthId}) => {
 
 	const [formState, formDispatch] = useReducer(formReducer, null, formReducerInit);
 
-	const {mappedCodes: validPurposes} = useCodeTable('wlh_id_purpose');
-	const [validAgeClass, setValidAgeClass] = useState([]);
-	const [validOrganization, setValidOrganization] = useState([]);
-
-	//@todo codetable this
-	const validRole = [
-		{value: 'HUNTER', label: 'Hunter'},
-		{value: 'TRAPPER', label: 'Trapper'},
-		{value: 'CONSERVATION_OFFICER', label: 'Conservation Officer'},
-		{value: 'WILDLIFE_BIOLOGIST', label: 'Wildlife Biologist'},
-		{value: 'PUBLIC', label: 'Public'},
-		{value: 'OTHER', label: 'Other'}
-	];
-
 	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
 	useEffect(() => {
 		if (!codeTablesInitialized) {
 			return;
 		}
-
-
 	}, [tables, codeTablesInitialized]);
 
-
-	const [organization, setOrganization] = useState('');
-	const [role, setRole] = useState('');
-	const [purpose, setPurpose] = useState(formState.purpose);
-	const [ageClass, setAgeClass] = useState('');
-	const [eventType, setEventType] = useState('');
-
-	const [locationOptions, setLocationOption] = useState([
-		{value: '', label: ''},
-	]);
 
 	const [expansionEvent, setExpansionEvent] = useState<ExpansionOverrideEvent>({
 		event: 'none',
 		id: 0
 	});
-
-	const handleSubmit = (e) => {
-
-	}
-	const handleUpdate = (e) => {
-
-	}
-
-
-	//Add new event
-	const [newEvent, setNewEvent] = useState(false);
-	const handleNewEvent = () => {
-		setNewEvent(true);
-	};
-
-	//Submitter Checked
-	const [submitterChecked, setSubmitterChecked] = useState(false);
-	const handleSubmitterChecked = () => {
-		setSubmitterChecked(!submitterChecked);
-	};
-
-	//edit requester dialog
-	const [openEditRequester, setOpenEditRequester] = useState(false);
-	const handleOpenEditRequester = () => {
-		setOpenEditRequester(true);
-	};
-	const handleCloseEditRequester = () => {
-		setOpenEditRequester(false);
-	};
-
-	//requester delete confirmation
-	const [DeleteConfirmation, setDeleteConfirmation] = useState(false);
-	const handleDeleteConfirmation = () => {
-		setDeleteConfirmation(true);
-	};
-	const handleCloseDeleteConfirmation = () => {
-		setDeleteConfirmation(false);
-	};
-
-	//handle location options
-	const handleSelectLocation = (index, e) => {
-		const values = [...locationOptions];
-		values[index][e.target.value] = e.target.value;
-		setLocationOption(values);
-	}
-	const handleAddLocation = (index) => {
-		if (index === (locationOptions.length - 1)) {
-			setLocationOption([...locationOptions, {value: '', label: ''}])
-		}
-	}
-
 
 	if (!codeTablesInitialized) {
 		return <Loading/>;
@@ -193,26 +194,31 @@ const EditForm = ({wildlifeHealthId}) => {
 		<Box className='container'>
 			<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
 				<Box>
-					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>WLH ID [Number]</Typography>
+					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>WLH ID {formState.metadata.wildlifeHealthId}</Typography>
 					<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>Update the WLH ID details and events.</Typography>
 				</Box>
 
-				<Button variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}} onClick={handleNewEvent}>+ Add
-					New
-					Event</Button>
+				<Button variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}} onClick={() => {
+					formDispatch({
+						type: 'events.add'
+					})
+				}
+				}>+ Add
+						New
+						Event</Button>
 			</Box>
 
 			<Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: '70px', margin: '70px 8px 0 0'}}>
 				<Button
 					variant='outlined' className='expand_btn' onClick={() => {
-					setExpansionEvent({event: 'expandAll', id: expansionEvent.id + 1});
-				}}
+						setExpansionEvent({event: 'expandAll', id: expansionEvent.id + 1});
+					}}
 				>Expand All</Button>
 				<Button
 					variant='outlined' className='expand_btn' onClick={() => {
-					setExpansionEvent({event: 'collapseAll', id: expansionEvent.id + 1});
-				}
-				} sx={{marginLeft: '8px'}}
+						setExpansionEvent({event: 'collapseAll', id: expansionEvent.id + 1});
+					}
+					} sx={{marginLeft: '8px'}}
 				>Collapse All</Button>
 			</Box>
 
@@ -228,19 +234,14 @@ const EditForm = ({wildlifeHealthId}) => {
 				</pre>
 			</>)}
 
-			<Status expansionEvent={expansionEvent} dispatch={formDispatch} state={formState}/>
+			<Status expansionEvent={expansionEvent}
+				dispatch={formDispatch}
+				state={formState}/>
 
 			<Purpose
 				expansionEvent={expansionEvent}
-				handleUpdate={handleUpdate}
-				setRole={setRole}
-				validRole={validRole}
-				setPurpose={setPurpose}
-				validPurposes={validPurposes}
-				organization={organization}
-				setOrganization={setOrganization}
-				validOrganization={validOrganization}
-				role={role}
+				dispatch={formDispatch}
+				state={formState}
 			/>
 
 			<AnimalDetails
@@ -249,48 +250,14 @@ const EditForm = ({wildlifeHealthId}) => {
 				state={formState}
 			/>
 
-			<EventDetails
+			<EventsContainer
+				state={formState}
+				dispatch={formDispatch}
 				expansionEvent={expansionEvent}
-				eventType={eventType}
-				setEventType={setEventType}
-				ageClass={ageClass}
-				validAgeClass={validAgeClass}
-				handleUpdate={handleUpdate}
-				locationOptions={locationOptions}
-				handleSelectLocation={handleSelectLocation}
-				handleAddLocation={handleAddLocation}
-				handleSubmitterChecked={handleSubmitterChecked}
-				submitterChecked={submitterChecked}
-				setAgeClass={setAgeClass}
-				handleOpenEditRequester={handleOpenEditRequester}
-				handleDeleteConfirmation={handleDeleteConfirmation}
-				handleOpenAddRequester={handleOpenEditRequester}
-				handleCloseDeleteConfirmation={handleCloseDeleteConfirmation}
-				handleCloseEditRequester={handleCloseEditRequester}
-				openEditRequester={openEditRequester}
-				handleNewEvent={handleNewEvent}
-				DeleteConfirmation={DeleteConfirmation}
 			/>
-			{newEvent &&
-				<CreateEvent
-					expansionEvent={expansionEvent}
-					eventType={eventType}
-					setEventType={setEventType}
-					ageClass={ageClass}
-					validAgeClass={validAgeClass}
-					handleUpdate={handleUpdate}
-					locationOptions={locationOptions}
-					handleSelectLocation={handleSelectLocation}
-					handleAddLocation={handleAddLocation}
-					handleSubmitterChecked={handleSubmitterChecked}
-					submitterChecked={submitterChecked}
-					setAgeClass={setAgeClass}
-					handleOpenEditRequester={handleOpenEditRequester}
-					handleDeleteConfirmation={handleDeleteConfirmation}
-					handleOpenAddRequester={handleOpenEditRequester}
-				/>}
 
 		</Box>
 	);
-};
+}
+;
 export default EditForm;
