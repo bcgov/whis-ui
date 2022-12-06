@@ -18,7 +18,14 @@ export function buildFormStateFromLegacyJSON(legacy) {
 			},
 		},
 		"status": {
-			"history": [],
+			"history": [
+				{
+					"status": legacy['initial_status'],
+					"reason": '',
+					"additionalAttributes": {},
+					"changedAt": legacy['created_at']
+				}
+			],
 			"dirty": {
 				"status": '',
 				"reason": '',
@@ -27,16 +34,24 @@ export function buildFormStateFromLegacyJSON(legacy) {
 		},
 		"purpose":
 			{
-				"primaryPurpose": '',
+				"primaryPurpose": legacy['purpose'],
 				"secondaryPurpose": '',
-				"associatedProject": '',
-				"projectDetails":  '',
-				"requester": null
+				"associatedProject": legacy['project'],
+				"projectDetails": legacy['project_details'],
+				"requester": {
+					"firstName": legacy['requester_first_name'],
+					"lastName": legacy['requester_last_name'],
+					"role": legacy['requester_role'],
+					"region": legacy['requester_region'],
+					"organization": legacy['requester_organization'],
+					"phoneNumber": legacy['requester_phone_number'],
+					"email": legacy['requester_email'],
+				}
 			}
 		,
 		"animalDetails":
 			{
-				"species": '',
+				"species": legacy['species'],
 				"homeRegion": '',
 				"sex": '',
 				"identifiers": []

@@ -64,7 +64,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 									}
 								})
 							}}
-							value={state.animalDetails.species.displayName}
+							value={state.animalDetails.species}
 						/>
 
 						<Select

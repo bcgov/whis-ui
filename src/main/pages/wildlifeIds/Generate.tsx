@@ -11,7 +11,7 @@ import {
 	IconButton,
 	InputAdornment,
 	MenuItem,
-	Paper,
+	Paper, Select,
 	Stack,
 	TextField,
 	Typography
@@ -66,6 +66,7 @@ const Generate: React.FC = () => {
 		projectDetail: '',
 		purpose: '',
 		organization: '',
+		status: 'UNASSIGNED',
 		requesterFirstName: me.firstName,
 		requesterLastName: me.lastName,
 		requesterContactEmail: me.email,
@@ -111,7 +112,27 @@ const Generate: React.FC = () => {
 		if (!validateYear())
 			return;
 
-		api.generateIDs({ quantity: formState.quantity }).then(result => {
+		api.generateIDs(
+			{
+				quantity: formState.quantity,
+				year: formState.year,
+				purpose: formState.purpose,
+				species: formState.species,
+				project: formState.associatedProject,
+				homeRegion: formState.homeRegion,
+				initialStatus: formState.status,
+				projectDetail: formState.projectDetail,
+				requester: {
+					firstName: formState.requesterFirstName,
+					lastName: formState.requesterLastName,
+					region: formState.requesterRegion,
+					organization: formState.organization,
+					phoneNumber: formState.requesterContactPhone,
+					email: formState.requesterContactEmail,
+					role: formState.requesterRole,
+				}
+			}
+		).then(result => {
 			setGenerateStatus({
 				status: 'ok',
 				message: JSON.stringify(result)
@@ -283,26 +304,25 @@ const Generate: React.FC = () => {
 								onChange={handleUpdate}
 							/>
 
-							<TextField
+							<Select
 								sx={{ width: '100%' }}
-								id='idStatus'
+								id='status'
 								label='WLH ID Status*'
-								name='idStatus'
-								select
-								{...register("idStatus", {
-									required: "❗Select the status.",
-								})}
-								error={!!errors?.idStatus}
-								helperText={errors.idStatus ? errors.idStatus.message : null}
-								onChange={handleUpdate}
-								onSelect={handleUpdate}
+								name='status'
+								onChange={(e) => {
+									setFormState({
+										...formState,
+										status: e.target.value
+									})
+								}}
+								value={formState.status}
 							>
 								{status.codes.map((m) => (
-									<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
+									<MenuItem key={m.value} value={m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
-							</TextField>
+							</Select>
 
 
 						</TwoColumnForm>
@@ -328,8 +348,8 @@ const Generate: React.FC = () => {
 							{...register("firstName", {
 								required: "❗Enter the first name.",
 								pattern: {
-									value: /^[a-zA-Z]{10,}$/,
-									message: '❗The first name must be at least 10 characters long.',
+									value: /^[\w-]{2,}$/,
+									message: '❗The first name must be at least 2 characters long.',
 								},
 							})}
 							error={!!errors?.firstName}
@@ -344,8 +364,8 @@ const Generate: React.FC = () => {
 							{...register("lastName", {
 								required: "❗Enter the last name.",
 								pattern: {
-									value: /^[a-zA-Z]{10,}$/,
-									message: '❗The last name must be at least 10 characters long.',
+									value: /^[\w-]{2,}$/,
+									message: '❗The last name must be at least 2 characters long.',
 								},
 
 							})}
@@ -494,7 +514,7 @@ const Generate: React.FC = () => {
 						<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
 							<Button
 								onClick={() => {
-									navigate('/wildlifeIds/edit/:id')
+									navigate('/wildlifeIds/list')
 								}}
 								sx={{
 									width: '110px',
