@@ -146,7 +146,7 @@ const EditForm = ({wildlifeHealthId}) => {
 		return <Loading/>;
 	}
 
-	if (!formState.metadata?.wildlifeHealthId) {
+	if (!(formState?.metadata?.wildlifeHealthId)) {
 		return <Loading/>;
 	}
 
