@@ -9,7 +9,9 @@ import PersonnelDialog from "./PersonnelDialog";
 const Purpose = ({
 	expansionEvent,
 	dispatch,
-	state
+	state,
+	resetState,
+	saveState
 }) => {
 
 	const [addRequesterDialogOpen, setAddRequesterDialogOpen] = useState(false);
@@ -190,12 +192,14 @@ const Purpose = ({
 					<Button
 						variant={'contained'}
 						className='update_btn'
+						onClick={saveState}
 					>
 						Update
 					</Button>
 					<Button
 						variant={'outlined'}
 						className='update_btn'
+						onClick={resetState}
 					>
 						Cancel
 					</Button>

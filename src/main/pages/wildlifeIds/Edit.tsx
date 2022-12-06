@@ -7,12 +7,13 @@ import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../.
 import '../../styles/inventory.scss';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
+import Loading from "../../components/util/Loading";
 
 const Edit: React.FC = () => {
 	const {id} = useParams();
 
 	const dispatch = useDispatch();
-	const data = useSelector(getWildlifeHealthId);
+	const {loading, initialized, data} = useSelector(getWildlifeHealthId);
 
 	useEffect(() => {
 		dispatch({
@@ -29,6 +30,10 @@ const Edit: React.FC = () => {
 
 
 	}, [id]);
+
+	if (!initialized || loading) {
+		return (<Loading/>);
+	}
 
 	return (
 		<>

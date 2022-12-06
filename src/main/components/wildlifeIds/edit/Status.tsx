@@ -1,25 +1,9 @@
 import Expandable from "../../pageElements/Expandable";
-import {
-	Box,
-	Button,
-	Dialog, DialogActions,
-	DialogContent,
-	DialogTitle,
-	FormControlLabel,
-	FormGroup,
-	IconButton,
-	MenuItem,
-	Switch,
-	TextField,
-	Tooltip,
-	Typography
-} from "@mui/material";
-import React, {useState} from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import FlagIcon from "@mui/icons-material/Flag";
-import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
+import {Box, Button, FormControlLabel, FormGroup, MenuItem, Switch, TextField, Typography} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import StatusHistory from "./StatusHistory";
 
-const Status = ({expansionEvent, dispatch, state}) => {
+const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 
 	const statuses = [
 		{value: 'ASSIGNED', label: 'Assigned'},
@@ -27,13 +11,24 @@ const Status = ({expansionEvent, dispatch, state}) => {
 		{value: 'UNASSIGNED', label: 'Unassigned'}
 	];
 
-	const [flag, setFlag] = useState(false);
+	const [displayedStatus, setDisplayedStatus] = useState('Unassigned');
+	const [lastState, setLastState] = useState(null);
 
-	const [idConfirmationOpen, setIdConfirmationOpen] = useState(false);
-	const idConfirmationOpenHandleClose = (e) => {
-		console.dir(e);
-	}
+	useEffect(() => {
+		if (lastState !== null) {
+			setDisplayedStatus(lastState.status)
+		} else {
+			setDisplayedStatus('Unassigned');
+		}
+	}, [lastState]);
 
+	useEffect(() => {
+		if (state.status.history.length > 0) {
+			setLastState(state.status.history[state.status.history.length - 1]);
+		} else {
+			setLastState(null);
+		}
+	}, [state]);
 
 	function renderDetailed(status) {
 		switch (status) {
@@ -50,12 +45,12 @@ const Status = ({expansionEvent, dispatch, state}) => {
 						dispatch({
 							type: 'fieldChange',
 							payload: {
-								field: 'status.reason',
+								field: 'status.dirty.reason',
 								value: e.target.value
 							}
 						})
 					}}
-					value={state.status.reason}
+					value={state.status.dirty.reason}
 					rows={3}
 				/>
 			);
@@ -74,9 +69,9 @@ const Status = ({expansionEvent, dispatch, state}) => {
 								}
 							}
 						)}
-						sx={{marginInline: '20px'}}/>}
-						checked={state.status.additionalAttributes.recaptureKitsReturned}
-						label={`${state.status.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}/>
+																							 sx={{marginInline: '20px'}}/>}
+						checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
+						label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}/>
 						<Typography variant='body1'>Recapture Status</Typography>
 						<FormControlLabel control={<Switch onChange={(e) => dispatch(
 							{
@@ -87,9 +82,9 @@ const Status = ({expansionEvent, dispatch, state}) => {
 								}
 							}
 						)}
-						checked={state.status.additionalAttributes.recaptureStatus}
-						sx={{marginInline: '20px'}}/>}
-						label={`${state.status.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{marginTop: '20px'}}/>
+																							 checked={state.status.dirty.additionalAttributes.recaptureStatus}
+																							 sx={{marginInline: '20px'}}/>}
+						label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{marginTop: '20px'}}/>
 					</FormGroup>
 
 					<TextField
@@ -97,12 +92,12 @@ const Status = ({expansionEvent, dispatch, state}) => {
 						id='correctIdNumber'
 						name='correctIdNumber'
 						label='Correct WLH ID Number'
-						value={state.status.additionalAttributes.correctIdNumber || ''}
+						value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
 						onChange={(e) => {
 							dispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'status.additionalAttributes.correctIdNumber',
+									field: 'status.dirty.additionalAttributes.correctIdNumber',
 									value: e.target.value
 								}
 							})
@@ -117,82 +112,17 @@ const Status = ({expansionEvent, dispatch, state}) => {
 						name='reason'
 						multiline
 						rows={3}
-						value={state.status.reason}
+						value={state.status.dirty.reason}
 						onChange={(e) => {
 							dispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'status.reason',
+									field: 'status.dirty.reason',
 									value: e.target.value
 								}
 							})
 						}}
 					/>
-
-					<Dialog
-						open={idConfirmationOpen}
-						onClose={idConfirmationOpenHandleClose}
-						maxWidth={false}
-						PaperProps={{
-							sx: {width: '600px', maxHeight: '272px', height: '279px'}
-						}}
-					>
-						<IconButton
-							onClick={idConfirmationOpenHandleClose}
-							sx={{
-								position: 'absolute',
-								right: 8,
-								top: 8
-							}}
-						>
-							<CloseIcon/>
-						</IconButton>
-						<DialogTitle sx={{fontSize: '16px', padding: '50px 0 20px 72px'}}>
-							{"Please enter the Correct WLH ID below"}
-						</DialogTitle>
-						<DialogContent sx={{padding: '0 72px', overflowY: 'unset'}}>
-							<TextField
-								sx={{width: '305px'}}
-								id='correctId'
-								name='correctId'
-								label='Correct WLH ID'
-							/>
-							<Tooltip
-								title="Flag it if the ID is not available as a to do list for the future"
-								arrow
-								placement="right"
-								componentsProps={{
-									tooltip: {
-										sx: {
-											color: "#313132",
-											backgroundColor: "white",
-											border: '1px solid #E6E8ED',
-											width: "140px",
-											height: "70px",
-											padding: '10px'
-										}
-									},
-									arrow: {
-										sx: {
-											color: "white",
-											"&:before": {
-												border: "1px solid #E6E8ED"
-											}
-										}
-									}
-								}}
-							>
-								<IconButton onClick={() => setFlag(!flag)} className='flagIcon'>
-									{flag && <FlagIcon sx={{fontSize: '40px', color: '#d8292f'}}/>}
-									{flag || <FlagOutlinedIcon sx={{fontSize: '40px'}}/>}
-								</IconButton>
-							</Tooltip>
-						</DialogContent>
-						<DialogActions sx={{padding: '0 32px 35px 0'}}>
-							<Button variant={'contained'} onClick={idConfirmationOpenHandleClose} className='requesterFormBtn'>Save</Button>
-							<Button variant={'outlined'} onClick={idConfirmationOpenHandleClose} className='requesterFormBtn' sx={{marginLeft: '11px'}}>Cancel</Button>
-						</DialogActions>
-					</Dialog>
 				</>
 			);
 			break;
@@ -208,7 +138,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 				<span>
 					<Typography sx={{fontSize: '18px'}}>Status</Typography>
 					<Typography className='unassigned' sx={{color: 'white', fontSize: '13px'}} variant='subtitle1'>
-						{state.metadata.status}
+						{displayedStatus}
 					</Typography>
 				</span>
 				<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
@@ -240,11 +170,14 @@ const Status = ({expansionEvent, dispatch, state}) => {
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box sx={{width: '1091px', margin: '48px auto'}}>
+					<StatusHistory history={state.status.history}/>
+				</Box>
+				<Box sx={{width: '1091px', margin: '48px auto'}}>
 					<TextField
 						sx={{width: '529px', marginTop: '8px'}}
 						id='idStatus'
 						label='Change WLH Status *'
-						defaultValue={state.status.status}
+						defaultValue={state.status.dirty.status}
 						select
 						onChange={(e) => {
 							dispatch({
@@ -259,7 +192,7 @@ const Status = ({expansionEvent, dispatch, state}) => {
 						))}
 					</TextField>
 					{
-						renderDetailed(state.status.status)
+						renderDetailed(state.status.dirty.status)
 					}
 				</Box>
 
@@ -267,12 +200,19 @@ const Status = ({expansionEvent, dispatch, state}) => {
 					<Button
 						variant={'contained'}
 						className='update_btn'
+						onClick={() => {
+							dispatch({
+								type: 'status.promote'
+							});
+							saveState();
+						}}
 					>
 						Update
 					</Button>
 					<Button
 						variant={'outlined'}
 						className='update_btn'
+						onClick={resetState}
 					>
 						Cancel
 					</Button>

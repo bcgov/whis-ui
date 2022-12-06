@@ -5,7 +5,7 @@ import IdentifierEntry from "./IdentifierEntry";
 import React from "react";
 import useCodeTable from "../../../hooks/useCodeTable";
 
-const AnimalDetails = ({expansionEvent, dispatch, state}) => {
+const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 
 	const {mappedCodes: validSex} = useCodeTable('animal_gender');
 	const {mappedCodes: regions} = useCodeTable('regions');
@@ -132,12 +132,14 @@ const AnimalDetails = ({expansionEvent, dispatch, state}) => {
 					<Button
 						variant={'contained'}
 						className='update_btn'
+						onClick={saveState}
 					>
 						Update
 					</Button>
 					<Button
 						variant={'outlined'}
 						className='update_btn'
+						onClick={resetState}
 					>
 						Cancel
 					</Button>

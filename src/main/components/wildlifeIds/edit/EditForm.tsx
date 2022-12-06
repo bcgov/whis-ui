@@ -11,113 +11,69 @@ import {getDevMode} from "../../../../state/utilities/config_helper";
 import Loading from "../../util/Loading";
 import _ from 'lodash';
 import EventsContainer from "./EventsContainer";
+import {useDispatch} from "react-redux";
+import {WILDLIFE_HEALTH_ID_PERSIST_REQUEST} from "../../../../state/actions";
+import {useParams} from "react-router";
+import AddEventConfirm from "./AddEventConfirm";
 
 const EditForm = ({wildlifeHealthId}) => {
 
 	const devMode = useSelector(getDevMode);
+	const dispatch = useDispatch();
+	const {id} = useParams();
+
+	const [addEventConfirmationDialogOpen, setAddEventConfirmationDialogOpen] = useState(false);
+
+	function resetState() {
+		// return the state of the form to whatever was last received from the api
+		// we could do fancier undo-tracking given the use of a reduce/dispatch pattern on this form if desired
+		formDispatch({
+			type: 'reset',
+			payload: wildlifeHealthId
+		});
+	}
+
+	function saveState() {
+		// this is redux-store dispatch, not form-local dispatch
+		dispatch({
+			type: WILDLIFE_HEALTH_ID_PERSIST_REQUEST,
+			payload: {
+				id,
+				state: formState
+			}
+		});
+	}
 
 	function formReducerInit(initialState) {
-		return {
-			"metadata": {
-				"year": "2022",
-				"id": 2041,
-				"wildlifeHealthId": "22-0002",
-				"generationDate": "2021-12-01",
-				"creator": {
-					"name": "Sample Creator",
-				},
-				"status": "Unassigned",
-			},
-			"status": {
-				"history": [
-					{
-						"status": "Assigned",
-						"reason": "Sent to field",
-						"date": "2022-04-01",
-						"additionalAttributes": {}
-					},
-					{
-						"status": "Unassigned",
-						"reason": "Newly generated",
-						"date": "2022-01-01",
-						"additionalAttributes": {}
-					}
-				],
-				"status": "RETIRED",
-				"reason": "Not in use",
-				"additionalAttributes": {
-					"recaptureKitsReturned": false
-				}
-			},
-			"purpose":
-					{
-						"primaryPurpose": "HERD_HEALTH",
-						"secondaryPurpose": "TARGETED",
-						"associatedProject": "Sample project",
-						"projectDetails":
-							"Sample detail text",
-						"requester":
-							{
-								"region": "THOMPSON",
-								"firstName": "Sample",
-								"lastName": "Persion",
-								"organization": "ORGANIZATION2",
-								"role": "TRAPPER",
-								"phoneNumber": "5551234",
-								"email": "test@email"
-							}
-					}
-			,
-			"animalDetails":
-					{
-						"species": "Deer",
-						"homeRegion": "THOMPSON",
-						"sex":
-							"male",
-						"identifiers":
-							[
-								{
-									"id": -1,
-									"type": "NICKNAME",
-									"identifier": "Steve",
-									"additionalAttributes": {}
-								}
-							]
-					}
-			,
-			"events":
-					[
-						{
-							"type": "capture",
-							"ageClass": "juvenile",
-							"startDate": null,
-							"endDate": null,
-							"submitter": null,
-							"locations": [
-								{
-									"type": "HERD_NAME",
-									"attributes": {
-										"herdName": "Sample Herd"
-									}
-								}
-							],
-							"additionalAttributes": {},
-							"history": "Sample history entry"
-						}
-					]
-		}
+		return initialState;
 	}
 
 	function formReducer(state, action) {
-		const updatedState = {...state};
+		let updatedState = {...state};
 
 		switch (action.type) {
+		case 'reset':
+			updatedState = action.payload;
+			break;
 		case 'fieldChange':
 			// for simple field changes
 			_.set(updatedState, action.payload.field, action.payload.value);
-			return updatedState;
+			break;
 		case 'status.statusChange':
-			updatedState.status.status = action.payload;
+			updatedState.status.dirty.status = action.payload;
+			break;
+		case 'status.promote':
+			updatedState.status.history.push({
+				status: state.status.dirty.status,
+				reason: state.status.dirty.reason,
+				additionalAttributes: state.status.dirty.additionalAttributes,
+				changedAt: new Date()
+			});
+			updatedState.status.dirty = {
+				status: '',
+				reason: '',
+				additionalAttributes: {}
+			};
 			break;
 		case 'animalDetails.identifiers.typeChange':
 			updatedState.animalDetails.identifiers[action.payload.index].type = action.payload.newType;
@@ -170,7 +126,7 @@ const EditForm = ({wildlifeHealthId}) => {
 		return updatedState;
 	}
 
-	const [formState, formDispatch] = useReducer(formReducer, null, formReducerInit);
+	const [formState, formDispatch] = useReducer(formReducer, wildlifeHealthId, formReducerInit);
 
 	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
@@ -190,6 +146,10 @@ const EditForm = ({wildlifeHealthId}) => {
 		return <Loading/>;
 	}
 
+	if (!formState.metadata?.wildlifeHealthId) {
+		return <Loading/>;
+	}
+
 	return (
 		<Box className='container'>
 			<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -199,14 +159,32 @@ const EditForm = ({wildlifeHealthId}) => {
 				</Box>
 
 				<Button variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}} onClick={() => {
-					formDispatch({
-						type: 'events.add'
-					})
+					if (formState.events.length > 0) {
+						// confirmation is required
+						setAddEventConfirmationDialogOpen(true);
+					} else {
+						// just add it
+						formDispatch({
+							type: 'events.add'
+						})
+					}
 				}
 				}>+ Add
 						New
 						Event</Button>
 			</Box>
+
+			<AddEventConfirm open={addEventConfirmationDialogOpen}
+												 cancelAction={() => {
+													 setAddEventConfirmationDialogOpen(false);
+												 }}
+												 acceptAction={() => {
+													 formDispatch({
+														 type: 'events.add'
+													 });
+													 setAddEventConfirmationDialogOpen(false);
+												 }
+												 }/>
 
 			<Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: '70px', margin: '70px 8px 0 0'}}>
 				<Button
@@ -226,34 +204,43 @@ const EditForm = ({wildlifeHealthId}) => {
 			{devMode && (<>
 				<strong>Redux Store State</strong>
 				<pre>
-					{JSON.stringify(wildlifeHealthId, '\t', 1)}
+					{JSON.stringify(wildlifeHealthId, null, 1)}
 				</pre>
 				<strong>Form Store State</strong>
 				<pre>
-					{JSON.stringify(formState, '\t', 1)}
+					{JSON.stringify(formState, null, 1)}
 				</pre>
 			</>)}
 
 			<Status expansionEvent={expansionEvent}
 				dispatch={formDispatch}
-				state={formState}/>
+				state={formState}
+				saveState={saveState}
+				resetState={resetState}
+			/>
 
 			<Purpose
 				expansionEvent={expansionEvent}
 				dispatch={formDispatch}
 				state={formState}
+				saveState={saveState}
+				resetState={resetState}
 			/>
 
 			<AnimalDetails
 				expansionEvent={expansionEvent}
 				dispatch={formDispatch}
 				state={formState}
+				saveState={saveState}
+				resetState={resetState}
 			/>
 
 			<EventsContainer
 				state={formState}
 				dispatch={formDispatch}
 				expansionEvent={expansionEvent}
+				saveState={saveState}
+				resetState={resetState}
 			/>
 
 		</Box>

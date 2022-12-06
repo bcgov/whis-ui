@@ -2,7 +2,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} f
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 
-const DeleteConfirm = ({open, acceptAction, cancelAction, noun}) => {
+const AddEventConfirm = ({open, acceptAction, cancelAction}) => {
 
 	function handleCancel() {
 		cancelAction();
@@ -32,20 +32,19 @@ const DeleteConfirm = ({open, acceptAction, cancelAction, noun}) => {
 				<CloseIcon/>
 			</IconButton>
 			<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '47px 0 35px 39px'}}>
-				{"Delete Confirmation"}
+				{"Event Add Confirmation"}
 			</DialogTitle>
 			<DialogContent sx={{padding: '40px 39px', fontSize: '16px'}}>
-				Are you sure you want to delete this {noun}?<br/>
-				There is no Undo for this action.
+				Are you sure you would like to add a new event? Existing events will have their <em>Type</em> parameter locked (other fields will remain writable).
 			</DialogContent>
 			<DialogActions sx={{padding: '0 32px 48px 0'}}>
 				<Button variant={'contained'} onClick={handleAccept} className='requesterFormBtn'
-					sx={{backgroundColor: '#d8292f'}}>Delete</Button>
+								sx={{backgroundColor: '#d8292f'}}>Confirm</Button>
 				<Button variant={'outlined'} onClick={handleCancel} className='requesterFormBtn'
-					sx={{marginLeft: '11px'}}>Cancel</Button>
+								sx={{marginLeft: '11px'}}>Cancel</Button>
 			</DialogActions>
 		</Dialog>
 	)
 }
 
-export default DeleteConfirm;
+export default AddEventConfirm;

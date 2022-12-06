@@ -21,7 +21,7 @@ import PersonnelTable from "./PersonnelTable";
 import useCodeTable from "../../../hooks/useCodeTable";
 import PersonnelDialog from "./PersonnelDialog";
 
-const EventDetails = ({expansionEvent, state, event, index, dispatch}) => {
+const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
 	const {mappedCodes: ageClasses} = useCodeTable('animal_age');
 
 
@@ -66,14 +66,14 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch}) => {
 							Location
 					</Typography>
 					<Typography variant='body1'>
-						{(event.locations && event.locations.length > 0 && JSON.stringify(event.locations[0], '\t', 1)) || 'unset'}
+						{(event.locations && event.locations.length > 0 && JSON.stringify(event.locations[0], null, 1)) || 'unset'}
 					</Typography>
 				</span>
 			</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box sx={{width: '1091px', margin: '0 auto'}}>
-					<FormControl sx={{width: '380px', marginTop: '62px'}}>
+					<FormControl sx={{marginTop: '62px'}}>
 						<FormLabel>Event Type</FormLabel>
 						<RadioGroup
 							row
@@ -93,6 +93,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch}) => {
 							<FormControlLabel value='capture' control={<Radio/>} label='Capture'/>
 							<FormControlLabel value='mortality' control={<Radio/>} label='Mortality'/>
 							<FormControlLabel value='recapture' control={<Radio/>} label='Recapture'/>
+							<FormControlLabel value='release' control={<Radio/>} label='Release'/>
 						</RadioGroup>
 					</FormControl>
 
@@ -193,7 +194,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch}) => {
 						}}>Copy from requester</Button>}
 					</FormGroup>
 
-					{event.submitter && <PersonnelTable people={[{
+					{event.submitter && <PersonnelTable noun='Submitter' people={[{
 						...event.submitter,
 						editAction: (updatedPerson) => {
 							dispatch({
@@ -287,12 +288,14 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch}) => {
 					<Button
 						variant={'contained'}
 						className='update_btn'
+						onClick={saveState}
 					>
 						Update
 					</Button>
 					<Button
 						variant={'outlined'}
 						className='update_btn'
+						onClick={resetState}
 					>
 						Cancel
 					</Button>

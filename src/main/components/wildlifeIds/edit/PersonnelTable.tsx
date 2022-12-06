@@ -19,7 +19,7 @@ import React, {useState} from "react";
 import DeleteConfirm from "./DeleteConfirm";
 import PersonnelDialog from "./PersonnelDialog";
 
-const PersonnelTable = ({people}) => {
+const PersonnelTable = ({people, noun='Requester'}) => {
 
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
@@ -78,7 +78,7 @@ const PersonnelTable = ({people}) => {
 
 						</TableRow>
 					))}
-					<DeleteConfirm open={deleteConfirmationDialogOpen} cancelAction={() => {
+					<DeleteConfirm noun={noun} open={deleteConfirmationDialogOpen} cancelAction={() => {
 						setDeleteConfirmationDialogOpen(false);
 						setCurrentDeletionAction({handler: unsetDeletionHandler});
 					}} acceptAction={() => {
