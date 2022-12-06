@@ -204,7 +204,12 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 							dispatch({
 								type: 'status.promote'
 							});
-							saveState();
+
+							//slight delay before sending
+							setTimeout(() => {
+								saveState();
+							}, 3000);
+
 						}}
 					>
 						Update
