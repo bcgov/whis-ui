@@ -37,7 +37,7 @@ export function buildFormStateFromLegacyJSON(legacy) {
 				"primaryPurpose": legacy['purpose'],
 				"secondaryPurpose": '',
 				"associatedProject": legacy['project'],
-				"projectDetails": legacy['project_details'],
+				"projectDetails": legacy['project_detail'],
 				"requester": {
 					"firstName": legacy['requester_first_name'],
 					"lastName": legacy['requester_last_name'],
