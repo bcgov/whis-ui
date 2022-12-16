@@ -59,7 +59,6 @@ const Generate: React.FC = () => {
 	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
 
 	const [formState, setFormState] = useState({
-		quantity: 1,
 		year: '2022',
 		species: '',
 		homeRegion: '',
@@ -114,7 +113,7 @@ const Generate: React.FC = () => {
 
 		api.generateIDs(
 			{
-				quantity: formState.quantity,
+				quantity: parseInt(numOfIDs),
 				year: formState.year,
 				purpose: formState.purpose,
 				species: formState.species,
