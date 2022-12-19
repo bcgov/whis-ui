@@ -18,19 +18,19 @@ import {
 import React, { useState } from "react";
 import '../../../styles/updateID.scss';
 
-const AnimalDetails = () => {
+const AnimalDetails = ({ state }) => {
 
 
 	return (
 		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 83px 24px' }}>Animal Details</Typography>
-			<Box className='info' sx={{ display: 'flex', alignItems: 'center', paddingLeft: '83px' }}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Animal Details</Typography>
+			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 				<span>
 					<Typography variant='body2'>
 						Species
 					</Typography>
 					<Typography variant='body1'>
-						Moose Moose Moose
+						{state.animalDetails.species}
 					</Typography>
 				</span>
 				<span>
@@ -38,7 +38,7 @@ const AnimalDetails = () => {
 						Sex
 					</Typography>
 					<Typography variant='body1'>
-						Female
+						{state.animalDetails.sex}
 					</Typography>
 				</span>
 				<span>
@@ -46,12 +46,12 @@ const AnimalDetails = () => {
 						Home Region
 					</Typography>
 					<Typography variant='body1'>
-						Region Region 1
+						{state.animalDetails.homeRegion}
 					</Typography>
 				</span>
 			</Box>
 
-			<Box sx={{ margin: '24px 83px' }}>
+			<Box sx={{ margin: '24px 0' }}>
 				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Identifiers</Typography>
 				<TableContainer component={Paper}>
 					<Table>
@@ -63,34 +63,9 @@ const AnimalDetails = () => {
 							</TableRow>
 						</TableHead>
 						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
+							<TableCell>{state.animalDetails.identifiers[0].identifierType}</TableCell>
+							<TableCell>{state.animalDetails.identifiers[0].identifierNameorNumber}</TableCell>
+							<TableCell>{state.animalDetails.identifiers[0].Additionalinfo}</TableCell>
 						</TableRow>
 					</Table>
 				</TableContainer>

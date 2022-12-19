@@ -1,6 +1,6 @@
 const getWildlifeHealthId = state => state.WildlifeHealthId;
 
-export {getWildlifeHealthId};
+export { getWildlifeHealthId };
 
 export function buildFormStateFromLegacyJSON(legacy) {
 
@@ -33,31 +33,57 @@ export function buildFormStateFromLegacyJSON(legacy) {
 			}
 		},
 		"purpose":
-			{
-				"primaryPurpose": legacy['purpose'],
-				"secondaryPurpose": '',
-				"associatedProject": legacy['project'],
-				"projectDetails": legacy['project_detail'],
-				"requester": {
-					"firstName": legacy['requester_first_name'],
-					"lastName": legacy['requester_last_name'],
-					"role": legacy['requester_role'],
-					"region": legacy['requester_region'],
-					"organization": legacy['requester_organization'],
-					"phoneNumber": legacy['requester_phone_number'],
-					"email": legacy['requester_email'],
-				}
+		{
+			"primaryPurpose": legacy['purpose'],
+			"secondaryPurpose": '',
+			"associatedProject": legacy['project'],
+			"projectDetails": legacy['project_detail'],
+			"requester": {
+				"firstName": legacy['requester_first_name'],
+				"lastName": legacy['requester_last_name'],
+				"role": legacy['requester_role'],
+				"region": legacy['requester_region'],
+				"organization": legacy['requester_organization'],
+				"phoneNumber": legacy['requester_phone_number'],
+				"email": legacy['requester_email'],
 			}
+		}
 		,
 		"animalDetails":
-			{
-				"species": legacy['species'],
-				"homeRegion": '',
-				"sex": '',
-				"identifiers": []
-			}
+		{
+			"species": legacy['species'],
+			"homeRegion": '',
+			"sex": '',
+			"identifiers": [
+				{
+					"identifierType": '',
+					"identifierNameorNumber": '',
+					"Additionalinfo": '',
+				}
+			],
+		}
 		,
-		"events": []
+		"events": [
+			{
+				"eventType": 'Capture',
+				"eventDate": '',
+				"ageClass": 'Adult',
+				"location": [
+					{
+						"location": 'Region',
+						"details": 'Number: 3235362',
+					}
+				],
+				"history": 'asdasdfasdfasfa',
+				"samples": [
+					{
+						"isCollected": 'Yes',
+						"isSenttoTesting": 'Yes',
+						"testResultReceived": 'No',
+					}
+				],
+			},
+		]
 	};
 	return built;
 }
