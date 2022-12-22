@@ -1,20 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import '../../../styles/updateID.scss';
 import EventDetails from "../detail/EventDetails";
 
-const Event = ({ expansionEvent, state, dispatch }) => {
-
-	const [EventDetailsExpand, setEventDetailsExpand] = useState(false);
+const Event = ({ state }) => {
 
 	return (
 		<>
-			{state.events.map((event: any, i: any) => (
+			{state.events.map((event, i) => (
 				<EventDetails
 					key={`event-${i}`}
-					expansionEvent={expansionEvent}
-					event={event}
 					state={state}
-					dispatch={dispatch}
 					index={i}
 				/>
 			))}

@@ -1,12 +1,6 @@
 import {
 	Box,
-	Button,
 	Card,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	IconButton,
 	Paper,
 	Table,
 	TableCell,
@@ -15,10 +9,12 @@ import {
 	TableRow,
 	Typography
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import '../../../styles/updateID.scss';
 
 const Purpose = ({ state }) => {
+
+	const requester = state.purpose.requester;
 
 	return (
 		<Card className='papper'>
@@ -76,13 +72,13 @@ const Purpose = ({ state }) => {
 						</TableHead>
 						<TableHead>
 							<TableRow>
-								<TableCell>{state.purpose.requester.firstName}</TableCell>
-								<TableCell>{state.purpose.requester.lastName}</TableCell>
-								<TableCell>{state.purpose.requester.region}</TableCell>
-								<TableCell>{state.purpose.requester.organization}</TableCell>
-								<TableCell>{state.purpose.requester.role}</TableCell>
-								<TableCell>{state.purpose.requester.phoneNumber}</TableCell>
-								<TableCell>{state.purpose.requester.email}</TableCell>
+								<TableCell>{requester.firstName}</TableCell>
+								<TableCell>{requester.lastName}</TableCell>
+								<TableCell>{requester.region}</TableCell>
+								<TableCell>{requester.organization}</TableCell>
+								<TableCell>{requester.role}</TableCell>
+								<TableCell>{requester.phoneNumber}</TableCell>
+								<TableCell>{requester.email}</TableCell>
 							</TableRow>
 						</TableHead>
 					</Table>

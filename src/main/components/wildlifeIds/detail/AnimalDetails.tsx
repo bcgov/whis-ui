@@ -1,21 +1,16 @@
 import {
 	Box,
-	Button,
 	Card,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	IconButton,
 	Paper,
 	Table,
+	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
 	TableRow,
 	Typography
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import '../../../styles/updateID.scss';
 
 const AnimalDetails = ({ state }) => {
@@ -62,11 +57,23 @@ const AnimalDetails = ({ state }) => {
 								<TableCell>Additional Information</TableCell>
 							</TableRow>
 						</TableHead>
-						<TableRow>
-							<TableCell>{state.animalDetails.identifiers[0].identifierType}</TableCell>
-							<TableCell>{state.animalDetails.identifiers[0].identifierNameorNumber}</TableCell>
-							<TableCell>{state.animalDetails.identifiers[0].Additionalinfo}</TableCell>
-						</TableRow>
+						<TableBody>
+							{state.animalDetails.identifiers.map((identifier, i) => {
+								const attributes = identifier.additionalAttributes;
+								const attr = Object.entries(attributes).map(([key, value]) => {
+									return (
+										<>{key} : {value.toString()}&emsp;&emsp;</>
+									);
+								})
+								return (
+									<TableRow key={i}>
+										<TableCell>{identifier.type}</TableCell>
+										<TableCell>{identifier.identifier}</TableCell>
+										<TableCell>{attr}</TableCell>
+									</TableRow>
+								)
+							})}
+						</TableBody>
 					</Table>
 				</TableContainer>
 			</Box>
