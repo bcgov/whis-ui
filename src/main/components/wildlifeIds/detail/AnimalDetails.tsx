@@ -1,36 +1,31 @@
 import {
 	Box,
-	Button,
 	Card,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	IconButton,
 	Paper,
 	Table,
+	TableBody,
 	TableCell,
 	TableContainer,
 	TableHead,
 	TableRow,
 	Typography
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import '../../../styles/updateID.scss';
 
-const AnimalDetails = () => {
+const AnimalDetails = ({ state }) => {
 
 
 	return (
 		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 83px 24px' }}>Animal Details</Typography>
-			<Box className='info' sx={{ display: 'flex', alignItems: 'center', paddingLeft: '83px' }}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Animal Details</Typography>
+			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 				<span>
 					<Typography variant='body2'>
 						Species
 					</Typography>
 					<Typography variant='body1'>
-						Moose Moose Moose
+						{state.animalDetails.species}
 					</Typography>
 				</span>
 				<span>
@@ -38,7 +33,7 @@ const AnimalDetails = () => {
 						Sex
 					</Typography>
 					<Typography variant='body1'>
-						Female
+						{state.animalDetails.sex}
 					</Typography>
 				</span>
 				<span>
@@ -46,12 +41,12 @@ const AnimalDetails = () => {
 						Home Region
 					</Typography>
 					<Typography variant='body1'>
-						Region Region 1
+						{state.animalDetails.homeRegion}
 					</Typography>
 				</span>
 			</Box>
 
-			<Box sx={{ margin: '24px 83px' }}>
+			<Box sx={{ margin: '24px 0' }}>
 				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Identifiers</Typography>
 				<TableContainer component={Paper}>
 					<Table>
@@ -62,36 +57,23 @@ const AnimalDetails = () => {
 								<TableCell>Additional Information</TableCell>
 							</TableRow>
 						</TableHead>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
-						<TableRow>
-							<TableCell>Alternate Animal ID</TableCell>
-							<TableCell>Identifier Name 1</TableCell>
-							<TableCell>N/A</TableCell>
-						</TableRow>
+						<TableBody>
+							{state.animalDetails.identifiers.map((identifier, i) => {
+								const attributes = identifier.additionalAttributes;
+								const attr = Object.entries(attributes).map(([key, value]) => {
+									return (
+										<>{key} : {value.toString()}&emsp;&emsp;</>
+									);
+								})
+								return (
+									<TableRow key={i}>
+										<TableCell>{identifier.type}</TableCell>
+										<TableCell>{identifier.identifier}</TableCell>
+										<TableCell>{attr}</TableCell>
+									</TableRow>
+								)
+							})}
+						</TableBody>
 					</Table>
 				</TableContainer>
 			</Box>

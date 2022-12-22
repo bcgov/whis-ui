@@ -59,6 +59,9 @@
 
 
     .info {
+        display: flex;
+        align-items: center;
+
         span {
             width: 166px;
         }
@@ -74,7 +77,13 @@
         span:nth-child(3) {
             margin-right: 137px;
         }
+        span:nth-child(4) {
+            width: 197px;
+        }
     }
+}
+.details_margin{
+    margin: 40px 0;
 }
 
 .expand_papper {
@@ -84,10 +93,21 @@
     flex-direction: column;
 }
 
+.details_samples{
+    display: flex;
+    span{
+        margin-right: 200px;
+    }
+}
+.expandDetailsIcon{
+    position: relative;
+    top: 7px;
+}
+
 .papper {
     margin: 32px auto;
     width: 1296px;
-    height: 716px;
+    height: auto;
     padding-left: 58px;
     padding-right: 40px;
 
@@ -101,6 +121,7 @@
 
 
     .info {
+        margin-block: 24px 32px;
         span {
             width: 166px;
         }
