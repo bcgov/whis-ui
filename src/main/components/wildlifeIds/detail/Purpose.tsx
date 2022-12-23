@@ -11,21 +11,22 @@ import {
 } from "@mui/material";
 import React from "react";
 import '../../../styles/updateID.scss';
+import CodeLookup from "../../util/CodeLookup";
 
-const Purpose = ({ state }) => {
+const Purpose = ({state}) => {
 
 	const requester = state.purpose.requester;
 
 	return (
 		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBlock: '48px 24px' }}>Purpose</Typography>
-			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', marginBlock: '48px 24px'}}>Purpose</Typography>
+			<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
 				<span>
 					<Typography variant='body2'>
 						Primary Purpose
 					</Typography>
 					<Typography variant='body1'>
-						{state.purpose.primaryPurpose}
+						<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose}/>
 					</Typography>
 				</span>
 				<span>
@@ -33,7 +34,7 @@ const Purpose = ({ state }) => {
 						Secondary Purpose
 					</Typography>
 					<Typography variant='body1'>
-						{state.purpose.secondaryPurpose}
+						<CodeLookup codeTable={'purposes'} code={state.purpose.secondaryPurpose}/>
 					</Typography>
 				</span>
 				<span>
@@ -45,17 +46,16 @@ const Purpose = ({ state }) => {
 					</Typography>
 				</span>
 			</Box>
-			<Box className="details_margin">
+			<Box className='details_margin'>
 				<Typography variant='body2'>
 					Project Details
 				</Typography>
 				<Typography variant='body1'>
 					{state.purpose.projectDetails}
-					{/* We can define wildlife conservation as any efforts taken to protect any species of wildlife (plants and animals included) along with their habitats. When we say protection, this includes the preservation, management, and restoration of wildlife. Wildlife protection means preventing any extinction and endangerment where possible. This could be in the form of bringing animals back to good health, creating sustainable habitats, assisting in breeding programs, and much more. As we discovered in our open step from the University of York, a major part of global wildlife conservation is protecting a single species in its core habitat. However, it’s important to understand how biodiversity can be maximised – we should assist it. */}
 				</Typography>
 			</Box>
-			<Box className="details_margin">
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Requester</Typography>
+			<Box className='details_margin'>
+				<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', marginBottom: '19px'}}>Requester</Typography>
 				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
