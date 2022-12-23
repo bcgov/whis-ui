@@ -39,7 +39,9 @@ const Detail: React.FC = () => {
 
 	return (
 		<>
-			<DetailForm wildlifeHealthId={data} onEditButtonClick={() => navigate(`/wildlifeIds/detail/${id}`)}/>
+			<DetailForm wildlifeHealthId={data} onEditButtonClick={() => {
+				navigate(`/wildlifeIds/edit/${id}`)
+			}}/>
 		</>
 
 
