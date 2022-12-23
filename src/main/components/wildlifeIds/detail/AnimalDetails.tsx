@@ -13,13 +13,13 @@ import {
 import React from "react";
 import '../../../styles/updateID.scss';
 
-const AnimalDetails = ({ state }) => {
+const AnimalDetails = ({state}) => {
 
 
 	return (
 		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Animal Details</Typography>
-			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '48px 0 24px'}}>Animal Details</Typography>
+			<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
 				<span>
 					<Typography variant='body2'>
 						Species
@@ -46,8 +46,8 @@ const AnimalDetails = ({ state }) => {
 				</span>
 			</Box>
 
-			<Box sx={{ margin: '24px 0' }}>
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Identifiers</Typography>
+			<Box sx={{margin: '24px 0'}}>
+				<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', marginBottom: '19px'}}>Identifiers</Typography>
 				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
@@ -59,17 +59,19 @@ const AnimalDetails = ({ state }) => {
 						</TableHead>
 						<TableBody>
 							{state.animalDetails.identifiers.map((identifier, i) => {
-								const attributes = identifier.additionalAttributes;
+								const {additionalAttributes: attributes} = identifier;
 								const attr = Object.entries(attributes).map(([key, value]) => {
 									return (
-										<>{key} : {value.toString()}&emsp;&emsp;</>
+										<li key={key}>{key} : {value.toString()}&emsp;&emsp;</li>
 									);
 								})
 								return (
 									<TableRow key={i}>
 										<TableCell>{identifier.type}</TableCell>
 										<TableCell>{identifier.identifier}</TableCell>
-										<TableCell>{attr}</TableCell>
+										<TableCell>
+											<ul>{attr}</ul>
+										</TableCell>
 									</TableRow>
 								)
 							})}
@@ -82,4 +84,4 @@ const AnimalDetails = ({ state }) => {
 	);
 }
 
-export default AnimalDetails;
+	export default AnimalDetails;
