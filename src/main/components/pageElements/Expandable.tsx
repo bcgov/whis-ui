@@ -21,7 +21,7 @@ export interface ExpansionOverrideEvent {
 const Expandable = (
 	{
 		children,
-		initiallyExpanded = false,
+		initiallyExpanded = true,
 		expansionEvent = { event: 'none', id: 0 }
 	}) => {
 	const [expanded, setExpanded] = useState(initiallyExpanded);

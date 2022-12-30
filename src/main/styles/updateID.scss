@@ -186,7 +186,7 @@
     flex-direction: row;
 }
 
-.assigned {
+.ASSIGNED {
     background-color: #4caf50;
     width: 90px;
     text-align: center;
@@ -194,8 +194,15 @@
     border-radius: 50px;
 }
 
-.unassigned {
+.UNASSIGNED {
     background-color: #fcba19;
+    width: 90px;
+    text-align: center;
+    height: 25px;
+    border-radius: 50px;
+}
+.RETIRED {
+    background-color: #868e96;
     width: 90px;
     text-align: center;
     height: 25px;

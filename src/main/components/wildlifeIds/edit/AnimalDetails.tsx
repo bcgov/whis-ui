@@ -1,22 +1,23 @@
 import Expandable from "../../pageElements/Expandable";
-import {Box, Button, InputAdornment, MenuItem, Select, TextField, Typography} from "@mui/material";
+import { Box, Button, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import IdentifierEntry from "./IdentifierEntry";
 import React from "react";
 import useCodeTable from "../../../hooks/useCodeTable";
+import CodeLookup from "../../util/CodeLookup";
 
-const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState}) => {
+const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 
-	const {mappedCodes: validSex} = useCodeTable('animal_gender');
-	const {mappedCodes: regions} = useCodeTable('regions');
+	const { mappedCodes: validSex } = useCodeTable('animal_gender');
+	const { mappedCodes: regions } = useCodeTable('regions');
 
 	return (
 		<Expandable expansionEvent={expansionEvent}>
 			<Expandable.Title>
 				<span>
-					<Typography sx={{fontSize: '18px'}}>Animal Details</Typography>
+					<Typography sx={{ fontSize: '18px' }}>Animal Details</Typography>
 				</span>
-				<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 					<span>
 						<Typography variant='body2'>
 							Species
@@ -30,7 +31,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 							Gender
 						</Typography>
 						<Typography variant='body1'>
-							{state.animalDetails.sex}
+							<CodeLookup codeTable={'animal_gender'} code={state.animalDetails.sex} />
 						</Typography>
 					</span>
 					<span>
@@ -38,22 +39,22 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 							Home Region
 						</Typography>
 						<Typography variant='body1'>
-							{state.animalDetails.homeRegion}
+							<CodeLookup codeTable={'regions'} code={state.animalDetails.homeRegion} />
 						</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
-				<Box sx={{width: '100%', display: 'flex', flexDirection: 'column'}}>
-					<Box sx={{width: '1091px', margin: '0 auto'}}>
+				<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+					<Box sx={{ width: '1091px', margin: '0 auto' }}>
 
 						<TextField
-							sx={{minWidth: '1091px', marginTop: '57px'}}
+							sx={{ minWidth: '1091px', marginTop: '57px' }}
 							label='Species'
 							id='species'
 							name='species'
 							InputProps={{
-								endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon/></InputAdornment>,
+								endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon /></InputAdornment>,
 							}}
 							onChange={(e) => {
 								dispatch({
@@ -68,7 +69,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 						/>
 
 						<Select
-							sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
+							sx={{ width: '529px', marginRight: '32px', marginTop: '32px' }}
 							label='Home Region'
 							id='homeRegion'
 							value={state.animalDetails.homeRegion}
@@ -89,7 +90,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 							))}
 						</Select>
 						<Select
-							sx={{width: '529px', marginTop: '32px'}}
+							sx={{ width: '529px', marginTop: '32px' }}
 							id='sex'
 							label='Sex'
 							value={state.animalDetails.sex}
@@ -128,7 +129,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 						</Button>
 					</Box>
 				</Box>
-				<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
+				<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
 					<Button
 						variant={'contained'}
 						className='update_btn'

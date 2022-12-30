@@ -1,10 +1,11 @@
 import Expandable from "../../pageElements/Expandable";
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TextField, Typography} from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TextField, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import useCodeTable from "../../../hooks/useCodeTable";
 import PersonnelTable from "./PersonnelTable";
 import PersonnelDialog from "./PersonnelDialog";
+import CodeLookup from "../../util/CodeLookup";
 
 const Purpose = ({
 	expansionEvent,
@@ -16,21 +17,21 @@ const Purpose = ({
 
 	const [addRequesterDialogOpen, setAddRequesterDialogOpen] = useState(false);
 
-	const {mappedCodes: purposes} = useCodeTable('purposes');
+	const { mappedCodes: purposes } = useCodeTable('purposes');
 
 	return (
 		<Expandable expansionEvent={expansionEvent}>
 			<Expandable.Title>
 				<span>
-					<Typography sx={{fontSize: '18px', width: '90px'}}>Purpose</Typography>
+					<Typography sx={{ fontSize: '18px', width: '90px' }}>Purpose</Typography>
 				</span>
-				<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 					<span>
 						<Typography variant='body2'>
 							Primary Purpose
 						</Typography>
 						<Typography variant='body1'>
-							{state.purpose.primaryPurpose}
+							<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose} />
 						</Typography>
 					</span>
 					<span>
@@ -46,16 +47,16 @@ const Purpose = ({
 							Organization
 						</Typography>
 						<Typography variant='body1'>
-							{state.purpose.requester && `${state.purpose.requester.organization}` || 'unset'}
+							<CodeLookup codeTable={'organizations'} code={state.purpose.requester && `${state.purpose.requester.organization}` || 'unset'} />
 						</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
-				<Box sx={{width: '1091px', margin: '0 auto'}}>
-					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '32px 0 21px 0'}}>WLH ID information</Typography>
+				<Box sx={{ width: '1091px', margin: '0 auto' }}>
+					<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '32px 0 21px 0' }}>WLH ID information</Typography>
 					<TextField
-						sx={{width: '529px'}}
+						sx={{ width: '529px' }}
 						select
 						label='Primary Purpose'
 						value={state.purpose.primaryPurpose}
@@ -76,7 +77,7 @@ const Purpose = ({
 						))}
 					</TextField>
 					<TextField
-						sx={{width: '529px', marginLeft: '32px'}}
+						sx={{ width: '529px', marginLeft: '32px' }}
 						select
 						label='Secondary Purpose'
 						value={state.purpose.secondaryPurpose}
@@ -98,7 +99,7 @@ const Purpose = ({
 					</TextField>
 
 					<TextField
-						sx={{minWidth: '1091px', marginTop: '32px'}}
+						sx={{ minWidth: '1091px', marginTop: '32px' }}
 						label='Associated Project'
 						id='associatedProject'
 						name='associatedProject'
@@ -114,7 +115,7 @@ const Purpose = ({
 						}}
 					/>
 					<TextField
-						sx={{minWidth: '1091px', marginTop: '32px'}}
+						sx={{ minWidth: '1091px', marginTop: '32px' }}
 						label='Project Details'
 						id='projectDetails'
 						name='projectDetails'
@@ -133,7 +134,7 @@ const Purpose = ({
 					/>
 
 					<Box className='requester'>
-						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '32px 0 21px 0'}}>
+						<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '32px 0 21px 0' }}>
 							Requester
 						</Typography>
 
@@ -159,13 +160,13 @@ const Purpose = ({
 									})
 								}
 							}
-						]}/>}
+						]} />}
 
 						{state.purpose.requester === null &&
-							<Button variant={'outlined'} sx={{marginTop: '7px', width: '128px', height: '32px', fontSize: '14px', padding: '0', textTransform: 'capitalize'}}
-											onClick={() => {
-												setAddRequesterDialogOpen(true)
-											}}>+ Add Requester</Button>}
+							<Button variant={'outlined'} sx={{ marginTop: '7px', width: '128px', height: '32px', fontSize: '14px', padding: '0', textTransform: 'capitalize' }}
+								onClick={() => {
+									setAddRequesterDialogOpen(true)
+								}}>+ Add Requester</Button>}
 
 						<PersonnelDialog
 							open={addRequesterDialogOpen}
@@ -188,7 +189,7 @@ const Purpose = ({
 
 					</Box>
 				</Box>
-				<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
+				<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
 					<Button
 						variant={'contained'}
 						className='update_btn'

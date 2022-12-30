@@ -12,14 +12,15 @@ import {
 } from "@mui/material";
 import React from "react";
 import '../../../styles/updateID.scss';
+import CodeLookup from "../../util/CodeLookup";
 
-const AnimalDetails = ({state}) => {
+const AnimalDetails = ({ state }) => {
 
 
 	return (
 		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', margin: '48px 0 24px'}}>Animal Details</Typography>
-			<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Animal Details</Typography>
+			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 				<span>
 					<Typography variant='body2'>
 						Species
@@ -33,7 +34,7 @@ const AnimalDetails = ({state}) => {
 						Sex
 					</Typography>
 					<Typography variant='body1'>
-						{state.animalDetails.sex}
+						<CodeLookup codeTable={'animal_gender'} code={state.animalDetails.sex} />
 					</Typography>
 				</span>
 				<span>
@@ -41,13 +42,13 @@ const AnimalDetails = ({state}) => {
 						Home Region
 					</Typography>
 					<Typography variant='body1'>
-						{state.animalDetails.homeRegion}
+						<CodeLookup codeTable={'regions'} code={state.animalDetails.homeRegion} />
 					</Typography>
 				</span>
 			</Box>
 
-			<Box sx={{margin: '24px 0'}}>
-				<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', marginBottom: '19px'}}>Identifiers</Typography>
+			<Box sx={{ margin: '24px 0' }}>
+				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Identifiers</Typography>
 				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
@@ -59,7 +60,7 @@ const AnimalDetails = ({state}) => {
 						</TableHead>
 						<TableBody>
 							{state.animalDetails.identifiers.map((identifier, i) => {
-								const {additionalAttributes: attributes} = identifier;
+								const { additionalAttributes: attributes } = identifier;
 								const attr = Object.entries(attributes).map(([key, value]) => {
 									return (
 										<li key={key}>{key} : {value.toString()}&emsp;&emsp;</li>
@@ -84,4 +85,4 @@ const AnimalDetails = ({state}) => {
 	);
 }
 
-	export default AnimalDetails;
+export default AnimalDetails;
