@@ -1,5 +1,6 @@
 import { Box, Paper, Table, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import React from "react";
+import CodeLookup from "../../util/CodeLookup";
 
 const HideableDetails = ({ state, index }) => {
     const submitters = state.events[index].submitter;
@@ -60,9 +61,15 @@ const HideableDetails = ({ state, index }) => {
                                 <TableRow>
                                     <TableCell>{submitters.firstName}</TableCell>
                                     <TableCell>{submitters.lastName}</TableCell>
-                                    <TableCell>{submitters.region}</TableCell>
-                                    <TableCell>{submitters.organization}</TableCell>
-                                    <TableCell>{submitters.role}</TableCell>
+                                    <TableCell>
+                                        <CodeLookup codeTable={'regions'} code={submitters.region} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <CodeLookup codeTable={'organizations'} code={submitters.organization} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <CodeLookup codeTable={'roles'} code={submitters.role} />
+                                    </TableCell>
                                     <TableCell>{submitters.phoneNumber}</TableCell>
                                     <TableCell>{submitters.email}</TableCell>
                                 </TableRow>

@@ -30,7 +30,8 @@ export const staticData = {
 		displayed_name: 'Valid Status',
 		codes: [
 			validCodeFromLabelAndValue({value: 'ASSIGNED', label: 'Assigned'}),
-			validCodeFromLabelAndValue({value: 'UNASSIGNED', label: 'Unassigned'})
+			validCodeFromLabelAndValue({value: 'UNASSIGNED', label: 'Unassigned'}),
+			validCodeFromLabelAndValue({value: 'RETIRED', label: 'Retired'})
 		]
 	},
 	'regions': {

@@ -1,14 +1,8 @@
-import { Box, Button, Card, FormControlLabel, FormGroup, Switch, TextField, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import '../../../styles/updateID.scss';
+import CodeLookup from "../../util/CodeLookup";
 
 const Status = ({ state }) => {
-
-	const statuses = [
-		{ value: 'ASSIGNED', label: 'Assigned' },
-		{ value: 'RETIRED', label: 'Retired' },
-		{ value: 'UNASSIGNED', label: 'Unassigned' }
-	];
 
 	const [displayedStatus, setDisplayedStatus] = useState('Unassigned');
 	const [lastState, setLastState] = useState(null);
@@ -34,12 +28,12 @@ const Status = ({ state }) => {
 	return (
 		<Card className='card' sx={{ width: '100%' }}>
 			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom:'15px' }}>General Information</Typography>
+				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '15px' }}>General Information</Typography>
 				<Box className='info' >
 					<span>
 						<Typography variant='body2'>Status</Typography>
-						<Typography className='assigned' sx={{ color: 'white', fontSize: '13px' }} variant='subtitle1'>
-							{displayedStatus}
+						<Typography className={displayedStatus} sx={{ color: 'white', fontSize: '13px' }} variant='subtitle1'>
+							<CodeLookup codeTable={'status'} code={displayedStatus} />
 						</Typography>
 					</span>
 					<span>

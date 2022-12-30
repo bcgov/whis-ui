@@ -15,11 +15,12 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import DeleteConfirm from "./DeleteConfirm";
 import PersonnelDialog from "./PersonnelDialog";
+import CodeLookup from "../../util/CodeLookup";
 
-const PersonnelTable = ({people, noun='Requester'}) => {
+const PersonnelTable = ({ people, noun = 'Requester' }) => {
 
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
@@ -31,7 +32,7 @@ const PersonnelTable = ({people, noun='Requester'}) => {
 	});
 
 	const [editDialogOpen, setEditDialogOpen] = useState(false);
-	const [currentEditAction, setCurrentEditAction] = useState({handler: unsetEditActionHandler})
+	const [currentEditAction, setCurrentEditAction] = useState({ handler: unsetEditActionHandler })
 
 	function unsetEditActionHandler(newPerson) {
 		setEditDialogOpen(false);
@@ -59,32 +60,38 @@ const PersonnelTable = ({people, noun='Requester'}) => {
 						<TableRow key={`${p.firstName - p.lastName}`}>
 							<TableCell>{p.firstName}</TableCell>
 							<TableCell>{p.lastName}</TableCell>
-							<TableCell>{p.region}</TableCell>
-							<TableCell>{p.organization}</TableCell>
-							<TableCell>{p.role}</TableCell>
+							<TableCell>
+								<CodeLookup codeTable={'regions'} code={p.region} />
+							</TableCell>
+							<TableCell>
+							<CodeLookup codeTable={'organizations'} code={p.organization} />
+							</TableCell>
+							<TableCell>
+							<CodeLookup codeTable={'roles'} code={p.role} />
+							</TableCell>
 							<TableCell>{p.phoneNumber}</TableCell>
 							<TableCell>{p.email}</TableCell>
 							<TableCell>
 								{!!p.editAction && <IconButton onClick={() => {
-									setCurrentEditAction({handler: p.editAction});
+									setCurrentEditAction({ handler: p.editAction });
 									setEditingPerson(p);
 									setEditDialogOpen(true);
-								}}><EditIcon color='primary'/></IconButton>}
+								}}><EditIcon color='primary' /></IconButton>}
 								{!!p.deleteAction && <IconButton><DeleteIcon onClick={() => {
-									setCurrentDeletionAction({handler: p.deleteAction});
+									setCurrentDeletionAction({ handler: p.deleteAction });
 									setDeleteConfirmationDialogOpen(true);
-								}} color='primary'/></IconButton>}
+								}} color='primary' /></IconButton>}
 							</TableCell>
 
 						</TableRow>
 					))}
 					<DeleteConfirm noun={noun} open={deleteConfirmationDialogOpen} cancelAction={() => {
 						setDeleteConfirmationDialogOpen(false);
-						setCurrentDeletionAction({handler: unsetDeletionHandler});
+						setCurrentDeletionAction({ handler: unsetDeletionHandler });
 					}} acceptAction={() => {
 						setDeleteConfirmationDialogOpen(false);
 						currentDeletionAction.handler();
-					}}/>
+					}} />
 					<PersonnelDialog
 						open={editDialogOpen}
 						acceptAction={(newPerson) => {
@@ -92,7 +99,7 @@ const PersonnelTable = ({people, noun='Requester'}) => {
 							setEditDialogOpen(false);
 						}}
 						cancelAction={() => {
-							setCurrentEditAction({handler: unsetEditActionHandler});
+							setCurrentEditAction({ handler: unsetEditActionHandler });
 							setEditDialogOpen(false);
 						}}
 						initialState={editingPerson}

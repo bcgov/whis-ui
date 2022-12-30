@@ -1,14 +1,15 @@
 import Expandable from "../../pageElements/Expandable";
-import {Box, Button, FormControlLabel, FormGroup, MenuItem, Switch, TextField, Typography} from "@mui/material";
-import React, {useEffect, useState} from "react";
+import { Box, Button, FormControlLabel, FormGroup, MenuItem, Switch, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import StatusHistory from "./StatusHistory";
+import CodeLookup from "../../util/CodeLookup";
 
-const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
+const Status = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 
 	const statuses = [
-		{value: 'ASSIGNED', label: 'Assigned'},
-		{value: 'RETIRED', label: 'Retired'},
-		{value: 'UNASSIGNED', label: 'Unassigned'}
+		{ value: 'ASSIGNED', label: 'Assigned' },
+		{ value: 'RETIRED', label: 'Retired' },
+		{ value: 'UNASSIGNED', label: 'Unassigned' }
 	];
 
 	const [displayedStatus, setDisplayedStatus] = useState('Unassigned');
@@ -32,87 +33,15 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 
 	function renderDetailed(status) {
 		switch (status) {
-		case 'ASSIGNED':
-		case 'UNASSIGNED':
-			return (
-				<TextField
-					sx={{minWidth: '1091px', marginTop: '28px'}}
-					label='Reason (Enter a reason why you are changing the WLH ID status)'
-					id='reason'
-					name='reason'
-					multiline
-					onChange={(e) => {
-						dispatch({
-							type: 'fieldChange',
-							payload: {
-								field: 'status.dirty.reason',
-								value: e.target.value
-							}
-						})
-					}}
-					value={state.status.dirty.reason}
-					rows={3}
-				/>
-			);
-			break;
-		case 'RETIRED':
-			return (
-				<>
-					<FormGroup sx={{width: '330px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '28px'}}>
-						<Typography variant='body1'>Recapture Kits Returned</Typography>
-						<FormControlLabel control={<Switch onChange={(e) => dispatch(
-							{
-								type: 'fieldChange',
-								payload: {
-									field: 'status.additionalAttributes.recaptureKitsReturned',
-									value: e.target.checked
-								}
-							}
-						)}
-																							 sx={{marginInline: '20px'}}/>}
-						checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
-						label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}/>
-						<Typography variant='body1'>Recapture Status</Typography>
-						<FormControlLabel control={<Switch onChange={(e) => dispatch(
-							{
-								type: 'fieldChange',
-								payload: {
-									field: 'status.additionalAttributes.recaptureStatus',
-									value: e.target.checked
-								}
-							}
-						)}
-																							 checked={state.status.dirty.additionalAttributes.recaptureStatus}
-																							 sx={{marginInline: '20px'}}/>}
-						label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{marginTop: '20px'}}/>
-					</FormGroup>
-
+			case 'ASSIGNED':
+			case 'UNASSIGNED':
+				return (
 					<TextField
-						sx={{width: '529px', marginTop: '28px'}}
-						id='correctIdNumber'
-						name='correctIdNumber'
-						label='Correct WLH ID Number'
-						value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
-						onChange={(e) => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: 'status.dirty.additionalAttributes.correctIdNumber',
-									value: e.target.value
-								}
-							})
-						}}
-						defaultValue='Pending'
-					/>
-
-					<TextField
-						sx={{minWidth: '1091px', marginTop: '28px'}}
+						sx={{ minWidth: '1091px', marginTop: '28px' }}
 						label='Reason (Enter a reason why you are changing the WLH ID status)'
 						id='reason'
 						name='reason'
 						multiline
-						rows={3}
-						value={state.status.dirty.reason}
 						onChange={(e) => {
 							dispatch({
 								type: 'fieldChange',
@@ -122,13 +51,85 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 								}
 							})
 						}}
+						value={state.status.dirty.reason}
+						rows={3}
 					/>
-				</>
-			);
-			break;
+				);
+				break;
+			case 'RETIRED':
+				return (
+					<>
+						<FormGroup sx={{ width: '330px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '28px' }}>
+							<Typography variant='body1'>Recapture Kits Returned</Typography>
+							<FormControlLabel control={<Switch onChange={(e) => dispatch(
+								{
+									type: 'fieldChange',
+									payload: {
+										field: 'status.additionalAttributes.recaptureKitsReturned',
+										value: e.target.checked
+									}
+								}
+							)}
+								sx={{ marginInline: '20px' }} />}
+								checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
+								label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`} />
+							<Typography variant='body1'>Recapture Status</Typography>
+							<FormControlLabel control={<Switch onChange={(e) => dispatch(
+								{
+									type: 'fieldChange',
+									payload: {
+										field: 'status.additionalAttributes.recaptureStatus',
+										value: e.target.checked
+									}
+								}
+							)}
+								checked={state.status.dirty.additionalAttributes.recaptureStatus}
+								sx={{ marginInline: '20px' }} />}
+								label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{ marginTop: '20px' }} />
+						</FormGroup>
 
-		default:
-			return (<></>);
+						<TextField
+							sx={{ width: '529px', marginTop: '28px' }}
+							id='correctIdNumber'
+							name='correctIdNumber'
+							label='Correct WLH ID Number'
+							value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
+							onChange={(e) => {
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'status.dirty.additionalAttributes.correctIdNumber',
+										value: e.target.value
+									}
+								})
+							}}
+							defaultValue='Pending'
+						/>
+
+						<TextField
+							sx={{ minWidth: '1091px', marginTop: '28px' }}
+							label='Reason (Enter a reason why you are changing the WLH ID status)'
+							id='reason'
+							name='reason'
+							multiline
+							rows={3}
+							value={state.status.dirty.reason}
+							onChange={(e) => {
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'status.dirty.reason',
+										value: e.target.value
+									}
+								})
+							}}
+						/>
+					</>
+				);
+				break;
+
+			default:
+				return (<></>);
 		}
 	}
 
@@ -136,12 +137,12 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 		<Expandable expansionEvent={expansionEvent}>
 			<Expandable.Title>
 				<span>
-					<Typography sx={{fontSize: '18px'}}>Status</Typography>
-					<Typography className='unassigned' sx={{color: 'white', fontSize: '13px'}} variant='subtitle1'>
-						{displayedStatus}
+					<Typography sx={{ fontSize: '18px' }}>Status</Typography>
+					<Typography className={displayedStatus} sx={{ color: 'white', fontSize: '13px' }} variant='subtitle1'>
+						<CodeLookup codeTable={'status'} code={displayedStatus} />
 					</Typography>
 				</span>
-				<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+				<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 					<span>
 						<Typography variant='body2'>
 							WLH ID Number
@@ -169,12 +170,12 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
-				<Box sx={{width: '1091px', margin: '48px auto'}}>
-					<StatusHistory history={state.status.history}/>
+				<Box sx={{ width: '1091px', margin: '48px auto' }}>
+					<StatusHistory history={state.status.history} />
 				</Box>
-				<Box sx={{width: '1091px', margin: '48px auto'}}>
+				<Box sx={{ width: '1091px', margin: '48px auto' }}>
 					<TextField
-						sx={{width: '529px', marginTop: '8px'}}
+						sx={{ width: '529px', marginTop: '8px' }}
 						id='idStatus'
 						label='Change WLH Status *'
 						defaultValue={state.status.dirty.status}
@@ -196,7 +197,7 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					}
 				</Box>
 
-				<Box sx={{display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0'}}>
+				<Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: '48px 94px 48px 0' }}>
 					<Button
 						variant={'contained'}
 						className='update_btn'

@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import HideableDetails from "./HideableDetails";
+import CodeLookup from "../../util/CodeLookup";
 
 
 
@@ -17,7 +18,7 @@ const EventDetails = ({ state, index }) => {
 	return (
 		<>
 			<Card className='papper' >
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Event {index+1}</Typography>
+				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Event {index + 1}</Typography>
 				<Box className='info' sx={{ display: 'flex', alignItems: 'stretch' }}>
 					<span>
 						<Typography variant='body2'>
@@ -40,12 +41,12 @@ const EventDetails = ({ state, index }) => {
 							Age Class
 						</Typography>
 						<Typography variant='body1'>
-							{state.events[index].ageClass}
+							<CodeLookup codeTable={'animal_age'} code={state.events[index].ageClass} />
 						</Typography>
 					</span>
 					<span>
 						<a onClick={() => { setEventDetailsExpand(!EventDetailsExpand) }} style={{ cursor: 'pointer' }}>
-							{EventDetailsExpand ? <>Less Details<KeyboardArrowUpIcon className="expandDetailsIcon"/></> : <>More Details<KeyboardArrowDownIcon className="expandDetailsIcon"/></>}
+							{EventDetailsExpand ? <>Less Details<KeyboardArrowUpIcon className="expandDetailsIcon" /></> : <>More Details<KeyboardArrowDownIcon className="expandDetailsIcon" /></>}
 						</a>
 					</span>
 				</Box>

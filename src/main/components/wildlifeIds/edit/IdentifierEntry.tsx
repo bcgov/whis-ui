@@ -44,7 +44,6 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 				<Box>
 					<TextField
 						sx={{width: '486px', marginTop: '32px'}}
-						// label='Identifier'
 						id='identifier'
 						name='identifier'
 						value={identifier.identifier}
@@ -64,10 +63,10 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 		case "EAR_TAG":
 		case "RAPP_TAG":
 			return (
-				<Box sx={{width: '529px', marginTop: '32px', display: 'flex', alignItems: 'center'}}>
+				<Box sx={{width: '486px', marginTop: '32px', display: 'flex', alignItems: 'center'}}>
 					<TextField
-						sx={{width: '486px', marginTop: '32px'}}
-						// label='Identifier'
+						sx={{width: '200px', marginRight: '12px'}}
+						label='Identifier'
 						id='identifier'
 						name='identifier'
 						value={identifier.identifier}
@@ -82,9 +81,8 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 						}}
 					/>
 					<TextField
-						sx={{width: '195px', marginRight: '12px'}}
+						sx={{width: '202px', marginRight: '12px'}}
 						id='color'
-						// select
 						label='Color'
 						value={identifier.additionalAttributes?.color || ''}
 						onChange={(e) => {
@@ -131,7 +129,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 	return (
 		<div>
 			<Box sx={{display: 'flex', flexDirection: 'column'}}>
-				<Box sx={{width: '1091px', margin: '0 auto', display: 'flex', flexDirection: 'row'}}>
+				<Box sx={{width: '1091px', margin: '0 auto', display: 'flex', flexDirection: 'row', alignItems:'flex-start'}}>
 					<Select
 						sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
 						id='identifier'

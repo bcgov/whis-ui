@@ -13,20 +13,20 @@ import React from "react";
 import '../../../styles/updateID.scss';
 import CodeLookup from "../../util/CodeLookup";
 
-const Purpose = ({state}) => {
+const Purpose = ({ state }) => {
 
 	const requester = state.purpose.requester;
 
 	return (
 		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', marginBlock: '48px 24px'}}>Purpose</Typography>
-			<Box className='info' sx={{display: 'flex', alignItems: 'center'}}>
+			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBlock: '48px 24px' }}>Purpose</Typography>
+			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
 				<span>
 					<Typography variant='body2'>
 						Primary Purpose
 					</Typography>
 					<Typography variant='body1'>
-						<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose}/>
+						<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose} />
 					</Typography>
 				</span>
 				<span>
@@ -34,7 +34,7 @@ const Purpose = ({state}) => {
 						Secondary Purpose
 					</Typography>
 					<Typography variant='body1'>
-						<CodeLookup codeTable={'purposes'} code={state.purpose.secondaryPurpose}/>
+						<CodeLookup codeTable={'purposes'} code={state.purpose.secondaryPurpose} />
 					</Typography>
 				</span>
 				<span>
@@ -55,7 +55,7 @@ const Purpose = ({state}) => {
 				</Typography>
 			</Box>
 			<Box className='details_margin'>
-				<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '18px', marginBottom: '19px'}}>Requester</Typography>
+				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Requester</Typography>
 				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
@@ -72,13 +72,27 @@ const Purpose = ({state}) => {
 						</TableHead>
 						<TableHead>
 							<TableRow>
-								<TableCell>{requester.firstName}</TableCell>
-								<TableCell>{requester.lastName}</TableCell>
-								<TableCell>{requester.region}</TableCell>
-								<TableCell>{requester.organization}</TableCell>
-								<TableCell>{requester.role}</TableCell>
-								<TableCell>{requester.phoneNumber}</TableCell>
-								<TableCell>{requester.email}</TableCell>
+								<TableCell>
+									{requester.firstName}
+								</TableCell>
+								<TableCell>
+									{requester.lastName}
+								</TableCell>
+								<TableCell>
+									<CodeLookup codeTable={'regions'} code={requester.region} />
+								</TableCell>
+								<TableCell>
+									<CodeLookup codeTable={'organizations'} code={requester.organization} />
+								</TableCell>
+								<TableCell>
+									<CodeLookup codeTable={'roles'} code={requester.role} />
+								</TableCell>
+								<TableCell>
+									{requester.phoneNumber}
+								</TableCell>
+								<TableCell>
+									{requester.email}
+								</TableCell>
 							</TableRow>
 						</TableHead>
 					</Table>
