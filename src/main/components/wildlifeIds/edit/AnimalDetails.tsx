@@ -8,7 +8,7 @@ import CodeLookup from "../../util/CodeLookup";
 
 const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 
-	const { mappedCodes: validSex } = useCodeTable('animal_gender');
+	const { mappedCodes: validSex } = useCodeTable('animal_sex');
 	const { mappedCodes: regions } = useCodeTable('regions');
 
 	return (
@@ -28,10 +28,10 @@ const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState 
 					</span>
 					<span>
 						<Typography variant='body2'>
-							Gender
+							Sex
 						</Typography>
 						<Typography variant='body1'>
-							<CodeLookup codeTable={'animal_gender'} code={state.animalDetails.sex} />
+							<CodeLookup codeTable={'animal_sex'} code={state.animalDetails.sex} />
 						</Typography>
 					</span>
 					<span>

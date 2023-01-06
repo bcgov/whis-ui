@@ -7,53 +7,49 @@ import Status from "./Status";
 import Purpose from "./Purpose";
 import AnimalDetails from "./AnimalDetails";
 import Event from "./Event";
-import {useNavigate} from "react-router-dom";
 
 const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
-
-		const nav = useNavigate();
-
-		return (
-			<Box className='container'>
-				<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-					<Box>
-						<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>WLH ID {wildlifeHealthId.metadata.wildlifeHealthId}</Typography>
-						<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>View the WLH ID details and events.</Typography>
-					</Box>
-					<Box>
-						<Button
-							onClick={onEditButtonClick}
-							variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}}
-						>
-							Update WLH ID
-						</Button>
-						<IconButton>
-							<PrintIcon/>
-						</IconButton>
-						<IconButton>
-							<DownloadIcon/>
-						</IconButton>
-					</Box>
+	return (
+		<Box className='container'>
+			<Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+				<Box>
+					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>WLH ID {wildlifeHealthId.metadata.wildlifeHealthId}</Typography>
+					<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>View the WLH ID details and events.</Typography>
 				</Box>
-
-				<Status
-					state={wildlifeHealthId}
-				/>
-
-				<Purpose
-					state={wildlifeHealthId}
-				/>
-
-				<AnimalDetails
-					state={wildlifeHealthId}
-				/>
-
-				<Event
-					state={wildlifeHealthId}
-				/>
-
+				<Box>
+					<Button
+						onClick={onEditButtonClick}
+						variant={'contained'} sx={{height: '41px', textTransform: 'capitalize', fontSize: '14px', marginRight: '8px'}}
+					>
+							Update WLH ID
+					</Button>
+					<IconButton>
+						<PrintIcon/>
+					</IconButton>
+					<IconButton>
+						<DownloadIcon/>
+					</IconButton>
+				</Box>
 			</Box>
-		);
-	}
+
+			<Status
+				state={wildlifeHealthId}
+			/>
+
+			<Purpose
+				state={wildlifeHealthId}
+			/>
+
+			<AnimalDetails
+				state={wildlifeHealthId}
+			/>
+
+			<Event
+				state={wildlifeHealthId}
+			/>
+
+		</Box>
+	);
+}
 ;
 export default DetailForm;

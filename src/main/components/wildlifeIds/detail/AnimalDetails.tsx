@@ -34,7 +34,7 @@ const AnimalDetails = ({ state }) => {
 						Sex
 					</Typography>
 					<Typography variant='body1'>
-						<CodeLookup codeTable={'animal_gender'} code={state.animalDetails.sex} />
+						<CodeLookup codeTable={'animal_sex'} code={state.animalDetails.sex} />
 					</Typography>
 				</span>
 				<span>

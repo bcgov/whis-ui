@@ -3,6 +3,7 @@ import { Box, Button, FormControlLabel, FormGroup, MenuItem, Switch, TextField, 
 import React, { useEffect, useState } from "react";
 import StatusHistory from "./StatusHistory";
 import CodeLookup from "../../util/CodeLookup";
+import FriendlyDate from "../../util/FriendlyDate";
 
 const Status = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 
@@ -33,15 +34,87 @@ const Status = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 
 	function renderDetailed(status) {
 		switch (status) {
-			case 'ASSIGNED':
-			case 'UNASSIGNED':
-				return (
+		case 'ASSIGNED':
+		case 'UNASSIGNED':
+			return (
+				<TextField
+					sx={{ minWidth: '1091px', marginTop: '28px' }}
+					label='Reason (Enter a reason why you are changing the WLH ID status)'
+					id='reason'
+					name='reason'
+					multiline
+					onChange={(e) => {
+						dispatch({
+							type: 'fieldChange',
+							payload: {
+								field: 'status.dirty.reason',
+								value: e.target.value
+							}
+						})
+					}}
+					value={state.status.dirty.reason}
+					rows={3}
+				/>
+			);
+			break;
+		case 'RETIRED':
+			return (
+				<>
+					<FormGroup sx={{ width: '330px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '28px' }}>
+						<Typography variant='body1'>Recapture Kits Returned</Typography>
+						<FormControlLabel control={<Switch onChange={(e) => dispatch(
+							{
+								type: 'fieldChange',
+								payload: {
+									field: 'status.additionalAttributes.recaptureKitsReturned',
+									value: e.target.checked
+								}
+							}
+						)}
+						sx={{ marginInline: '20px' }} />}
+						checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
+						label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`} />
+						<Typography variant='body1'>Recapture Status</Typography>
+						<FormControlLabel control={<Switch onChange={(e) => dispatch(
+							{
+								type: 'fieldChange',
+								payload: {
+									field: 'status.additionalAttributes.recaptureStatus',
+									value: e.target.checked
+								}
+							}
+						)}
+						checked={state.status.dirty.additionalAttributes.recaptureStatus}
+						sx={{ marginInline: '20px' }} />}
+						label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{ marginTop: '20px' }} />
+					</FormGroup>
+
+					<TextField
+						sx={{ width: '529px', marginTop: '28px' }}
+						id='correctIdNumber'
+						name='correctIdNumber'
+						label='Correct WLH ID Number'
+						value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
+						onChange={(e) => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'status.dirty.additionalAttributes.correctIdNumber',
+									value: e.target.value
+								}
+							})
+						}}
+						defaultValue='Pending'
+					/>
+
 					<TextField
 						sx={{ minWidth: '1091px', marginTop: '28px' }}
 						label='Reason (Enter a reason why you are changing the WLH ID status)'
 						id='reason'
 						name='reason'
 						multiline
+						rows={3}
+						value={state.status.dirty.reason}
 						onChange={(e) => {
 							dispatch({
 								type: 'fieldChange',
@@ -51,85 +124,13 @@ const Status = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 								}
 							})
 						}}
-						value={state.status.dirty.reason}
-						rows={3}
 					/>
-				);
-				break;
-			case 'RETIRED':
-				return (
-					<>
-						<FormGroup sx={{ width: '330px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '28px' }}>
-							<Typography variant='body1'>Recapture Kits Returned</Typography>
-							<FormControlLabel control={<Switch onChange={(e) => dispatch(
-								{
-									type: 'fieldChange',
-									payload: {
-										field: 'status.additionalAttributes.recaptureKitsReturned',
-										value: e.target.checked
-									}
-								}
-							)}
-								sx={{ marginInline: '20px' }} />}
-								checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
-								label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`} />
-							<Typography variant='body1'>Recapture Status</Typography>
-							<FormControlLabel control={<Switch onChange={(e) => dispatch(
-								{
-									type: 'fieldChange',
-									payload: {
-										field: 'status.additionalAttributes.recaptureStatus',
-										value: e.target.checked
-									}
-								}
-							)}
-								checked={state.status.dirty.additionalAttributes.recaptureStatus}
-								sx={{ marginInline: '20px' }} />}
-								label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`} sx={{ marginTop: '20px' }} />
-						</FormGroup>
+				</>
+			);
+			break;
 
-						<TextField
-							sx={{ width: '529px', marginTop: '28px' }}
-							id='correctIdNumber'
-							name='correctIdNumber'
-							label='Correct WLH ID Number'
-							value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
-							onChange={(e) => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: 'status.dirty.additionalAttributes.correctIdNumber',
-										value: e.target.value
-									}
-								})
-							}}
-							defaultValue='Pending'
-						/>
-
-						<TextField
-							sx={{ minWidth: '1091px', marginTop: '28px' }}
-							label='Reason (Enter a reason why you are changing the WLH ID status)'
-							id='reason'
-							name='reason'
-							multiline
-							rows={3}
-							value={state.status.dirty.reason}
-							onChange={(e) => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: 'status.dirty.reason',
-										value: e.target.value
-									}
-								})
-							}}
-						/>
-					</>
-				);
-				break;
-
-			default:
-				return (<></>);
+		default:
+			return (<></>);
 		}
 	}
 
@@ -156,7 +157,7 @@ const Status = ({ expansionEvent, dispatch, state, resetState, saveState }) => {
 							WLH ID Generated  Date
 						</Typography>
 						<Typography variant='body1'>
-							{state.metadata.generationDate}
+							<FriendlyDate value={state.metadata.generationDate}/>
 						</Typography>
 					</span>
 					<span>

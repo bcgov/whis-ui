@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import CodeLookup from "../../util/CodeLookup";
+import FriendlyDate from "../../util/FriendlyDate";
 
 const StatusHistory = ({ history }) => {
 	return (
@@ -21,7 +22,7 @@ const StatusHistory = ({ history }) => {
 								<CodeLookup codeTable={'status'} code={h.status} />
 							</TableCell>
 							<TableCell>{h.reason}</TableCell>
-							<TableCell>{`${h.changedAt}`}</TableCell>
+							<TableCell><FriendlyDate value={h.changedAt}/></TableCell>
 						</TableRow>
 					))}
 				</TableBody>

@@ -45,8 +45,8 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 			<Table>
 				<TableHead>
 					<TableRow className='tablehead'>
-						<TableCell>Name</TableCell>
-						<TableCell>Family</TableCell>
+						<TableCell>First</TableCell>
+						<TableCell>Last</TableCell>
 						<TableCell>Region</TableCell>
 						<TableCell>Organization</TableCell>
 						<TableCell>Role</TableCell>
