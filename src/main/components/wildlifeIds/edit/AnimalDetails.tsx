@@ -1,5 +1,5 @@
 import Expandable from "../../pageElements/Expandable";
-import { Box, Button, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, InputAdornment, MenuItem, TextField, Typography } from "@mui/material";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import IdentifierEntry from "./IdentifierEntry";
 import React from "react";
@@ -68,7 +68,8 @@ const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState 
 							value={state.animalDetails.species}
 						/>
 
-						<Select
+						<TextField
+							select
 							sx={{ width: '529px', marginRight: '32px', marginTop: '32px' }}
 							label='Home Region'
 							id='homeRegion'
@@ -88,8 +89,9 @@ const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState 
 									{r.label}
 								</MenuItem>
 							))}
-						</Select>
-						<Select
+						</TextField>
+						<TextField
+							select
 							sx={{ width: '529px', marginTop: '32px' }}
 							id='sex'
 							label='Sex'
@@ -109,7 +111,7 @@ const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState 
 									{m.label}
 								</MenuItem>
 							))}
-						</Select>
+						</TextField>
 						{state.animalDetails.identifiers.map((identifier, index) => (
 
 							<IdentifierEntry
@@ -119,12 +121,15 @@ const AnimalDetails = ({ expansionEvent, dispatch, state, resetState, saveState 
 							/>
 
 						))}
-						<Button onClick={() => {
-							dispatch({
-								type: 'animalDetails.identifiers.add'
-							});
-						}
-						}>
+						<Button
+							variant="outlined"
+							sx={{marginTop:'32px'}}
+							onClick={() => {
+								dispatch({
+									type: 'animalDetails.identifiers.add'
+								});
+							}
+							}>
 							+ Add Identifier Types
 						</Button>
 					</Box>

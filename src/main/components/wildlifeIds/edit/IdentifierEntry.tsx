@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, FormControlLabel, IconButton, MenuItem, Radio, RadioGroup, Select, TextField} from '@mui/material';
+import {Box, FormControlLabel, IconButton, MenuItem, Radio, RadioGroup, TextField} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 /*
@@ -130,13 +130,14 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 		<div>
 			<Box sx={{display: 'flex', flexDirection: 'column'}}>
 				<Box sx={{width: '1091px', margin: '0 auto', display: 'flex', flexDirection: 'row', alignItems:'flex-start'}}>
-					<Select
+					<TextField
+						select
 						sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
 						id='identifier'
 						name='identifier'
+						label='Identifier Types'
 						value={identifier.type}
 						onChange={(e) => {
-							//setIdentifier(e.target.value);
 							dispatch({
 								type: 'animalDetails.identifiers.typeChange',
 								payload: {
@@ -151,7 +152,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 								{m.label}
 							</MenuItem>
 						))}
-					</Select>
+					</TextField>
 					{
 						renderDetailed()
 					}
