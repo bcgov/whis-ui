@@ -18,6 +18,7 @@ const CodeLookup = ({codeTable, code}) => {
 		const table = tables[codeTable];
 		if (table === undefined) {
 			setValue(`Code table ${codeTable} not loaded or does not exist`)
+			return;
 		}
 
 		const found = table.codes.find(c => c.value === code);
