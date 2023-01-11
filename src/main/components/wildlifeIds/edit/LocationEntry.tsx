@@ -296,42 +296,6 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 					</IconButton>
 				</Box>);
 			break;
-		// case "URM_NORTHING":
-		// 	return (
-		// 		<Box sx={{width: '529px', display: 'flex', alignItems: 'center', marginTop: '32px'}}>
-		// 			<TextField
-		// 				sx={{width: '235px', marginRight: '16px'}}
-		// 				label='Value 1'
-		// 				value={location.attributes.value1 || ''}
-		// 				onChange={(e) => {
-		// 					dispatch({
-		// 						type: 'fieldChange',
-		// 						payload: {
-		// 							field: `${path}.attributes.value1`,
-		// 							value: e.target.value
-		// 						}
-		// 					});
-		// 				}}
-		// 			/>
-		// 			<TextField
-		// 				sx={{width: '235px', marginRight: '4px'}}
-		// 				label='Value 2'
-		// 				value={location.attributes.value2 || ''}
-		// 				onChange={(e) => {
-		// 					dispatch({
-		// 						type: 'fieldChange',
-		// 						payload: {
-		// 							field: `${path}.attributes.value2`,
-		// 							value: e.target.value
-		// 						}
-		// 					});
-		// 				}}
-		// 			/>
-		// 			<IconButton onClick={deleteAction}>
-		// 				<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
-		// 			</IconButton>
-		// 		</Box>);
-		// 	break;
 		case "CITY":
 			return (
 				<Box>
