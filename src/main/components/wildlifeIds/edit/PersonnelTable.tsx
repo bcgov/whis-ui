@@ -42,7 +42,9 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 
 	return (
 		<TableContainer component={Paper}>
-			<Table>
+			<Table
+				sx={{tableLayout:'auto'}}
+			>
 				<TableHead>
 					<TableRow className='tablehead'>
 						<TableCell>First</TableCell>
@@ -71,7 +73,9 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 							</TableCell>
 							<TableCell>{p.phoneNumber}</TableCell>
 							<TableCell>{p.email}</TableCell>
-							<TableCell>
+							<TableCell
+								sx={{width:'112px'}}
+							>
 								{!!p.editAction && <IconButton onClick={() => {
 									setCurrentEditAction({ handler: p.editAction });
 									setEditingPerson(p);
