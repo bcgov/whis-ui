@@ -27,8 +27,7 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 		{value: 'HERD_NAME', label: 'Herd Name'},
 		{value: 'LATITUDE', label: 'Latitude/ Longitude (in decimal degrees)'},
 		{value: 'NICKNAME', label: 'Nickname'},
-		{value: 'UTM_EASTING', label: 'UTM Easting Band'},
-		{value: 'URM_NORTHING', label: 'URM Northing'},
+		{value: 'UTM_COORDINATES', label: 'UTM Coordinates'},
 		{value: 'CITY', label: 'City'},
 		{value: 'CIVIC_ADDRESS', label: 'Civic Address'}
 	];
@@ -247,7 +246,7 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 					</IconButton>
 				</Box>);
 			break;
-		case "UTM_EASTING":
+		case "UTM_COORDINATES":
 			return (
 				<Box sx={{width: '529px', display: 'flex', alignItems: 'center', marginTop: '32px'}}>
 					<TextField
@@ -297,42 +296,42 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 					</IconButton>
 				</Box>);
 			break;
-		case "URM_NORTHING":
-			return (
-				<Box sx={{width: '529px', display: 'flex', alignItems: 'center', marginTop: '32px'}}>
-					<TextField
-						sx={{width: '235px', marginRight: '16px'}}
-						label='Value 1'
-						value={location.attributes.value1 || ''}
-						onChange={(e) => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: `${path}.attributes.value1`,
-									value: e.target.value
-								}
-							});
-						}}
-					/>
-					<TextField
-						sx={{width: '235px', marginRight: '4px'}}
-						label='Value 2'
-						value={location.attributes.value2 || ''}
-						onChange={(e) => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: `${path}.attributes.value2`,
-									value: e.target.value
-								}
-							});
-						}}
-					/>
-					<IconButton onClick={deleteAction}>
-						<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
-					</IconButton>
-				</Box>);
-			break;
+		// case "URM_NORTHING":
+		// 	return (
+		// 		<Box sx={{width: '529px', display: 'flex', alignItems: 'center', marginTop: '32px'}}>
+		// 			<TextField
+		// 				sx={{width: '235px', marginRight: '16px'}}
+		// 				label='Value 1'
+		// 				value={location.attributes.value1 || ''}
+		// 				onChange={(e) => {
+		// 					dispatch({
+		// 						type: 'fieldChange',
+		// 						payload: {
+		// 							field: `${path}.attributes.value1`,
+		// 							value: e.target.value
+		// 						}
+		// 					});
+		// 				}}
+		// 			/>
+		// 			<TextField
+		// 				sx={{width: '235px', marginRight: '4px'}}
+		// 				label='Value 2'
+		// 				value={location.attributes.value2 || ''}
+		// 				onChange={(e) => {
+		// 					dispatch({
+		// 						type: 'fieldChange',
+		// 						payload: {
+		// 							field: `${path}.attributes.value2`,
+		// 							value: e.target.value
+		// 						}
+		// 					});
+		// 				}}
+		// 			/>
+		// 			<IconButton onClick={deleteAction}>
+		// 				<DeleteIcon color='primary' sx={{fontSize: '20px'}}/>
+		// 			</IconButton>
+		// 		</Box>);
+		// 	break;
 		case "CITY":
 			return (
 				<Box>
@@ -419,6 +418,7 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 					sx={{width: '529px', marginRight: '32px', marginTop: '32px'}}
 					id='location'
 					name='location'
+					label='Add Location'
 					select
 					value={location.type}
 					onChange={(e) => {

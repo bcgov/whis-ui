@@ -60,7 +60,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
 			onClose={onClose}
 			maxWidth={false}
 			PaperProps={{
-				sx: {width: '975px', maxHeight: '432px'}
+				sx: {width: '975px', maxHeight: '508px'}
 			}}
 		>
 			<IconButton
@@ -73,7 +73,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
 			>
 				<CloseIcon/>
 			</IconButton>
-			<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 5px 31px'}}>Add Requester</DialogTitle>
+			<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 5px 31px'}}>Update Requester</DialogTitle>
 			<DialogContent sx={{display: 'block', padding: ' 0 15px'}}>
 				<TextField
 					className='requesterFormInput'
@@ -93,6 +93,24 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
 					}}
 					required
 				/>
+				<TextField
+					// className='requesterFormInput'
+					sx={{width:'912px', margin:'12px 16px'}}
+					id='region-select'
+					select
+					label='Region'
+					value={person.region}
+					onChange={(e) => {
+						setPerson({...person, region: e.target.value})
+					}}
+
+				>
+					{regions.map((m, i) => (
+						<MenuItem key={i} value={m.value}>
+							{m.label}
+						</MenuItem>
+					))}
+				</TextField>
 				<TextField
 					className='requesterFormInput'
 					id='organization-select'
