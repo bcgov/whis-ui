@@ -12,7 +12,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import React, {useEffect, useState} from "react";
 import useCodeTable from "../../../hooks/useCodeTable";
 
-const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
+const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='Update Requester'}) => {
 
 	const {mappedCodes: purposes} = useCodeTable('purposes');
 	const {mappedCodes: roles} = useCodeTable('roles');
@@ -73,11 +73,12 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
 			>
 				<CloseIcon/>
 			</IconButton>
-			<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 5px 31px'}}>Update Requester</DialogTitle>
+			<DialogTitle sx={{fontSize: '18px', fontFamily: 'BCSans-Bold', padding: '59px 0 12px 31px'}}>{noun}</DialogTitle>
 			<DialogContent sx={{display: 'block', padding: ' 0 15px'}}>
 				<TextField
 					className='requesterFormInput'
 					label='First Name'
+					inputProps={{ maxLength: 30 }}
 					value={person.firstName}
 					onChange={(e) => {
 						setPerson({...person, firstName: e.target.value})
@@ -87,6 +88,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
 				<TextField
 					className='requesterFormInput'
 					label='Last Name'
+					inputProps={{ maxLength: 30 }}
 					value={person.lastName}
 					onChange={(e) => {
 						setPerson({...person, lastName: e.target.value})
@@ -94,7 +96,6 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState}) => {
 					required
 				/>
 				<TextField
-					// className='requesterFormInput'
 					sx={{width:'912px', margin:'12px 16px'}}
 					id='region-select'
 					select

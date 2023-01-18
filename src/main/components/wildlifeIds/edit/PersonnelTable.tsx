@@ -5,6 +5,8 @@ import {
 	DialogContent,
 	DialogTitle,
 	IconButton,
+	Menu,
+	MenuItem,
 	Paper,
 	Table,
 	TableCell,
@@ -15,12 +17,14 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { useState } from "react";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useState, useEffect } from "react";
 import DeleteConfirm from "./DeleteConfirm";
 import PersonnelDialog from "./PersonnelDialog";
 import CodeLookup from "../../util/CodeLookup";
 
 const PersonnelTable = ({ people, noun = 'Requester' }) => {
+
 
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
@@ -40,21 +44,30 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 
 	const [editingPerson, setEditingPerson] = useState(null);
 
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	return (
 		<TableContainer component={Paper}>
 			<Table
-				sx={{tableLayout:'auto'}}
+				sx={{ tableLayout: 'auto' }}
 			>
 				<TableHead>
 					<TableRow className='tablehead'>
-						<TableCell>First</TableCell>
-						<TableCell>Last</TableCell>
+						<TableCell>First Name</TableCell>
+						<TableCell>Last Name</TableCell>
 						<TableCell>Region</TableCell>
 						<TableCell>Organization</TableCell>
 						<TableCell>Role</TableCell>
 						<TableCell>Phone</TableCell>
 						<TableCell>Email</TableCell>
-						<TableCell>Action</TableCell>
+						<TableCell>Actions</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableHead>
@@ -66,25 +79,51 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 								<CodeLookup codeTable={'regions'} code={p.region} />
 							</TableCell>
 							<TableCell>
-							<CodeLookup codeTable={'organizations'} code={p.organization} />
+								<CodeLookup codeTable={'organizations'} code={p.organization} />
 							</TableCell>
 							<TableCell>
-							<CodeLookup codeTable={'roles'} code={p.role} />
+								<CodeLookup codeTable={'roles'} code={p.role} />
 							</TableCell>
-							<TableCell>{p.phoneNumber}</TableCell>
+							<TableCell sx={{whiteSpace:'nowrap'}}>{p.phoneNumber}</TableCell>
 							<TableCell>{p.email}</TableCell>
-							<TableCell
-								sx={{width:'112px'}}
-							>
-								{!!p.editAction && <IconButton onClick={() => {
-									setCurrentEditAction({ handler: p.editAction });
-									setEditingPerson(p);
-									setEditDialogOpen(true);
-								}}><EditIcon color='primary' /></IconButton>}
-								{!!p.deleteAction && <IconButton><DeleteIcon onClick={() => {
-									setCurrentDeletionAction({ handler: p.deleteAction });
-									setDeleteConfirmationDialogOpen(true);
-								}} color='primary' /></IconButton>}
+							<TableCell>
+								<IconButton
+									id="demo-positioned-button"
+									aria-controls={open ? 'demo-positioned-menu' : undefined}
+									aria-haspopup="true"
+									aria-expanded={open ? 'true' : undefined}
+									onClick={handleClick}
+								>
+									<MoreVertIcon color='primary' />
+								</IconButton>
+								<Menu
+									id="demo-positioned-menu"
+									aria-labelledby="demo-positioned-button"
+									anchorEl={anchorEl}
+									open={open}
+									onClose={handleClose}
+									anchorOrigin={{
+										vertical: 'top',
+										horizontal: 'left',
+									}}
+									transformOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+								>
+									{!!p.editAction && <MenuItem onClick={() => {
+										setCurrentEditAction({ handler: p.editAction });
+										setEditingPerson(p);
+										setEditDialogOpen(true);
+										setAnchorEl(null);
+									}}><EditIcon color="primary" sx={{marginRight:'10px'}}/>Edit {noun}</MenuItem>}
+									{!!p.deleteAction && <MenuItem onClick={() => {
+										setCurrentDeletionAction({ handler: p.deleteAction });
+										setDeleteConfirmationDialogOpen(true);
+										setAnchorEl(null);
+									}}><DeleteIcon color="primary" sx={{marginRight:'10px'}}/>Remove {noun}</MenuItem>}
+
+								</Menu>
 							</TableCell>
 
 						</TableRow>
@@ -107,6 +146,7 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 							setEditDialogOpen(false);
 						}}
 						initialState={editingPerson}
+						noun={`Update ${noun}`}
 					/>
 				</TableHead>
 			</Table>

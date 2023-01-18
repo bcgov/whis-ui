@@ -24,7 +24,6 @@ import PersonnelDialog from "./PersonnelDialog";
 const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetState, saveState }) => {
 	const { mappedCodes: ageClasses } = useCodeTable('animal_age');
 
-
 	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(false);
 	const [shouldShowAddSubmitterButton, setShouldShowAddSubmitterButton] = useState(false);
 	const [addSubmitterDialogOpen, setAddSubmitterDialogOpen] = useState(false);
@@ -100,7 +99,7 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 					<Box sx={{ width: 'inherit', display: 'flex', flexDirection: 'row', marginTop: '24px' }}>
 						<TextField
 							sx={{ width: '529px' }}
-							label='Event Start Date(DD-MM-YYYY)'
+							label='Event Start Date(MM-DD-YYYY)'
 							id='start_date'
 							name='start_date'
 							onChange={(e) => {
@@ -108,24 +107,6 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 									type: 'fieldChange',
 									payload: {
 										field: `events[${index}].startDate`,
-										value: e.target.value
-									}
-								})
-							}}
-							InputProps={{
-								endAdornment: <InputAdornment position='end'><CalendarTodayIcon /></InputAdornment>,
-							}}
-						/>
-						<TextField
-							sx={{ width: '529px', marginLeft: '32px' }}
-							label='Event End Date(DD-MM-YYYY)'
-							id='end_date'
-							name='end_date'
-							onChange={(e) => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `events[${index}].endDate`,
 										value: e.target.value
 									}
 								})
@@ -176,7 +157,7 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 					<Button
 						variant={'outlined'}
 						sx={{
-							marginTop: '12px', 
+							marginTop: '12px',
 							width: '128px',
 							height: '32px',
 							fontSize: '14px',
@@ -228,15 +209,17 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 						}
 					}]} />}
 
-					{shouldShowAddSubmitterButton && <Button variant={'outlined'} sx={{
+
+					<Button variant={'outlined'} sx={{
 						width: '128px',
 						height: '32px',
 						fontSize: '14px',
 						padding: '0',
+						marginTop: '12px',
 						textTransform: 'capitalize',
 					}} onClick={() => {
 						setAddSubmitterDialogOpen(true);
-					}}>+ Add Submitter</Button>}
+					}}>+ Add Submitter</Button>
 
 					<PersonnelDialog
 						open={addSubmitterDialogOpen}
@@ -254,6 +237,7 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 							setAddSubmitterDialogOpen(false);
 						}}
 						initialState={null}
+						noun='Add Submitter'
 					/>
 
 					<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '35px 0 16px 0' }}>Samples</Typography>
@@ -261,17 +245,17 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 
 					<FormGroup sx={{ width: '400px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
 						<Typography variant='body1' sx={{ color: '#868e96' }}>Samples Were Collected?</Typography>
-						<FormControlLabel control={<Switch onChange={(e) => {
-							dispatch({ type: 'fieldChange', payload: { field: `events[${index}].additionalAttributes.samplesCollected`, value: e.target.checked } });
-						}} />} label={`${event.additionalAttributes.samplesCollected ? 'Yes' : 'No'}`} />
+						<FormControlLabel control={<Switch checked={event.additionalAttributes.samplesCollected}
+							onChange={(e) => {dispatch({ type: 'fieldChange', payload: { field: `events[${index}].additionalAttributes.samplesCollected`, value: e.target.checked } });
+							}} />} label={`${event.additionalAttributes.samplesCollected ? 'Yes' : 'No'}`} />
 						<Typography variant='body1' sx={{ color: '#868e96' }}>Samples Sent for Testing?</Typography>
-						<FormControlLabel control={<Switch onChange={(e) => {
-							dispatch({ type: 'fieldChange', payload: { field: `events[${index}].additionalAttributes.samplesSentForTesting`, value: e.target.checked } });
-						}} />} label={`${event.additionalAttributes.samplesSentForTesting ? 'Yes' : 'No'}`} />
+						<FormControlLabel control={<Switch checked={event.additionalAttributes.samplesSentForTesting}
+							onChange={(e) => {dispatch({ type: 'fieldChange', payload: { field: `events[${index}].additionalAttributes.samplesSentForTesting`, value: e.target.checked } });
+							}} />} label={`${event.additionalAttributes.samplesSentForTesting ? 'Yes' : 'No'}`} />
 						<Typography variant='body1' sx={{ color: '#868e96' }}>Test Results Received?</Typography>
-						<FormControlLabel control={<Switch onChange={(e) => {
-							dispatch({ type: 'fieldChange', payload: { field: `events[${index}].additionalAttributes.testResultsReceived`, value: e.target.checked } });
-						}} />} label={`${event.additionalAttributes.testResultsReceived ? 'Yes' : 'No'}`} />
+						<FormControlLabel control={<Switch checked={event.additionalAttributes.testResultsReceived}
+							onChange={(e) => {dispatch({ type: 'fieldChange', payload: { field: `events[${index}].additionalAttributes.testResultsReceived`, value: e.target.checked } });
+							}} />} label={`${event.additionalAttributes.testResultsReceived ? 'Yes' : 'No'}`} />
 					</FormGroup>
 
 					<TextField
@@ -313,7 +297,7 @@ const EventDetails = ({ expansionEvent, state, event, index, dispatch, resetStat
 					</Button>
 				</Box>
 			</Expandable.Detail>
-		</Expandable>);
+		</Expandable >);
 }
 
 export default EventDetails;
