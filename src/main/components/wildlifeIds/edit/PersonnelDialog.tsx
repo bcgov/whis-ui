@@ -12,9 +12,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import React, {useEffect, useState} from "react";
 import useCodeTable from "../../../hooks/useCodeTable";
 
-const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='Update Requester'}) => {
+const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun = 'Update Requester'}) => {
 
-	const {mappedCodes: purposes} = useCodeTable('purposes');
 	const {mappedCodes: roles} = useCodeTable('roles');
 	const {mappedCodes: organizations} = useCodeTable('organizations');
 	const {mappedCodes: regions} = useCodeTable('regions');
@@ -30,6 +29,32 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='
 			'role': ''
 		}
 	);
+
+	function resetState() {
+		if (initialState !== null) {
+			setPerson({
+				firstName: initialState.firstName,
+				lastName: initialState.lastName,
+				phoneNumber: initialState.phoneNumber,
+				email: initialState.email,
+				region: initialState.region,
+				role: initialState.role,
+				organization: initialState.organization
+			});
+		} else {
+			setPerson(
+				{
+					'firstName': '',
+					'lastName': '',
+					'region': '',
+					'organization': '',
+					'phoneNumber': '',
+					'email': '',
+					'role': ''
+				}
+			);
+		}
+	}
 
 	useEffect(() => {
 		if (initialState !== null) {
@@ -51,6 +76,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='
 
 	function onAccept() {
 		acceptAction(person);
+		resetState();
 	}
 
 	return (
@@ -78,7 +104,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='
 				<TextField
 					className='requesterFormInput'
 					label='First Name'
-					inputProps={{ maxLength: 30 }}
+					inputProps={{maxLength: 30}}
 					value={person.firstName}
 					onChange={(e) => {
 						setPerson({...person, firstName: e.target.value})
@@ -88,7 +114,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='
 				<TextField
 					className='requesterFormInput'
 					label='Last Name'
-					inputProps={{ maxLength: 30 }}
+					inputProps={{maxLength: 30}}
 					value={person.lastName}
 					onChange={(e) => {
 						setPerson({...person, lastName: e.target.value})
@@ -96,7 +122,7 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun='
 					required
 				/>
 				<TextField
-					sx={{width:'912px', margin:'12px 16px'}}
+					sx={{width: '912px', margin: '12px 16px'}}
 					id='region-select'
 					select
 					label='Region'

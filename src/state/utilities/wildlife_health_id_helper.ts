@@ -3,7 +3,6 @@ const getWildlifeHealthId = state => state.WildlifeHealthId;
 export {getWildlifeHealthId};
 
 export function buildFormStateFromLegacyJSON(legacy) {
-
 	// build a template object for the forms based on data returned by the v1 API
 
 	const built = {
@@ -60,4 +59,38 @@ export function buildFormStateFromLegacyJSON(legacy) {
 		"events": []
 	};
 	return built;
+}
+
+export function updateJSONStructure(toUpgrade) {
+	const apiVersion = toUpgrade?.metadata?.apiVersion;
+
+	if (!apiVersion) {
+		return toUpgrade;
+	}
+
+	const upgraded = {...toUpgrade};
+
+	switch (apiVersion) {
+	case '20221206': {
+		// need to remove event endDate, and change submitters to an array
+		for (const e of toUpgrade.events) {
+
+			// add the old one to the array, if it exists
+			if (e.submitter !== null) {
+				e['submitters'] = [{...e.submitter}];
+			} else {
+				e['submitters'] = [];
+			}
+
+			// remove legacy properties
+			delete e['submitter'];
+			delete e['endDate'];
+		}
+		upgraded.metadata.apiVersion = '20230119';
+	}
+	}
+
+
+	return upgraded;
+
 }

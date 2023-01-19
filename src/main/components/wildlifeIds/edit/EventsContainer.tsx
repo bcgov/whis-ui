@@ -3,7 +3,6 @@ import EventDetails from "./EventDetails";
 
 const EventsContainer = ({expansionEvent, state, dispatch, resetState, saveState}) => {
 
-
 	return (
 		<>
 			{state.events.map((event, i) => (
