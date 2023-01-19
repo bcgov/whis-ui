@@ -3,9 +3,6 @@ const getWildlifeHealthId = state => state.WildlifeHealthId;
 export {getWildlifeHealthId};
 
 export function buildFormStateFromLegacyJSON(legacy) {
-
-	console.log('upgrading legacy data');
-
 	// build a template object for the forms based on data returned by the v1 API
 
 	const built = {
@@ -75,7 +72,6 @@ export function updateJSONStructure(toUpgrade) {
 
 	switch (apiVersion) {
 	case '20221206': {
-		console.log(`upgrading from old version ${apiVersion}`);
 		// need to remove event endDate, and change submitters to an array
 		for (const e of toUpgrade.events) {
 
@@ -94,10 +90,6 @@ export function updateJSONStructure(toUpgrade) {
 	}
 	}
 
-	console.dir('init state:');
-	console.dir(toUpgrade);
-	console.dir('upgraded state:');
-	console.dir(upgraded);
 
 	return upgraded;
 
