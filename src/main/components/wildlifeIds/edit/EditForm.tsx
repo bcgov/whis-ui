@@ -104,8 +104,7 @@ const EditForm = ({wildlifeHealthId}) => {
 					"type": 'capture',
 					"ageClass": '',
 					"startDate": '',
-					"endDate": '',
-					"submitter": null,
+					"submitters": [],
 					"locations": [],
 					"additionalAttributes": {},
 					"history": ''
