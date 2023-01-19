@@ -7,7 +7,6 @@ import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_h
 import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
 import Loading from "../../components/util/Loading";
 import DetailForm from '../../components/wildlifeIds/detail/DetailForm';
-import {WildlifeHealthId} from '../../components/wildlifeIds/detail/SampleData'
 import {useNavigate} from "react-router-dom";
 
 const Detail: React.FC = () => {

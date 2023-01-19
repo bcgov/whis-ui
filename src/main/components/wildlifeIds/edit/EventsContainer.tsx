@@ -3,6 +3,7 @@ import EventDetails from "./EventDetails";
 
 const EventsContainer = ({expansionEvent, state, dispatch, resetState, saveState}) => {
 
+	console.dir(state.events);
 
 	return (
 		<>

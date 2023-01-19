@@ -1,30 +1,13 @@
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	IconButton,
-	Menu,
-	MenuItem,
-	Paper,
-	Table,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow
-} from "@mui/material";
+import {IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import DeleteConfirm from "./DeleteConfirm";
 import PersonnelDialog from "./PersonnelDialog";
 import CodeLookup from "../../util/CodeLookup";
 
 const PersonnelTable = ({ people, noun = 'Requester' }) => {
-
 
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
@@ -45,13 +28,43 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 	const [editingPerson, setEditingPerson] = useState(null);
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
-	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+	const menuOpen = Boolean(anchorEl);
+
+	const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
-	const handleClose = () => {
+	const handleMenuClose = () => {
 		setAnchorEl(null);
 	};
+
+	const [menuCurrentActions, setMenuCurrentActions] = useState([]);
+	const [menuCurrentPerson, setMenuCurrentPerson] = useState(null);
+	useEffect(() => {
+		const actions = [];
+		if (menuCurrentPerson != null) {
+			if (menuCurrentPerson.editAction) {
+				actions.push((<MenuItem
+					onClick={() => {
+						setCurrentEditAction({handler: menuCurrentPerson.editAction});
+						setEditingPerson(menuCurrentPerson);
+						console.log(`set editing person, ${JSON.stringify(menuCurrentPerson)}`)
+						setEditDialogOpen(true);
+						setAnchorEl(null);
+					}}
+				><EditIcon color="primary" sx={{marginRight: '10px'}}/>Edit {noun}</MenuItem>))
+			}
+			if (menuCurrentPerson.deleteAction) {
+				actions.push((<MenuItem
+					onClick={() => {
+						setCurrentDeletionAction({handler: menuCurrentPerson.deleteAction});
+						setDeleteConfirmationDialogOpen(true);
+						setAnchorEl(null);
+					}}
+				><DeleteIcon color="primary" sx={{marginRight: '10px'}}/>Remove {noun}</MenuItem>))
+			}
+		}
+		setMenuCurrentActions(actions);
+	}, [menuCurrentPerson, noun]);
 
 	return (
 		<TableContainer component={Paper}>
@@ -70,9 +83,9 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 						<TableCell>Actions</TableCell>
 					</TableRow>
 				</TableHead>
-				<TableHead>
+				<TableBody>
 					{people.map(p => (
-						<TableRow key={`${p.firstName - p.lastName}`}>
+						<TableRow key={`${p.firstName} - ${p.lastName}`}>
 							<TableCell>{p.firstName}</TableCell>
 							<TableCell>{p.lastName}</TableCell>
 							<TableCell>
@@ -88,42 +101,14 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 							<TableCell>{p.email}</TableCell>
 							<TableCell>
 								<IconButton
-									id="demo-positioned-button"
-									aria-controls={open ? 'demo-positioned-menu' : undefined}
+									id="positioned-button"
+									aria-controls={menuOpen ? 'positioned-menu' : undefined}
 									aria-haspopup="true"
-									aria-expanded={open ? 'true' : undefined}
-									onClick={handleClick}
+									aria-expanded={menuOpen ? 'true' : undefined}
+									onClick={(e) => { setMenuCurrentPerson(p); handleMenuClick(e); }}
 								>
 									<MoreVertIcon color='primary' />
 								</IconButton>
-								<Menu
-									id="demo-positioned-menu"
-									aria-labelledby="demo-positioned-button"
-									anchorEl={anchorEl}
-									open={open}
-									onClose={handleClose}
-									anchorOrigin={{
-										vertical: 'top',
-										horizontal: 'left',
-									}}
-									transformOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-								>
-									{!!p.editAction && <MenuItem onClick={() => {
-										setCurrentEditAction({ handler: p.editAction });
-										setEditingPerson(p);
-										setEditDialogOpen(true);
-										setAnchorEl(null);
-									}}><EditIcon color="primary" sx={{marginRight:'10px'}}/>Edit {noun}</MenuItem>}
-									{!!p.deleteAction && <MenuItem onClick={() => {
-										setCurrentDeletionAction({ handler: p.deleteAction });
-										setDeleteConfirmationDialogOpen(true);
-										setAnchorEl(null);
-									}}><DeleteIcon color="primary" sx={{marginRight:'10px'}}/>Remove {noun}</MenuItem>}
-
-								</Menu>
 							</TableCell>
 
 						</TableRow>
@@ -135,6 +120,23 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 						setDeleteConfirmationDialogOpen(false);
 						currentDeletionAction.handler();
 					}} />
+					<Menu
+						id="positioned-menu"
+						aria-labelledby="positioned-button"
+						anchorEl={anchorEl}
+						open={menuOpen}
+						onClose={handleMenuClose}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'left',
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+					>
+						{menuCurrentActions}
+					</Menu>
 					<PersonnelDialog
 						open={editDialogOpen}
 						acceptAction={(newPerson) => {
@@ -148,7 +150,7 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 						initialState={editingPerson}
 						noun={`Update ${noun}`}
 					/>
-				</TableHead>
+				</TableBody>
 			</Table>
 		</TableContainer>
 	)

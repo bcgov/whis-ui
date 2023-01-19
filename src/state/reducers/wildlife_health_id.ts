@@ -6,7 +6,7 @@ import {
 	WILDLIFE_HEALTH_ID_LOAD_REQUEST, WILDLIFE_HEALTH_ID_PERSIST_COMPLETE
 } from "../actions";
 import {AppConfig} from "../config";
-import {buildFormStateFromLegacyJSON} from "../utilities/wildlife_health_id_helper";
+import {buildFormStateFromLegacyJSON, updateJSONStructure} from "../utilities/wildlife_health_id_helper";
 
 class WildLifeHealthId {
 
@@ -38,11 +38,13 @@ function createWildlifeHealthIdReducer(): (WildLifeHealthId, AnyAction) => WildL
 			};
 		}
 		case WILDLIFE_HEALTH_ID_LOAD_COMPLETE: {
+			let newState = action.payload['persisted_form_state'] || buildFormStateFromLegacyJSON(action.payload);
+			newState = updateJSONStructure(newState);
 			return {
 				...state,
 				initialized: true,
 				working: false,
-				data: action.payload['persisted_form_state'] || buildFormStateFromLegacyJSON(action.payload)
+				data: newState
 			};
 		}
 		case WILDLIFE_HEALTH_ID_LOAD_ERROR: {

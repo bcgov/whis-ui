@@ -96,7 +96,7 @@ const EditForm = ({wildlifeHealthId}) => {
 			});
 			break;
 		case 'events.copyFromRequester':
-			_.set(updatedState, action.payload.destinationField, state.purpose.requester);
+			updatedState.events[action.payload.eventIndex].submitters.push({...state.purpose.requester});
 			break;
 		case 'events.add':
 			updatedState.events.push(
@@ -121,8 +121,15 @@ const EditForm = ({wildlifeHealthId}) => {
 		case 'locations.delete':
 			updatedState.events[action.payload.eventIndex].locations.splice(action.payload.locationIndex, 1);
 			break;
+		case 'submitters.add':
+			updatedState.events[action.payload.eventIndex].submitters.push(action.payload.submitter);
+			break;
+		case 'submitters.delete':
+			updatedState.events[action.payload.eventIndex].submitters.splice(action.payload.submitterIndex, 1);
+			break;
 		}
 
+		console.dir(updatedState);
 		return updatedState;
 	}
 
