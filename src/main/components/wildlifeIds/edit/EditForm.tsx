@@ -129,7 +129,6 @@ const EditForm = ({wildlifeHealthId}) => {
 			break;
 		}
 
-		console.dir(updatedState);
 		return updatedState;
 	}
 

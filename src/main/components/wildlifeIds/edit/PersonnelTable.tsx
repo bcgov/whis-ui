@@ -47,7 +47,6 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 					onClick={() => {
 						setCurrentEditAction({handler: menuCurrentPerson.editAction});
 						setEditingPerson(menuCurrentPerson);
-						console.log(`set editing person, ${JSON.stringify(menuCurrentPerson)}`)
 						setEditDialogOpen(true);
 						setAnchorEl(null);
 					}}
