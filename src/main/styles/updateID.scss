@@ -1,17 +1,61 @@
-@import "colours";
+@import 'colours';
 
 .container {
-    width: 1344px;
+
+    .pageHead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .mainTitle {
+            .MuiTypography-root:nth-child(1) {
+                font-size: 32px;
+                font-family: 'BCSans-Bold';
+            }
+
+            .MuiTypography-root:nth-child(2) {
+                font-size: 16px;
+                margin-bottom: 28px;
+                color: #787f81;
+            }
+        }
+
+        button {
+            height: 41px;
+            text-transform: capitalize;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+    }
+
+    .expandButtons {
+        display: flex;
+        justify-content: flex-end;
+        margin: 70px 8px 0 0;
+
+        button:nth-child(2) {
+            margin-left: 8px;
+        }
+    }
 
     .css-bhp9pd-MuiPaper-root-MuiCard-root {
         border-radius: 4px;
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
     }
 
-    .tablehead {
+    //for personnel table
+    .tableActionIcon {
+        margin-right: 10px;
+    }
+    .personnelTable {
+        table-layout: auto;
+        .phone{
+            white-space: nowrap;
+        }
+    }
+    .tableHead {
         background-color: #f8f9fa;
     }
-
 }
 
 .addEvent {
@@ -57,6 +101,16 @@
         flex-shrink: 0;
     }
 
+    .cardSubtitle {
+        .MuiTypography-root:nth-child(1) {
+            font-size: 18px;
+        }
+
+        .MuiTypography-root:nth-child(2) {
+            font-size: 13px;
+            color: #ffffff;
+        }
+    }
 
     .info {
         display: flex;
@@ -77,12 +131,15 @@
         span:nth-child(3) {
             margin-right: 137px;
         }
+
         span:nth-child(4) {
             width: 197px;
         }
     }
+
 }
-.details_margin{
+
+.details_margin {
     margin: 40px 0;
 }
 
@@ -91,15 +148,227 @@
     width: 1296px;
     display: flex;
     flex-direction: column;
+
+    .cardDetails {
+        width: 1091px;
+        margin: 10px auto;
+
+        //for Edit Status
+        .changeStatus,
+        .correctIdNumber {
+            width: 529px;
+            margin-top: 32px;
+        }
+
+        .reason,
+        .project,
+        .projectDetails,
+        .species,
+        .history {
+            min-width: 1091px;
+            margin-top: 32px;
+        }
+
+        .retiredSwitches {
+            width: 330px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: baseline;
+
+
+            .switch {
+                margin-inline: 20px;
+            }
+        }
+
+        .switchLabels,
+        .eventRadios {
+            margin-top: 32px;
+            color: #c0c0c0;
+        }
+
+        //status history
+        .historyTable {
+            margin-bottom: 36px;
+        }
+
+        //for edit purpose
+        .detailsSubtitle {
+            font-family: 'BCSans-Bold';
+            font-size: 18px;
+            margin-block: 32px 10px;
+        }
+
+        //left column
+        .priPurpose {
+            width: 529px;
+            margin-top: 32px;
+        }
+
+        //right column
+        .secPurpose {
+            width: 529px;
+            margin-top: 32px;
+            margin-left: 32px;
+        }
+
+        .addRequester {
+            width: 128px;
+            height: 32px;
+            margin-top: 7px;
+            font-size: 14px;
+            padding: 0;
+            text-transform: capitalize;
+        }
+
+        .submitterContainer {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+        }
+
+        .addIdentifier {
+            height: 32px;
+            margin-top: 32px;
+            font-size: 14px;
+            text-transform: capitalize;
+        }
+
+        .copyFromRequester {
+            height: 32px;
+            margin-top: 6px;
+            font-size: 14px;
+            text-transform: capitalize;
+        }
+
+        .addSubmitter,
+        .addLocation {
+            height: 32px;
+            margin-top: 14px;
+            font-size: 14px;
+            text-transform: capitalize;
+        }
+
+        //for event details
+
+        //location container
+        .locations {
+            .locationEntry {
+                display: flex;
+                flex-direction: column;
+
+                .locationsContainer {
+                    width: 1091px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: row;
+
+                    .locationSelect {
+                        width: 529px;
+                        margin-right: 32px;
+                        margin-top: 32px;
+                    }
+
+                    svg {
+                        font-size: 20px;
+                        margin-left: 4px;
+                    }
+
+                    .oneColumnContainer {
+                        width: 529px;
+                        display: flex;
+                        align-items: center;
+                        margin-top: 32px;
+
+                        .MuiTextField-root {
+                            width: 486px;
+                        }
+
+                    }
+
+                    .twoColumnContainer {
+                        width: 529px;
+                        display: flex;
+                        align-items: center;
+                        margin-top: 32px;
+
+                        .MuiTextField-root:nth-child(1) {
+                            width: 235px;
+                            margin-right: 16px;
+                        }
+
+                        .MuiTextField-root:nth-child(2) {
+                            width: 235px;
+                        }
+
+                    }
+
+                    .threeColumnContainer {
+                        width: 529px;
+                        display: flex;
+                        align-items: center;
+                        margin-top: 32px;
+
+                        .MuiTextField-root:nth-child(1),
+                        .MuiTextField-root:nth-child(2) {
+                            width: 151px;
+                            margin-right: 16px;
+                        }
+
+                        .MuiTextField-root:nth-child(3) {
+                            width: 151px;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        // edit event sample
+        .samplesContainer {
+            width: 400px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: baseline;
+
+            .MuiTypography-body1 {
+                color: $body2;
+            }
+
+            .sampleLabel {
+                .MuiTypography-body1 {
+                    color: #666666;
+                }
+            }
+        }
+
+
+    }
+
+    .cardButtons {
+        display: flex;
+        justify-content: flex-end;
+        margin: 40px 94px 48px 0;
+    }
+
 }
 
-.details_samples{
+
+
+.details_samples {
     display: flex;
-    span{
+
+    span {
         margin-right: 200px;
     }
 }
-.expandDetailsIcon{
+
+.expandDetailsIcon {
     position: relative;
     top: 7px;
 }
@@ -119,9 +388,9 @@
         color: $body2;
     }
 
-
     .info {
         margin-block: 24px 32px;
+
         span {
             width: 166px;
         }
@@ -140,7 +409,6 @@
     }
 }
 
-
 .MuiButton-root.update_btn {
     width: 132px;
     height: 36px;
@@ -150,19 +418,18 @@
 }
 
 .requester {
-
     .MuiTableCell-root {
         color: $text;
     }
 
     .MuiTableContainer-root {
         width: 1091px;
+        margin-top: 32px;
     }
 
     .MuiButtonBase-root.MuiIconButton-root {
         padding-right: 8px;
     }
-
 }
 
 .MuiButton-root.requesterFormBtn {
@@ -201,6 +468,7 @@
     height: 25px;
     border-radius: 50px;
 }
+
 .RETIRED {
     background-color: #868e96;
     width: 90px;
@@ -222,7 +490,6 @@
 .requesterTable {
     color: darkgrey;
 }
-
 
 //Status Form
 

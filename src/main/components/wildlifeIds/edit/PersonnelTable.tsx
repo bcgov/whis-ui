@@ -1,14 +1,13 @@
-import {IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import React, {useEffect, useState} from "react";
-import DeleteConfirm from "./DeleteConfirm";
-import PersonnelDialog from "./PersonnelDialog";
-import CodeLookup from "../../util/CodeLookup";
+import React, {useEffect, useState} from 'react';
+import DeleteConfirm from './DeleteConfirm';
+import PersonnelDialog from './PersonnelDialog';
+import CodeLookup from '../../util/CodeLookup';
 
-const PersonnelTable = ({ people, noun = 'Requester' }) => {
-
+const PersonnelTable = ({people, noun = 'Requester'}) => {
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
 	}
@@ -19,7 +18,7 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 	});
 
 	const [editDialogOpen, setEditDialogOpen] = useState(false);
-	const [currentEditAction, setCurrentEditAction] = useState({ handler: unsetEditActionHandler })
+	const [currentEditAction, setCurrentEditAction] = useState({handler: unsetEditActionHandler});
 
 	function unsetEditActionHandler(newPerson) {
 		setEditDialogOpen(false);
@@ -43,23 +42,33 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 		const actions = [];
 		if (menuCurrentPerson != null) {
 			if (menuCurrentPerson.editAction) {
-				actions.push((<MenuItem
-					onClick={() => {
-						setCurrentEditAction({handler: menuCurrentPerson.editAction});
-						setEditingPerson(menuCurrentPerson);
-						setEditDialogOpen(true);
-						setAnchorEl(null);
-					}}
-				><EditIcon color="primary" sx={{marginRight: '10px'}}/>Edit {noun}</MenuItem>))
+				actions.push(
+					<MenuItem
+						onClick={() => {
+							setCurrentEditAction({handler: menuCurrentPerson.editAction});
+							setEditingPerson(menuCurrentPerson);
+							setEditDialogOpen(true);
+							setAnchorEl(null);
+						}}
+					>
+						<EditIcon color="primary" className="tableActionIcon" />
+						Edit {noun}
+					</MenuItem>
+				);
 			}
 			if (menuCurrentPerson.deleteAction) {
-				actions.push((<MenuItem
-					onClick={() => {
-						setCurrentDeletionAction({handler: menuCurrentPerson.deleteAction});
-						setDeleteConfirmationDialogOpen(true);
-						setAnchorEl(null);
-					}}
-				><DeleteIcon color="primary" sx={{marginRight: '10px'}}/>Remove {noun}</MenuItem>))
+				actions.push(
+					<MenuItem
+						onClick={() => {
+							setCurrentDeletionAction({handler: menuCurrentPerson.deleteAction});
+							setDeleteConfirmationDialogOpen(true);
+							setAnchorEl(null);
+						}}
+					>
+						<DeleteIcon color="primary" className="tableActionIcon" />
+						Remove {noun}
+					</MenuItem>
+				);
 			}
 		}
 		setMenuCurrentActions(actions);
@@ -67,11 +76,9 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 
 	return (
 		<TableContainer component={Paper}>
-			<Table
-				sx={{ tableLayout: 'auto' }}
-			>
+			<Table className="personnelTable">
 				<TableHead>
-					<TableRow className='tablehead'>
+					<TableRow className="tableHead">
 						<TableCell>First Name</TableCell>
 						<TableCell>Last Name</TableCell>
 						<TableCell>Region</TableCell>
@@ -96,7 +103,7 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 							<TableCell>
 								<CodeLookup codeTable={'roles'} code={p.role} />
 							</TableCell>
-							<TableCell sx={{whiteSpace:'nowrap'}}>{p.phoneNumber}</TableCell>
+							<TableCell className='phone'>{p.phoneNumber}</TableCell>
 							<TableCell>{p.email}</TableCell>
 							<TableCell>
 								<IconButton
@@ -104,21 +111,28 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 									aria-controls={menuOpen ? 'positioned-menu' : undefined}
 									aria-haspopup="true"
 									aria-expanded={menuOpen ? 'true' : undefined}
-									onClick={(e) => { setMenuCurrentPerson(p); handleMenuClick(e); }}
+									onClick={e => {
+										setMenuCurrentPerson(p);
+										handleMenuClick(e);
+									}}
 								>
-									<MoreVertIcon color='primary' />
+									<MoreVertIcon color="primary" />
 								</IconButton>
 							</TableCell>
-
 						</TableRow>
 					))}
-					<DeleteConfirm noun={noun} open={deleteConfirmationDialogOpen} cancelAction={() => {
-						setDeleteConfirmationDialogOpen(false);
-						setCurrentDeletionAction({ handler: unsetDeletionHandler });
-					}} acceptAction={() => {
-						setDeleteConfirmationDialogOpen(false);
-						currentDeletionAction.handler();
-					}} />
+					<DeleteConfirm
+						noun={noun}
+						open={deleteConfirmationDialogOpen}
+						cancelAction={() => {
+							setDeleteConfirmationDialogOpen(false);
+							setCurrentDeletionAction({handler: unsetDeletionHandler});
+						}}
+						acceptAction={() => {
+							setDeleteConfirmationDialogOpen(false);
+							currentDeletionAction.handler();
+						}}
+					/>
 					<Menu
 						id="positioned-menu"
 						aria-labelledby="positioned-button"
@@ -127,23 +141,23 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 						onClose={handleMenuClose}
 						anchorOrigin={{
 							vertical: 'top',
-							horizontal: 'left',
+							horizontal: 'left'
 						}}
 						transformOrigin={{
 							vertical: 'top',
-							horizontal: 'right',
+							horizontal: 'right'
 						}}
 					>
 						{menuCurrentActions}
 					</Menu>
 					<PersonnelDialog
 						open={editDialogOpen}
-						acceptAction={(newPerson) => {
+						acceptAction={newPerson => {
 							currentEditAction.handler(newPerson);
 							setEditDialogOpen(false);
 						}}
 						cancelAction={() => {
-							setCurrentEditAction({ handler: unsetEditActionHandler });
+							setCurrentEditAction({handler: unsetEditActionHandler});
 							setEditDialogOpen(false);
 						}}
 						initialState={editingPerson}
@@ -152,7 +166,7 @@ const PersonnelTable = ({ people, noun = 'Requester' }) => {
 				</TableBody>
 			</Table>
 		</TableContainer>
-	)
-}
+	);
+};
 
 export default PersonnelTable;

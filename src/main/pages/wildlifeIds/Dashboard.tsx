@@ -138,7 +138,7 @@ const Dashboard: React.FC = () => {
 						>
 							Generate Wildlife Health ID
 						</Button>
-						<Button variant={'contained'} onClick={() => navigate('/wildlifeIds/list')}>View WLH ID Inventory</Button>
+						<Button variant={'contained'} onClick={() => navigate('/wildlifeIds/inventory')}>View WLH ID Inventory</Button>
 						<Button disabled variant={'contained'}>Future Function</Button>
 					</Box>
 				</CardContent>
