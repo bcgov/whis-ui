@@ -6,8 +6,8 @@ import FriendlyDate from "../../util/FriendlyDate";
 const StatusHistory = ({ history }) => {
 	return (
 		<>
-			<Typography sx={{ fontSize: '16px' }}>History</Typography>
-			<TableContainer>
+			<Typography className="detailsSubtitle">History</Typography>
+			<TableContainer className="historyTable">
 				<TableHead>
 					<TableRow>
 						<TableCell>Status</TableCell>
