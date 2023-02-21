@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useParams} from "react-router";
+import {useLocation, useParams} from "react-router";
 import EditForm from "../../components/wildlifeIds/edit/EditForm";
 import {useDispatch} from "react-redux";
 import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
@@ -11,6 +11,7 @@ import Loading from "../../components/util/Loading";
 
 const Edit: React.FC = () => {
 	const {id} = useParams();
+	const {pathname} = useLocation();
 
 	const dispatch = useDispatch();
 	const {loading, initialized, data} = useSelector(getWildlifeHealthId);
@@ -27,9 +28,7 @@ const Edit: React.FC = () => {
 			}
 			);
 		}
-
-
-	}, [id]);
+	}, [pathname, id]);
 
 	if (!initialized || loading) {
 		return (<Loading/>);
