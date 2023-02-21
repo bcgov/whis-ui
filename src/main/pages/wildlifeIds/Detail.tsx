@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import '../../styles/inventory.scss';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useDispatch} from "react-redux";
-import {useParams} from "react-router";
+import {useLocation, useParams} from "react-router";
 import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
 import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
 import Loading from "../../components/util/Loading";
@@ -12,6 +12,7 @@ import {useNavigate} from "react-router-dom";
 const Detail: React.FC = () => {
 
 	const {id} = useParams();
+	const {pathname} = useLocation();
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Detail: React.FC = () => {
 			}
 			);
 		}
-	}, [id]);
+	}, [pathname, id]);
 
 	if (!initialized || loading) {
 		return (<Loading/>);

@@ -60,7 +60,7 @@ function createWildlifeHealthIdReducer(): (WildLifeHealthId, AnyAction) => WildL
 				...state,
 				initialized: true,
 				working: false,
-				data: action.payload
+				data: action.payload['persisted_form_state']
 			};
 		}
 		default:

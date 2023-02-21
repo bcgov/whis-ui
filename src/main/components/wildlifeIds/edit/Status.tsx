@@ -33,15 +33,100 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 
 	function renderDetailed(status) {
 		switch (status) {
-			case 'ASSIGNED':
-			case 'UNASSIGNED':
-				return (
+		case 'ASSIGNED':
+		case 'UNASSIGNED':
+			return (
+				<TextField
+					className="reason"
+					label="Reason (Enter a reason why you are changing the WLH ID status)"
+					id="reason"
+					name="reason"
+					multiline
+					onChange={e => {
+						dispatch({
+							type: 'fieldChange',
+							payload: {
+								field: 'status.dirty.reason',
+								value: e.target.value
+							}
+						});
+					}}
+					value={state.status.dirty.reason}
+					rows={3}
+				/>
+			);
+		case 'RETIRED':
+			return (
+				<>
+					<FormGroup className="retiredSwitches">
+						<Typography variant="body1">Recapture Kits Returned</Typography>
+						<FormControlLabel
+							className="switchLabels"
+							control={
+								<Switch
+									onChange={e => {
+										dispatch({
+											type: 'fieldChange',
+											payload: {
+												field: 'status.dirty.additionalAttributes.recaptureKitsReturned',
+												value: e.target.checked
+											}
+										});
+									}}
+									checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
+									className="switch"
+								/>
+							}
+							label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}
+						/>
+						<Typography variant="body1">Recapture Status</Typography>
+						<FormControlLabel
+							className="switchLabels"
+							control={
+								<Switch
+									onChange={e =>
+										dispatch({
+											type: 'fieldChange',
+											payload: {
+												field: 'status.dirty.additionalAttributes.recaptureStatus',
+												value: e.target.checked
+											}
+										})
+									}
+									checked={state.status.dirty.additionalAttributes.recaptureStatus}
+									className="switch"
+								/>
+							}
+							label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`}
+						/>
+					</FormGroup>
+
+					<TextField
+						className='correctIdNumber'
+						id="correctIdNumber"
+						name="correctIdNumber"
+						label="Correct WLH ID Number"
+						value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
+						onChange={e => {
+							dispatch({
+								type: 'fieldChange',
+								payload: {
+									field: 'status.dirty.additionalAttributes.correctIdNumber',
+									value: e.target.value
+								}
+							});
+						}}
+						defaultValue="Pending"
+					/>
+
 					<TextField
 						className="reason"
 						label="Reason (Enter a reason why you are changing the WLH ID status)"
 						id="reason"
 						name="reason"
 						multiline
+						rows={3}
+						value={state.status.dirty.reason}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
@@ -51,99 +136,11 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 								}
 							});
 						}}
-						value={state.status.dirty.reason}
-						rows={3}
 					/>
-				);
-				break;
-			case 'RETIRED':
-				return (
-					<>
-						<FormGroup className="retiredSwitches">
-							<Typography variant="body1">Recapture Kits Returned</Typography>
-							<FormControlLabel
-								className="switchLabels"
-								control={
-									<Switch
-										onChange={e => {
-											dispatch({
-												type: 'fieldChange',
-												payload: {
-													field: 'status.additionalAttributes.recaptureKitsReturned',
-													value: e.target.checked
-												}
-											});
-										}}
-										checked={state.status.additionalAttributes.recaptureKitsReturned}
-										className="switch"
-									/>
-								}
-								label={`${state.status.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}
-							/>
-							<Typography variant="body1">Recapture Status</Typography>
-							<FormControlLabel
-								className="switchLabels"
-								control={
-									<Switch
-										onChange={e =>
-											dispatch({
-												type: 'fieldChange',
-												payload: {
-													field: 'status.additionalAttributes.recaptureStatus',
-													value: e.target.checked
-												}
-											})
-										}
-										checked={state.status.additionalAttributes.recaptureStatus}
-										className="switch"
-									/>
-								}
-								label={`${state.status.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`}
-							/>
-						</FormGroup>
-
-						<TextField
-							className='correctIdNumber'
-							id="correctIdNumber"
-							name="correctIdNumber"
-							label="Correct WLH ID Number"
-							value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: 'status.dirty.additionalAttributes.correctIdNumber',
-										value: e.target.value
-									}
-								});
-							}}
-							defaultValue="Pending"
-						/>
-
-						<TextField
-							className="reason"
-							label="Reason (Enter a reason why you are changing the WLH ID status)"
-							id="reason"
-							name="reason"
-							multiline
-							rows={3}
-							value={state.status.dirty.reason}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: 'status.dirty.reason',
-										value: e.target.value
-									}
-								});
-							}}
-						/>
-					</>
-				);
-				break;
-
-			default:
-				return <></>;
+				</>
+			);
+		default:
+			return <></>;
 		}
 	}
 
@@ -153,7 +150,7 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 				<span className="cardSubtitle">
 					<Typography>Status</Typography>
 					<Typography className={displayedStatus} variant="subtitle1">
-						<CodeLookup codeTable={'status'} code={displayedStatus} />
+						<CodeLookup codeTable={'status'} code={displayedStatus}/>
 					</Typography>
 				</span>
 				<Box className="info">
@@ -164,7 +161,7 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					<span>
 						<Typography variant="body2">WLH ID Generated Date</Typography>
 						<Typography variant="body1">
-							<FriendlyDate value={state.metadata.generationDate} />
+							<FriendlyDate value={state.metadata.generationDate}/>
 						</Typography>
 					</span>
 					<span>
@@ -175,7 +172,7 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box className="cardDetails">
-					<StatusHistory history={state.status.history} />
+					<StatusHistory history={state.status.history}/>
 					<TextField
 						className='changeStatus'
 						id="idStatus"
