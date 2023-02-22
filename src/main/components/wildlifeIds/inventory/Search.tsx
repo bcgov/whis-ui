@@ -12,7 +12,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {useNavigate} from 'react-router-dom';
-import HideableSearchForm from './HideableSearchForm';
+import HidableSearchForm from './HidableSearchForm';
 
 const Search: React.FC = () => {
 	const navigate = useNavigate();
@@ -118,7 +118,7 @@ const Search: React.FC = () => {
 				</TextField>
 
 				{AdvancedSearchExpand ? (
-					<HideableSearchForm formState={formState} />
+					<HidableSearchForm formState={formState} />
 				) : (
 					''
 				)}

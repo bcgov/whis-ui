@@ -1,5 +1,4 @@
 import React from "react";
-import '../../../styles/updateID.scss';
 import EventDetails from "../detail/EventDetails";
 
 const Event = ({ state }) => {

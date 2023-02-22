@@ -1,34 +1,28 @@
-import {Card, Collapse, IconButton, Paper} from "@mui/material";
-import React, {useEffect, useState} from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {Card, Collapse, IconButton, Paper} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const ExpandableTitle = ({children}) => {
-	return (children);
-}
+	return children;
+};
 ExpandableTitle.displayName = 'Expandable.Title';
 
 const ExpandableDetail = ({children}) => {
-	return (children);
-}
+	return children;
+};
 ExpandableDetail.displayName = 'Expandable.Detail';
-
 
 export interface ExpansionOverrideEvent {
 	event: 'expandAll' | 'collapseAll' | 'none';
 	id: number;
 }
 
-const Expandable = (
-	{
-		children,
-		initiallyExpanded = false,
-		expansionEvent = { event: 'none', id: 0 }
-	}) => {
+const Expandable = ({children, initiallyExpanded = false, expansionEvent = {event: 'none', id: 0}}) => {
 	const [expanded, setExpanded] = useState(initiallyExpanded);
 
 	useEffect(() => {
-		if (!expansionEvent)
-			return;
+		if (!expansionEvent) return;
 
 		if (expansionEvent.event === 'expandAll') {
 			setExpanded(true);
@@ -37,7 +31,6 @@ const Expandable = (
 			setExpanded(false);
 		}
 	}, [expansionEvent]);
-
 
 	function renderTitle() {
 		return (
@@ -49,7 +42,7 @@ const Expandable = (
 					return null;
 				})}
 			</>
-		)
+		);
 	}
 
 	function renderDetail() {
@@ -62,36 +55,28 @@ const Expandable = (
 					return null;
 				})}
 			</>
-		)
+		);
 	}
 
 	return (
 		<>
-			<Card className='card'>
+			<Card className="card">
 				{renderTitle()}
-				<IconButton aria-expanded={expanded}>
-					<KeyboardArrowDownIcon onClick={() => {
-						setExpanded(!expanded)
-					}} sx={{
-						fontSize: '41px',
-						color: '#1a5a96',
-						marginLeft: 'auto',
-						transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-						transitionDuration: '300ms',
-						transitionProperty: 'transform'
-					}}/>
+				<IconButton
+					className="expand_icon"
+					onClick={() => {
+						setExpanded(!expanded);
+					}}
+				>
+					{expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
 				</IconButton>
-
 			</Card>
 			<Collapse in={expanded} aria-expanded={expanded}>
-				<Paper className='expand_papper'>
-					{renderDetail()}
-				</Paper>
+				<Paper className="expand_paper">{renderDetail()}</Paper>
 			</Collapse>
 		</>
 	);
-
-}
+};
 
 Expandable.Title = ExpandableTitle;
 Expandable.Detail = ExpandableDetail;

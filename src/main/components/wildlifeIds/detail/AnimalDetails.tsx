@@ -11,16 +11,15 @@ import {
 	Typography
 } from "@mui/material";
 import React from "react";
-import '../../../styles/updateID.scss';
 import CodeLookup from "../../util/CodeLookup";
 
 const AnimalDetails = ({ state }) => {
 
 
 	return (
-		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', margin: '48px 0 24px' }}>Animal Details</Typography>
-			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+		<Card className='paper'>
+			<Typography className="title">Animal Details</Typography>
+			<Box className='info'>
 				<span>
 					<Typography variant='body2'>
 						Species
@@ -47,12 +46,12 @@ const AnimalDetails = ({ state }) => {
 				</span>
 			</Box>
 
-			<Box sx={{ margin: '24px 0' }}>
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Identifiers</Typography>
+			<Box className='detailsTableContainer'>
+				<Typography>Identifiers</Typography>
 				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
-							<TableRow className='tablehead'>
+							<TableRow className='tableHead'>
 								<TableCell>Identifier Type</TableCell>
 								<TableCell>Identifier Name/Number</TableCell>
 								<TableCell>Additional Information</TableCell>

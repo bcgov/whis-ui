@@ -10,7 +10,6 @@ import {
 	Typography
 } from "@mui/material";
 import React from "react";
-import '../../../styles/updateID.scss';
 import CodeLookup from "../../util/CodeLookup";
 
 const Purpose = ({ state }) => {
@@ -18,9 +17,9 @@ const Purpose = ({ state }) => {
 	const requester = state.purpose.requester;
 
 	return (
-		<Card className='papper'>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBlock: '48px 24px' }}>Purpose</Typography>
-			<Box className='info' sx={{ display: 'flex', alignItems: 'center' }}>
+		<Card className='paper'>
+			<Typography className="title">Purpose</Typography>
+			<Box className='info'>
 				<span>
 					<Typography variant='body2'>
 						Primary Purpose
@@ -54,12 +53,12 @@ const Purpose = ({ state }) => {
 					{state.purpose.projectDetails}
 				</Typography>
 			</Box>
-			<Box className='details_margin'>
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '19px' }}>Requester</Typography>
+			<Box className='detailsTableContainer'>
+				<Typography>Requester</Typography>
 				<TableContainer component={Paper}>
-					<Table>
+					<Table className="personnelTable">
 						<TableHead>
-							<TableRow className='tablehead'>
+							<TableRow className='tableHead'>
 								<TableCell>First</TableCell>
 								<TableCell>Last</TableCell>
 								<TableCell>Region</TableCell>
@@ -87,7 +86,7 @@ const Purpose = ({ state }) => {
 								<TableCell>
 									<CodeLookup codeTable={'roles'} code={requester.role} />
 								</TableCell>
-								<TableCell>
+								<TableCell className="phone">
 									{requester.phoneNumber}
 								</TableCell>
 								<TableCell>
