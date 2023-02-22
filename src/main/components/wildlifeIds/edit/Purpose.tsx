@@ -122,7 +122,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 						}}
 					/>
 
-					<Box className="requester">
+					<Box>
 						<Typography className='detailsSubtitle'>
 							Requester
 						</Typography>

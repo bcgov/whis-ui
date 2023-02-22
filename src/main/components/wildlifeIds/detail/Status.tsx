@@ -26,13 +26,13 @@ const Status = ({ state }) => {
 
 
 	return (
-		<Card className='card' sx={{ width: '100%' }}>
-			<Box sx={{ display: 'flex', flexDirection: 'column' }}>
-				<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '18px', marginBottom: '15px' }}>General Information</Typography>
+		<Card className='card'>
+			<Box className="idInformationCard">
+				<Typography className="title">General Information</Typography>
 				<Box className='info' >
 					<span>
 						<Typography variant='body2'>Status</Typography>
-						<Typography className={displayedStatus} sx={{ color: 'white', fontSize: '13px' }} variant='subtitle1'>
+						<Typography className={displayedStatus} variant='subtitle1'>
 							<CodeLookup codeTable={'status'} code={displayedStatus} />
 						</Typography>
 					</span>

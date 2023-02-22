@@ -94,8 +94,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 						<FormLabel>Event Type</FormLabel>
 						<RadioGroup
 							row
-							aria-labelledby="demo-controlled-radio-buttons-group"
-							name="controlled-radio-buttons-group"
 							value={event.type}
 							onChange={e => {
 								dispatch({
@@ -116,7 +114,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 
 					<Box>
 						<TextField
-							className="priPurpose"
+							className="leftColumn"
 							label="Event Start Date(MM-DD-YYYY)"
 							id="start_date"
 							name="start_date"
@@ -139,7 +137,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 						/>
 
 						<TextField
-							className="secPurpose"
+							className="rightColumn"
 							id="ageClass"
 							select
 							label="Age Class"

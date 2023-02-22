@@ -20,12 +20,20 @@
             }
         }
 
-        button {
-            height: 41px;
-            text-transform: capitalize;
-            font-size: 14px;
-            margin-right: 8px;
+        .pageHeadBtn {
+            .updateIDBtn {
+                height: 41px;
+                text-transform: capitalize;
+                font-size: 14px;
+                margin-right: 8px;
+            }
+
+            .MuiIconButton-root {
+                margin: 0;
+                font-size: 14px;
+            }
         }
+
     }
 
     .expandButtons {
@@ -33,49 +41,205 @@
         justify-content: flex-end;
         margin: 70px 8px 0 0;
 
+        .expand_btn {
+            width: 108px;
+            height: 32px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #ffffff;
+            background-size: cover;
+            font-size: 14px;
+            color: #868e96;
+            text-decoration: none solid rgb(134, 142, 150);
+            text-transform: capitalize;
+        }
+
         button:nth-child(2) {
             margin-left: 8px;
         }
     }
 
-    .css-bhp9pd-MuiPaper-root-MuiCard-root {
-        border-radius: 4px;
-        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-    }
+    //title card
+    // .css-bhp9pd-MuiPaper-root-MuiCard-root {
+    // border-radius: 4px;
+    // box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+    // }
 
     //for personnel table
     .tableActionIcon {
         margin-right: 10px;
     }
+
     .personnelTable {
         table-layout: auto;
-        .phone{
+
+        .tableHead {
+            background-color: #f8f9fa;
+
+            .MuiTableCell-root:nth-child(8) {
+                width: 80px;
+            }
+        }
+
+        .phone {
             white-space: nowrap;
         }
     }
-    .tableHead {
-        background-color: #f8f9fa;
+}
+
+//Event Add Confirm, delete Confirm
+.addEventConfirm,
+.deleteConfirm {
+    .MuiDialog-paper {
+        width: 615px;
+        height: 279px;
+
+        .dialogBtn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+        }
+
+        .MuiTypography-root {
+            font-size: 18px;
+            font-family: 'BCSans-Bold';
+            padding: 47px 0 35px 39px;
+        }
+
+        .MuiDialogContent-root {
+            padding: 0 39px;
+            font-size: 16px;
+        }
+
+        .MuiDialogActions-root {
+            padding: 0 32px 48px 0;
+
+            .requesterFormBtn {
+                width: 106px;
+                height: 34px;
+                font-size: 14px;
+                text-transform: capitalize;
+            }
+
+            .MuiButton-root:nth-child(1) {
+                background-color: #d8292f;
+            }
+
+            .MuiButton-root:nth-child(2) {
+                margin-left: 12px;
+            }
+        }
+
+    }
+
+}
+
+//personnel Dialog
+.personnelDialog {
+    .MuiDialog-paper {
+        width: 975px;
+        height: 508px;
+
+        .dialogBtn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+        }
+
+        .MuiTypography-root {
+            font-size: 18px;
+            font-family: 'BCSans-Bold';
+            padding: 59px 0 12px 31px;
+        }
+
+        .MuiDialogContent-root {
+            display: block;
+            padding: 0 15px;
+
+            .requesterFormInput {
+                width: 440px;
+                margin: 12px 16px;
+            }
+
+            .region {
+                width: 912px;
+                margin: 12px 16px;
+            }
+
+        }
+
+        .MuiDialogActions-root {
+            padding: 29px 32px 32px 0;
+
+            .requesterFormBtn {
+                width: 106px;
+                height: 34px;
+                font-size: 14px;
+                text-transform: capitalize;
+            }
+
+            .MuiButton-root:nth-child(2) {
+                margin-left: 12px;
+            }
+        }
     }
 }
 
-.addEvent {
-    height: 41px;
-    font-size: 14px;
-    text-transform: capitalize;
+.statusConfirmDialog {
+    .MuiDialog-paper {
+        width: 600px;
+        height: 279px;
+
+        .dialogBtn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+        }
+
+        .MuiTypography-root {
+            font-size: 16px;
+            padding: 50px 0 20px 72px;
+        }
+
+        .MuiDialogContent-root {
+            overflow-y: unset;
+            padding: 0 72px;
+
+            .requesterFormInput {
+                width: 440px;
+                margin: 12px 16px;
+            }
+
+            .region {
+                width: 912px;
+                margin: 12px 16px;
+            }
+
+        }
+
+        .MuiDialogActions-root {
+            padding: 29px 32px 32px 0;
+
+            .requesterFormBtn {
+                width: 106px;
+                height: 34px;
+                font-size: 14px;
+                text-transform: capitalize;
+            }
+
+            .MuiButton-root:nth-child(2) {
+                margin-left: 12px;
+            }
+        }
+
+    }
+
 }
 
-.MuiButton-root.expand_btn {
-    width: 108px;
-    height: 32px;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    background-color: #ffffff;
-    background-size: cover;
-    font-size: 14px;
-    color: #868e96;
-    text-decoration: none solid rgb(134, 142, 150);
-    text-transform: capitalize;
-}
+// .card .MuiPaper-root {
+//     border-radius: 4px;
+//     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+// }
 
 .card {
     margin: 0 auto;
@@ -86,6 +250,29 @@
     align-items: center;
     padding-left: 58px;
     padding-right: 40px;
+
+
+    .idInformationCard {
+        display: flex;
+        flex-direction: column;
+
+        .info {
+            span:nth-child(1) {
+                margin-right: 82px;
+
+                .MuiTypography-root:nth-child(2) {
+                    color: #ffffff;
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+
+    .title {
+        font-family: 'BCSans-Bold';
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
 
     .MuiTypography-body1 {
         color: $text;
@@ -137,13 +324,15 @@
         }
     }
 
+    .expand_icon {
+        svg {
+            font-size: 40px;
+            color: #1a5a96;
+        }
+    }
 }
 
-.details_margin {
-    margin: 40px 0;
-}
-
-.expand_papper {
+.expand_paper {
     margin: 0 auto;
     width: 1296px;
     display: flex;
@@ -152,6 +341,18 @@
     .cardDetails {
         width: 1091px;
         margin: 10px auto;
+
+        //for pri and sec purpose
+        .priPurpose {
+            width: 529px;
+            margin-top: 14px;
+        }
+
+        .secPurpose {
+            width: 529px;
+            margin-left: 32px;
+            margin-top: 14px;
+        }
 
         //for Edit Status
         .changeStatus,
@@ -185,7 +386,7 @@
         .switchLabels,
         .eventRadios {
             margin-top: 32px;
-            color: #c0c0c0;
+            color: #666666;
         }
 
         //status history
@@ -201,16 +402,16 @@
         }
 
         //left column
-        .priPurpose {
+        .leftColumn {
             width: 529px;
             margin-top: 32px;
         }
 
         //right column
-        .secPurpose {
+        .rightColumn {
             width: 529px;
-            margin-top: 32px;
             margin-left: 32px;
+            margin-top: 32px;
         }
 
         .addRequester {
@@ -251,20 +452,24 @@
         }
 
         //for event details
-
         //location container
-        .locations {
-            .locationEntry {
+        .locations,
+        .identifier {
+
+            .locationEntry,
+            .identifierEntry {
                 display: flex;
                 flex-direction: column;
 
-                .locationsContainer {
-                    width: 1091px;
+                .locationsContainer,
+                .identifierContainer {
+                    width: 1140px;
                     margin: 0 auto;
                     display: flex;
                     flex-direction: row;
 
-                    .locationSelect {
+                    .locationSelect,
+                    .identifierSelect {
                         width: 529px;
                         margin-right: 32px;
                         margin-top: 32px;
@@ -276,52 +481,76 @@
                     }
 
                     .oneColumnContainer {
-                        width: 529px;
+                        width: 569px;
                         display: flex;
                         align-items: center;
                         margin-top: 32px;
 
                         .MuiTextField-root {
-                            width: 486px;
+                            width: 529px;
                         }
 
                     }
 
                     .twoColumnContainer {
-                        width: 529px;
+                        width: 569px;
                         display: flex;
                         align-items: center;
                         margin-top: 32px;
 
                         .MuiTextField-root:nth-child(1) {
-                            width: 235px;
+                            width: 256px;
                             margin-right: 16px;
                         }
 
                         .MuiTextField-root:nth-child(2) {
-                            width: 235px;
+                            width: 256px;
                         }
 
                     }
 
                     .threeColumnContainer {
-                        width: 529px;
+                        width: 569px;
                         display: flex;
                         align-items: center;
                         margin-top: 32px;
 
                         .MuiTextField-root:nth-child(1),
                         .MuiTextField-root:nth-child(2) {
-                            width: 151px;
+                            width: 165px;
                             margin-right: 16px;
                         }
 
                         .MuiTextField-root:nth-child(3) {
-                            width: 151px;
+                            width: 165px;
                         }
 
                     }
 
+                    .earTag {
+                        width: 569px;
+                        display: flex;
+                        align-items: center;
+                        margin-top: 32px;
+
+                        .MuiTextField-root:nth-child(1),
+                        .MuiTextField-root:nth-child(2) {
+                            width: 210px;
+                            margin-right: 16px;
+                        }
+
+                        .MuiFormGroup-root:nth-child(3) {
+                            width: 80px;
+                        }
+
+                        .MuiRadio-root {
+                            padding: 0;
+                        }
+
+                        .MuiTypography-root {
+                            margin: 0;
+                        }
+                    }
                 }
 
             }
@@ -354,31 +583,59 @@
         display: flex;
         justify-content: flex-end;
         margin: 40px 94px 48px 0;
+
+        .update_btn {
+            width: 132px;
+            height: 36px;
+            text-transform: capitalize;
+            font-size: 14px;
+            margin-right: 8px;
+        }
     }
 
 }
 
+//HidableDetails
+.hidableDetails {
+    margin: 40px 0;
 
+    .title {
+        font-family: 'BCSans-Bold';
+        font-size: 18px;
+        margin-bottom: 19px;
+    }
 
-.details_samples {
-    display: flex;
+    .tableHead {
+        background-color: #f8f9fa;
+    }
 
-    span {
-        margin-right: 200px;
+    .details_samples {
+        display: flex;
+
+        span {
+            margin-right: 200px;
+        }
     }
 }
+
 
 .expandDetailsIcon {
     position: relative;
     top: 7px;
 }
 
-.papper {
+.paper {
     margin: 32px auto;
     width: 1296px;
     height: auto;
     padding-left: 58px;
     padding-right: 40px;
+
+    .title {
+        font-family: 'BCSans-Bold';
+        font-size: 18px;
+        margin-block: 48px 24px;
+    }
 
     .MuiTypography-body1 {
         color: $text;
@@ -390,6 +647,8 @@
 
     .info {
         margin-block: 24px 32px;
+        display: flex;
+        align-items: center;
 
         span {
             width: 166px;
@@ -407,52 +666,36 @@
             margin-right: 67px;
         }
     }
-}
 
-.MuiButton-root.update_btn {
-    width: 132px;
-    height: 36px;
-    text-transform: capitalize;
-    font-size: 14px;
-    margin-right: 8px;
-}
+    .detailsTableContainer {
+        margin: 24px 0;
 
-.requester {
-    .MuiTableCell-root {
-        color: $text;
+        .MuiTypography-root:nth-child(1) {
+            font-family: 'BCSans-Bold';
+            font-size: 18px;
+            margin-bottom: 19px;
+        }
+
+        .personnelTable {
+            table-layout: auto;
+
+            .tableHead {
+                background-color: #f8f9fa;
+            }
+
+            .phone {
+                white-space: nowrap;
+            }
+        }
+
+        .tableHead {
+            background-color: #f8f9fa;
+        }
     }
-
-    .MuiTableContainer-root {
-        width: 1091px;
-        margin-top: 32px;
-    }
-
-    .MuiButtonBase-root.MuiIconButton-root {
-        padding-right: 8px;
-    }
 }
 
-.MuiButton-root.requesterFormBtn {
-    width: 106px;
-    height: 34px;
-    font-size: 14px;
-    text-transform: capitalize;
-}
 
-.MuiTextField-root.requesterFormInput {
-    width: 440px;
-    margin: 12px 16px;
-}
-
-#line2>p {
-    margin-right: 5%;
-}
-
-.identifierSelect {
-    display: flex;
-    flex-direction: row;
-}
-
+//Status Signal
 .ASSIGNED {
     background-color: #4caf50;
     width: 90px;
@@ -475,20 +718,6 @@
     text-align: center;
     height: 25px;
     border-radius: 50px;
-}
-
-.MuiTypography-subtitle1.retired {
-    background-color: #868e96;
-    width: 90px;
-    text-align: center;
-    height: 25px;
-    border-radius: 50px;
-    color: #ffffff;
-    font-size: 13px;
-}
-
-.requesterTable {
-    color: darkgrey;
 }
 
 //Status Form

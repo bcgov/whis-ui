@@ -63,7 +63,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 
 					<TextField
 						select
-						className="priPurpose"
+						className="leftColumn"
 						label="Home Region"
 						id="homeRegion"
 						value={state.animalDetails.homeRegion}
@@ -85,7 +85,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 					</TextField>
 					<TextField
 						select
-						className="secPurpose"
+						className="rightColumn"
 						id="sex"
 						label="Sex"
 						value={state.animalDetails.sex}
@@ -105,12 +105,16 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 							</MenuItem>
 						))}
 					</TextField>
-					{state.animalDetails.identifiers.map((identifier, index) => (
-						<IdentifierEntry identifier={identifier} index={index} dispatch={dispatch} />
-					))}
+					<Box className="identifier">
+						{state.animalDetails.identifiers.map((identifier, index) => (
+							<Box className="identifierEntry">
+								<IdentifierEntry identifier={identifier} index={index} dispatch={dispatch} />
+							</Box>
+						))}
+					</Box>
 					<Button
 						variant="outlined"
-						className='addIdentifier'
+						className="addIdentifier"
 						onClick={() => {
 							dispatch({
 								type: 'animalDetails.identifiers.add'
@@ -120,7 +124,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 						+ Add Identifier Types
 					</Button>
 				</Box>
-				<Box className='cardButtons'>
+				<Box className="cardButtons">
 					<Button variant={'contained'} className="update_btn" onClick={saveState}>
 						Update
 					</Button>

@@ -107,7 +107,6 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 							<TableCell>{p.email}</TableCell>
 							<TableCell>
 								<IconButton
-									id="positioned-button"
 									aria-controls={menuOpen ? 'positioned-menu' : undefined}
 									aria-haspopup="true"
 									aria-expanded={menuOpen ? 'true' : undefined}
@@ -140,12 +139,12 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 						open={menuOpen}
 						onClose={handleMenuClose}
 						anchorOrigin={{
-							vertical: 'top',
+							vertical: 'bottom',
 							horizontal: 'left'
 						}}
 						transformOrigin={{
 							vertical: 'top',
-							horizontal: 'right'
+							horizontal: 'left'
 						}}
 					>
 						{menuCurrentActions}

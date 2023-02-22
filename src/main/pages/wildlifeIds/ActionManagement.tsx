@@ -14,7 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SpeedIcon from '@mui/icons-material/Speed';
-import {useSelector} from "../../../state/utilities/use_selector";
+import {useSelector} from '../../../state/utilities/use_selector';
 import {
 	Box,
 	Button,
@@ -33,7 +33,7 @@ import {
 	Switch,
 	TextField,
 	Typography
-} from "@mui/material";
+} from '@mui/material';
 import {LocalizationProvider, MobileDatePicker, MobileTimePicker} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 
@@ -49,26 +49,25 @@ const ActionManagement: React.FC = () => {
 		{label: 'Shari', value: 'Shari'},
 		{label: 'Cati', value: 'Cati'},
 		{label: 'Maeve', value: 'Maeve'},
-		{label: 'Sultana', value: 'Sultana'},
-	]
+		{label: 'Sultana', value: 'Sultana'}
+	];
 	const [checked1, setChecked1] = useState(false);
 	const toggleChecked1 = () => {
-		setChecked1((prev) => !prev);
-	}
+		setChecked1(prev => !prev);
+	};
 	const [checked2, setChecked2] = useState(false);
 	const toggleChecked2 = () => {
-		setChecked2((prev) => !prev);
-	}
+		setChecked2(prev => !prev);
+	};
 
 	//handle blur
 	const [requiredTitle, setRequiredTitle] = useState(false);
-	const handleOnblur = (e) => {
+	const handleOnblur = e => {
 		const value = e.target.value;
-		if (value == "" || value == undefined || value == null) {
+		if (value == '' || value == undefined || value == null) {
 			setRequiredTitle(true);
-		} else
-			setRequiredTitle(false);
-	}
+		} else setRequiredTitle(false);
+	};
 
 	//submit dialog
 	const [open, setOpen] = useState(false);
@@ -83,201 +82,161 @@ const ActionManagement: React.FC = () => {
 	// const toolbarTitle = toolTitle ? "Select a date" : "Enter a Date";
 
 	return (
-		<Box sx={{width: 'inherit'}}>
-			<Stack direction='row' spacing={1}>
-				<Card sx={{borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', marginRight: '15px', width: '330px'}}>
-					<IconButton
-						sx={{
-							position: 'absolute',
-							left: 70,
-							top: 68,
-							fontSize: 'large'
-						}}
-					>
-						<SettingsIcon/>
+		<Box>
+			<Stack direction="row" spacing={1}>
+				<Card className="actionManagement_profile" id="actionManagement_profile">
+					<IconButton className="settingIcon">
+						<SettingsIcon />
 					</IconButton>
-					<CardHeader
-						title={'Profile'}
-						titleTypographyProps={{sx: {paddingTop: '10px', color: '#666666', fontSize: '20px', fontFamily: 'BCSans-Bold'}}}
-						sx={{textAlign: 'center', paddingTop: '30px'}}
-					/>
+					<CardHeader title={'Profile'} className="profileTitle" />
 
 					<CardContent className={'profile_card'}>
+						<AccountCircleIcon className="userIcon" />
+						<Box className={'userInfo'}>
+							<PersonIcon />
+							<Typography className="name">{me.bestName}</Typography>
 
-						<Box className='card_user_icon'>
-							<AccountCircleIcon sx={{fontSize: '200px', color: 'rgb(26, 90, 150)'}}/>
+							<Typography className="role">{me.roles.join(', ')}</Typography>
+
+							<LocalPhoneIcon className="phoneIcon" />
+							<Typography className="infoText">phone_placeholder</Typography>
+
+							<EmailIcon className="emailIcon" />
+							<Typography className="infoText">{me.email}</Typography>
+
+							<BusinessIcon className="businessIcon" />
+							<Typography className="infoText">org_placeholder</Typography>
 						</Box>
 
-						<Box className={'name'}>
-
-							<PersonIcon color={'primary'}/><Typography sx={{fontSize: '16px'}}>{me.bestName}</Typography>
-
-							<Typography className='role'>{me.roles.join(', ')}</Typography>
-
-							<LocalPhoneIcon color={'primary'} sx={{marginBottom: '20px'}}/><Typography sx={{fontSize: '13px'}}>phone_placeholder</Typography>
-
-							<EmailIcon color={'primary'} sx={{marginBottom: '20px'}}/><Typography sx={{fontSize: '13px'}}>{me.email}</Typography>
-
-							<BusinessIcon color={'primary'} sx={{marginBottom: '20px'}}/><Typography sx={{fontSize: '13px'}}>org_placeholder</Typography>
-						</Box>
-
-						<Box className={'quick_access'} sx={{marginTop: '2rem'}}>
-							<Divider variant='middle' sx={{position: 'relative', top: '-175px'}}/>
-							<Divider variant='middle' sx={{marginBottom: '25px'}}/>
-							<Typography sx={{marginBottom: '10px', fontSize: '16px'}}>
-								Quick Access
-							</Typography>
+						<Box className={'quick_access'}>
+							<Divider variant="middle" className="divider1" />
+							<Divider variant="middle" className="divider2" />
+							<Typography className="quickAccessText">Quick Access</Typography>
 							<Box className={'actions'}>
-								<Box className='generateBtn'>
-									<IconButton className='generateBtn' onClick={() => navigate('/wildlifeIds/generate')}>
-										<AddCircleOutlineIcon color={'primary'}/>
+								<Box className="generateBtn">
+									<IconButton onClick={() => navigate('/wildlifeIds/generate')}>
+										<AddCircleOutlineIcon />
 									</IconButton>
 									<p>Generate IDs</p>
 								</Box>
-								<Box className='searchBtn'>
-									<IconButton className='searchBtn'>
-										<ManageSearchIcon color={'primary'}/>
+								<Box className="searchBtn">
+									<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
+										<ManageSearchIcon />
 									</IconButton>
 									<p>Search IDs</p>
 								</Box>
-								<Box className='actionBtn'>
-									<IconButton className='actionBtn' onClick={() => navigate('/wildlifeIds')}>
-										<SpeedIcon color={'primary'}/>
+								<Box className="actionBtn">
+									<IconButton onClick={() => navigate('/wildlifeIds')}>
+										<SpeedIcon />
 									</IconButton>
-									<p style={{left: '230px'}}>Dashboard</p>
+									<p>Dashboard</p>
 								</Box>
 							</Box>
 						</Box>
 					</CardContent>
 				</Card>
 
-				<Card sx={{borderRadius: '15px', boxShadow: 'rgb(0 0 0 / 20%) 0px 0px 5px 0px', width: '850px'}}>
-					<CardHeader
-						title={'Action & Notification Management'}
-						titleTypographyProps={{sx: {paddingTop: '10px', color: '#666666', fontSize: '20px', fontFamily: 'BCSans-Bold'}}}
-						subheader={'You may set some actions that you need reminders for them'}
-						subheaderTypographyProps={{variant: 'subtitle1', sx: {paddingTop: '15px', color: 'black'}}}
-						sx={{padding: '30px 0px 10px 50px'}}
-					/>
-					<CardContent sx={{paddingLeft: '50px'}}>
+				<Card className="actionManagement_welcome" id="actionManagement_welcome">
+					<CardHeader title={'Action & Notification Management'} subheader={'You may set some actions that you need reminders for them'} />
+					<CardContent>
 						<LocalizationProvider dateAdapter={AdapterDateFns}>
 							<Stack spacing={3}>
 								<TextField
-									sx={{width: '45%'}}
-									label='Action Title'
-									id='actionTitle'
-									name='actionTitle'
+									className="action_inputs"
+									label="Action Title"
+									id="actionTitle"
+									name="actionTitle"
 									error={requiredTitle}
-									onBlur={(e) => {
-										handleOnblur(e)
+									onBlur={e => {
+										handleOnblur(e);
 									}}
 									required
 								/>
-								<Box sx={{display: 'flex'}}>
+								<Box>
 									<MobileDatePicker
-										label='Date'
+										label="Date"
 										value={date}
-										toolbarTitle='Select a date'
+										toolbarTitle="Select a date"
 										componentsProps={{
-											actionBar: {actions: ["clear", "today"]},
+											actionBar: {actions: ['clear', 'today']}
 										}}
 										closeOnSelect={true}
-										onChange={(newValue) => {
+										onChange={newValue => {
 											setDate(newValue);
 										}}
-										renderInput={(params) =>
+										renderInput={params => (
 											<TextField
-												sx={{minWidth: '45%', marginRight: '50px'}}
+												className="action_inputs date"
 												InputProps={{
-													endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
+													endAdornment: (
+														<InputAdornment position="end">
+															<CalendarTodayIcon />
+														</InputAdornment>
+													)
 												}}
-												placeholder='mm/dd/yyyy'
+												placeholder="mm/dd/yyyy"
 												{...params}
 											/>
-										}
+										)}
 									/>
 									<MobileTimePicker
-										label='Time'
+										label="Time"
 										value={time}
-										onChange={(newValue) => {
+										onChange={newValue => {
 											setTime(newValue);
 										}}
-										renderInput={(params) =>
+										renderInput={params => (
 											<TextField
-												sx={{width: '45%'}}
+												className="action_inputs"
 												InputProps={{
-													endAdornment: <InputAdornment position='end'><CalendarTodayIcon/></InputAdornment>,
+													endAdornment: (
+														<InputAdornment position="end">
+															<CalendarTodayIcon />
+														</InputAdornment>
+													)
 												}}
-												placeholder='hh:mm (a|p)m'
+												placeholder="hh:mm (a|p)m"
 												{...params}
-											/>}
+											/>
+										)}
 									/>
 								</Box>
-								<TextField
-									sx={{width: '45%'}}
-									id='receiver'
-									name='receiver'
-									select
-									label='Receiver (Optional)'
-									placeholder='Receiver (Optional)'
-								>
+								<TextField className="action_inputs" select label="Receiver" placeholder="Receiver" required>
 									{receivers.map((m, i) => (
 										<MenuItem key={i} value={m.value}>
 											{m.label}
 										</MenuItem>
 									))}
 								</TextField>
-								<TextField
-									sx={{width: '97%'}}
-									id='note'
-									name='note'
-									label='Note (Optional)'
-									multiline
-									rows={3}
-									// onChange={handleUpdate}
-								/>
-								<Box sx={{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', color: 'rgb(140, 140, 140)'}}>
-									<Typography variant='subtitle1' sx={{marginRight: '15%'}}>Notification Method (s)</Typography>
-									<FormControlLabel control={<Switch onChange={toggleChecked1}/>} label='Dashboard' sx={{marginRight: '8%', color: checked1 ? '#313132' : ''}}/>
-									<FormControlLabel control={<Switch onChange={toggleChecked2}/>} label='Email' sx={{color: checked2 ? '#313132' : ''}}/>
+								<TextField className="note" label="Note (Optional)" multiline rows={3} />
+								<Box className="Notification">
+									<Typography>Notification Method (s)</Typography>
+									<FormControlLabel control={<Switch onChange={toggleChecked1} />} label="Dashboard" />
+									<FormControlLabel control={<Switch onChange={toggleChecked2} />} label="Email" />
 								</Box>
 							</Stack>
-							<Button
-								variant='contained'
-								sx={{textTransform: 'capitalize', margin: '40px 20px 20px 0px', float: 'right'}}
-								onClick={handleClickOpen}
-							>
+							<Button variant="contained" className="reminderBtn" onClick={handleClickOpen}>
 								Set Reminder
 							</Button>
 						</LocalizationProvider>
-
 					</CardContent>
-
 				</Card>
 			</Stack>
-			<Dialog
-				open={open}
-				onClose={handleClose}
-				PaperProps={{
-					sx: {overflowY: 'inherit', width: '504px', height: '230px', borderRadius: '10px'}
-				}}
-			>
-				<Box className='checkIcon'><CheckIcon sx={{position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#EEF2F6',}}/></Box>
+			<Dialog className="success_dialog" open={open} onClose={handleClose}>
+				<Box className="checkIcon">
+					<CheckIcon />
+				</Box>
 				<IconButton
 					onClick={handleClose}
-					sx={{
-						position: 'absolute',
-						right: 8,
-						top: 8
-					}}
+					className='dialogCloseBtn'
 				>
 					<CloseIcon/>
 				</IconButton>
-				<DialogContent sx={{margin: 'auto', padding: '0 24px', textAlign: 'center'}}>
-					<p style={{color: '#666666', fontSize: '16px', margin: '5px 0'}}>You have successfully set a reminder</p>
+				<DialogContent>
+					<p>You have successfully set a reminder</p>
 				</DialogContent>
-				<DialogActions sx={{margin: 'auto', marginBottom: '20px'}}>
-					<Button className='okBtn' sx={{backgroundColor: '#3ADB76', color: '#EEF2F6', ":hover": {backgroundColor: '#3ADB76'}}}>
+				<DialogActions>
+					<Button className="okBtn">
 						OK
 					</Button>
 				</DialogActions>
