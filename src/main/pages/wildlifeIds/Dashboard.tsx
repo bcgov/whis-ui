@@ -14,7 +14,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import FlagIcon from '@mui/icons-material/Flag';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {useSelector} from '../../../state/utilities/use_selector';
-import {LockModal} from '../../components/wildlifeIds/LockModal';
+import {LockModal} from '../../components/wildlifeIds/generate/LockModal';
 import {Box, Button, Card, CardContent, CardHeader, Divider, IconButton, Typography, Link, Stack} from '@mui/material';
 
 const Dashboard: React.FC = () => {
@@ -39,6 +39,10 @@ const Dashboard: React.FC = () => {
 	const [lockModalOpen, setLockModalOpen] = useState(false);
 	const [testOpen, setTestOpen] = useState(false);
 
+	const handleClose = () => {
+		setTestOpen(false);
+	};
+
 	useEffect(() => {
 		if (lockStatus.initialized && !lockStatus.working && lockStatus.status && lockStatus.status.lockHolder && !lockStatus.status.lockHolder.isSelf) {
 			setLockModalOpen(true);
@@ -47,7 +51,7 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<Box className={'dash_grid'}>
-			<LockModal open={testOpen} />
+			<LockModal open={testOpen} close={handleClose} />
 			<Card className="dash_profile">
 				<IconButton className="settingIcon">
 					<SettingsIcon />

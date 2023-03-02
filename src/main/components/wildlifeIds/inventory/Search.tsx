@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {useNavigate} from 'react-router-dom';
 import HidableSearchForm from './HidableSearchForm';
+import FilterResult from './FilterResult';
 
 const Search: React.FC = () => {
 	const navigate = useNavigate();
@@ -137,6 +138,7 @@ const Search: React.FC = () => {
 					</Button>
 				</Box>
 			</Card>
+			<FilterResult/>
 		</Box>
 	);
 };
