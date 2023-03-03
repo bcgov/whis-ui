@@ -32,47 +32,122 @@
         width: 1326px;
         padding-inline: 80px;
 
-        .leftColumn{
+        .leftColumn {
             width: 567px;
             margin: 32px 32px 0 0;
         }
-        .rightColumn{
+
+        .rightColumn {
             width: 567px;
             margin-top: 32px;
         }
+
         .cardButtons {
             display: flex;
             justify-content: flex-end;
             margin-block: 44px 50px;
 
-            button:nth-child(1){
+            button:nth-child(1) {
                 width: 131px;
                 height: 42px;
                 text-transform: capitalize;
                 margin-right: 12px;
             }
-            button:nth-child(2){
+
+            button:nth-child(2) {
                 width: 165px;
                 height: 42px;
                 text-transform: capitalize;
                 padding: 0;
             }
         }
+
         .eventRadios {
             width: 100%;
             color: #c0c0c0;
         }
-        .eventKeywords{
+
+        .eventKeywords {
             width: 1166px;
             margin-top: 10px;
         }
     }
 
-
-
     .detailsSubtitle {
         font-family: 'BCSans-Bold';
         font-size: 18px;
         margin-block: 32px 10px;
+    }
+
+    .filter_result {
+        width: 1326px;
+        min-height: 680px;
+        margin-top: 20px;
+
+        .results_table {
+            margin-inline: 32px;
+            height: 430px;
+
+            .MuiTypography-root {
+                color: $text;
+                font-size: 18px;
+                font-family: 'BCSans-Bold';
+                margin-block: 15px;
+            }
+
+            .MuiDataGrid-columnSeparator{
+                display: none;
+            }
+            .MuiDataGrid-columnHeaders{
+                background-color: #ececec;
+            }
+        }
+    }
+
+    .filters {
+        width: 1224px;
+        height: 106px;
+        border-radius: 5px;
+        border: 1px solid #f8f9fa;
+        margin: 30px 32px;
+        padding: 13px 0 27px 17px;
+
+        .filters_title {
+            font-size: 14px;
+            font-family: 'BCSans-Bold';
+            color: $text;
+            margin-bottom: 16px;
+        }
+
+        .chips_container {
+            width: 1120px;
+            display: block;
+        }
+
+        .filter_chips {
+            background-color: $link;
+            font-size: 12px;
+            color: #ffffff;
+            margin: 5px;
+
+            svg {
+                color: #ffffff;
+                font-size: 16px;
+                margin-left: 12px;
+            }
+        }
+
+        .clear_filters {
+            width: 74px;
+            height: 32px;
+            border-radius: 16px;
+            background-color: #f1f3f5;
+            font-size: 12px;
+            color: $text;
+            text-align: center;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+            float: right;
+        }
+
     }
 }

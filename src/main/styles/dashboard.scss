@@ -526,3 +526,76 @@ button[class^="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-siz
 button[class*="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e0vxdt-MuiButtonBase-root-MuiButton-root"] {
 	color: $link;
 }
+
+//Lock Modal
+.lock_modal_dialog {
+	.MuiDialog-container {
+		.MuiDialog-paper {
+			width: 505px;
+			height: 305px;
+			border-radius: 10px;
+			overflow-y: inherit;
+
+			.dialogBtn {
+				position: absolute;
+				right: 8px;
+				top: 8px;
+			}
+
+		}
+	}
+	.lock_icon_container {
+		margin: auto;
+		width: 78px;
+		height: 78px;
+		border-radius: 999rem;
+		background-color: #ffae00;
+		position: relative;
+		top: -30px;
+	}
+
+	.LockIcon {
+		position: relative;
+		color: #ffffff;
+		font-size: 50px;
+		top: 14px;
+		left: 14px;
+	}
+
+	.dialog_content {
+		margin: auto;
+		padding: 0 24px;
+		text-align: left;
+
+		p {
+			color: $text;
+			font-size: 14px;
+			margin: 20px;
+		}
+	}
+
+	.dialog_actions {
+		margin: auto;
+		margin-bottom: 25px;
+
+		.lock_btn {
+			width: 110px;
+			height: 42px;
+			border-radius: 6px;
+			margin-right: 10px;
+			background-color: #ffae00;
+			font-size: 16px;
+			color: #ffffff;
+		}
+
+		.MuiButton-root:nth-child(2) {
+			width: 110px;
+			height: 42px;
+			border-radius: 6px;
+			font-size: 16px;
+			border: 1px solid #868e96;
+			color: #666666;
+			text-transform: capitalize;
+		}
+	}
+}

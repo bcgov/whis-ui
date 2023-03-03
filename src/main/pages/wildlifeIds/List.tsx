@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {useAPI} from "../../hooks/useAPI";
-import {paperStyle} from "../../../state/style_constants";
 import {Paper, Typography} from "@mui/material";
 import '../../styles/inventory.scss';
 import {useNavigate} from "react-router-dom";
@@ -24,8 +23,8 @@ const List: React.FC = () => {
 	}, []);
 
 	return (
-		<Paper sx={paperStyle}>
-			<Typography variant={'h3'}>WLH ID Inventory</Typography>
+		<Paper className='list_page'>
+			<Typography>WLH ID Inventory</Typography>
 
 			<table className={'inventory_table'}>
 				<thead>

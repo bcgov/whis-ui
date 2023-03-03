@@ -1,44 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import GenerationLockWidget from "../../components/wildlifeIds/GenerationLockWidget";
-import { useAPI } from "../../hooks/useAPI";
+import React, {useEffect, useState} from 'react';
+import GenerationLockWidget from '../../components/wildlifeIds/generate/GenerationLockWidget';
+import {useAPI} from '../../hooks/useAPI';
 import {
 	Box,
 	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	IconButton,
 	InputAdornment,
 	MenuItem,
-	Paper, Select,
+	Paper,
+	Select,
 	Stack,
 	TextField,
 	Typography
-} from "@mui/material";
+} from '@mui/material';
 import '../../styles/inventory.scss';
 import AddIcon from '@mui/icons-material/Add';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import { useSelector } from "../../../state/utilities/use_selector";
-import { useNavigate } from "react-router-dom";
-import TwoColumnForm from "../../components/wildlifeIds/TwoColumnForm";
-import { paperStyle } from "../../../state/style_constants";
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import {useSelector} from '../../../state/utilities/use_selector';
+import {useNavigate} from 'react-router-dom';
+import TwoColumnForm from '../../components/wildlifeIds/generate/TwoColumnForm';
+import {paperStyle} from '../../../state/style_constants';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import { selectCodeTables } from "../../../state/reducers/code_tables";
-import Loading from "../../components/util/Loading";
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useForm } from "react-hook-form";
+import {selectCodeTables} from '../../../state/reducers/code_tables';
+import Loading from '../../components/util/Loading';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import {useForm} from 'react-hook-form';
+import ConfirmDialog from '../../components/wildlifeIds/generate/ConfirmDialog';
+import CancelDialog from '../../components/wildlifeIds/generate/CancelDialog';
 
 const Generate: React.FC = () => {
-
 	const me = useSelector(state => state.Auth);
-	const { purposes, status, regions, organizations, roles } = useSelector(state => state.CodeTables.tables);
-	const { initialized: codeTablesInitialized } = useSelector(selectCodeTables);
+	const {purposes, status, regions, organizations, roles} = useSelector(state => state.CodeTables.tables);
+	const {initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
 	const api = useAPI();
 
@@ -47,16 +41,12 @@ const Generate: React.FC = () => {
 	const [lockModalOpen, setLockModalOpen] = useState(false);
 
 	useEffect(() => {
-		if (lockStatus.initialized
-			&& !lockStatus.working
-			&& lockStatus.status
-			&& lockStatus.status.lockHolder
-			&& !lockStatus.status.lockHolder.isSelf) {
+		if (lockStatus.initialized && !lockStatus.working && lockStatus.status && lockStatus.status.lockHolder && !lockStatus.status.lockHolder.isSelf) {
 			setLockModalOpen(true);
 		}
 	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
 
-	const [generateStatus, setGenerateStatus] = useState({ status: 'not yet called', message: '' })
+	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''});
 
 	const [formState, setFormState] = useState({
 		year: '2022',
@@ -79,8 +69,12 @@ const Generate: React.FC = () => {
 	});
 
 	//handle form error
-	const { register, handleSubmit, control, formState: { errors } } = useForm({ mode: "onChange" });
-
+	const {
+		register,
+		handleSubmit,
+		control,
+		formState: {errors}
+	} = useForm({mode: 'onChange'});
 
 	//year picker
 	const [year, setYear] = React.useState<Date | null>(null);
@@ -93,7 +87,6 @@ const Generate: React.FC = () => {
 		setGenerateDialog(true);
 	};
 	const handleClose = () => {
-		// setAlertNumber(false);
 		setGenerateDialog(false);
 		setCancelDialog(false);
 	};
@@ -104,15 +97,14 @@ const Generate: React.FC = () => {
 			return false;
 		}
 		return true;
-	}
+	};
 
 	//handle direct
 	const handleFormSubmit = () => {
-		if (!validateYear())
-			return;
+		if (!validateYear()) return;
 
-		api.generateIDs(
-			{
+		api
+			.generateIDs({
 				quantity: parseInt(numOfIDs),
 				year: formState.year,
 				purpose: formState.purpose,
@@ -128,34 +120,35 @@ const Generate: React.FC = () => {
 					organization: formState.organization,
 					phoneNumber: formState.requesterContactPhone,
 					email: formState.requesterContactEmail,
-					role: formState.requesterRole,
+					role: formState.requesterRole
 				}
-			}
-		).then(result => {
-			setGenerateStatus({
-				status: 'ok',
-				message: JSON.stringify(result)
+			})
+			.then(result => {
+				setGenerateStatus({
+					status: 'ok',
+					message: JSON.stringify(result)
+				});
+			})
+			.catch(err => {
+				console.dir(err);
+				setGenerateStatus({
+					status: 'failed',
+					message: JSON.stringify(err.response ? err.response.data : 'unknown')
+				});
 			});
-		}).catch(err => {
-			console.dir(err);
-			setGenerateStatus({
-				status: 'failed',
-				message: JSON.stringify(err.response ? err.response.data : 'unknown')
-			});
-		});
 	};
 
 	//handle update
 	const handleUpdate = event => {
 		const currentState = formState;
 		switch (event.target.name) {
-		default:
-			currentState[event.target.name] = event.target.value;
+			default:
+				currentState[event.target.name] = event.target.value;
 		}
 	};
 
-	const [showOptional, setShowOptional] = useState(false);
-	const [OptionalButton, setOptionalButton] = useState(true);
+	//expand requester details
+	const [RequesterDetailsExpand, setRequesterDetailsExpand] = useState(false);
 
 	//handle submit
 	const handleRequiredSubmit = () => {
@@ -165,36 +158,30 @@ const Generate: React.FC = () => {
 
 	//get Number Of IDs
 	const [numOfIDs, setNumOfIDs] = useState();
-	const getNumberOfIDs = (e) => {
+	const getNumberOfIDs = e => {
 		setNumOfIDs(e.target.value);
-	}
+	};
 
 	if (!codeTablesInitialized) {
-		return (<Loading />);
+		return <Loading />;
 	}
 
 	return (
-		<>
-			<Typography fontFamily={'BCSans-Bold'} sx={{ fontSize: '32px' }}>Generate WLH ID</Typography>
-			<Typography sx={{ marginBottom: '28px', fontSize: '16px', color: '#787f81' }}>Generate one or multiple WLH IDs by entering the information
-				below.</Typography>
-
+		<Box className="generate_container">
+			<Typography className="generate_headline">Generate WLH ID</Typography>
+			<Typography className="generate_subtitle">Generate one or multiple WLH IDs by entering the information below.</Typography>
 			<Paper sx={paperStyle}>
-				{/* <LockModal open={lockModalOpen} /> */}
-				{/* <form onSubmit={handleRequiredSubmit}> */}
 				<form onSubmit={handleSubmit(handleRequiredSubmit)}>
-
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<TwoColumnForm title={'WLH ID information'}>
 							<TextField
-								sx={{ width: '100%' }}
-								id='wlh_id'
-								name='wlh_id'
-								label='Number of WLH IDs*'
-								type='tel'
-
-								{...register("wlh_id", {
-									required: "❗Enter the number of WLH IDs.",
+								className="generate_textfield"
+								id="wlh_id"
+								name="wlh_id"
+								label="Number of WLH IDs*"
+								type="tel"
+								{...register('wlh_id', {
+									required: '❗Enter the number of WLH IDs.',
 									min: {
 										value: 1,
 										message: '❗Please enter a number between 1 - 100.'
@@ -205,35 +192,34 @@ const Generate: React.FC = () => {
 									},
 									pattern: {
 										value: /^([0-9]{0,3})$/,
-										message: '❗Please enter a number between 1 - 100.',
+										message: '❗Please enter a number between 1 - 100.'
 									},
 									onChange(e) {
 										getNumberOfIDs(e);
-									},
+									}
 								})}
 								error={!!errors?.wlh_id}
 								helperText={errors.wlh_id ? errors.wlh_id.message : ''}
-
 							/>
 							<DatePicker
 								views={['year']}
-								label='Year*'
+								label="Year*"
 								value={year}
 								minDate={new Date(2020, 1, 1)}
 								maxDate={new Date(2099, 1, 1)}
 								onError={(e, value) => {
 									switch (e) {
-									case 'minDate':
-									case "invalidDate":
-									case 'maxDate':
-										setYearSelectError('❗Please enter a number between 2020 - 2099.');
-										break;
-									case null:
-										setYearSelectError(null);
-										break;
+										case 'minDate':
+										case 'invalidDate':
+										case 'maxDate':
+											setYearSelectError('❗Please enter a number between 2020 - 2099.');
+											break;
+										case null:
+											setYearSelectError(null);
+											break;
 									}
 								}}
-								onChange={(y) => {
+								onChange={y => {
 									if (y) {
 										setYear(y);
 									}
@@ -241,372 +227,221 @@ const Generate: React.FC = () => {
 								components={{
 									OpenPickerIcon: ArrowDropDownIcon
 								}}
-
-								renderInput={(params) => (
-									<TextField
-										sx={{ width: '100%' }}
-										name='year'
-										error={yearSelectError}
-										helperText={yearSelectError}
-										{...params}
-									/>
+								renderInput={params => (
+									<TextField className="generate_textfield" name="year" error={yearSelectError} helperText={yearSelectError} {...params} />
 								)}
 							/>
 
 							<TextField
-								sx={{ width: '100%' }}
-								id='purpose'
-								label='Purpose*'
-								name='purpose'
+								className="generate_textfield"
+								id="purpose"
+								name="purpose"
+								label="Purpose*"
 								select
-								// value={formState.purpose}
-								{...register("purpose", {
-									required: "❗Select the purpose.",
+								{...register('purpose', {
+									required: '❗Select the purpose.'
 								})}
 								error={!!errors?.purpose}
 								helperText={errors.purpose ? errors.purpose.message : null}
 								onChange={handleUpdate}
 								onSelect={handleUpdate}
 							>
-								{purposes.codes.map((m) => (
+								{purposes.codes.map(m => (
 									<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
 							</TextField>
 
-
 							<TextField
-								sx={{ width: '100%' }} label='Species'
-								id='species'
+								className="generate_textfield"
+								label="Species"
+								id="species"
 								defaultValue={formState.species}
-								name='species'
+								name="species"
 								onChange={handleUpdate}
 								InputProps={{
-									endAdornment: <InputAdornment position='end'><AccountTreeOutlinedIcon /></InputAdornment>,
+									endAdornment: (
+										<InputAdornment position="end">
+											<AccountTreeOutlinedIcon />
+										</InputAdornment>
+									)
 								}}
 							/>
 							<TextField
-								sx={{ width: '100%' }}
-								label='Associated Project'
-								id='associatedProject'
+								className="generate_textfield"
+								label="Associated Project"
+								id="associatedProject"
 								defaultValue={formState.associatedProject}
-								name='associatedProject'
+								name="associatedProject"
 								onChange={handleUpdate}
 							/>
 
-							<TextField
-								sx={{ width: '100%' }}
-								label='Home Region'
-								id='homeRegion'
-								name='homeRegion'
-								onChange={handleUpdate}
-							/>
+							<TextField className="generate_textfield" label="Home Region" id="homeRegion" name="homeRegion" onChange={handleUpdate} />
 
 							<Select
-								sx={{ width: '100%' }}
-								id='status'
-								label='WLH ID Status*'
-								name='status'
-								onChange={(e) => {
+								className="generate_textfield"
+								id="status"
+								label="WLH ID Status*"
+								name="status"
+								onChange={e => {
 									setFormState({
 										...formState,
 										status: e.target.value
-									})
+									});
 								}}
 								value={formState.status}
 							>
-								{status.codes.map((m) => (
+								{status.codes.map(m => (
 									<MenuItem key={m.value} value={m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
 							</Select>
-
-
 						</TwoColumnForm>
 					</LocalizationProvider>
 
-					<TextField
-						sx={{ minWidth: '1078px', marginInline: '145px', marginTop: '32px' }}
-						label='Project Detail'
-						id='projectDetail'
-						name='projectDetail'
-						multiline
-						rows={3}
-						onChange={handleUpdate}
-					/>
+					<TextField className="project_detail" label="Project Detail" id="projectDetail" name="projectDetail" multiline rows={3} onChange={handleUpdate} />
 
 					<TwoColumnForm title={'Requester'}>
-
 						<TextField
-							sx={{ width: '100%' }}
-							label='First Name*'
-							id='firstName'
-							name='firstName'
-							{...register("firstName", {
-								required: "❗Enter the first name.",
+							className="generate_textfield"
+							label="First Name*"
+							id="firstName"
+							name="firstName"
+							{...register('firstName', {
+								required: '❗Enter the first name.',
 								pattern: {
 									value: /^[\w-]{2,}$/,
-									message: '❗The first name must be at least 2 characters long.',
-								},
+									message: '❗The first name must be at least 2 characters long.'
+								}
 							})}
 							error={!!errors?.firstName}
 							helperText={errors.firstName ? errors.firstName.message : null}
 						/>
 
 						<TextField
-							sx={{ width: '100%' }}
-							label='Last Name*'
-							id='lastName'
-							name='lastName'
-							{...register("lastName", {
-								required: "❗Enter the last name.",
+							className="generate_textfield"
+							label="Last Name*"
+							id="lastName"
+							name="lastName"
+							{...register('lastName', {
+								required: '❗Enter the last name.',
 								pattern: {
 									value: /^[\w-]{2,}$/,
-									message: '❗The last name must be at least 2 characters long.',
-								},
-
+									message: '❗The last name must be at least 2 characters long.'
+								}
 							})}
 							error={!!errors?.lastName}
 							helperText={errors.lastName ? errors.lastName.message : null}
 						/>
 					</TwoColumnForm>
 
-					<Box sx={{ display: showOptional ? 'auto' : 'none' }}>
+					{RequesterDetailsExpand ? (
 						<TwoColumnForm title={'Requester details'}>
 							<TextField
-								sx={{ width: '100%' }}
+								className="generate_textfield"
 								select
-								label='Region'
-								id='requesterRegion'
-								placeholder='Region'
+								label="Region"
+								id="requesterRegion"
+								placeholder="Region"
 								onSelect={handleUpdate}
 								onChange={handleUpdate}
 							>
-								{regions.codes.map((m) => (
+								{regions.codes.map(m => (
 									<MenuItem key={m.value} value={m.value} selected={formState.requesterRegion === m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
 							</TextField>
 							<TextField
-								sx={{ width: '100%' }}
+								className="generate_textfield"
 								select
-								label='Organization'
-								id='requesterOrganization'
-								placeholder='Organization'
+								label="Organization"
+								id="requesterOrganization"
+								placeholder="Organization"
 								onSelect={handleUpdate}
 							>
-								{organizations.codes.map((m) => (
+								{organizations.codes.map(m => (
 									<MenuItem key={m.value} value={m.value} selected={formState.requesterOrganization === m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
 							</TextField>
 							<TextField
-								sx={{ width: '100%' }}
-								label='Phone Number (---) --- ---'
-								id='phone'
-								name='phone'
+								className="generate_textfield"
+								label="Phone Number (---) --- ---"
+								id="phone"
+								name="phone"
 								defaultValue={formState.phone}
-								{...register("phone", {
+								{...register('phone', {
 									pattern: {
 										value: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
-										message: '❗The phone format is (---)--- ----.',
-									},
+										message: '❗The phone format is (---)--- ----.'
+									}
 								})}
 								error={!!errors?.phone}
 								helperText={errors.phone ? errors.phone.message : null}
 							/>
 							<TextField
-								sx={{ width: '100%' }}
-								label='Email'
-								id='email'
-								name='email'
-								{...register("email", {
+								className="generate_textfield"
+								label="Email"
+								id="email"
+								name="email"
+								{...register('email', {
 									pattern: {
 										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
 										message: '❗Invalid email address.'
-									},
+									}
 								})}
 								error={!!errors?.email}
 								helperText={errors.email ? errors.email.message : null}
 							/>
-							<TextField
-								sx={{ width: '100%' }}
-								select
-								label="Requester's Role"
-								id='requesterRole'
-								placeholder='Role'
-								onSelect={handleUpdate}
-							>
-								{roles.codes.map((m) => (
+							<TextField className="generate_textfield" select label="Requester's Role" id="requesterRole" placeholder="Role" onSelect={handleUpdate}>
+								{roles.codes.map(m => (
 									<MenuItem key={m.value} value={m.value} selected={formState.requesterRole === m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
 							</TextField>
-
 						</TwoColumnForm>
-					</Box>
+					) : (
+						''
+					)}
 
-					<Box sx={{ position: 'relative' }}>
-						<Button
-							sx={{
-								display: OptionalButton ? 'auto' : 'none',
-								textTransform: 'capitalize',
-								position: 'relative',
-								margin: '28px 0 51px 0',
-								left: '10.6%',
-								fontSize: '16px'
-							}}
-							onClick={() => {
-								setShowOptional(!showOptional);
-								setOptionalButton(!OptionalButton);
-							}} variant='outlined'
-						>
-							<AddIcon color='primary' sx={{ marginRight: '8px' }} />Add Requester Details
-						</Button>
-						<Button
-							sx={{
-								display: OptionalButton ? 'none' : 'auto',
-								textTransform: 'capitalize',
-								position: 'relative',
-								margin: '24px 0 10px 0',
-								left: '10.6%',
-								fontSize: '16px'
-							}}
-							onClick={(e) => {
-								setShowOptional(!showOptional);
-								setOptionalButton(!OptionalButton);
-								// resetDetails
-								// setFormState(formState.year:'')
-							}} variant='outlined'
-						>
-							<DeleteForeverOutlinedIcon color='primary' sx={{ marginRight: '8px' }} />Remove Requester Details
-						</Button>
-					</Box>
-
-					<Dialog
-						open={openGenerateDialog}
-						onClose={handleClose}
-						PaperProps={{
-							sx: { overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px' }
+					<Button
+						className="requester_details_btn"
+						variant="outlined"
+						onClick={() => {
+							setRequesterDetailsExpand(!RequesterDetailsExpand);
 						}}
 					>
-						<Box className='checkIcon'><CheckIcon sx={{ position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#EEF2F6', }} /></Box>
-						<IconButton
-							onClick={handleClose}
-							sx={{
-								position: 'absolute',
-								right: 8,
-								top: 8
-							}}
-						>
-							<CloseIcon />
-						</IconButton>
-						<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
-							<p style={{ color: '#666666', fontSize: '15px' }}>You have generated {numOfIDs} WLH IDs: (range of numbers)</p>
-							<p style={{ color: '#666666', fontSize: '15px', marginTop: '25px' }}>Would you like to add more details to these IDs?</p>
-						</DialogContent>
-						<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
-							<Button
-								onClick={() => {
-									navigate('/wildlifeIds/list')
-								}}
-								sx={{
-									width: '110px',
-									height: '42px',
-									borderRadius: '6px',
-									marginRight: '10px',
-									backgroundColor: 'rgb(58, 219, 118)',
-									color: '#fff',
-									fontSize: '16px',
-									":hover": { backgroundColor: 'rgb(58, 219, 118)' }
-								}}
-							>YES</Button>
-							<Button
-								onClick={() => {
-									navigate('/wildlifeIds')
-								}}
-								sx={{
-									width: '110px',
-									height: '42px',
-									border: '1px solid rgb(134, 142, 150)',
-									borderRadius: '6px',
-									color: 'rgb(102, 102, 102)',
-									fontSize: '16px',
-									":hover": { backgroundColor: '#fff' }
-								}}
-							>Later</Button>
-						</DialogActions>
-					</Dialog>
-					<Dialog
-						open={openCancelDialog}
-						onClose={handleClose}
-						PaperProps={{
-							sx: { overflowY: 'inherit', width: '504px', height: '289px', borderRadius: '10px' }
-						}}
-					>
-						<Box className='alertIcon'><PriorityHighIcon sx={{ position: 'relative', top: '17px', left: '17px', fontSize: '45px', color: '#ffffff' }} /></Box>
-						<IconButton
-							onClick={handleClose}
-							sx={{
-								position: 'absolute',
-								right: 8,
-								top: 8
-							}}
-						>
-							<CloseIcon />
-						</IconButton>
-						<DialogTitle sx={{ margin: '0 auto', padding: '0px', fontSize: '16px', color: '#666666' }}>Cancel WLH ID Generation</DialogTitle>
-						<DialogContent sx={{ margin: 'auto', padding: '0 24px', textAlign: 'center' }}>
-							<p style={{ color: '#313132', fontSize: '14px', margin: '25px 0 5px 0' }}>You have NOT generated any IDs! Are you sure you want</p>
-							<p style={{ color: '#313132', fontSize: '14px', textAlign: 'left', margin: '0' }}> to leave this page?</p>
-						</DialogContent>
-						<DialogActions sx={{ margin: 'auto', marginBottom: '25px' }}>
-							<Button
-								onClick={() => {
-									navigate('/wildlifeIds/')
-								}}
-								sx={{
-									width: '110px',
-									height: '42px',
-									borderRadius: '6px',
-									marginRight: '10px',
-									backgroundColor: '#ffae00',
-									color: '#fff',
-									fontSize: '16px',
-									":hover": { backgroundColor: '#ffae00' }
-								}}
-							>YES</Button>
-							<Button
-								onClick={() => {
-									setCancelDialog(false)
-								}}
-								sx={{
-									width: '110px',
-									height: '42px',
-									border: '1px solid rgb(134, 142, 150)',
-									borderRadius: '6px',
-									color: 'rgb(102, 102, 102)',
-									fontSize: '16px',
-									":hover": { backgroundColor: '#fff' }
-								}}
-							>NO</Button>
-						</DialogActions>
-					</Dialog>
+						{RequesterDetailsExpand ? (
+							<>
+								<DeleteForeverOutlinedIcon />
+								Remove Requester Details
+							</>
+						) : (
+							<>
+								<AddIcon />
+								Add Requester Details
+							</>
+						)}
+					</Button>
 
+					<ConfirmDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs} />
+					<CancelDialog openCancelDialog={openCancelDialog} handleClose={handleClose} navigate={navigate} setCancelDialog={setCancelDialog} />
 
-					<Stack spacing={2} direction={"row"} alignItems={'flex-end'} justifyContent={'flex-end'} sx={{ paddingRight: '145px', marginBottom: '88px' }}>
+					<Stack margin={'48px 125px 88px 0'} spacing={1} direction={'row'} justifyContent={'flex-end'}>
 						<GenerationLockWidget />
-						<Button type='submit' sx={{ textTransform: 'capitalize', width: '130px' }} variant={'contained'}>Generate</Button>
+						<Button type="submit" className="generate_submit_btn" variant={'contained'}>
+							Generate
+						</Button>
 						<Button
-							sx={{ textTransform: 'capitalize', width: '130px' }}
+							className="generate_submit_btn"
 							variant={'outlined'}
 							onClick={() => {
-								setCancelDialog(true)
+								setCancelDialog(true);
 							}}
 						>
 							Cancel
@@ -614,7 +449,7 @@ const Generate: React.FC = () => {
 					</Stack>
 				</form>
 			</Paper>
-		</>
+		</Box>
 	);
 };
 

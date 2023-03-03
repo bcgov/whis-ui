@@ -3,6 +3,7 @@
 table.inventory_table {
 
 	min-width: 80%;
+	margin: auto;
 
 	tbody {
 		tr {
@@ -31,39 +32,179 @@ table.inventory_table {
 	}
 }
 
-.checkIcon {
-	margin: auto;
-	width: 78px;
-	height: 78px;
-	border-radius: 999rem;
-	background-color: #3ADB76;
-	position: relative;
-	top: -35px;
-}
-.alertIcon {
-	margin: auto;
-	width: 78px;
-	height: 78px;
-	border-radius: 999rem;
-	background-color: #ffae00;
-	position: relative;
-	top: -30px;
+.generate_container {
+	.generate_headline {
+		font-family: 'BCSans-Bold';
+		font-size: 32px;
+	}
+
+	.generate_subtitle {
+		margin-bottom: 28px;
+		font-size: 16px;
+		color: #787f81;
+	}
+
+	.generate_textfield {
+		width: 529px;
+	}
+
+	.project_detail {
+		min-width: 1090px;
+		margin: 32px 125px 0 125px;
+	}
+
+	.two_column {
+		.MuiTypography-root {
+			font-family: 'BCSans-Bold';
+			font-size: 18px;
+			margin: 32px 0 21px 125px;
+		}
+
+		.display_row {
+			margin-inline: 125px;
+		}
+	}
+
+	.requester_details_btn {
+		text-transform: capitalize;
+		font-size: 14px;
+		margin: 32px 0 0 125px;
+		padding: 5px 10px;
+	}
+
+	.generate_submit_btn {
+		text-transform: capitalize;
+		width: 130px;
+	}
+
 }
 
-.okBtn{
-	width: 110px;
-	height: 45px;
-	font-size: 16px;
-	border-radius: 6px;
+.generate_confirm_dialog,
+.generate_cancel_dialog {
+	.MuiDialog-container {
+		.MuiDialog-paper {
+			width: 505px;
+			height: 289px;
+			border-radius: 10px;
+			overflow-y: inherit;
+
+			.dialogBtn {
+				position: absolute;
+				right: 8px;
+				top: 8px;
+			}
+
+		}
+	}
+
+	.cancel_icon_container {
+		margin: auto;
+		width: 78px;
+		height: 78px;
+		border-radius: 999rem;
+		background-color: #ffae00;
+		position: relative;
+		top: -30px;
+	}
+
+	.generated_icon_container {
+		margin: auto;
+		width: 78px;
+		height: 78px;
+		border-radius: 999rem;
+		background-color: #3ADB76;
+		position: relative;
+		top: -30px;
+	}
+
+	.PriorityHighIcon,
+	.CheckIcon {
+		position: relative;
+		color: #ffffff;
+		font-size: 60px;
+		top: 9px;
+		left: 9px;
+	}
+
+	.dialog_title {
+		margin: 0 auto;
+		padding: 0;
+		font-size: 16px;
+		color: #666666;
+	}
+
+	.dialog_content {
+		margin: auto;
+		padding: 0 24px;
+		text-align: center;
+
+		p {
+			color: #666666;
+			font-size: 16px;
+			margin: 20px;
+		}
+	}
+
+	.cancel_dialog_content {
+		margin: auto;
+		padding: 0 24px;
+		text-align: left;
+		width: 425px;
+		line-height: 2;
+	}
+
+	.dialog_actions {
+		margin: auto;
+		margin-bottom: 25px;
+
+		.cancelBtn {
+			width: 110px;
+			height: 42px;
+			border-radius: 6px;
+			margin-right: 10px;
+			background-color: #ffae00;
+			font-size: 16px;
+			color: #ffffff;
+		}
+
+		.generatedBtn {
+			width: 110px;
+			height: 42px;
+			border-radius: 6px;
+			margin-right: 10px;
+			background-color: #3adb76;
+			font-size: 16px;
+			color: #ffffff;
+			text-transform: capitalize;
+		}
+
+		.MuiButton-root:nth-child(2) {
+			width: 110px;
+			height: 42px;
+			border-radius: 6px;
+			font-size: 16px;
+			border: 1px solid #868e96;
+			color: #666666;
+			text-transform: capitalize;
+		}
+	}
 }
 
-.MuiTextField-root > p{
-	margin-left: 0;
+//list page
+.list_page {
+	width: 1344px;
+	padding: 4px;
+	padding-top: 16px;
+	border-radius: 5px;
+	.MuiTypography-root{
+		font-family: 'BCSans-Bold';
+		font-size: 40px;
+		margin: 20px 130px;
+	}
 }
 
-// input:invalid ~ .MuiTextField-root > p{
-	
-// 		display: block;
-// 		color: red;
-	
-// }
+//generate lock widget
+.lockWidget {
+	display: flex;
+	align-items: center;
+}
