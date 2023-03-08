@@ -8,6 +8,7 @@ import {createGenerationLockReducer} from "./generation_lock";
 import {createCodeTablesReducer} from "./code_tables";
 import {createFlashMessagesReducer} from "./flash_messages";
 import {createWildlifeHealthIdReducer} from "./wildlife_health_id";
+import {createSearchReducer} from "./search";
 
 function createRootReducer(config: AppConfig) {
 	const rootReducer = combineReducers({
@@ -16,7 +17,8 @@ function createRootReducer(config: AppConfig) {
 		GenerationLock: createGenerationLockReducer(config),
 		WildlifeHealthId: createWildlifeHealthIdReducer(),
 		CodeTables: createCodeTablesReducer(),
-		FlashMessages: createFlashMessagesReducer()
+		FlashMessages: createFlashMessagesReducer(),
+		Search: createSearchReducer()
 	});
 
 	return rootReducer;
