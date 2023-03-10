@@ -2,6 +2,7 @@ import {Box, Typography, TextField, MenuItem, InputAdornment, FormControl, FormL
 import React, {useState} from 'react';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import TaxonomySearch from "../../util/TaxonomySearch";
 
 const HideableSearchForm = formState => {
 	const validPurposes = [
@@ -55,6 +56,8 @@ const HideableSearchForm = formState => {
 		{value: 'NOT_COLLECTED', label: 'Samples were NOT collected'}
 	];
 
+	const [species, setSpecies] = useState('');
+
 	return (
 		<Box>
 			<Typography className="detailsSubtitle">Purpose</Typography>
@@ -75,17 +78,8 @@ const HideableSearchForm = formState => {
 			</TextField>
 
 			<Typography className="detailsSubtitle">Animal Details</Typography>
-			<TextField
-				className="leftColumn"
-				label="Species"
-				InputProps={{
-					endAdornment: (
-						<InputAdornment position="end">
-							<AccountTreeOutlinedIcon />
-						</InputAdornment>
-					)
-				}}
-			/>
+			<TaxonomySearch value={species} onValueChange={v => {setSpecies(v)}} />
+
 			<TextField className="rightColumn" select label="Home Region">
 				{validRegion.map((m, i) => (
 					<MenuItem key={i} value={m.value}>
