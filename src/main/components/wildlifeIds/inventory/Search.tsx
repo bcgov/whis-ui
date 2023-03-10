@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
+import _ from 'lodash';
+
+
 import {
 	Box,
 	Button,
@@ -14,9 +17,62 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {useNavigate} from 'react-router-dom';
 import HidableSearchForm from './HidableSearchForm';
 import FilterResult from './FilterResult';
+import {useSelector} from "../../../../state/utilities/use_selector";
+import {getDevMode} from "../../../../state/utilities/config_helper";
+import {SEARCH_EXECUTE} from "../../../../state/actions";
+import {useDispatch} from "react-redux";
+import TemporaryResults from "./TemporaryResults";
+
+// from the API -- keep this interface in sync.
+interface HealthIDSearchParams {
+	id?: number,
+	year?: number,
+	wlhID?: string,
+	keywords?: string,
+	sequenceNumberMinimum?: number | null,
+	sequenceNumberMaximum?: number | null,
+	creationDateMinimum?: number | null, //millis since epoch
+	creationDateMaximum?: number | null, //millis since epoch
+	creator?: string,
+	currentStatus?: string,
+	purpose?: string,
+	requester?: string,
+	requesterOrganization?: string,
+	species?: string,
+	homeRegion?: string
+}
 
 const Search: React.FC = () => {
 	const navigate = useNavigate();
+	const devMode = useSelector(getDevMode);
+	const dispatch = useDispatch();
+
+	function constructAPISearchRequest(): HealthIDSearchParams {
+		return {
+			keywords: searchRequest.keywords,
+		}
+	}
+
+	function searchReducerInit(initialState) {
+		return initialState;
+	}
+
+	function searchReducer(state, action) {
+		const updatedState = {...state};
+		switch (action.type) {
+		case 'fieldChange':
+			// for simple field changes
+			_.set(updatedState, action.payload.field, action.payload.value);
+			break;
+		}
+
+
+		return updatedState;
+	}
+
+	const [searchRequest, searchDispatch] = useReducer(searchReducer, {
+		keywords: ""
+	}, searchReducerInit);
 
 	const idCreationPeriod = [
 		{value: 'TODAY', label: 'WLH IDs Created Today'},
@@ -32,20 +88,7 @@ const Search: React.FC = () => {
 		{value: 'RECAPTURE', label: 'Retired - Recapture IDs'},
 		{value: 'FLAGGED', label: 'Retired - Flagged IDs'}
 	];
-	
 
-	const [formState, setFormState] = useState({
-		quantity: 1,
-		year: '2022',
-		purpose: 'UNKNOWN',
-		species: '',
-		identifier: '',
-		other_identifier: '',
-		organization: '',
-		requesterRegion: '',
-		associatedProject: '',
-		reason: ''
-	});
 
 	const [AdvancedSearchExpand, setAdvancedSearchExpand] = useState(false);
 
@@ -71,12 +114,25 @@ const Search: React.FC = () => {
 				</Button>
 			</Box>
 
+			{devMode && <Card className="paperStyle">
+				<pre>
+					{JSON.stringify(searchRequest, '\t', 2)}
+				</pre>
+			</Card>}
+
 			<Card className="paperStyle">
 				<Typography className="detailsSubtitle">Filter WLH IDs</Typography>
 
-				<TextField label="Enter Event History and Associated Project Keywords" className='eventKeywords' required />
-				<TextField label="From (enter WLH ID Number)" id="fromID" className="leftColumn" />
-				<TextField label="To (enter WLH ID Number)" id="toID" className="rightColumn" />
+				<TextField
+					label="Enter Event History and Associated Project Keywords"
+					className='eventKeywords'
+					value={searchRequest.keywords}
+					onChange={e => {
+						searchDispatch({type: 'fieldChange', payload: {field: `keywords`, value: e.target.value}});
+					}}
+				/>
+				<TextField label="From (enter WLH ID Number)" id="fromID" className="leftColumn"/>
+				<TextField label="To (enter WLH ID Number)" id="toID" className="rightColumn"/>
 				<TextField
 					className="leftColumn"
 					id="startDate"
@@ -85,7 +141,7 @@ const Search: React.FC = () => {
 					InputProps={{
 						endAdornment: (
 							<InputAdornment position="end">
-								<CalendarTodayIcon />
+								<CalendarTodayIcon/>
 							</InputAdornment>
 						)
 					}}
@@ -98,7 +154,7 @@ const Search: React.FC = () => {
 					InputProps={{
 						endAdornment: (
 							<InputAdornment position="end">
-								<CalendarTodayIcon />
+								<CalendarTodayIcon/>
 							</InputAdornment>
 						)
 					}}
@@ -119,13 +175,22 @@ const Search: React.FC = () => {
 				</TextField>
 
 				{AdvancedSearchExpand ? (
-					<HidableSearchForm formState={formState} />
+					<HidableSearchForm formState={searchRequest}/>
 				) : (
 					''
 				)}
 
 				<Box className="cardButtons">
-					<Button variant={'contained'} >
+					<Button variant={'contained'} onClick={() => {
+						const resolvedSearchRequest = constructAPISearchRequest();
+						dispatch({
+							type: SEARCH_EXECUTE,
+							payload: {
+								searchRequest
+							}
+						});
+					}
+					}>
 						Search
 					</Button>
 					<Button
@@ -134,11 +199,14 @@ const Search: React.FC = () => {
 							setAdvancedSearchExpand(!AdvancedSearchExpand);
 						}}
 					>
-						{AdvancedSearchExpand ? <>Basic Search <KeyboardArrowUpIcon /></> : <>Advanced Search <KeyboardArrowDownIcon /></>}
+						{AdvancedSearchExpand ? <>Basic Search <KeyboardArrowUpIcon/></> : <>Advanced Search <KeyboardArrowDownIcon/></>}
 					</Button>
 				</Box>
 			</Card>
-			<FilterResult/>
+
+			<TemporaryResults/>
+
+			{/*<FilterResult/>*/}
 		</Box>
 	);
 };
