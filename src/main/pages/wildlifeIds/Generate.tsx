@@ -1,26 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import GenerationLockWidget from '../../components/wildlifeIds/generate/GenerationLockWidget';
 import {useAPI} from '../../hooks/useAPI';
-import {
-	Box,
-	Button,
-	InputAdornment,
-	MenuItem,
-	Paper,
-	Select,
-	Stack,
-	TextField,
-	Typography
-} from '@mui/material';
+import {Box, Button, InputAdornment, MenuItem, Paper, Select, Stack, TextField, Typography} from '@mui/material';
 import '../../styles/inventory.scss';
-import AddIcon from '@mui/icons-material/Add';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useSelector} from '../../../state/utilities/use_selector';
 import {useNavigate} from 'react-router-dom';
 import TwoColumnForm from '../../components/wildlifeIds/generate/TwoColumnForm';
 import {paperStyle} from '../../../state/style_constants';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import {selectCodeTables} from '../../../state/reducers/code_tables';
 import Loading from '../../components/util/Loading';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
@@ -79,6 +68,7 @@ const Generate: React.FC = () => {
 	//year picker
 	const [year, setYear] = React.useState<Date | null>(null);
 	const [yearSelectError, setYearSelectError] = React.useState<string | null>(null);
+	// const [yearSelectError, setYearSelectError] = useState(null);
 
 	//update dialog
 	const [openGenerateDialog, setGenerateDialog] = useState(false);
@@ -93,7 +83,7 @@ const Generate: React.FC = () => {
 
 	const validateYear = () => {
 		if (!formState.year) {
-			setYearSelectError('❗Enter the year.');
+			setYearSelectError('❗Enter the year');
 			return false;
 		}
 		return true;
@@ -148,7 +138,7 @@ const Generate: React.FC = () => {
 	};
 
 	//expand requester details
-	const [RequesterDetailsExpand, setRequesterDetailsExpand] = useState(false);
+	const [RequesterDetailsExpand, setRequesterDetailsExpand] = useState(true);
 
 	//handle submit
 	const handleRequiredSubmit = () => {
@@ -165,6 +155,106 @@ const Generate: React.FC = () => {
 	if (!codeTablesInitialized) {
 		return <Loading />;
 	}
+	const errorIconStyled = textField => {
+		switch (textField) {
+			case 'wlh_id':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Enter the number of WLH IDs.</span>
+					</Stack>
+				);
+				break;
+			case 'wlh_id_value':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Please enter a number between 1 - 100.</span>
+					</Stack>
+				);
+				break;
+			case 'year':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Enter the year.</span>
+					</Stack>
+				);
+				break;
+			case 'year_value':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Please enter a number between 2020 - 2099.</span>
+					</Stack>
+				);
+				break;
+			case 'purpose':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Select the purpose.</span>
+					</Stack>
+				);
+				break;
+			case 'status':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Select the status.</span>
+					</Stack>
+				);
+				break;
+			case 'firstName':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Enter the first name.</span>
+					</Stack>
+				);
+				break;
+			case 'firstName_value':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>The first name must be at least 2 characters long.</span>
+					</Stack>
+				);
+				break;
+			case 'lastName':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Enter the last name.</span>
+					</Stack>
+				);
+				break;
+			case 'lastName_value':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>The last name must be at least 2 characters long.</span>
+					</Stack>
+				);
+				break;
+			case 'phone':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>The phone format is (---)--- ----.</span>
+					</Stack>
+				);
+				break;
+			case 'email':
+				return (
+					<Stack direction="row" alignItems="center">
+						<PriorityHighIcon sx={{fontSize: '14px'}} color="error" />
+						<span>Invalid email address.</span>
+					</Stack>
+				);
+				break;
+		}
+	};
 
 	return (
 		<Box className="generate_container">
@@ -179,19 +269,23 @@ const Generate: React.FC = () => {
 								id="wlh_id"
 								name="wlh_id"
 								label="Number of WLH IDs*"
-								type="tel"
+								inputProps={{maxLength: 3}}
 								{...register('wlh_id', {
+									// required: errorIconStyled('wlh_id'),
 									required: '❗Enter the number of WLH IDs.',
 									min: {
 										value: 1,
+										// message: errorIconStyled('wlh_id_value')
 										message: '❗Please enter a number between 1 - 100.'
 									},
 									max: {
 										value: 100,
+										// message: errorIconStyled('wlh_id_value')
 										message: '❗Please enter a number between 1 - 100.'
 									},
 									pattern: {
 										value: /^([0-9]{0,3})$/,
+										// message: errorIconStyled('wlh_id_value')
 										message: '❗Please enter a number between 1 - 100.'
 									},
 									onChange(e) {
@@ -228,7 +322,11 @@ const Generate: React.FC = () => {
 									OpenPickerIcon: ArrowDropDownIcon
 								}}
 								renderInput={params => (
-									<TextField className="generate_textfield" name="year" error={yearSelectError} helperText={yearSelectError} {...params} />
+									<TextField 
+									className="generate_textfield" 
+									name="year"
+									error={!!errors?.yearSelectError} 
+									helperText={yearSelectError} {...params} />
 								)}
 							/>
 
@@ -277,31 +375,43 @@ const Generate: React.FC = () => {
 								onChange={handleUpdate}
 							/>
 
-							<TextField className="generate_textfield" label="Home Region" id="homeRegion" name="homeRegion" onChange={handleUpdate} />
+							<TextField className="generate_textfield" label="Home Region" id="homeRegion" name="homeRegion" select onChange={handleUpdate}>
+								{regions.codes.map(m => (
+									<MenuItem key={m.value} value={m.value} selected={formState.homeRegion === m.value}>
+										{m.displayed_value}
+									</MenuItem>
+								))}
+							</TextField>
 
-							<Select
+							<TextField
 								className="generate_textfield"
 								id="status"
 								label="WLH ID Status*"
 								name="status"
+								select
+								{...register('status', {
+									// required: errorIconStyled('status')
+									required:'❗Select the status.'
+								})}
+								error={!!errors?.status}
+								helperText={errors.status ? errors.status.message : null}
 								onChange={e => {
 									setFormState({
 										...formState,
 										status: e.target.value
 									});
 								}}
-								value={formState.status}
 							>
 								{status.codes.map(m => (
 									<MenuItem key={m.value} value={m.value}>
 										{m.displayed_value}
 									</MenuItem>
 								))}
-							</Select>
+							</TextField>
 						</TwoColumnForm>
 					</LocalizationProvider>
 
-					<TextField className="project_detail" label="Project Detail" id="projectDetail" name="projectDetail" multiline rows={3} onChange={handleUpdate} />
+					<TextField className="project_details" label="Project Details" multiline rows={3} onChange={handleUpdate} />
 
 					<TwoColumnForm title={'Requester'}>
 						<TextField
@@ -311,9 +421,11 @@ const Generate: React.FC = () => {
 							name="firstName"
 							{...register('firstName', {
 								required: '❗Enter the first name.',
+								// required: errorIconStyled('firstName'),
 								pattern: {
 									value: /^[\w-]{2,}$/,
 									message: '❗The first name must be at least 2 characters long.'
+									// message: errorIconStyled('firstName_value')
 								}
 							})}
 							error={!!errors?.firstName}
@@ -327,9 +439,11 @@ const Generate: React.FC = () => {
 							name="lastName"
 							{...register('lastName', {
 								required: '❗Enter the last name.',
+								// required: errorIconStyled('lastName'),
 								pattern: {
 									value: /^[\w-]{2,}$/,
 									message: '❗The last name must be at least 2 characters long.'
+									// message: errorIconStyled('lastName_value')
 								}
 							})}
 							error={!!errors?.lastName}
@@ -370,9 +484,11 @@ const Generate: React.FC = () => {
 							</TextField>
 							<TextField
 								className="generate_textfield"
-								label="Phone Number (---) --- ---"
+								label="Phone Number"
+								placeholder="(---) --- ----"
 								id="phone"
 								name="phone"
+								type='tel'
 								defaultValue={formState.phone}
 								{...register('phone', {
 									pattern: {
@@ -388,6 +504,7 @@ const Generate: React.FC = () => {
 								label="Email"
 								id="email"
 								name="email"
+								type='email'
 								{...register('email', {
 									pattern: {
 										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -416,17 +533,7 @@ const Generate: React.FC = () => {
 							setRequesterDetailsExpand(!RequesterDetailsExpand);
 						}}
 					>
-						{RequesterDetailsExpand ? (
-							<>
-								<DeleteForeverOutlinedIcon />
-								Remove Requester Details
-							</>
-						) : (
-							<>
-								<AddIcon />
-								Add Requester Details
-							</>
-						)}
+						{RequesterDetailsExpand ? 'Hide Requester Details' : 'Show Requester Details'}
 					</Button>
 
 					<ConfirmDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs} />

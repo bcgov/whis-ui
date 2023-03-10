@@ -172,7 +172,7 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box className="cardDetails">
-					<StatusHistory history={state.status.history}/>
+					{/* <StatusHistory history={state.status.history}/> */}
 					<TextField
 						className='changeStatus'
 						id="idStatus"

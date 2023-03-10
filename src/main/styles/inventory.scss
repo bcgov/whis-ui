@@ -48,7 +48,11 @@ table.inventory_table {
 		width: 529px;
 	}
 
-	.project_detail {
+	//year selector
+	
+
+
+	.project_details {
 		min-width: 1090px;
 		margin: 32px 125px 0 125px;
 	}
@@ -78,6 +82,24 @@ table.inventory_table {
 	}
 
 }
+
+.css-j5h6pi-MuiPopper-root{
+	// width: 529px;
+	.MuiPaper-root{
+		width: 529px;
+		position: relative;
+		left: 25px;
+		.css-epd502{
+			width: 529px;
+			.MuiCalendarPicker-root{
+				width: 529px;
+			}
+		}
+	}
+}
+// .css-j7qwjs{
+// 	width: 529px;
+// }
 
 .generate_confirm_dialog,
 .generate_cancel_dialog {

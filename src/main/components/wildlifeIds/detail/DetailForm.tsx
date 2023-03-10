@@ -19,7 +19,7 @@ const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
 					<Button className="updateIDBtn" onClick={onEditButtonClick} variant={'contained'}>
 						Update WLH ID
 					</Button>
-					<IconButton >
+					<IconButton>
 						<PrintIcon />
 					</IconButton>
 					<IconButton>
@@ -30,11 +30,11 @@ const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
 
 			<Status state={wildlifeHealthId} />
 
-			<Purpose state={wildlifeHealthId} />
-
 			<AnimalDetails state={wildlifeHealthId} />
 
 			<Event state={wildlifeHealthId} />
+			
+			<Purpose state={wildlifeHealthId} />
 		</Box>
 	);
 };
