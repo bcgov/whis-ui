@@ -8,6 +8,7 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import Detail from "../pages/wildlifeIds/Detail";
 import Edit from "../pages/wildlifeIds/Edit";
 import ActionManagement from '../pages/wildlifeIds/ActionManagement';
+import EditMultiple from '../pages/wildlifeIds/EditMultiple';
 
 const WildlifeIdRoutes = [
 	<Route path='/wildlifeIds' element={<DefaultLayout showNavigation={true}><Dashboard/></DefaultLayout>}/>,
@@ -16,6 +17,7 @@ const WildlifeIdRoutes = [
 	<Route path='/wildlifeIds/generate' element={<DefaultLayout><Generate/></DefaultLayout>}/>,
 	<Route path='/wildlifeIds/detail/:id' element={<DefaultLayout><Detail/></DefaultLayout>}/>,
 	<Route path='/wildlifeIds/edit/:id' element={<DefaultLayout><Edit/></DefaultLayout>}/>,
+	<Route path='/wildlifeIds/multipleEdit' element={<DefaultLayout><EditMultiple/></DefaultLayout>}/>,
 	<Route path='/wildlifeIds/actionManagement' element={<DefaultLayout><ActionManagement/></DefaultLayout>}/>
 ];
 export default WildlifeIdRoutes;

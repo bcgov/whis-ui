@@ -9,7 +9,7 @@ const ValidationError = ({hidden, message}) => {
 	return (
 		<Stack direction="row" alignItems="center">
 			<PriorityHighIcon sx={{fontSize: '14px'}} color="error"/>
-			<span>{message}</span>
+			<span className='error_message'>{message}</span>
 		</Stack>
 	);
 };

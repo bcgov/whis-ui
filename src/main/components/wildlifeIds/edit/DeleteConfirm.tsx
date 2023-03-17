@@ -1,4 +1,4 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from '@mui/material';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
@@ -12,28 +12,19 @@ const DeleteConfirm = ({open, acceptAction, cancelAction, noun}) => {
 	}
 
 	return (
-		<Dialog
-			className="deleteConfirm"
-			open={open}
-			onClose={handleCancel}
-			maxWidth={false}
-		>
-			<IconButton
-				className="dialogBtn"
-				onClick={handleCancel}
-			>
-				<CloseIcon />
-			</IconButton>
+		<Dialog className="deleteConfirm" open={open} onClose={handleCancel} maxWidth={false}>
 			<DialogTitle>{'Delete Confirmation'}</DialogTitle>
 			<DialogContent>
 				Are you sure you want to delete this {noun}?<br />
 				There is no Undo for this action.
+				<Typography>Are you sure you want to proceed?</Typography>
 			</DialogContent>
+			<Divider variant="middle" />
 			<DialogActions>
 				<Button variant={'contained'} onClick={handleAccept} className="requesterFormBtn">
 					Delete
 				</Button>
-				<Button variant={'outlined'} onClick={handleCancel} className="requesterFormBtn">
+				<Button variant={'contained'} onClick={handleCancel} className="requesterFormBtn">
 					Cancel
 				</Button>
 			</DialogActions>

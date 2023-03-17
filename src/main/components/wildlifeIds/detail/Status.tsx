@@ -26,7 +26,7 @@ const Status = ({ state }) => {
 
 
 	return (
-		<Card className='card'>
+		<Card className='details_status_card'>
 			<Box className="idInformationCard">
 				<Typography className="title">General Information</Typography>
 				<Box className='info' >

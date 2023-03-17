@@ -11,7 +11,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 	const {mappedCodes: regions} = useCodeTable('regions');
 
 	return (
-		<Expandable expansionEvent={expansionEvent}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
 			<Expandable.Title>
 				<span className="cardSubtitle">
 					<Typography>Animal Details</Typography>

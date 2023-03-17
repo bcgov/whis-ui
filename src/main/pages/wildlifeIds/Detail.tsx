@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import '../../styles/inventory.scss';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useDispatch} from "react-redux";
 import {useLocation, useParams} from "react-router";
