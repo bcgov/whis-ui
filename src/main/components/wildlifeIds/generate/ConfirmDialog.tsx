@@ -10,7 +10,7 @@ const ConfirmDialog = ({openGenerateDialog, handleClose, navigate, numOfIDs}) =>
 			<Box className="generated_icon_container">
 				<CheckIcon className="CheckIcon" />
 			</Box>
-			<DialogTitle>WLH ID (s) successfully generated!</DialogTitle>
+			<DialogTitle>WLH ID (s) Successfully Generated!</DialogTitle>
 			<DialogContent>
 				You have generated {numOfIDs} WLH IDs: [WLH ID]-[WLH ID]<br/>
 				What would you like to do next?
@@ -33,7 +33,7 @@ const ConfirmDialog = ({openGenerateDialog, handleClose, navigate, numOfIDs}) =>
 						navigate('/wildlifeIds');
 					}}
 				>
-					Go to Dashboard
+					Go&nbsp;<span>to</span>&nbsp;Dashboard
 				</Button>
 				<Button
 					className='dialog_actions closeBtn cancelBtns'

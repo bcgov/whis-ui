@@ -301,18 +301,18 @@ const Generate: React.FC = () => {
 									))}
 								</TextField>
 							</FormGroup>
-							<FormGroup>
-								<TextField
-									className="generate_textfield"
-									label="Associated Project"
-									id="associatedProject"
-									value={formState.associatedProject}
-									name="associatedProject"
-									onChange={handleUpdate}
-								/>
-							</FormGroup>
 						</TwoColumnForm>
 					</LocalizationProvider>
+					<FormGroup>
+						<TextField
+							className="associated_proj"
+							label="Associated Project"
+							id="associatedProject"
+							value={formState.associatedProject}
+							name="associatedProject"
+							onChange={handleUpdate}
+						/>
+					</FormGroup>
 					<FormGroup>
 						<TextField className="project_details" label="Project Details" multiline rows={3} onChange={handleUpdate} />
 					</FormGroup>

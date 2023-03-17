@@ -55,7 +55,7 @@ table.inventory_table {
     }
 
 
-	.project_details {
+	.project_details, .associated_proj {
 		min-width: 1090px;
 		margin: 32px 125px 0 125px;
 	}
@@ -181,11 +181,14 @@ table.inventory_table {
 		padding: 24px 24px 24px 0;
 
 		.dialog_actions {
-			// width: 94px;
 			height: 36px;
 			font-size: 14px;
 			text-transform: capitalize;
 			font-family: 'BCSans-Bold';
+
+			span{
+				text-transform: lowercase;
+			}
 		}
 
 		.closeBtn {

@@ -8,7 +8,7 @@ const NotificationDialog = ({open, close}) => {
 			<Box className="notification_icon_container">
 				<NotificationsActiveOutlinedIcon className="NotificationIcon" />
 			</Box>
-			<DialogTitle>WLH ID (s) successfully generated!</DialogTitle>
+			<DialogTitle>Notification Alert Saved!</DialogTitle>
 			<DialogContent>
 				You have set an [email/ dashboard] notification. You will receive a message when the WLH ID generation function is available.
 			</DialogContent>

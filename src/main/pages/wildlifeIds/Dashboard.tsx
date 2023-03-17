@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
 
 	const reports = [
 		{count: 1859, event: 'IDs Generated', discriminator: 'From last 7 days'},
-		{count: 45, event: 'ID Requests', discriminator: 'From 12 organizations'}
+		{count: 4501, event: 'ID Requests', discriminator: 'From 12 organizations'}
 	];
 
 	const actions = [

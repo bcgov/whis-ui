@@ -14,11 +14,11 @@ const LockedDialog = ({open, close, setUserWantsNotification}) => {
 			<Box className="lock_icon_container">
 				<LockIcon className="LockIcon" />
 			</Box>
-			<DialogTitle>WLH ID generation locked!</DialogTitle>
+			<DialogTitle>WLH ID Generation Locked!</DialogTitle>
 			<DialogContent>
 				{/* [{lockStatus.status?.lockHolder?.email}] */}
 				{/* the name should be Full Name instead of email */}
-				{lockStatus.bestName} is currently generating WLH IDs. If you like to be notified when the function is available, choose your notification method?
+				{lockStatus.bestName} is currently generating WLH IDs. If you like to be notified when the function is available, choose your notification method and save it?
 				<RadioGroup row>
 					<FormControlLabel value="email" control={<Radio />} label="Email" />
 					<FormControlLabel value="dashboard" control={<Radio />} label="Dashboard" />

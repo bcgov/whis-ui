@@ -121,7 +121,7 @@ const ActionManagement: React.FC = () => {
 									<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
 										<ManageSearchIcon />
 									</IconButton>
-									<p>Search IDs</p>
+									<p>Inventory</p>
 								</Box>
 								<Box className="actionBtn">
 									<IconButton onClick={() => navigate('/wildlifeIds')}>
@@ -194,7 +194,7 @@ const ActionManagement: React.FC = () => {
 				<Box className="icon_container">
 					<CheckIcon className="CheckIcon" />
 				</Box>
-				<DialogTitle>Notification alert saved!</DialogTitle>
+				<DialogTitle>Notification Alert Saved!</DialogTitle>
 				<DialogContent>You have successfully set a reminder.</DialogContent>
 				<Divider variant="middle" />
 				<DialogActions>
