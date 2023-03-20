@@ -13,7 +13,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 	const {mappedCodes: purposes} = useCodeTable('purposes');
 
 	return (
-		<Expandable expansionEvent={expansionEvent}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
 			<Expandable.Title>
 				<span className="cardSubtitle">
 					<Typography>Purpose</Typography>

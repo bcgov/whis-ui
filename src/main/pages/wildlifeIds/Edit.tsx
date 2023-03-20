@@ -4,7 +4,6 @@ import EditForm from "../../components/wildlifeIds/edit/EditForm";
 import {useDispatch} from "react-redux";
 import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
 
-import '../../styles/inventory.scss';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
 import Loading from "../../components/util/Loading";

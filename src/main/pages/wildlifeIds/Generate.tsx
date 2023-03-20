@@ -1,26 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import GenerationLockWidget from '../../components/wildlifeIds/generate/GenerationLockWidget';
 import {useAPI} from '../../hooks/useAPI';
-import {
-	Box,
-	Button,
-	InputAdornment,
-	MenuItem,
-	Paper,
-	Select,
-	Stack,
-	TextField,
-	Typography
-} from '@mui/material';
+import {Box, Button, FormGroup, InputAdornment, MenuItem, Paper, Stack, TextField, Typography} from '@mui/material';
 import '../../styles/inventory.scss';
-import AddIcon from '@mui/icons-material/Add';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useSelector} from '../../../state/utilities/use_selector';
 import {useNavigate} from 'react-router-dom';
 import TwoColumnForm from '../../components/wildlifeIds/generate/TwoColumnForm';
 import {paperStyle} from '../../../state/style_constants';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import {selectCodeTables} from '../../../state/reducers/code_tables';
 import Loading from '../../components/util/Loading';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
@@ -28,6 +16,7 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {useForm} from 'react-hook-form';
 import ConfirmDialog from '../../components/wildlifeIds/generate/ConfirmDialog';
 import CancelDialog from '../../components/wildlifeIds/generate/CancelDialog';
+import ValidationError from '../../components/util/ValidationError';
 
 const Generate: React.FC = () => {
 	const me = useSelector(state => state.Auth);
@@ -49,13 +38,13 @@ const Generate: React.FC = () => {
 	const [generateStatus, setGenerateStatus] = useState({status: 'not yet called', message: ''});
 
 	const [formState, setFormState] = useState({
-		year: '2022',
+		year: null,
 		species: '',
 		homeRegion: '',
 		projectDetail: '',
 		purpose: '',
 		organization: '',
-		status: 'UNASSIGNED',
+		status: '',
 		requesterFirstName: me.firstName,
 		requesterLastName: me.lastName,
 		requesterContactEmail: me.email,
@@ -72,12 +61,11 @@ const Generate: React.FC = () => {
 	const {
 		register,
 		handleSubmit,
-		control,
-		formState: {errors}
+		formState: {errors},
+		clearErrors
 	} = useForm({mode: 'onChange'});
 
 	//year picker
-	const [year, setYear] = React.useState<Date | null>(null);
 	const [yearSelectError, setYearSelectError] = React.useState<string | null>(null);
 
 	//update dialog
@@ -86,22 +74,17 @@ const Generate: React.FC = () => {
 	const handleClickOpen = () => {
 		setGenerateDialog(true);
 	};
+
 	const handleClose = () => {
 		setGenerateDialog(false);
 		setCancelDialog(false);
 	};
 
-	const validateYear = () => {
-		if (!formState.year) {
-			setYearSelectError('❗Enter the year.');
-			return false;
-		}
-		return true;
-	};
-
-	//handle direct
 	const handleFormSubmit = () => {
-		if (!validateYear()) return;
+		if (yearSelectError || formState.year === null) {
+			setYearSelectError('Year is a required field');
+			return;
+		}
 
 		api
 			.generateIDs({
@@ -140,15 +123,14 @@ const Generate: React.FC = () => {
 
 	//handle update
 	const handleUpdate = event => {
-		const currentState = formState;
-		switch (event.target.name) {
-			default:
-				currentState[event.target.name] = event.target.value;
-		}
+		setFormState({
+			...formState,
+			[event.target.name]: event.target.value
+		});
 	};
 
 	//expand requester details
-	const [RequesterDetailsExpand, setRequesterDetailsExpand] = useState(false);
+	const [RequesterDetailsExpand, setRequesterDetailsExpand] = useState(true);
 
 	//handle submit
 	const handleRequiredSubmit = () => {
@@ -174,236 +156,301 @@ const Generate: React.FC = () => {
 				<form onSubmit={handleSubmit(handleRequiredSubmit)}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<TwoColumnForm title={'WLH ID information'}>
-							<TextField
-								className="generate_textfield"
-								id="wlh_id"
-								name="wlh_id"
-								label="Number of WLH IDs*"
-								type="tel"
-								{...register('wlh_id', {
-									required: '❗Enter the number of WLH IDs.',
-									min: {
-										value: 1,
-										message: '❗Please enter a number between 1 - 100.'
-									},
-									max: {
-										value: 100,
-										message: '❗Please enter a number between 1 - 100.'
-									},
-									pattern: {
-										value: /^([0-9]{0,3})$/,
-										message: '❗Please enter a number between 1 - 100.'
-									},
-									onChange(e) {
-										getNumberOfIDs(e);
-									}
-								})}
-								error={!!errors?.wlh_id}
-								helperText={errors.wlh_id ? errors.wlh_id.message : ''}
-							/>
-							<DatePicker
-								views={['year']}
-								label="Year*"
-								value={year}
-								minDate={new Date(2020, 1, 1)}
-								maxDate={new Date(2099, 1, 1)}
-								onError={(e, value) => {
-									switch (e) {
-										case 'minDate':
-										case 'invalidDate':
-										case 'maxDate':
-											setYearSelectError('❗Please enter a number between 2020 - 2099.');
-											break;
-										case null:
-											setYearSelectError(null);
-											break;
-									}
-								}}
-								onChange={y => {
-									if (y) {
-										setYear(y);
-									}
-								}}
-								components={{
-									OpenPickerIcon: ArrowDropDownIcon
-								}}
-								renderInput={params => (
-									<TextField className="generate_textfield" name="year" error={yearSelectError} helperText={yearSelectError} {...params} />
-								)}
-							/>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									id="wlh_id"
+									name="wlh_id"
+									label="Number of WLH IDs*"
+									inputProps={{maxLength: 3}}
+									{...register('wlh_id', {
+										required: 'Enter the number of WLH IDs.',
+										min: {
+											value: 1,
+											message: 'Please enter a number between 1 - 100.'
+										},
+										max: {
+											value: 100,
+											message: 'Please enter a number between 1 - 100.'
+										},
+										pattern: {
+											value: /^([0-9]{0,3})$/,
+											message: 'Please enter a number between 1 - 100.'
+										},
+										onChange(e) {
+											getNumberOfIDs(e);
+										}
+									})}
+									error={!!errors?.wlh_id}
+								/>
+								<ValidationError hidden={!errors?.wlh_id} message={errors.wlh_id?.message} />
+							</FormGroup>
+							<FormGroup>
+								<DatePicker
+									views={['year']}
+									label="Year*"
+									value={formState.year}
+									minDate={new Date(2020, 0, 1)}
+									maxDate={new Date(2099, 0, 1)}
+									onError={(e, value) => {
+										switch (e) {
+											case 'minDate':
+											case 'invalidDate':
+											case 'maxDate':
+												setYearSelectError('Please enter a number between 2020 - 2099.');
+												break;
+											case null:
+												setYearSelectError(null);
+												break;
+										}
+									}}
+									onChange={year => {
+										if (year) {
+											setFormState({...formState, year});
+										}
+									}}
+									components={{
+										OpenPickerIcon: ArrowDropDownIcon
+									}}
+									renderInput={params => <TextField className="generate_textfield" name="year" error={yearSelectError !== null} {...params} />}
+								/>
+								<ValidationError hidden={yearSelectError == null} message={yearSelectError} />
+							</FormGroup>
 
-							<TextField
-								className="generate_textfield"
-								id="purpose"
-								name="purpose"
-								label="Purpose*"
-								select
-								{...register('purpose', {
-									required: '❗Select the purpose.'
-								})}
-								error={!!errors?.purpose}
-								helperText={errors.purpose ? errors.purpose.message : null}
-								onChange={handleUpdate}
-								onSelect={handleUpdate}
-							>
-								{purposes.codes.map(m => (
-									<MenuItem key={m.value} value={m.value} selected={formState.purpose === m.value}>
-										{m.displayed_value}
-									</MenuItem>
-								))}
-							</TextField>
-
-							<TextField
-								className="generate_textfield"
-								label="Species"
-								id="species"
-								defaultValue={formState.species}
-								name="species"
-								onChange={handleUpdate}
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											<AccountTreeOutlinedIcon />
-										</InputAdornment>
-									)
-								}}
-							/>
-							<TextField
-								className="generate_textfield"
-								label="Associated Project"
-								id="associatedProject"
-								defaultValue={formState.associatedProject}
-								name="associatedProject"
-								onChange={handleUpdate}
-							/>
-
-							<TextField className="generate_textfield" label="Home Region" id="homeRegion" name="homeRegion" onChange={handleUpdate} />
-
-							<Select
-								className="generate_textfield"
-								id="status"
-								label="WLH ID Status*"
-								name="status"
-								onChange={e => {
-									setFormState({
-										...formState,
-										status: e.target.value
-									});
-								}}
-								value={formState.status}
-							>
-								{status.codes.map(m => (
-									<MenuItem key={m.value} value={m.value}>
-										{m.displayed_value}
-									</MenuItem>
-								))}
-							</Select>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									id="purpose"
+									name="purpose"
+									label="Purpose*"
+									select
+									{...register('purpose', {
+										required: 'Select the purpose.'
+									})}
+									error={!!errors?.purpose}
+									onChange={e => {
+										handleUpdate(e);
+										clearErrors('purpose');
+									}}
+									value={formState.purpose}
+								>
+									{purposes.codes.map(m => (
+										<MenuItem key={m.value} value={m.value}>
+											{m.displayed_value}
+										</MenuItem>
+									))}
+								</TextField>
+								<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message} />
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									label="Species"
+									id="species"
+									value={formState.species}
+									name="species"
+									onChange={handleUpdate}
+									InputProps={{
+										endAdornment: (
+											<InputAdornment position="end">
+												<AccountTreeOutlinedIcon />
+											</InputAdornment>
+										)
+									}}
+								/>
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									id="status"
+									label="WLH ID Status*"
+									name="status"
+									select
+									value={formState.status}
+									{...register('status', {
+										required: 'Select the status.'
+									})}
+									error={!!errors?.status}
+									onChange={e => {
+										handleUpdate(e);
+										clearErrors('status');
+									}}
+								>
+									{status.codes.map(m => (
+										<MenuItem key={m.value} value={m.value}>
+											{m.displayed_value}
+										</MenuItem>
+									))}
+								</TextField>
+								<ValidationError hidden={!errors?.status} message={errors.status?.message} />
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									label="Home Region"
+									id="homeRegion"
+									name="homeRegion"
+									select
+									onChange={handleUpdate}
+									value={formState.homeRegion}
+								>
+									{regions.codes.map(m => (
+										<MenuItem key={m.value} value={m.value}>
+											{m.displayed_value}
+										</MenuItem>
+									))}
+								</TextField>
+							</FormGroup>
 						</TwoColumnForm>
 					</LocalizationProvider>
-
-					<TextField className="project_detail" label="Project Detail" id="projectDetail" name="projectDetail" multiline rows={3} onChange={handleUpdate} />
-
+					<FormGroup>
+						<TextField
+							className="associated_proj"
+							label="Associated Project"
+							id="associatedProject"
+							value={formState.associatedProject}
+							name="associatedProject"
+							onChange={handleUpdate}
+						/>
+					</FormGroup>
+					<FormGroup>
+						<TextField className="project_details" label="Project Details" multiline rows={3} onChange={handleUpdate} />
+					</FormGroup>
 					<TwoColumnForm title={'Requester'}>
-						<TextField
-							className="generate_textfield"
-							label="First Name*"
-							id="firstName"
-							name="firstName"
-							{...register('firstName', {
-								required: '❗Enter the first name.',
-								pattern: {
-									value: /^[\w-]{2,}$/,
-									message: '❗The first name must be at least 2 characters long.'
-								}
-							})}
-							error={!!errors?.firstName}
-							helperText={errors.firstName ? errors.firstName.message : null}
-						/>
-
-						<TextField
-							className="generate_textfield"
-							label="Last Name*"
-							id="lastName"
-							name="lastName"
-							{...register('lastName', {
-								required: '❗Enter the last name.',
-								pattern: {
-									value: /^[\w-]{2,}$/,
-									message: '❗The last name must be at least 2 characters long.'
-								}
-							})}
-							error={!!errors?.lastName}
-							helperText={errors.lastName ? errors.lastName.message : null}
-						/>
+						<FormGroup>
+							<TextField
+								className="generate_textfield"
+								label="First Name*"
+								id="requesterFirstName"
+								name="requesterFirstName"
+								value={formState.requesterFirstName}
+								{...register('requesterFirstName', {
+									required: 'Enter the first name.',
+									pattern: {
+										value: /^[\w- ]{2,}$/,
+										message: 'The first name must be at least 2 characters long.'
+									},
+									onChange: handleUpdate
+								})}
+								error={!!errors?.requesterFirstName}
+							/>
+							<ValidationError hidden={!errors?.requesterFirstName} message={errors.requesterFirstName?.message} />
+						</FormGroup>
+						<FormGroup>
+							<TextField
+								className="generate_textfield"
+								label="Last Name*"
+								id="requesterLastName"
+								name="requesterLastName"
+								value={formState.requesterLastName}
+								{...register('requesterLastName', {
+									required: 'Enter the last name.',
+									pattern: {
+										value: /^[\w- ]{2,}$/,
+										message: 'The last name must be at least 2 characters long.'
+									},
+									onChange: handleUpdate
+								})}
+								error={!!errors?.requesterLastName}
+							/>
+							<ValidationError hidden={!errors?.requesterLastName} message={errors.requesterLastName?.message} />
+						</FormGroup>
 					</TwoColumnForm>
-
 					{RequesterDetailsExpand ? (
 						<TwoColumnForm title={'Requester details'}>
-							<TextField
-								className="generate_textfield"
-								select
-								label="Region"
-								id="requesterRegion"
-								placeholder="Region"
-								onSelect={handleUpdate}
-								onChange={handleUpdate}
-							>
-								{regions.codes.map(m => (
-									<MenuItem key={m.value} value={m.value} selected={formState.requesterRegion === m.value}>
-										{m.displayed_value}
-									</MenuItem>
-								))}
-							</TextField>
-							<TextField
-								className="generate_textfield"
-								select
-								label="Organization"
-								id="requesterOrganization"
-								placeholder="Organization"
-								onSelect={handleUpdate}
-							>
-								{organizations.codes.map(m => (
-									<MenuItem key={m.value} value={m.value} selected={formState.requesterOrganization === m.value}>
-										{m.displayed_value}
-									</MenuItem>
-								))}
-							</TextField>
-							<TextField
-								className="generate_textfield"
-								label="Phone Number (---) --- ---"
-								id="phone"
-								name="phone"
-								defaultValue={formState.phone}
-								{...register('phone', {
-									pattern: {
-										value: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
-										message: '❗The phone format is (---)--- ----.'
-									}
-								})}
-								error={!!errors?.phone}
-								helperText={errors.phone ? errors.phone.message : null}
-							/>
-							<TextField
-								className="generate_textfield"
-								label="Email"
-								id="email"
-								name="email"
-								{...register('email', {
-									pattern: {
-										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-										message: '❗Invalid email address.'
-									}
-								})}
-								error={!!errors?.email}
-								helperText={errors.email ? errors.email.message : null}
-							/>
-							<TextField className="generate_textfield" select label="Requester's Role" id="requesterRole" placeholder="Role" onSelect={handleUpdate}>
-								{roles.codes.map(m => (
-									<MenuItem key={m.value} value={m.value} selected={formState.requesterRole === m.value}>
-										{m.displayed_value}
-									</MenuItem>
-								))}
-							</TextField>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									select
+									label="Region"
+									id="requesterRegion"
+									name="requesterRegion"
+									placeholder="Region"
+									onChange={handleUpdate}
+									value={formState.requesterRegion}
+								>
+									{regions.codes.map(m => (
+										<MenuItem key={m.value} value={m.value}>
+											{m.displayed_value}
+										</MenuItem>
+									))}
+								</TextField>
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									select
+									label="Organization"
+									id="requesterOrganization"
+									name="requesterOrganization"
+									placeholder="Organization"
+									onChange={handleUpdate}
+									value={formState.requesterOrganization}
+								>
+									{organizations.codes.map(m => (
+										<MenuItem key={m.value} value={m.value}>
+											{m.displayed_value}
+										</MenuItem>
+									))}
+								</TextField>
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									label="Phone Number"
+									placeholder="(---) --- ----"
+									id="requesterContactPhone"
+									name="requesterContactPhone"
+									value={formState.requesterContactPhone}
+									type="tel"
+									{...register('requesterContactPhone', {
+										pattern: {
+											value: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im,
+											message: 'The phone format is (---)--- ----.'
+										},
+										onChange: handleUpdate
+									})}
+									error={!!errors?.requesterContactPhone}
+								/>
+								<ValidationError hidden={!errors?.requesterContactPhone} message={errors.requesterContactPhone?.message} />
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									label="Email"
+									id="requesterContactEmail"
+									name="requesterContactEmail"
+									value={formState.requesterContactEmail}
+									type="email"
+									{...register('requesterContactEmail', {
+										pattern: {
+											value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+											message: 'Invalid email address.'
+										},
+										onChange: handleUpdate
+									})}
+									error={!!errors?.requesterContactEmail}
+								/>
+								<ValidationError hidden={!errors?.requesterContactEmail} message={errors.requesterContactEmail?.message} />
+							</FormGroup>
+							<FormGroup>
+								<TextField
+									className="generate_textfield"
+									select
+									label="Requester's Role"
+									id="requesterRole"
+									name="requesterRole"
+									placeholder="Role"
+									onChange={handleUpdate}
+									value={formState.requesterRole}
+								>
+									{roles.codes.map(m => (
+										<MenuItem key={m.value} value={m.value} selected={formState.requesterRole === m.value}>
+											{m.displayed_value}
+										</MenuItem>
+									))}
+								</TextField>
+							</FormGroup>
 						</TwoColumnForm>
 					) : (
 						''
@@ -416,17 +463,7 @@ const Generate: React.FC = () => {
 							setRequesterDetailsExpand(!RequesterDetailsExpand);
 						}}
 					>
-						{RequesterDetailsExpand ? (
-							<>
-								<DeleteForeverOutlinedIcon />
-								Remove Requester Details
-							</>
-						) : (
-							<>
-								<AddIcon />
-								Add Requester Details
-							</>
-						)}
+						{RequesterDetailsExpand ? 'Hide Requester Details' : 'Show Requester Details'}
 					</Button>
 
 					<ConfirmDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs} />

@@ -24,6 +24,7 @@ import {
 	Dialog,
 	DialogActions,
 	DialogContent,
+	DialogTitle,
 	Divider,
 	FormControlLabel,
 	IconButton,
@@ -41,9 +42,8 @@ const ActionManagement: React.FC = () => {
 	const me = useSelector(state => state.Auth);
 	const navigate = useNavigate();
 
-	const [date, setDate] = useState(null);
-	const [time, setTime] = useState(null);
-	// const [toolTitle, setTitle] = useState(true);
+	// const [date, setDate] = useState(null);
+	// const [time, setTime] = useState(null);
 
 	const receivers = [
 		{label: 'Shari', value: 'Shari'},
@@ -78,9 +78,7 @@ const ActionManagement: React.FC = () => {
 		setOpen(false);
 	};
 
-	//date & time
-	// const toolbarTitle = toolTitle ? "Select a date" : "Enter a Date";
-
+	
 	return (
 		<Box>
 			<Stack direction="row" spacing={1}>
@@ -123,7 +121,7 @@ const ActionManagement: React.FC = () => {
 									<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
 										<ManageSearchIcon />
 									</IconButton>
-									<p>Search IDs</p>
+									<p>Inventory</p>
 								</Box>
 								<Box className="actionBtn">
 									<IconButton onClick={() => navigate('/wildlifeIds')}>
@@ -153,53 +151,23 @@ const ActionManagement: React.FC = () => {
 									required
 								/>
 								<Box>
-									<MobileDatePicker
+									<TextField
 										label="Date"
-										value={date}
-										toolbarTitle="Select a date"
-										componentsProps={{
-											actionBar: {actions: ['clear', 'today']}
+										type="date"
+										className="action_inputs date"
+										InputLabelProps={{
+											shrink: true
 										}}
-										closeOnSelect={true}
-										onChange={newValue => {
-											setDate(newValue);
-										}}
-										renderInput={params => (
-											<TextField
-												className="action_inputs date"
-												InputProps={{
-													endAdornment: (
-														<InputAdornment position="end">
-															<CalendarTodayIcon />
-														</InputAdornment>
-													)
-												}}
-												placeholder="mm/dd/yyyy"
-												{...params}
-											/>
-										)}
 									/>
-									<MobileTimePicker
+									<TextField
 										label="Time"
-										value={time}
-										onChange={newValue => {
-											setTime(newValue);
+										type="time"
+										className="action_inputs"
+										InputLabelProps={{
+											shrink: true
 										}}
-										renderInput={params => (
-											<TextField
-												className="action_inputs"
-												InputProps={{
-													endAdornment: (
-														<InputAdornment position="end">
-															<CalendarTodayIcon />
-														</InputAdornment>
-													)
-												}}
-												placeholder="hh:mm (a|p)m"
-												{...params}
-											/>
-										)}
 									/>
+									
 								</Box>
 								<TextField className="action_inputs" select label="Receiver" placeholder="Receiver" required>
 									{receivers.map((m, i) => (
@@ -222,22 +190,16 @@ const ActionManagement: React.FC = () => {
 					</CardContent>
 				</Card>
 			</Stack>
-			<Dialog className="success_dialog" open={open} onClose={handleClose}>
-				<Box className="checkIcon">
-					<CheckIcon />
+			<Dialog className="set_reminder_dialog" open={open} onClose={handleClose}>
+				<Box className="icon_container">
+					<CheckIcon className="CheckIcon" />
 				</Box>
-				<IconButton
-					onClick={handleClose}
-					className='dialogCloseBtn'
-				>
-					<CloseIcon/>
-				</IconButton>
-				<DialogContent>
-					<p>You have successfully set a reminder</p>
-				</DialogContent>
+				<DialogTitle>Notification Alert Saved!</DialogTitle>
+				<DialogContent>You have successfully set a reminder.</DialogContent>
+				<Divider variant="middle" />
 				<DialogActions>
-					<Button className="okBtn">
-						OK
+					<Button className="closeBtn" variant="contained" onClick={handleClose}>
+						Close
 					</Button>
 				</DialogActions>
 			</Dialog>

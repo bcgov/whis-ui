@@ -1,36 +1,34 @@
-import {Button, Dialog, DialogActions, DialogContent, Box, IconButton, DialogTitle} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import {Button, Dialog, DialogActions, DialogContent, Box, DialogTitle, Divider} from '@mui/material';
 import React from 'react';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 const CancelDialog = ({openCancelDialog, handleClose, navigate, setCancelDialog}) => {
 	return (
 		<Dialog open={openCancelDialog} onClose={handleClose} className="generate_cancel_dialog">
-			<Box className='cancel_icon_container'>
+			<Box className="cancel_icon_container">
 				<PriorityHighIcon className="PriorityHighIcon" />
 			</Box>
-			<IconButton onClick={handleClose} className="dialogBtn">
-				<CloseIcon />
-			</IconButton>
-			<DialogTitle className='dialog_title'>Cancel WLH ID Generation</DialogTitle>
-			<DialogContent className="cancel_dialog_content">
-				<p>You have NOT generated any IDs!&nbsp;&nbsp;Are you sure you want to leave this page?</p>
-			</DialogContent>
-			<DialogActions className="dialog_actions">
+			<DialogTitle>Cancel WLH ID Generation</DialogTitle>
+			<DialogContent>Are you sure you want to cancel?&nbsp;Changes you have made will not be saved.</DialogContent>
+			<Divider variant="middle" />
+			<DialogActions>
 				<Button
-					className="cancelBtn"
+					className="dialog_actions cancelBtns"
+					variant={'contained'}
 					onClick={() => {
 						navigate('/wildlifeIds/');
 					}}
 				>
-					YES
+					Yes
 				</Button>
 				<Button
+					className="dialog_actions closeBtn cancelBtns"
 					onClick={() => {
 						setCancelDialog(false);
 					}}
+					variant={'contained'}
 				>
-					NO
+					No
 				</Button>
 			</DialogActions>
 		</Dialog>

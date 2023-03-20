@@ -1,17 +1,17 @@
-import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
+import {Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
 import React from 'react';
 import CodeLookup from '../../util/CodeLookup';
 
 const HidableDetails = ({state, index}) => {
 	const submitters = state.events[index].submitters;
 	return (
-		<Box className="hidableDetails">
-			<Typography className="title">Location</Typography>
-			<TableContainer component={Paper}>
+		<Box className="cardDetails">
+			<Typography className="detailsSubtitle">Location</Typography>
+			<TableContainer component={Box} className="details_table">
 				<Table>
 					<TableHead>
 						<TableRow className="tableHead">
-							<TableCell>Location</TableCell>
+							<TableCell className="table_location">Location</TableCell>
 							<TableCell>Details</TableCell>
 						</TableRow>
 					</TableHead>
@@ -35,14 +35,12 @@ const HidableDetails = ({state, index}) => {
 			</TableContainer>
 			<Box className="hidableDetails">
 				<Typography variant="body2">History</Typography>
-				<Typography variant="body1">{state.events[index].history}</Typography>
+				<Typography className="history_content">{state.events[index].history}</Typography>
 			</Box>
 
 			<Box className="hidableDetails">
-				<Typography className="title">
-					Submitters
-				</Typography>
-				<TableContainer component={Paper}>
+				<Typography className="title">Submitters</Typography>
+				<TableContainer component={Box}>
 					<Table className="personnelTable">
 						<TableHead>
 							<TableRow className="tableHead">
@@ -69,7 +67,7 @@ const HidableDetails = ({state, index}) => {
 									<TableCell>
 										<CodeLookup codeTable={'roles'} code={s.role} />
 									</TableCell>
-									<TableCell className='phone'>{s.phoneNumber}</TableCell>
+									<TableCell className="phone">{s.phoneNumber}</TableCell>
 									<TableCell>{s.email}</TableCell>
 								</TableRow>
 							))}
@@ -78,9 +76,7 @@ const HidableDetails = ({state, index}) => {
 				</TableContainer>
 			</Box>
 			<Box className="hidableDetails">
-				<Typography className='title'>
-					Samples
-				</Typography>
+				<Typography className="title">Samples</Typography>
 				<Box className="details_samples">
 					<span>
 						<Typography variant="body2">Samples Were Collected?</Typography>

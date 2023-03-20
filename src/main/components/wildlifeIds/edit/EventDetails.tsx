@@ -68,7 +68,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 	}, [event.submitters, index, serial]);
 
 	return (
-		<Expandable expansionEvent={expansionEvent}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
 			<Expandable.Title>
 				<span className="cardSubtitle">
 					<Typography>Event {index + 1}</Typography>

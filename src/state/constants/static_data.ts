@@ -47,6 +47,7 @@ export const staticData = {
 			validCodeFromLabelAndValue({value: 'OMINECA', label: 'Omineca'}),
 			validCodeFromLabelAndValue({value: 'OKANAGAN', label: 'Okanagan'}),
 			validCodeFromLabelAndValue({value: 'PEACE', label: 'Peace'}),
+			validCodeFromLabelAndValue({value: 'NOT_RECORDED', label: 'Not Recorded'}),
 		]
 	},
 	'organizations': {

@@ -1,4 +1,4 @@
-import {IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {Box, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -75,7 +75,7 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 	}, [menuCurrentPerson, noun]);
 
 	return (
-		<TableContainer component={Paper}>
+		<TableContainer component={Box}>
 			<Table className="personnelTable">
 				<TableHead>
 					<TableRow className="tableHead">

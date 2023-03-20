@@ -1,11 +1,9 @@
 import Expandable from '../../pageElements/Expandable';
 import {Box, Button, FormControlLabel, FormGroup, MenuItem, Switch, TextField, Typography} from '@mui/material';
 import React, {useEffect, useState} from 'react';
-import StatusHistory from './StatusHistory';
 import CodeLookup from '../../util/CodeLookup';
-import FriendlyDate from '../../util/FriendlyDate';
 
-const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
+const Status = ({expansionEvent}) => {
 	const statuses = [
 		{value: 'ASSIGNED', label: 'Assigned'},
 		{value: 'RETIRED', label: 'Retired'},
@@ -23,13 +21,13 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 		}
 	}, [lastState]);
 
-	useEffect(() => {
-		if (state.status.history.length > 0) {
-			setLastState(state.status.history[state.status.history.length - 1]);
-		} else {
-			setLastState(null);
-		}
-	}, [state]);
+	// useEffect(() => {
+	// 	if (state.status.history.length > 0) {
+	// 		setLastState(state.status.history[state.status.history.length - 1]);
+	// 	} else {
+	// 		setLastState(null);
+	// 	}
+	// }, [state]);
 
 	function renderDetailed(status) {
 		switch (status) {
@@ -42,16 +40,16 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					id="reason"
 					name="reason"
 					multiline
-					onChange={e => {
-						dispatch({
-							type: 'fieldChange',
-							payload: {
-								field: 'status.dirty.reason',
-								value: e.target.value
-							}
-						});
-					}}
-					value={state.status.dirty.reason}
+					// onChange={e => {
+					// 	dispatch({
+					// 		type: 'fieldChange',
+					// 		payload: {
+					// 			field: 'status.dirty.reason',
+					// 			value: e.target.value
+					// 		}
+					// 	});
+					// }}
+					// value={state.status.dirty.reason}
 					rows={3}
 				/>
 			);
@@ -64,40 +62,42 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 							className="switchLabels"
 							control={
 								<Switch
-									onChange={e => {
-										dispatch({
-											type: 'fieldChange',
-											payload: {
-												field: 'status.dirty.additionalAttributes.recaptureKitsReturned',
-												value: e.target.checked
-											}
-										});
-									}}
-									checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
+									// onChange={e => {
+									// 	dispatch({
+									// 		type: 'fieldChange',
+									// 		payload: {
+									// 			field: 'status.dirty.additionalAttributes.recaptureKitsReturned',
+									// 			value: e.target.checked
+									// 		}
+									// 	});
+									// }}
+									// checked={state.status.dirty.additionalAttributes.recaptureKitsReturned}
 									className="switch"
 								/>
 							}
-							label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}
+							// label={`${state.status.dirty.additionalAttributes.recaptureKitsReturned ? 'Yes' : 'No'}`}
+							label='No'
 						/>
 						<Typography variant="body1">Recapture Status</Typography>
 						<FormControlLabel
 							className="switchLabels"
 							control={
 								<Switch
-									onChange={e =>
-										dispatch({
-											type: 'fieldChange',
-											payload: {
-												field: 'status.dirty.additionalAttributes.recaptureStatus',
-												value: e.target.checked
-											}
-										})
-									}
-									checked={state.status.dirty.additionalAttributes.recaptureStatus}
+									// onChange={e =>
+									// 	dispatch({
+									// 		type: 'fieldChange',
+									// 		payload: {
+									// 			field: 'status.dirty.additionalAttributes.recaptureStatus',
+									// 			value: e.target.checked
+									// 		}
+									// 	})
+									// }
+									// checked={state.status.dirty.additionalAttributes.recaptureStatus}
 									className="switch"
 								/>
 							}
-							label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`}
+							// label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`}
+							label='Off'
 						/>
 					</FormGroup>
 
@@ -106,16 +106,16 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 						id="correctIdNumber"
 						name="correctIdNumber"
 						label="Correct WLH ID Number"
-						value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
-						onChange={e => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: 'status.dirty.additionalAttributes.correctIdNumber',
-									value: e.target.value
-								}
-							});
-						}}
+						// value={state.status.dirty.additionalAttributes.correctIdNumber || ''}
+						// onChange={e => {
+						// 	dispatch({
+						// 		type: 'fieldChange',
+						// 		payload: {
+						// 			field: 'status.dirty.additionalAttributes.correctIdNumber',
+						// 			value: e.target.value
+						// 		}
+						// 	});
+						// }}
 						defaultValue="Pending"
 					/>
 
@@ -126,16 +126,16 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 						name="reason"
 						multiline
 						rows={3}
-						value={state.status.dirty.reason}
-						onChange={e => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: 'status.dirty.reason',
-									value: e.target.value
-								}
-							});
-						}}
+						// value={state.status.dirty.reason}
+						// onChange={e => {
+						// 	dispatch({
+						// 		type: 'fieldChange',
+						// 		payload: {
+						// 			field: 'status.dirty.reason',
+						// 			value: e.target.value
+						// 		}
+						// 	});
+						// }}
 					/>
 				</>
 			);
@@ -145,28 +145,29 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 	}
 
 	return (
-		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'multiple_card'}>
 			<Expandable.Title>
 				<span className="cardSubtitle">
 					<Typography>Status</Typography>
-					<Typography className={displayedStatus} variant="subtitle1">
-						<CodeLookup codeTable={'status'} code={displayedStatus}/>
+					<Typography className='MULTIPLE' variant="subtitle1">
+						Multiple
 					</Typography>
 				</span>
 				<Box className="info">
 					<span>
 						<Typography variant="body2">WLH ID Number</Typography>
-						<Typography variant="body1">{state.metadata.wildlifeHealthId}</Typography>
+						<Typography variant="body1">22-00001-22-00010</Typography>
+						{/* <Typography variant="body1">{state.metadata.wildlifeHealthId}</Typography> */}
 					</span>
 					<span>
 						<Typography variant="body2">WLH ID Generated Date</Typography>
 						<Typography variant="body1">
-							<FriendlyDate value={state.metadata.generationDate}/>
+							Multiple
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">WLH ID Creator</Typography>
-						<Typography variant="body1">{state.metadata.creator.name}</Typography>
+						<Typography variant="body1">Multiple</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
@@ -177,14 +178,14 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 						className='changeStatus'
 						id="idStatus"
 						label="Change WLH Status *"
-						defaultValue={state.status.dirty.status}
 						select
-						onChange={e => {
-							dispatch({
-								type: 'status.statusChange',
-								payload: e.target.value
-							});
-						}}
+						// defaultValue={state.status.dirty.status}
+						// onChange={e => {
+						// 	dispatch({
+						// 		type: 'status.statusChange',
+						// 		payload: e.target.value
+						// 	});
+						// }}
 					>
 						{statuses.map(m => (
 							<MenuItem key={m.value} value={m.value}>
@@ -192,27 +193,28 @@ const Status = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 							</MenuItem>
 						))}
 					</TextField>
-					{renderDetailed(state.status.dirty.status)}
+					{/* {renderDetailed(state.status.dirty.status)} */}
 				</Box>
 
 				<Box className="cardButtons">
 					<Button
 						variant={'contained'}
 						className="update_btn"
-						onClick={() => {
-							dispatch({
-								type: 'status.promote'
-							});
+						// onClick={() => {
+						// 	dispatch({
+						// 		type: 'status.promote'
+						// 	});
 
-							//slight delay before sending
-							setTimeout(() => {
-								saveState();
-							}, 3000);
-						}}
+						// 	//slight delay before sending
+						// 	setTimeout(() => {
+						// 		saveState();
+						// 	}, 3000);
+						// }}
 					>
 						Update
 					</Button>
-					<Button variant={'outlined'} className="update_btn" onClick={resetState}>
+					<Button variant={'outlined'} className="update_btn" >
+					{/* onClick={resetState} */}
 						Cancel
 					</Button>
 				</Box>

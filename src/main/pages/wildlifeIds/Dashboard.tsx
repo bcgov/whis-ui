@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
 
 	const reports = [
 		{count: 1859, event: 'IDs Generated', discriminator: 'From last 7 days'},
-		{count: 45, event: 'ID Requests', discriminator: 'From 12 organizations'}
+		{count: 4501, event: 'ID Requests', discriminator: 'From 12 organizations'}
 	];
 
 	const actions = [
@@ -37,10 +37,9 @@ const Dashboard: React.FC = () => {
 
 	const lockStatus = useSelector(state => state.GenerationLock);
 	const [lockModalOpen, setLockModalOpen] = useState(false);
-	const [testOpen, setTestOpen] = useState(false);
 
 	const handleClose = () => {
-		setTestOpen(false);
+		setLockModalOpen(false);
 	};
 
 	useEffect(() => {
@@ -51,7 +50,7 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<Box className={'dash_grid'}>
-			<LockModal open={testOpen} close={handleClose} />
+			<LockModal open={lockModalOpen} close={handleClose} handleClose={setLockModalOpen}/>
 			<Card className="dash_profile">
 				<IconButton className="settingIcon">
 					<SettingsIcon />
@@ -84,7 +83,7 @@ const Dashboard: React.FC = () => {
 							<Box className="generateBtn">
 								<IconButton
 									onClick={() => {
-										setTestOpen(true);
+										setLockModalOpen(true);
 									}}
 								>
 									<AddCircleOutlineIcon />
@@ -95,7 +94,7 @@ const Dashboard: React.FC = () => {
 								<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
 									<ManageSearchIcon />
 								</IconButton>
-								<p>Search IDs</p>
+								<p>Inventory</p>
 							</Box>
 							<Box className="actionBtn">
 								<IconButton onClick={() => navigate('/wildlifeIds/actionManagement')}>
