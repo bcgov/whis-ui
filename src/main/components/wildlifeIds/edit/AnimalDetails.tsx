@@ -5,6 +5,7 @@ import IdentifierEntry from './IdentifierEntry';
 import React from 'react';
 import useCodeTable from '../../../hooks/useCodeTable';
 import CodeLookup from '../../util/CodeLookup';
+import TaxonomySearch from "../../util/TaxonomySearch";
 
 const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 	const {mappedCodes: validSex} = useCodeTable('animal_sex');
@@ -24,42 +25,29 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 					<span>
 						<Typography variant="body2">Sex</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'animal_sex'} code={state.animalDetails.sex} />
+							<CodeLookup codeTable={'animal_sex'} code={state.animalDetails.sex}/>
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Home Region</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'regions'} code={state.animalDetails.homeRegion} />
+							<CodeLookup codeTable={'regions'} code={state.animalDetails.homeRegion}/>
 						</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box className="cardDetails">
-					<TextField
-						className="species"
-						label="Species"
-						id="species"
-						name="species"
-						InputProps={{
-							endAdornment: (
-								<InputAdornment position="end">
-									<AccountTreeOutlinedIcon />
-								</InputAdornment>
-							)
-						}}
-						onChange={e => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: 'animalDetails.species',
-									value: e.target.value
-								}
-							});
-						}}
-						value={state.animalDetails.species}
-					/>
+					<TaxonomySearch value={state.animalDetails.species} onValueChange={v => {
+						dispatch({
+							type: 'fieldChange',
+							payload: {
+								field: 'animalDetails.species',
+								value: v
+							}
+						});
+					}}/>
+
 
 					<TextField
 						select
@@ -108,7 +96,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 					<Box className="identifier">
 						{state.animalDetails.identifiers.map((identifier, index) => (
 							<Box className="identifierEntry">
-								<IdentifierEntry identifier={identifier} index={index} dispatch={dispatch} />
+								<IdentifierEntry identifier={identifier} index={index} dispatch={dispatch}/>
 							</Box>
 						))}
 					</Box>
