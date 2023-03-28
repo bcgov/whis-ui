@@ -1,0 +1,266 @@
+@import "colours";
+
+.success_dialog {
+	.MuiDialog-paper {
+		width: 732px;
+		height: 327px;
+		overflow-y: inherit;
+	}
+
+	.icon_container {
+		margin: auto;
+		width: 110px;
+		height: 110px;
+		border-radius: 999rem;
+		background: rgba(223, 240, 216, 0.83);
+		position: relative;
+		top: -55px;
+	}
+
+	.CheckIcon {
+		position: relative;
+		color: #2d4821;
+		font-size: 40px;
+		top: 35px;
+		left: 35px;
+	}
+
+	.MuiDialogTitle-root {
+		margin: 0 auto;
+		padding: 0;
+		font-size: 20px;
+		font-family: 'BCSans-Bold';
+		color: #000000;
+		position: relative;
+		top: -25px;
+	}
+
+	.MuiDialogContent-root {
+		margin: auto;
+		padding: 0 24px;
+		text-align: center;
+		color: #787f81;
+		font-size: 16px;
+		margin-inline: auto;
+		width: 560px;
+	}
+
+	.MuiDivider-root {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.MuiDialogActions-root {
+		padding: 24px 24px 24px 0;
+
+		.closeBtn {
+			width: 94px;
+			height: 36px;
+			font-size: 14px;
+			text-transform: capitalize;
+			font-family: 'BCSans-Bold';
+			background-color: #e9e9e9;
+			color: $text;
+		}
+	}
+}
+
+.cancel_dialog {
+
+	.MuiDialog-paper {
+		width: 732px;
+		height: 327px;
+		overflow-y: inherit;
+
+		.dialogBtn {
+			position: absolute;
+			right: 8px;
+			top: 8px;
+		}
+	}
+
+	.cancel_icon_container {
+		margin: auto;
+		width: 110px;
+		height: 110px;
+		border-radius: 999rem;
+		background: rgba(255, 174, 0, 0.68);
+		position: relative;
+		top: -60px;
+	}
+
+	.generated_icon_container {
+		margin: auto;
+		width: 110px;
+		height: 110px;
+		border-radius: 999rem;
+		background: rgba(	223, 240, 216, 0.83);
+		position: relative;
+		top: -55px;
+	}
+
+	.PriorityHighIcon {
+		position: relative;
+		color: #ffffff;
+		font-size: 50px;
+		top: 30px;
+		left: 30px;
+	}
+	.CheckIcon {
+		position: relative;
+		color: #2d4821;
+		font-size: 40px;
+		top: 35px;
+		left: 35px;
+	}
+
+	.MuiDialogTitle-root {
+		margin: 0 auto;
+		padding: 0;
+		font-size: 20px;
+		font-family: 'BCSans-Bold';
+		color: #000000;
+		position: relative;
+		top: -25px;
+	}
+
+	.MuiDialogContent-root {
+		margin: auto;
+		padding: 0 24px;
+		text-align: center;
+		color: #787f81;
+		font-size: 16px;
+		margin-inline: auto;
+		width: 560px;
+	}
+
+	.MuiDivider-root {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.MuiDialogActions-root {
+		padding: 24px 24px 24px 0;
+
+		.dialog_actions {
+			height: 36px;
+			font-size: 14px;
+			text-transform: capitalize;
+			font-family: 'BCSans-Bold';
+
+			span{
+				text-transform: lowercase;
+			}
+		}
+
+		.closeBtn {
+			background-color: #e9e9e9;
+			color: $text;
+			margin-left: 12px;
+		}
+
+		.cancelBtns{
+			width: 94px;
+		}
+	}
+}
+
+.confirm_dialog {
+    .MuiDialog-paper {
+		width: 732px;
+		height: 327px;
+		overflow-y: inherit;
+
+		.dialogBtn {
+			position: absolute;
+			right: 8px;
+			top: 8px;
+		}
+	}
+
+	.icon_container {
+		margin: auto;
+		width: 110px;
+		height: 110px;
+		border-radius: 999rem;
+		background: rgba(255, 174, 0, 0.68);
+		position: relative;
+		top: -60px;
+	}
+
+	.generated_icon_container {
+		margin: auto;
+		width: 110px;
+		height: 110px;
+		border-radius: 999rem;
+		background: rgba(	223, 240, 216, 0.83);
+		position: relative;
+		top: -55px;
+	}
+
+	.PriorityHighIcon {
+		position: relative;
+		color: #ffffff;
+		font-size: 50px;
+		top: 30px;
+		left: 30px;
+	}
+	.CheckIcon {
+		position: relative;
+		color: #2d4821;
+		font-size: 40px;
+		top: 35px;
+		left: 35px;
+	}
+
+	.MuiDialogTitle-root {
+		margin: 0 auto;
+		padding: 0;
+		font-size: 20px;
+		font-family: 'BCSans-Bold';
+		color: #000000;
+		position: relative;
+		top: -25px;
+	}
+
+	.MuiDialogContent-root {
+		margin: auto;
+		padding: 0 24px;
+		text-align: center;
+		color: #787f81;
+		font-size: 16px;
+		margin-inline: auto;
+		width: 560px;
+	}
+
+	.MuiDivider-root {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.MuiDialogActions-root {
+		padding: 24px 24px 24px 0;
+
+		.dialog_actions {
+			height: 36px;
+			font-size: 14px;
+			text-transform: capitalize;
+			font-family: 'BCSans-Bold';
+
+			span{
+				text-transform: lowercase;
+			}
+		}
+
+		.closeBtn {
+			background-color: #e9e9e9;
+			color: $text;
+			margin-left: 12px;
+		}
+
+		.cancelBtns{
+			width: 94px;
+		}
+	}
+}
+    

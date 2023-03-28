@@ -2,14 +2,19 @@ import Expandable from '../../pageElements/Expandable';
 import {Box, Button, InputAdornment, MenuItem, TextField, Typography} from '@mui/material';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import IdentifierEntry from './IdentifierEntry';
-import React from 'react';
+import React, {useState} from 'react';
 import useCodeTable from '../../../hooks/useCodeTable';
 import CodeLookup from '../../util/CodeLookup';
+import CancelDialog from '../../util/CancelDialog';
+import ConfirmDialog from '../../util/ConfirmDialog';
 
 const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 	const {mappedCodes: validSex} = useCodeTable('animal_sex');
 	const {mappedCodes: regions} = useCodeTable('regions');
 
+	const [displayUpdateButtons, setDisplayUpdateButtons] = useState(false);
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
 			<Expandable.Title>
@@ -57,6 +62,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 						value={state.animalDetails.species}
 					/>
@@ -75,6 +81,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					>
 						{regions.map(r => (
@@ -97,6 +104,7 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					>
 						{validSex.map(m => (
@@ -108,7 +116,14 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 					<Box className="identifier">
 						{state.animalDetails.identifiers.map((identifier, index) => (
 							<Box className="identifierEntry">
-								<IdentifierEntry identifier={identifier} index={index} dispatch={dispatch} />
+								<IdentifierEntry
+									identifier={identifier}
+									index={index}
+									dispatch={dispatch}
+									showUpdateButtons={() => {
+										setDisplayUpdateButtons(true);
+									}}
+								/>
 							</Box>
 						))}
 					</Box>
@@ -119,19 +134,45 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 							dispatch({
 								type: 'animalDetails.identifiers.add'
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					>
 						+ Add Identifier Types
 					</Button>
 				</Box>
-				<Box className="cardButtons">
-					<Button variant={'contained'} className="update_btn" onClick={saveState}>
-						Update
-					</Button>
-					<Button variant={'outlined'} className="update_btn" onClick={resetState}>
-						Cancel
-					</Button>
-				</Box>
+				<ConfirmDialog
+					open={confirmDialogOpen}
+					close={() => {
+						resetState()
+						setConfirmDialogOpen(false);
+					}}
+					acceptAction={() => {
+						saveState()
+						setConfirmDialogOpen(false);
+					}}
+					icon={'NotificationImportantIcon'}
+					title={'Do you want to continue?'}
+					content={'Would you like to save your changes?'}
+				/>
+				<CancelDialog
+					open={cancelDialogOpen}
+					close={() => {
+						setCancelDialogOpen(false);
+					}}
+					acceptAction={resetState}
+					title={'Cancel WLH ID Animal Details Update'}
+					content={'You have not saved your changes. Are you sure you want to cancel?'}
+				/>
+				{displayUpdateButtons && (
+					<Box className="cardButtons">
+						<Button variant={'contained'} className="update_btn" onClick={()=>{setConfirmDialogOpen(true)}}>
+							Update
+						</Button>
+						<Button variant={'outlined'} className="update_btn" onClick={()=>{setCancelDialogOpen(true)}}>
+							Cancel
+						</Button>
+					</Box>
+				)}
 			</Expandable.Detail>
 		</Expandable>
 	);

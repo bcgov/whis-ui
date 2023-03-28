@@ -1,13 +1,14 @@
-import {Box, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {Box, IconButton, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React, {useEffect, useState} from 'react';
 import DeleteConfirm from './DeleteConfirm';
 import PersonnelDialog from './PersonnelDialog';
 import CodeLookup from '../../util/CodeLookup';
+import LightTooltip from '../editMultiple/LightTooltip';
+import TrashBinIcon from '../../util/TrashBinIcon';
 
-const PersonnelTable = ({people, noun = 'Requester'}) => {
+const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
 	}
@@ -38,12 +39,53 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 
 	const [menuCurrentActions, setMenuCurrentActions] = useState([]);
 	const [menuCurrentPerson, setMenuCurrentPerson] = useState(null);
+
+	function deletable(noun, p) {
+		switch (noun) {
+			case 'Submitter':
+				return (
+					<IconButton
+						aria-controls={menuOpen ? 'positioned-menu' : undefined}
+						aria-haspopup="true"
+						aria-expanded={menuOpen ? 'true' : undefined}
+						onClick={e => {
+							setMenuCurrentPerson(p);
+							handleMenuClick(e);
+						}}
+					>
+						<MoreVertIcon color="primary" className="moreActionIcon" />
+					</IconButton>
+				);
+				break;
+			case 'Requester':
+				return (
+					<LightTooltip title="Edit Requester">
+						<IconButton
+							aria-controls={menuOpen ? 'positioned-menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={menuOpen ? 'true' : undefined}
+							onClick={e => {
+								setMenuCurrentPerson(p);
+								// setCurrentEditAction({handler: menuCurrentPerson.editAction});
+								setEditingPerson(menuCurrentPerson);
+								setEditDialogOpen(true);
+							}}
+						>
+							<EditIcon color="primary" />
+						</IconButton>
+					</LightTooltip>
+				);
+				break;
+		}
+	}
+
 	useEffect(() => {
 		const actions = [];
 		if (menuCurrentPerson != null) {
 			if (menuCurrentPerson.editAction) {
 				actions.push(
 					<MenuItem
+						className="personnelTableMenu"
 						onClick={() => {
 							setCurrentEditAction({handler: menuCurrentPerson.editAction});
 							setEditingPerson(menuCurrentPerson);
@@ -59,13 +101,14 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 			if (menuCurrentPerson.deleteAction) {
 				actions.push(
 					<MenuItem
+						className="personnelTableMenu"
 						onClick={() => {
 							setCurrentDeletionAction({handler: menuCurrentPerson.deleteAction});
 							setDeleteConfirmationDialogOpen(true);
 							setAnchorEl(null);
 						}}
 					>
-						<DeleteIcon color="primary" className="tableActionIcon" />
+						<TrashBinIcon />
 						Remove {noun}
 					</MenuItem>
 				);
@@ -103,21 +146,9 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 							<TableCell>
 								<CodeLookup codeTable={'roles'} code={p.role} />
 							</TableCell>
-							<TableCell className='phone'>{p.phoneNumber}</TableCell>
+							<TableCell className="phone">{p.phoneNumber}</TableCell>
 							<TableCell>{p.email}</TableCell>
-							<TableCell>
-								<IconButton
-									aria-controls={menuOpen ? 'positioned-menu' : undefined}
-									aria-haspopup="true"
-									aria-expanded={menuOpen ? 'true' : undefined}
-									onClick={e => {
-										setMenuCurrentPerson(p);
-										handleMenuClick(e);
-									}}
-								>
-									<MoreVertIcon color="primary" />
-								</IconButton>
-							</TableCell>
+							<TableCell>{deletable(noun, p)}</TableCell>
 						</TableRow>
 					))}
 					<DeleteConfirm
@@ -129,6 +160,7 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 						}}
 						acceptAction={() => {
 							setDeleteConfirmationDialogOpen(false);
+							showUpdateButtons();
 							currentDeletionAction.handler();
 						}}
 					/>
@@ -139,12 +171,12 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 						open={menuOpen}
 						onClose={handleMenuClose}
 						anchorOrigin={{
-							vertical: 'bottom',
-							horizontal: 'left'
+							vertical: 'center',
+							horizontal: 'center'
 						}}
 						transformOrigin={{
-							vertical: 'top',
-							horizontal: 'left'
+							vertical: 'bottom',
+							horizontal: 'right'
 						}}
 					>
 						{menuCurrentActions}
@@ -154,6 +186,7 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 						acceptAction={newPerson => {
 							currentEditAction.handler(newPerson);
 							setEditDialogOpen(false);
+							showUpdateButtons();
 						}}
 						cancelAction={() => {
 							setCurrentEditAction({handler: unsetEditActionHandler});

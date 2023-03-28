@@ -15,6 +15,7 @@ import {useDispatch} from 'react-redux';
 import {WILDLIFE_HEALTH_ID_PERSIST_REQUEST} from '../../../../state/actions';
 import {useParams} from 'react-router';
 import AddEventConfirm from './AddEventConfirm';
+import NewEventFormDialog from './NewEventFormDialog';
 
 const EditForm = ({wildlifeHealthId}) => {
 	const devMode = useSelector(getDevMode);
@@ -22,6 +23,7 @@ const EditForm = ({wildlifeHealthId}) => {
 	const {id} = useParams();
 
 	const [addEventConfirmationDialogOpen, setAddEventConfirmationDialogOpen] = useState(false);
+	const [newEventFormDialogOpen, setNewEventFormDialogOpen] = useState(false);
 
 	function resetState() {
 		// return the state of the form to whatever was last received from the api
@@ -170,15 +172,29 @@ const EditForm = ({wildlifeHealthId}) => {
 							setAddEventConfirmationDialogOpen(true);
 						} else {
 							// just add it
-							formDispatch({
-								type: 'events.add'
-							});
+							setNewEventFormDialogOpen(true);
+							console.log(newEventFormDialogOpen);
 						}
 					}}
 				>
 					+ Add New Event
 				</Button>
 			</Box>
+
+			<NewEventFormDialog
+				open={newEventFormDialogOpen}
+				acceptAction={() => {
+					formDispatch({
+						type: 'events.add'
+					});
+				}}
+				cancelAction={() => {
+					setNewEventFormDialogOpen(false);
+				}}
+				resetState={resetState}
+				saveState={saveState}
+				state={formState}
+			/>
 
 			<AddEventConfirm
 				open={addEventConfirmationDialogOpen}
@@ -192,7 +208,6 @@ const EditForm = ({wildlifeHealthId}) => {
 					setAddEventConfirmationDialogOpen(false);
 				}}
 			/>
-
 			<Box className="expandButtons">
 				<Button
 					variant="outlined"
@@ -213,7 +228,6 @@ const EditForm = ({wildlifeHealthId}) => {
 					Collapse All
 				</Button>
 			</Box>
-
 			{devMode && (
 				<>
 					<strong>Redux Store State</strong>
@@ -222,11 +236,8 @@ const EditForm = ({wildlifeHealthId}) => {
 					<pre>{JSON.stringify(formState, null, 1)}</pre>
 				</>
 			)}
-
 			<Status expansionEvent={expansionEvent} dispatch={formDispatch} state={formState} saveState={saveState} resetState={resetState} />
-
 			<AnimalDetails expansionEvent={expansionEvent} dispatch={formDispatch} state={formState} saveState={saveState} resetState={resetState} />
-
 			<EventsContainer state={formState} dispatch={formDispatch} expansionEvent={expansionEvent} saveState={saveState} resetState={resetState} />
 			<Purpose expansionEvent={expansionEvent} dispatch={formDispatch} state={formState} saveState={saveState} resetState={resetState} />
 		</Box>

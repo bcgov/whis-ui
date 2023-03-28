@@ -36,7 +36,7 @@ const Status = ({ state }) => {
 							<CodeLookup codeTable={'status'} code={displayedStatus} />
 						</Typography>
 					</span>
-					<span>
+					{/* <span>
 						<Typography variant='body2'>
 							WLH ID Number
 						</Typography>
@@ -59,7 +59,7 @@ const Status = ({ state }) => {
 						<Typography variant='body1'>
 							{state.metadata.generationDate}
 						</Typography>
-					</span>
+					</span> */}
 
 				</Box>
 			</Box>

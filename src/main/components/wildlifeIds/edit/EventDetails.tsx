@@ -20,9 +20,17 @@ import React, {useEffect, useState} from 'react';
 import PersonnelTable from './PersonnelTable';
 import useCodeTable from '../../../hooks/useCodeTable';
 import PersonnelDialog from './PersonnelDialog';
+import CancelDialog from '../../util/CancelDialog';
+import ConfirmDialog from '../../util/ConfirmDialog';
 
 const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
+	const CHARACTER_LIMIT = 500;
+	
 	const {mappedCodes: ageClasses} = useCodeTable('animal_age');
+
+	const [displayUpdateButtons, setDisplayUpdateButtons] = useState(false);
+	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
 	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(false);
 	const [shouldShowAddSubmitterButton, setShouldShowAddSubmitterButton] = useState(false);
@@ -103,6 +111,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										value: e.target.value
 									}
 								});
+								setDisplayUpdateButtons(true);
 							}}
 						>
 							<FormControlLabel value="capture" control={<Radio />} label="Capture" />
@@ -126,6 +135,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										value: e.target.value
 									}
 								});
+								setDisplayUpdateButtons(true);
 							}}
 							InputProps={{
 								endAdornment: (
@@ -150,6 +160,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										value: e.target.value
 									}
 								});
+								setDisplayUpdateButtons(true);
 							}}
 						>
 							{ageClasses.map((m, i) => (
@@ -164,7 +175,15 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 					<Box className="locations">
 						{event.locations.map((location, locationIndex) => (
 							<Box className="locationEntry" key={index}>
-								<LocationEntry location={location} dispatch={dispatch} eventIndex={index} locationIndex={locationIndex} />
+								<LocationEntry
+									location={location}
+									dispatch={dispatch}
+									eventIndex={index}
+									locationIndex={locationIndex}
+									showUpdateButtons={() => {
+										setDisplayUpdateButtons(true);
+									}}
+								/>
 							</Box>
 						))}
 					</Box>
@@ -179,13 +198,14 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									eventIndex: index
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					>
 						+ Add Location
 					</Button>
 
 					<Typography className="detailsSubtitle">Submitters</Typography>
-					<FormGroup className='submitterContainer'>
+					<FormGroup className="submitterContainer">
 						{shouldShowCopyFromRequesterButton && (
 							<Button
 								variant={'outlined'}
@@ -198,6 +218,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										}
 									});
 									setSerial(serial + 1);
+									setDisplayUpdateButtons(true);
 								}}
 							>
 								Copy from requester
@@ -205,7 +226,15 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 						)}
 					</FormGroup>
 
-					{event.submitters.length > 0 && <PersonnelTable noun="Submitter" people={personnelTableDetails} />}
+					{event.submitters.length > 0 && (
+						<PersonnelTable
+							noun="Submitter"
+							people={personnelTableDetails}
+							showUpdateButtons={() => {
+								setDisplayUpdateButtons(true);
+							}}
+						/>
+					)}
 
 					<Button
 						variant={'outlined'}
@@ -229,6 +258,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 							});
 							setSerial(serial + 1);
 							setAddSubmitterDialogOpen(false);
+							setDisplayUpdateButtons(true);
 						}}
 						cancelAction={() => {
 							setAddSubmitterDialogOpen(false);
@@ -247,6 +277,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									checked={event.additionalAttributes.samplesCollected}
 									onChange={e => {
 										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.samplesCollected`, value: e.target.checked}});
+										setDisplayUpdateButtons(true);
 									}}
 								/>
 							}
@@ -260,6 +291,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									checked={event.additionalAttributes.samplesSentForTesting}
 									onChange={e => {
 										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.samplesSentForTesting`, value: e.target.checked}});
+										setDisplayUpdateButtons(true);
 									}}
 								/>
 							}
@@ -273,6 +305,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									checked={event.additionalAttributes.testResultsReceived}
 									onChange={e => {
 										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.testResultsReceived`, value: e.target.checked}});
+										setDisplayUpdateButtons(true);
 									}}
 								/>
 							}
@@ -281,7 +314,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 					</FormGroup>
 
 					<TextField
-						className='history'
+						className="history"
 						label="History (Max 500 Characters)"
 						id="history"
 						name="history"
@@ -296,19 +329,63 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
-						inputProps={{maxLength: 500}}
+						inputProps={{maxLength: CHARACTER_LIMIT}}
+						helperText={
+							event.history.length == 500
+								? `${event.history.length} / ${CHARACTER_LIMIT} You have reached the maximum number of characters`
+								: event.history != ''
+								? `${event.history.length} / ${CHARACTER_LIMIT} Characters`
+								: '0 / 500 Character'
+						}
 					/>
 				</Box>
-
-				<Box className="cardButtons">
-					<Button variant={'contained'} className="update_btn" onClick={saveState}>
-						Update
-					</Button>
-					<Button variant={'outlined'} className="update_btn" onClick={resetState}>
-						Cancel
-					</Button>
-				</Box>
+				<ConfirmDialog
+					open={confirmDialogOpen}
+					close={() => {
+						setConfirmDialogOpen(false);
+					}}
+					acceptAction={() => {
+						saveState();
+					}}
+					icon={'NotificationImportantIcon'}
+					title={'Do you want to continue?'}
+					content={'Would you like to save your changes?'}
+				/>
+				<CancelDialog
+					open={cancelDialogOpen}
+					close={() => {
+						setCancelDialogOpen(false);
+					}}
+					acceptAction={() => {
+						resetState();
+					}}
+					title={'Cancel WLH ID Event Details Update'}
+					content={'You have not saved your changes. Are you sure you want to cancel?'}
+				/>
+				{displayUpdateButtons && (
+					<Box className="cardButtons">
+						<Button
+							variant={'contained'}
+							className="update_btn"
+							onClick={() => {
+								setConfirmDialogOpen(true);
+							}}
+						>
+							Update
+						</Button>
+						<Button
+							variant={'outlined'}
+							className="update_btn"
+							onClick={() => {
+								setCancelDialogOpen(true);
+							}}
+						>
+							Cancel
+						</Button>
+					</Box>
+				)}
 			</Expandable.Detail>
 		</Expandable>
 	);

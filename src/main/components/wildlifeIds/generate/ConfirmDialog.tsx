@@ -5,6 +5,7 @@ import {useSelector} from '../../../../state/utilities/use_selector';
 
 const ConfirmDialog = ({openGenerateDialog, handleClose, navigate, numOfIDs}) => {
 	const range = useSelector(state => state.GenerationLock);
+	const refresh = () => window.location.reload();
 	return (
 		<Dialog open={openGenerateDialog} onClose={handleClose} className="generate_confirm_dialog">
 			<Box className="generated_icon_container">
@@ -12,7 +13,8 @@ const ConfirmDialog = ({openGenerateDialog, handleClose, navigate, numOfIDs}) =>
 			</Box>
 			<DialogTitle>WLH ID (s) Successfully Generated!</DialogTitle>
 			<DialogContent>
-				You have generated {numOfIDs} WLH IDs: [WLH ID]-[WLH ID]<br/>
+				You have generated {numOfIDs} WLH IDs: [WLH ID]-[WLH ID]
+				<br />
 				What would you like to do next?
 			</DialogContent>
 			<Divider variant="middle" />
@@ -36,9 +38,13 @@ const ConfirmDialog = ({openGenerateDialog, handleClose, navigate, numOfIDs}) =>
 					Go&nbsp;<span>to</span>&nbsp;Dashboard
 				</Button>
 				<Button
-					className='dialog_actions closeBtn cancelBtns'
+					className="dialog_actions closeBtn cancelBtns"
 					variant={'contained'}
-					onClick={handleClose}
+					onClick={() => {
+						//clear form
+						refresh();
+						handleClose();
+					}}
 				>
 					Close
 				</Button>

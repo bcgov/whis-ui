@@ -1,14 +1,18 @@
 import Expandable from '../../pageElements/Expandable';
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TextField, Typography} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
 import React, {useState} from 'react';
 import useCodeTable from '../../../hooks/useCodeTable';
 import PersonnelTable from './PersonnelTable';
 import PersonnelDialog from './PersonnelDialog';
 import CodeLookup from '../../util/CodeLookup';
+import ConfirmDialog from '../../util/ConfirmDialog';
+import CancelDialog from '../../util/CancelDialog';
 
 const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 	const [addRequesterDialogOpen, setAddRequesterDialogOpen] = useState(false);
+	const [displayUpdateButtons, setDisplayUpdateButtons] = useState(false);
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
 	const {mappedCodes: purposes} = useCodeTable('purposes');
 
@@ -41,11 +45,9 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box className="cardDetails">
-					<Typography className='detailsSubtitle'>
-						WLH ID information
-					</Typography>
+					<Typography className="detailsSubtitle">WLH ID information</Typography>
 					<TextField
-						className='priPurpose'
+						className="priPurpose"
 						select
 						label="Primary Purpose"
 						value={state.purpose.primaryPurpose}
@@ -57,6 +59,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					>
 						{purposes.map((m, i) => (
@@ -66,7 +69,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 						))}
 					</TextField>
 					<TextField
-						className='secPurpose'
+						className="secPurpose"
 						select
 						label="Secondary Purpose"
 						value={state.purpose.secondaryPurpose}
@@ -78,6 +81,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					>
 						{purposes.map((m, i) => (
@@ -88,7 +92,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					</TextField>
 
 					<TextField
-						className='project'
+						className="project"
 						label="Associated Project"
 						id="associatedProject"
 						name="associatedProject"
@@ -101,10 +105,11 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					/>
 					<TextField
-						className='projectDetails'
+						className="projectDetails"
 						label="Project Details"
 						id="projectDetails"
 						name="projectDetails"
@@ -119,13 +124,12 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
+							setDisplayUpdateButtons(true);
 						}}
 					/>
 
 					<Box>
-						<Typography className='detailsSubtitle'>
-							Requester
-						</Typography>
+						<Typography className="detailsSubtitle">Requester</Typography>
 
 						{state.purpose.requester && (
 							<PersonnelTable
@@ -152,15 +156,19 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 										}
 									}
 								]}
+								showUpdateButtons={() => {
+									setDisplayUpdateButtons(true);
+								}}
 							/>
 						)}
 
 						{state.purpose.requester === null && (
 							<Button
 								variant={'outlined'}
-								className='addRequester'
+								className="addRequester"
 								onClick={() => {
 									setAddRequesterDialogOpen(true);
+									setDisplayUpdateButtons(true);
 								}}
 							>
 								+ Add Requester
@@ -186,14 +194,43 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 						/>
 					</Box>
 				</Box>
-				<Box className="cardButtons">
-					<Button variant={'contained'} className="update_btn" onClick={saveState}>
-						Update
-					</Button>
-					<Button variant={'outlined'} className="update_btn" onClick={resetState}>
-						Cancel
-					</Button>
-				</Box>
+				<ConfirmDialog
+					open={confirmDialogOpen}
+					close={() => {
+						resetState();
+						setConfirmDialogOpen(false);
+					}}
+					acceptAction={() => {
+						saveState();
+						setConfirmDialogOpen(false);
+					}}
+					icon={'NotificationImportantIcon'}
+					title={'Do you want to continue?'}
+					content={'Would you like to save your changes?'}
+				/>
+				<CancelDialog
+					open={cancelDialogOpen}
+					close={() => {
+						setCancelDialogOpen(false);
+					}}
+					acceptAction={resetState}
+					title={'Cancel WLH ID Purpose Update'}
+					content={'You have not saved your changes. Are you sure you want to cancel?'}
+				/>
+				{displayUpdateButtons && (
+					<Box className="cardButtons">
+						<Button variant={'contained'} className="update_btn" onClick={() => {
+								setConfirmDialogOpen(true);
+							}}>
+							Update
+						</Button>
+						<Button variant={'outlined'} className="update_btn" onClick={() => {
+								setCancelDialogOpen(true);
+							}}>
+							Cancel
+						</Button>
+					</Box>
+				)}
 			</Expandable.Detail>
 		</Expandable>
 	);

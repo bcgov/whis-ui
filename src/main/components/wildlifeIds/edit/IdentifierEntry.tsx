@@ -1,11 +1,19 @@
 import React from 'react';
-import {Box, FormControlLabel, IconButton, MenuItem, Radio, RadioGroup, TextField} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import {Box, FormControlLabel, FormGroup, IconButton, MenuItem, Radio, RadioGroup, TextField} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import ValidationError from '../../util/ValidationError';
+import TrashBinIcon from '../../util/TrashBinIcon';
 
 /*
 	File @todo: colors from code table, move valid identifier types to code table, fix labels, harmonize styling
  */
-const IdentifierEntry = ({identifier, index, dispatch}) => {
+const IdentifierEntry = ({identifier, index, dispatch, showUpdateButtons}) => {
+	const {
+		register,
+		formState: {errors},
+		clearErrors
+	} = useForm({mode: 'onChange'});
+
 	const validIdentifier = [
 		{value: 'ANIMAL_ID', label: 'Alternate Animal ID'},
 		{value: 'COMPULSORY', label: 'Compulsory Inspection Number'},
@@ -41,20 +49,30 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 			case 'COLOR_ID':
 				return (
 					<Box className="oneColumnContainer">
-						<TextField
-							id="identifier"
-							name="identifier"
-							value={identifier.identifier}
-							onChange={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.valueChange',
-									payload: {
-										index,
-										newValue: e.target.value
+						<FormGroup>
+							<TextField
+								label="Identifier"
+								id="identifier"
+								name="identifier"
+								value={identifier.identifier}
+								required
+								{...register('identifier', {
+									required: 'Enter the identifier.',
+									onChange(e) {
+										dispatch({
+											type: 'animalDetails.identifiers.valueChange',
+											payload: {
+												index,
+												newValue: e.target.value
+											}
+										});
+										showUpdateButtons();
 									}
-								});
-							}}
-						/>
+								})}
+								error={!!errors?.identifier}
+							/>
+							<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message} />
+						</FormGroup>
 						<IconButton
 							onClick={e => {
 								dispatch({
@@ -63,9 +81,10 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 										index
 									}
 								});
+								showUpdateButtons();
 							}}
 						>
-							<DeleteIcon color="primary" />
+							<TrashBinIcon/>
 						</IconButton>
 					</Box>
 				);
@@ -73,25 +92,35 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 			case 'EAR_TAG':
 			case 'RAPP_TAG':
 				return (
-					<Box className='earTag'>
-						<TextField
-							label="Identifier"
-							id="identifier"
-							name="identifier"
-							value={identifier.identifier}
-							onChange={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.valueChange',
-									payload: {
-										index,
-										newValue: e.target.value
+					<Box className="earTag">
+						<FormGroup>
+							<TextField
+								label="Identifier"
+								id="identifier"
+								name="identifier"
+								value={identifier.identifier}
+								required
+								{...register('identifier', {
+									required: 'Enter the identifier.',
+									onChange(e) {
+										dispatch({
+											type: 'animalDetails.identifiers.valueChange',
+											payload: {
+												index,
+												newValue: e.target.value
+											}
+										});
+										showUpdateButtons();
 									}
-								});
-							}}
-						/>
+								})}
+								error={!!errors?.identifier}
+							/>
+							<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message} />
+						</FormGroup>
 						<TextField
 							id="color"
 							label="Color"
+							required
 							value={identifier.additionalAttributes?.color || ''}
 							onChange={e => {
 								dispatch({
@@ -104,6 +133,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 										}
 									}
 								});
+								showUpdateButtons();
 							}}
 						></TextField>
 						<RadioGroup
@@ -120,10 +150,11 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 										}
 									}
 								});
+								showUpdateButtons();
 							}}
 						>
 							<FormControlLabel value="left" control={<Radio />} label="Left" />
-							<FormControlLabel value="right" control={<Radio/>} label="Right"/>
+							<FormControlLabel value="right" control={<Radio />} label="Right" />
 						</RadioGroup>
 						<IconButton
 							onClick={e => {
@@ -133,9 +164,10 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 										index
 									}
 								});
+								showUpdateButtons();
 							}}
 						>
-							<DeleteIcon color="primary" />
+							<TrashBinIcon/>
 						</IconButton>
 					</Box>
 				);
@@ -162,6 +194,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 							newType: e.target.value
 						}
 					});
+					showUpdateButtons();
 				}}
 			>
 				{validIdentifier.map((m, i) => (
