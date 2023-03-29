@@ -1,15 +1,19 @@
 import Expandable from '../../pageElements/Expandable';
-import {Box, Button, InputAdornment, MenuItem, TextField, Typography} from '@mui/material';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
 import IdentifierEntry from './IdentifierEntry';
-import React from 'react';
+import React, {useState} from 'react';
 import useCodeTable from '../../../hooks/useCodeTable';
 import CodeLookup from '../../util/CodeLookup';
+import CancelDialog from '../../util/CancelDialog';
+import ConfirmDialog from '../../util/ConfirmDialog';
 import TaxonomySearch from "../../util/TaxonomySearch";
 
-const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState}) => {
+const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, saveState}) => {
 	const {mappedCodes: validSex} = useCodeTable('animal_sex');
 	const {mappedCodes: regions} = useCodeTable('regions');
+
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
@@ -38,16 +42,17 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 			</Expandable.Title>
 			<Expandable.Detail>
 				<Box className="cardDetails">
-					<TaxonomySearch value={state.animalDetails.species} onValueChange={v => {
-						dispatch({
+					<TaxonomySearch
+						onValueChange={v => dispatch({
 							type: 'fieldChange',
 							payload: {
 								field: 'animalDetails.species',
 								value: v
 							}
-						});
-					}}/>
-
+						})}
+						className="species"
+						value={state.animalDetails.species}
+					/>
 
 					<TextField
 						select
@@ -112,14 +117,43 @@ const AnimalDetails = ({expansionEvent, dispatch, state, resetState, saveState})
 						+ Add Identifier Types
 					</Button>
 				</Box>
+				<ConfirmDialog
+					open={confirmDialogOpen}
+					close={() => {
+						resetState()
+						setConfirmDialogOpen(false);
+					}}
+					acceptAction={() => {
+						saveState()
+						setConfirmDialogOpen(false);
+					}}
+					icon={'NotificationImportantIcon'}
+					title={'Do you want to continue?'}
+					content={'Would you like to save your changes?'}
+				/>
+				<CancelDialog
+					open={cancelDialogOpen}
+					close={() => {
+						setCancelDialogOpen(false);
+					}}
+					acceptAction={resetState}
+					title={'Cancel WLH ID Animal Details Update'}
+					content={'You have not saved your changes. Are you sure you want to cancel?'}
+				/>
+
 				<Box className="cardButtons">
-					<Button variant={'contained'} className="update_btn" onClick={saveState}>
+					<Button disabled={!dirty} variant={'contained'} className="update_btn" onClick={() => {
+						setConfirmDialogOpen(true)
+					}}>
 						Update
 					</Button>
-					<Button variant={'outlined'} className="update_btn" onClick={resetState}>
+					<Button disabled={!dirty} variant={'outlined'} className="update_btn" onClick={() => {
+						setCancelDialogOpen(true)
+					}}>
 						Cancel
 					</Button>
 				</Box>
+
 			</Expandable.Detail>
 		</Expandable>
 	);

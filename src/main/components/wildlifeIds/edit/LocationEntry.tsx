@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Box, IconButton, MenuItem, TextField} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import {Box, FormGroup, IconButton, MenuItem, TextField} from '@mui/material';
+import TrashBinIcon from '../../util/TrashBinIcon';
+import ValidationError from '../../util/ValidationError';
+import {useForm} from 'react-hook-form';
 
 const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 	const [path, setPath] = useState(`events[${eventIndex}].locations[${locationIndex}]`);
@@ -25,7 +27,6 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 		{value: 'POPULATION_UNIT', label: 'Population Unit'},
 		{value: 'HERD_NAME', label: 'Herd Name'},
 		{value: 'LATITUDE', label: 'Latitude/ Longitude (in decimal degrees)'},
-		{value: 'NICKNAME', label: 'Nickname'},
 		{value: 'UTM_COORDINATES', label: 'UTM Coordinates'},
 		{value: 'CITY', label: 'City'},
 		{value: 'CIVIC_ADDRESS', label: 'Civic Address'}
@@ -53,62 +54,97 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 		{value: 'CITY5', label: 'City 5'}
 	];
 
+	const {
+		register,
+		formState: {errors},
+		clearErrors
+	} = useForm({mode: 'onChange'});
+
 	function renderDetailed() {
 		switch (location.type) {
-			case 'REGION':
-				return (
-					<Box className="twoColumnContainer">
+		case 'REGION':
+			return (
+				<Box className="twoColumnContainer">
+					<FormGroup>
 						<TextField
 							label="Region Number"
 							id="regionNumber"
+							className="firstColumn"
 							value={location.attributes.regionNumber || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.regionNumber`,
-										value: e.target.value
-									}
-								});
-							}}
+							required
+							{...register('regionNumber', {
+								required: 'Enter the region number.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.regionNumber`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.regionNumber}
 						/>
+						<ValidationError hidden={!errors?.regionNumber} message={errors.regionNumber?.message}/>
+					</FormGroup>
+					<FormGroup>
 						<TextField
+							className="secondColumn"
 							label="Region Name"
 							id="regionName"
 							value={location.attributes.regionName || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.regionName`,
-										value: e.target.value
-									}
-								});
-							}}
+							required
+							{...register('regionName', {
+								required: 'Enter the region name.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.regionName`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.regionName}
 						/>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'MANAGEMENT_UNIT':
-				return (
-					<Box className='oneColumnContainer'>
+						<ValidationError hidden={!errors?.regionName} message={errors.regionName?.message}/>
+					</FormGroup>
+
+					<IconButton
+						onClick={() => {
+							deleteAction();
+						}}
+					>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'MANAGEMENT_UNIT':
+			return (
+				<Box className="oneColumnContainer">
+					<FormGroup>
 						<TextField
 							id="m_unit"
 							select
 							label="Management Unit"
 							value={location.attributes.managementUnit || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.managementUnit`,
-										value: e.target.value
-									}
-								});
-							}}
+							required
+							{...register('m_unit', {
+								required: 'Enter the management unit.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.managementUnit`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.m_unit}
 						>
 							{managementUnits.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -116,29 +152,40 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 								</MenuItem>
 							))}
 						</TextField>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'POPULATION_UNIT':
-				return (
-					<Box className='oneColumnContainer'>
+						<ValidationError hidden={!errors?.m_unit} message={errors.m_unit?.message}/>
+					</FormGroup>
+
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'POPULATION_UNIT':
+			return (
+				<Box className="oneColumnContainer">
+					<FormGroup>
 						<TextField
 							id="p_unit"
 							select
+							required
 							label="Population Unit"
 							value={location.attributes.populationUnit || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.populationUnit`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('p_unit', {
+								required: 'Enter the population unit.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.populationUnit`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.p_unit}
 						>
 							{populationUnits.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -146,169 +193,202 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 								</MenuItem>
 							))}
 						</TextField>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary"/>
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'HERD_NAME':
-				return (
-					<Box className='oneColumnContainer'>
+						<ValidationError hidden={!errors?.p_unit} message={errors.p_unit?.message}/>
+					</FormGroup>
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'HERD_NAME':
+			return (
+				<Box className="oneColumnContainer">
+					<FormGroup>
 						<TextField
 							label="Herd Name"
+							required
 							value={location.attributes.herdName || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.herdName`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('herdName', {
+								required: 'Enter the herd name.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.herdName`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.herdName}
 						/>
-						<IconButton  onClick={deleteAction}>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'LATITUDE':
-				return (
-					<Box className='threeColumnContainer'>
+						<ValidationError hidden={!errors?.herdName} message={errors.herdName?.message}/>
+					</FormGroup>
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'LATITUDE':
+			return (
+				<Box className="twoColumnContainer">
+					<FormGroup>
 						<TextField
-							label="Unit"
-							value={location.attributes.unit || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.unit`,
-										value: e.target.value
-									}
-								});
-							}}
-						/>
-						<TextField
+							className="firstColumn"
 							label="Latitude"
+							required
 							value={location.attributes.latitude || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.latitude`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('latitude', {
+								required: 'Enter the latitude.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.latitude`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.latitude}
 						/>
+						<ValidationError hidden={!errors?.latitude} message={errors.latitude?.message}/>
+					</FormGroup>
+					<FormGroup>
 						<TextField
+							className="secondColumn"
 							label="Longitude"
+							required
 							value={location.attributes.longitude || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.longitude`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('longitude', {
+								required: 'Enter the longitude.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.longitude`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.longitude}
 						/>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary"/>
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'NICKNAME':
-				return (
-					<Box className='oneColumnContainer'>
+						<ValidationError hidden={!errors?.longitude} message={errors.longitude?.message}/>
+					</FormGroup>
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'UTM_COORDINATES':
+			return (
+				<Box className="threeColumnContainer">
+					<FormGroup>
 						<TextField
-							label="Nickname"
-							value={location.attributes.nickName || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.nickName`,
-										value: e.target.value
-									}
-								});
-							}}
-						/>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary"/>
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'UTM_COORDINATES':
-				return (
-					<Box className='threeColumnContainer'>
-						<TextField
+							className="leftColumns"
 							label="Zone"
+							required
 							value={location.attributes.zone || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.zone`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('zone', {
+								required: 'Enter the zone.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.zone`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.zone}
 						/>
+						<ValidationError hidden={!errors?.zone} message={errors.zone?.message}/>
+					</FormGroup>
+					<FormGroup>
 						<TextField
+							className="leftColumns"
 							label="Easting"
+							required
 							value={location.attributes.easting || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.easting`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('easting', {
+								required: 'Enter the easting.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.easting`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.easting}
 						/>
+						<ValidationError hidden={!errors?.easting} message={errors.easting?.message}/>
+					</FormGroup>
+					<FormGroup>
 						<TextField
 							label="Northing"
+							required
 							value={location.attributes.northing || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.northing`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('northing', {
+								required: 'Enter the northing.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.northing`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.northing}
 						/>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'CITY':
-				return (
-					<Box className='oneColumnContainer'>
+						<ValidationError hidden={!errors?.northing} message={errors.northing?.message}/>
+					</FormGroup>
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'CITY':
+			return (
+				<Box className="oneColumnContainer">
+					<FormGroup>
 						<TextField
 							id="cities"
 							select
+							required
 							label="BC Cities"
 							value={location.attributes.city || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.city`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('city', {
+								required: 'Enter the city.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.city`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.city}
 						>
 							{cities.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -316,29 +396,40 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 								</MenuItem>
 							))}
 						</TextField>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary"/>
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'CIVIC_ADDRESS':
-				return (
-					<Box className='twoColumnContainer'>
+						<ValidationError hidden={!errors?.city} message={errors.city?.message}/>
+					</FormGroup>
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'CIVIC_ADDRESS':
+			return (
+				<Box className="twoColumnContainer">
+					<FormGroup>
 						<TextField
+							className="firstColumn"
 							id="civic_city"
-							select
 							label="City"
+							select
+							required
 							value={location.attributes.city || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.city`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('city', {
+								required: 'Enter the city.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.city`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.city}
 						>
 							{cities.map((m, i) => (
 								<MenuItem key={i} value={m.value}>
@@ -346,27 +437,40 @@ const LocationEntry = ({location, dispatch, eventIndex, locationIndex}) => {
 								</MenuItem>
 							))}
 						</TextField>
+						<ValidationError hidden={!errors?.city} message={errors.city?.message}/>
+					</FormGroup>
+					<FormGroup>
 						<TextField
+							className="secondColumn"
 							label="Street Address"
+							required
 							value={location.attributes.streetAddress || ''}
-							onChange={e => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: `${path}.attributes.streetAddress`,
-										value: e.target.value
-									}
-								});
-							}}
+							{...register('streetAddress', {
+								required: 'Enter the streetAddress.',
+								onChange(e) {
+									dispatch({
+										type: 'fieldChange',
+										payload: {
+											field: `${path}.attributes.streetAddress`,
+											value: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.streetAddress}
 						/>
-						<IconButton onClick={deleteAction}>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			default:
-				return <></>;
+						<ValidationError hidden={!errors?.streetAddress} message={errors.streetAddress?.message}/>
+					</FormGroup>
+					<IconButton onClick={() => {
+						deleteAction();
+					}}>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		default:
+			return <></>;
 		}
 	}
 

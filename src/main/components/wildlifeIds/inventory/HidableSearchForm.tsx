@@ -78,16 +78,16 @@ const HideableSearchForm = formState => {
 			</TextField>
 
 			<Typography className="detailsSubtitle">Animal Details</Typography>
-			<TaxonomySearch value={species} onValueChange={v => {setSpecies(v)}} />
+			<TaxonomySearch value={species} onValueChange={v => {setSpecies(v)}} className="species"/>
 
-			<TextField className="rightColumn" select label="Home Region">
+			<TextField className="leftColumn" select label="Home Region">
 				{validRegion.map((m, i) => (
 					<MenuItem key={i} value={m.value}>
 						{m.label}
 					</MenuItem>
 				))}
 			</TextField>
-			<TextField className="leftColumn" select label="Identifier Type">
+			<TextField className="rightColumn" select label="Identifier Type">
 				{validIdentifier.map((m, i) => (
 					<MenuItem key={i} value={m.value}>
 						{m.label}
@@ -95,7 +95,7 @@ const HideableSearchForm = formState => {
 				))}
 			</TextField>
 
-			<TextField className="rightColumn" label="Other Identifier ID" />
+			<TextField className="leftColumn" label="Other Identifier ID" />
 
 			<Typography className="detailsSubtitle">Events</Typography>
 

@@ -1,11 +1,18 @@
 import React from 'react';
-import {Box, FormControlLabel, IconButton, MenuItem, Radio, RadioGroup, TextField} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import {Box, FormControlLabel, FormGroup, IconButton, MenuItem, Radio, RadioGroup, TextField} from '@mui/material';
+import {useForm} from 'react-hook-form';
+import ValidationError from '../../util/ValidationError';
+import TrashBinIcon from '../../util/TrashBinIcon';
 
 /*
 	File @todo: colors from code table, move valid identifier types to code table, fix labels, harmonize styling
  */
 const IdentifierEntry = ({identifier, index, dispatch}) => {
+	const {
+		register,
+		formState: {errors},
+	} = useForm({mode: 'onChange'});
+
 	const validIdentifier = [
 		{value: 'ANIMAL_ID', label: 'Alternate Animal ID'},
 		{value: 'COMPULSORY', label: 'Compulsory Inspection Number'},
@@ -26,122 +33,140 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 
 	function renderDetailed() {
 		switch (identifier.type) {
-			case 'ANIMAL_ID':
-			case 'COMPULSORY':
-			case 'HUMAN_WILDLIFE':
-			case 'COORS':
-			case 'LEG_BAND':
-			case 'MICROCHIP':
-			case 'NICKNAME':
-			case 'PIT_TAG':
-			case 'RECAPTURE_ID':
-			case 'CWD':
-			case 'VAGINAL':
-			case 'WING_BAND':
-			case 'COLOR_ID':
-				return (
-					<Box className="oneColumnContainer">
-						<TextField
-							id="identifier"
-							name="identifier"
-							value={identifier.identifier}
-							onChange={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.valueChange',
-									payload: {
-										index,
-										newValue: e.target.value
-									}
-								});
-							}}
-						/>
-						<IconButton
-							onClick={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.delete',
-									payload: {
-										index
-									}
-								});
-							}}
-						>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			case 'EAR_TAG':
-			case 'RAPP_TAG':
-				return (
-					<Box className='earTag'>
+		case 'ANIMAL_ID':
+		case 'COMPULSORY':
+		case 'HUMAN_WILDLIFE':
+		case 'COORS':
+		case 'LEG_BAND':
+		case 'MICROCHIP':
+		case 'NICKNAME':
+		case 'PIT_TAG':
+		case 'RECAPTURE_ID':
+		case 'CWD':
+		case 'VAGINAL':
+		case 'WING_BAND':
+		case 'COLOR_ID':
+			return (
+				<Box className="oneColumnContainer">
+					<FormGroup>
 						<TextField
 							label="Identifier"
 							id="identifier"
 							name="identifier"
 							value={identifier.identifier}
-							onChange={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.valueChange',
-									payload: {
-										index,
-										newValue: e.target.value
+							required
+							{...register('identifier', {
+								required: 'Enter the identifier.',
+								onChange(e) {
+									dispatch({
+										type: 'animalDetails.identifiers.valueChange',
+										payload: {
+											index,
+											newValue: e.target.value
+										}
+									});
 									}
-								});
-							}}
+							})}
+							error={!!errors?.identifier}
 						/>
+						<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message}/>
+					</FormGroup>
+					<IconButton
+						onClick={e => {
+							dispatch({
+								type: 'animalDetails.identifiers.delete',
+								payload: {
+									index
+								}
+							});
+						}}
+					>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'EAR_TAG':
+		case 'RAPP_TAG':
+			return (
+				<Box className="earTag">
+					<FormGroup>
 						<TextField
-							id="color"
-							label="Color"
-							value={identifier.additionalAttributes?.color || ''}
-							onChange={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.additionalAttributesChange',
-									payload: {
-										index,
-										newAttributes: {
-											...identifier.additionalAttributes,
-											color: e.target.value
+							label="Identifier"
+							id="identifier"
+							name="identifier"
+							value={identifier.identifier}
+							required
+							{...register('identifier', {
+								required: 'Enter the identifier.',
+								onChange(e) {
+									dispatch({
+										type: 'animalDetails.identifiers.valueChange',
+										payload: {
+											index,
+											newValue: e.target.value
 										}
+									});
+								}
+							})}
+							error={!!errors?.identifier}
+						/>
+						<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message}/>
+					</FormGroup>
+					<TextField
+						id="color"
+						label="Color"
+						required
+						value={identifier.additionalAttributes?.color || ''}
+						onChange={e => {
+							dispatch({
+								type: 'animalDetails.identifiers.additionalAttributesChange',
+								payload: {
+									index,
+									newAttributes: {
+										...identifier.additionalAttributes,
+										color: e.target.value
 									}
-								});
-							}}
-						></TextField>
-						<RadioGroup
-							name="controlled-radio-buttons-group"
-							value={identifier.additionalAttributes?.taggedEar || ''}
-							onChange={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.additionalAttributesChange',
-									payload: {
-										index,
-										newAttributes: {
-											...identifier.additionalAttributes,
-											taggedEar: e.target.value
-										}
+								}
+							});
+						}}
+					></TextField>
+					<RadioGroup
+						name="controlled-radio-buttons-group"
+						value={identifier.additionalAttributes?.taggedEar || ''}
+						onChange={e => {
+							dispatch({
+								type: 'animalDetails.identifiers.additionalAttributesChange',
+								payload: {
+									index,
+									newAttributes: {
+										...identifier.additionalAttributes,
+										taggedEar: e.target.value
 									}
-								});
-							}}
-						>
-							<FormControlLabel value="left" control={<Radio />} label="Left" />
-							<FormControlLabel value="right" control={<Radio/>} label="Right"/>
-						</RadioGroup>
-						<IconButton
-							onClick={e => {
-								dispatch({
-									type: 'animalDetails.identifiers.delete',
-									payload: {
-										index
-									}
-								});
-							}}
-						>
-							<DeleteIcon color="primary" />
-						</IconButton>
-					</Box>
-				);
-				break;
-			default:
-				return <></>;
+								}
+							});
+						}}
+					>
+						<FormControlLabel value="left" control={<Radio/>} label="Left"/>
+						<FormControlLabel value="right" control={<Radio/>} label="Right"/>
+					</RadioGroup>
+					<IconButton
+						onClick={e => {
+							dispatch({
+								type: 'animalDetails.identifiers.delete',
+								payload: {
+									index
+								}
+							});
+						}}
+					>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		default:
+			return <></>;
 		}
 	}
 

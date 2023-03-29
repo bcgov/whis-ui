@@ -20,22 +20,26 @@ import React, {useEffect, useState} from 'react';
 import PersonnelTable from './PersonnelTable';
 import useCodeTable from '../../../hooks/useCodeTable';
 import PersonnelDialog from './PersonnelDialog';
+import CancelDialog from '../../util/CancelDialog';
+import ConfirmDialog from '../../util/ConfirmDialog';
 
-const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
+const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
+	const CHARACTER_LIMIT = 500;
+
 	const {mappedCodes: ageClasses} = useCodeTable('animal_age');
 
+	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
 	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(false);
-	const [shouldShowAddSubmitterButton, setShouldShowAddSubmitterButton] = useState(false);
 	const [addSubmitterDialogOpen, setAddSubmitterDialogOpen] = useState(false);
 	const [personnelTableDetails, setPersonnelTableDetails] = useState([]);
 	const [serial, setSerial] = useState(0);
 
 	useEffect(() => {
 		if (event.submitters.length > 0) {
-			setShouldShowAddSubmitterButton(false);
 			setShouldShowCopyFromRequesterButton(false);
 		} else {
-			setShouldShowAddSubmitterButton(true);
 			setShouldShowCopyFromRequesterButton(!!state.purpose.requester);
 		}
 	}, [event.submitters, state.purpose.requester, serial, state]);
@@ -105,10 +109,10 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 								});
 							}}
 						>
-							<FormControlLabel value="capture" control={<Radio />} label="Capture" />
-							<FormControlLabel value="mortality" control={<Radio />} label="Mortality" />
-							<FormControlLabel value="recapture" control={<Radio />} label="Recapture" />
-							<FormControlLabel value="release" control={<Radio />} label="Release" />
+							<FormControlLabel value="capture" control={<Radio/>} label="Capture"/>
+							<FormControlLabel value="mortality" control={<Radio/>} label="Mortality"/>
+							<FormControlLabel value="recapture" control={<Radio/>} label="Recapture"/>
+							<FormControlLabel value="release" control={<Radio/>} label="Release"/>
 						</RadioGroup>
 					</FormControl>
 
@@ -130,7 +134,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
-										<CalendarTodayIcon />
+										<CalendarTodayIcon/>
 									</InputAdornment>
 								)
 							}}
@@ -164,7 +168,12 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 					<Box className="locations">
 						{event.locations.map((location, locationIndex) => (
 							<Box className="locationEntry" key={index}>
-								<LocationEntry location={location} dispatch={dispatch} eventIndex={index} locationIndex={locationIndex} />
+								<LocationEntry
+									location={location}
+									dispatch={dispatch}
+									eventIndex={index}
+									locationIndex={locationIndex}
+								/>
 							</Box>
 						))}
 					</Box>
@@ -185,7 +194,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 					</Button>
 
 					<Typography className="detailsSubtitle">Submitters</Typography>
-					<FormGroup className='submitterContainer'>
+					<FormGroup className="submitterContainer">
 						{shouldShowCopyFromRequesterButton && (
 							<Button
 								variant={'outlined'}
@@ -205,7 +214,12 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 						)}
 					</FormGroup>
 
-					{event.submitters.length > 0 && <PersonnelTable noun="Submitter" people={personnelTableDetails} />}
+					{event.submitters.length > 0 && (
+						<PersonnelTable
+							noun="Submitter"
+							people={personnelTableDetails}
+						/>
+					)}
 
 					<Button
 						variant={'outlined'}
@@ -281,7 +295,7 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 					</FormGroup>
 
 					<TextField
-						className='history'
+						className="history"
 						label="History (Max 500 Characters)"
 						id="history"
 						name="history"
@@ -297,18 +311,62 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 								}
 							});
 						}}
-						inputProps={{maxLength: 500}}
+						inputProps={{maxLength: CHARACTER_LIMIT}}
+						helperText={
+							event.history.length == 500
+								? `${event.history.length} / ${CHARACTER_LIMIT} You have reached the maximum number of characters`
+								: event.history != ''
+									? `${event.history.length} / ${CHARACTER_LIMIT} Characters`
+									: '0 / 500 Character'
+						}
 					/>
 				</Box>
-
+				<ConfirmDialog
+					open={confirmDialogOpen}
+					close={() => {
+						setConfirmDialogOpen(false);
+					}}
+					acceptAction={() => {
+						saveState();
+					}}
+					icon={'NotificationImportantIcon'}
+					title={'Do you want to continue?'}
+					content={'Would you like to save your changes?'}
+				/>
+				<CancelDialog
+					open={cancelDialogOpen}
+					close={() => {
+						setCancelDialogOpen(false);
+					}}
+					acceptAction={() => {
+						resetState();
+					}}
+					title={'Cancel WLH ID Event Details Update'}
+					content={'You have not saved your changes. Are you sure you want to cancel?'}
+				/>
 				<Box className="cardButtons">
-					<Button variant={'contained'} className="update_btn" onClick={saveState}>
+					<Button
+						variant={'contained'}
+						disabled={!dirty}
+						className="update_btn"
+						onClick={() => {
+							setConfirmDialogOpen(true);
+						}}
+					>
 						Update
 					</Button>
-					<Button variant={'outlined'} className="update_btn" onClick={resetState}>
+					<Button
+						variant={'outlined'}
+						disabled={!dirty}
+						className="update_btn"
+						onClick={() => {
+							setCancelDialogOpen(true);
+						}}
+					>
 						Cancel
 					</Button>
 				</Box>
+
 			</Expandable.Detail>
 		</Expandable>
 	);

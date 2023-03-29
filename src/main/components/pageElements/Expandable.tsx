@@ -20,7 +20,6 @@ export interface ExpansionOverrideEvent {
 
 const Expandable = ({children, initiallyExpanded = false, expansionEvent = {event: 'none', id: 0}, expansionCardsClassName}) => {
 	const [expanded, setExpanded] = useState(initiallyExpanded);
-	// const [cardsClassName, setCardsClassName] = useState(expansionCardsClassName);
 
 	useEffect(() => {
 		if (!expansionEvent) return;
@@ -62,8 +61,6 @@ const Expandable = ({children, initiallyExpanded = false, expansionEvent = {even
 
 	return (
 		<>
-			{/* <Card className="card"> */}
-			{/* <Card className={cardsClassName?'multiple_card':'card'}> */}
 			<Card className={expansionCardsClassName}>
 				{renderTitle()}
 				<IconButton
