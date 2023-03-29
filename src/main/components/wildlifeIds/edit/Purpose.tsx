@@ -8,9 +8,8 @@ import CodeLookup from '../../util/CodeLookup';
 import ConfirmDialog from '../../util/ConfirmDialog';
 import CancelDialog from '../../util/CancelDialog';
 
-const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
+const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}) => {
 	const [addRequesterDialogOpen, setAddRequesterDialogOpen] = useState(false);
-	const [displayUpdateButtons, setDisplayUpdateButtons] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
@@ -26,7 +25,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					<span>
 						<Typography variant="body2">Primary Purpose</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose} />
+							<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose}/>
 						</Typography>
 					</span>
 					<span>
@@ -38,7 +37,7 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					<span>
 						<Typography variant="body2">Organization</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'organizations'} code={(state.purpose.requester && `${state.purpose.requester.organization}`) || 'unset'} />
+							<CodeLookup codeTable={'organizations'} code={(state.purpose.requester && `${state.purpose.requester.organization}`) || 'unset'}/>
 						</Typography>
 					</span>
 				</Box>
@@ -59,7 +58,6 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
-							setDisplayUpdateButtons(true);
 						}}
 					>
 						{purposes.map((m, i) => (
@@ -81,7 +79,6 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
-							setDisplayUpdateButtons(true);
 						}}
 					>
 						{purposes.map((m, i) => (
@@ -105,7 +102,6 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
-							setDisplayUpdateButtons(true);
 						}}
 					/>
 					<TextField
@@ -124,7 +120,6 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 									value: e.target.value
 								}
 							});
-							setDisplayUpdateButtons(true);
 						}}
 					/>
 
@@ -156,9 +151,6 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 										}
 									}
 								]}
-								showUpdateButtons={() => {
-									setDisplayUpdateButtons(true);
-								}}
 							/>
 						)}
 
@@ -168,7 +160,6 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 								className="addRequester"
 								onClick={() => {
 									setAddRequesterDialogOpen(true);
-									setDisplayUpdateButtons(true);
 								}}
 							>
 								+ Add Requester
@@ -217,20 +208,19 @@ const Purpose = ({expansionEvent, dispatch, state, resetState, saveState}) => {
 					title={'Cancel WLH ID Purpose Update'}
 					content={'You have not saved your changes. Are you sure you want to cancel?'}
 				/>
-				{displayUpdateButtons && (
-					<Box className="cardButtons">
-						<Button variant={'contained'} className="update_btn" onClick={() => {
-								setConfirmDialogOpen(true);
-							}}>
-							Update
-						</Button>
-						<Button variant={'outlined'} className="update_btn" onClick={() => {
-								setCancelDialogOpen(true);
-							}}>
-							Cancel
-						</Button>
-					</Box>
-				)}
+				<Box className="cardButtons">
+					<Button disabled={!dirty} variant={'contained'} className="update_btn" onClick={() => {
+						setConfirmDialogOpen(true);
+					}}>
+						Update
+					</Button>
+					<Button disabled={!dirty} variant={'outlined'} className="update_btn" onClick={() => {
+						setCancelDialogOpen(true);
+					}}>
+						Cancel
+					</Button>
+				</Box>
+
 			</Expandable.Detail>
 		</Expandable>
 	);

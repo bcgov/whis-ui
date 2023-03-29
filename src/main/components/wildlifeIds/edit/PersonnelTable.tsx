@@ -8,7 +8,7 @@ import CodeLookup from '../../util/CodeLookup';
 import LightTooltip from '../editMultiple/LightTooltip';
 import TrashBinIcon from '../../util/TrashBinIcon';
 
-const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
+const PersonnelTable = ({people, noun = 'Requester'}) => {
 	function unsetDeletionHandler() {
 		setDeleteConfirmationDialogOpen(false);
 	}
@@ -42,40 +42,40 @@ const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 
 	function deletable(noun, p) {
 		switch (noun) {
-			case 'Submitter':
-				return (
+		case 'Submitter':
+			return (
+				<IconButton
+					aria-controls={menuOpen ? 'positioned-menu' : undefined}
+					aria-haspopup="true"
+					aria-expanded={menuOpen ? 'true' : undefined}
+					onClick={e => {
+						setMenuCurrentPerson(p);
+						handleMenuClick(e);
+					}}
+				>
+					<MoreVertIcon color="primary" className="moreActionIcon"/>
+				</IconButton>
+			);
+			break;
+		case 'Requester':
+			return (
+				<LightTooltip title="Edit Requester">
 					<IconButton
 						aria-controls={menuOpen ? 'positioned-menu' : undefined}
 						aria-haspopup="true"
 						aria-expanded={menuOpen ? 'true' : undefined}
 						onClick={e => {
 							setMenuCurrentPerson(p);
-							handleMenuClick(e);
+							// setCurrentEditAction({handler: menuCurrentPerson.editAction});
+							setEditingPerson(menuCurrentPerson);
+							setEditDialogOpen(true);
 						}}
 					>
-						<MoreVertIcon color="primary" className="moreActionIcon" />
+						<EditIcon color="primary"/>
 					</IconButton>
-				);
-				break;
-			case 'Requester':
-				return (
-					<LightTooltip title="Edit Requester">
-						<IconButton
-							aria-controls={menuOpen ? 'positioned-menu' : undefined}
-							aria-haspopup="true"
-							aria-expanded={menuOpen ? 'true' : undefined}
-							onClick={e => {
-								setMenuCurrentPerson(p);
-								// setCurrentEditAction({handler: menuCurrentPerson.editAction});
-								setEditingPerson(menuCurrentPerson);
-								setEditDialogOpen(true);
-							}}
-						>
-							<EditIcon color="primary" />
-						</IconButton>
-					</LightTooltip>
-				);
-				break;
+				</LightTooltip>
+			);
+			break;
 		}
 	}
 
@@ -93,7 +93,7 @@ const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 							setAnchorEl(null);
 						}}
 					>
-						<EditIcon color="primary" className="tableActionIcon" />
+						<EditIcon color="primary" className="tableActionIcon"/>
 						Edit {noun}
 					</MenuItem>
 				);
@@ -108,7 +108,7 @@ const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 							setAnchorEl(null);
 						}}
 					>
-						<TrashBinIcon />
+						<TrashBinIcon/>
 						Remove {noun}
 					</MenuItem>
 				);
@@ -138,13 +138,13 @@ const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 							<TableCell>{p.firstName}</TableCell>
 							<TableCell>{p.lastName}</TableCell>
 							<TableCell>
-								<CodeLookup codeTable={'regions'} code={p.region} />
+								<CodeLookup codeTable={'regions'} code={p.region}/>
 							</TableCell>
 							<TableCell>
-								<CodeLookup codeTable={'organizations'} code={p.organization} />
+								<CodeLookup codeTable={'organizations'} code={p.organization}/>
 							</TableCell>
 							<TableCell>
-								<CodeLookup codeTable={'roles'} code={p.role} />
+								<CodeLookup codeTable={'roles'} code={p.role}/>
 							</TableCell>
 							<TableCell className="phone">{p.phoneNumber}</TableCell>
 							<TableCell>{p.email}</TableCell>
@@ -160,7 +160,6 @@ const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 						}}
 						acceptAction={() => {
 							setDeleteConfirmationDialogOpen(false);
-							showUpdateButtons();
 							currentDeletionAction.handler();
 						}}
 					/>
@@ -186,7 +185,6 @@ const PersonnelTable = ({people, noun = 'Requester', showUpdateButtons}) => {
 						acceptAction={newPerson => {
 							currentEditAction.handler(newPerson);
 							setEditDialogOpen(false);
-							showUpdateButtons();
 						}}
 						cancelAction={() => {
 							setCurrentEditAction({handler: unsetEditActionHandler});

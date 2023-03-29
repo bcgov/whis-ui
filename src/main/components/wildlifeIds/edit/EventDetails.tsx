@@ -23,27 +23,23 @@ import PersonnelDialog from './PersonnelDialog';
 import CancelDialog from '../../util/CancelDialog';
 import ConfirmDialog from '../../util/ConfirmDialog';
 
-const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
+const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
 	const CHARACTER_LIMIT = 500;
-	
+
 	const {mappedCodes: ageClasses} = useCodeTable('animal_age');
 
-	const [displayUpdateButtons, setDisplayUpdateButtons] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
 	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(false);
-	const [shouldShowAddSubmitterButton, setShouldShowAddSubmitterButton] = useState(false);
 	const [addSubmitterDialogOpen, setAddSubmitterDialogOpen] = useState(false);
 	const [personnelTableDetails, setPersonnelTableDetails] = useState([]);
 	const [serial, setSerial] = useState(0);
 
 	useEffect(() => {
 		if (event.submitters.length > 0) {
-			setShouldShowAddSubmitterButton(false);
 			setShouldShowCopyFromRequesterButton(false);
 		} else {
-			setShouldShowAddSubmitterButton(true);
 			setShouldShowCopyFromRequesterButton(!!state.purpose.requester);
 		}
 	}, [event.submitters, state.purpose.requester, serial, state]);
@@ -111,13 +107,12 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										value: e.target.value
 									}
 								});
-								setDisplayUpdateButtons(true);
 							}}
 						>
-							<FormControlLabel value="capture" control={<Radio />} label="Capture" />
-							<FormControlLabel value="mortality" control={<Radio />} label="Mortality" />
-							<FormControlLabel value="recapture" control={<Radio />} label="Recapture" />
-							<FormControlLabel value="release" control={<Radio />} label="Release" />
+							<FormControlLabel value="capture" control={<Radio/>} label="Capture"/>
+							<FormControlLabel value="mortality" control={<Radio/>} label="Mortality"/>
+							<FormControlLabel value="recapture" control={<Radio/>} label="Recapture"/>
+							<FormControlLabel value="release" control={<Radio/>} label="Release"/>
 						</RadioGroup>
 					</FormControl>
 
@@ -135,12 +130,11 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										value: e.target.value
 									}
 								});
-								setDisplayUpdateButtons(true);
 							}}
 							InputProps={{
 								endAdornment: (
 									<InputAdornment position="end">
-										<CalendarTodayIcon />
+										<CalendarTodayIcon/>
 									</InputAdornment>
 								)
 							}}
@@ -160,7 +154,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										value: e.target.value
 									}
 								});
-								setDisplayUpdateButtons(true);
 							}}
 						>
 							{ageClasses.map((m, i) => (
@@ -180,9 +173,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									dispatch={dispatch}
 									eventIndex={index}
 									locationIndex={locationIndex}
-									showUpdateButtons={() => {
-										setDisplayUpdateButtons(true);
-									}}
 								/>
 							</Box>
 						))}
@@ -198,7 +188,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									eventIndex: index
 								}
 							});
-							setDisplayUpdateButtons(true);
 						}}
 					>
 						+ Add Location
@@ -218,7 +207,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 										}
 									});
 									setSerial(serial + 1);
-									setDisplayUpdateButtons(true);
 								}}
 							>
 								Copy from requester
@@ -230,9 +218,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 						<PersonnelTable
 							noun="Submitter"
 							people={personnelTableDetails}
-							showUpdateButtons={() => {
-								setDisplayUpdateButtons(true);
-							}}
 						/>
 					)}
 
@@ -258,7 +243,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 							});
 							setSerial(serial + 1);
 							setAddSubmitterDialogOpen(false);
-							setDisplayUpdateButtons(true);
 						}}
 						cancelAction={() => {
 							setAddSubmitterDialogOpen(false);
@@ -277,7 +261,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									checked={event.additionalAttributes.samplesCollected}
 									onChange={e => {
 										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.samplesCollected`, value: e.target.checked}});
-										setDisplayUpdateButtons(true);
 									}}
 								/>
 							}
@@ -291,7 +274,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									checked={event.additionalAttributes.samplesSentForTesting}
 									onChange={e => {
 										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.samplesSentForTesting`, value: e.target.checked}});
-										setDisplayUpdateButtons(true);
 									}}
 								/>
 							}
@@ -305,7 +287,6 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									checked={event.additionalAttributes.testResultsReceived}
 									onChange={e => {
 										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.testResultsReceived`, value: e.target.checked}});
-										setDisplayUpdateButtons(true);
 									}}
 								/>
 							}
@@ -329,15 +310,14 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 									value: e.target.value
 								}
 							});
-							setDisplayUpdateButtons(true);
 						}}
 						inputProps={{maxLength: CHARACTER_LIMIT}}
 						helperText={
 							event.history.length == 500
 								? `${event.history.length} / ${CHARACTER_LIMIT} You have reached the maximum number of characters`
 								: event.history != ''
-								? `${event.history.length} / ${CHARACTER_LIMIT} Characters`
-								: '0 / 500 Character'
+									? `${event.history.length} / ${CHARACTER_LIMIT} Characters`
+									: '0 / 500 Character'
 						}
 					/>
 				</Box>
@@ -364,28 +344,29 @@ const EventDetails = ({expansionEvent, state, event, index, dispatch, resetState
 					title={'Cancel WLH ID Event Details Update'}
 					content={'You have not saved your changes. Are you sure you want to cancel?'}
 				/>
-				{displayUpdateButtons && (
-					<Box className="cardButtons">
-						<Button
-							variant={'contained'}
-							className="update_btn"
-							onClick={() => {
-								setConfirmDialogOpen(true);
-							}}
-						>
-							Update
-						</Button>
-						<Button
-							variant={'outlined'}
-							className="update_btn"
-							onClick={() => {
-								setCancelDialogOpen(true);
-							}}
-						>
-							Cancel
-						</Button>
-					</Box>
-				)}
+				<Box className="cardButtons">
+					<Button
+						variant={'contained'}
+						disabled={!dirty}
+						className="update_btn"
+						onClick={() => {
+							setConfirmDialogOpen(true);
+						}}
+					>
+						Update
+					</Button>
+					<Button
+						variant={'outlined'}
+						disabled={!dirty}
+						className="update_btn"
+						onClick={() => {
+							setCancelDialogOpen(true);
+						}}
+					>
+						Cancel
+					</Button>
+				</Box>
+
 			</Expandable.Detail>
 		</Expandable>
 	);

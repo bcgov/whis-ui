@@ -28,9 +28,8 @@ const EditForm = ({wildlifeHealthId}) => {
 	function resetState() {
 		// return the state of the form to whatever was last received from the api
 		// we could do fancier undo-tracking given the use of a reduce/dispatch pattern on this form if desired
-		formDispatch({
+		localDispatch({
 			type: 'reset',
-			payload: wildlifeHealthId
 		});
 	}
 
@@ -40,100 +39,112 @@ const EditForm = ({wildlifeHealthId}) => {
 			type: WILDLIFE_HEALTH_ID_PERSIST_REQUEST,
 			payload: {
 				id,
-				state: formState
+				state: localState.formState
 			}
 		});
 	}
 
 	function formReducerInit(initialState) {
-		return initialState;
+
+		return {
+			initialState: _.cloneDeep(initialState),
+			formState: _.cloneDeep(initialState),
+			dirty: false
+		};
 	}
 
 	function formReducer(state, action) {
-		let updatedState = {...state};
+		const updatedState = {...state};
 
 		switch (action.type) {
-			case 'reset':
-				updatedState = action.payload;
-				break;
-			case 'fieldChange':
-				// for simple field changes
-				_.set(updatedState, action.payload.field, action.payload.value);
-				break;
-			case 'status.statusChange':
-				updatedState.status.dirty.status = action.payload;
-				if (action.payload === 'RETIRED') {
-					updatedState.status.dirty.additionalAttributes.recaptureKitsReturned = false;
-				}
-				break;
-			case 'status.promote':
-				updatedState.status.history.push({
-					status: state.status.dirty.status,
-					reason: state.status.dirty.reason,
-					additionalAttributes: state.status.dirty.additionalAttributes,
-					changedAt: new Date()
-				});
-				updatedState.status.dirty = {
-					status: '',
-					reason: '',
-					additionalAttributes: {}
-				};
-				break;
-			case 'animalDetails.identifiers.typeChange':
-				updatedState.animalDetails.identifiers[action.payload.index].type = action.payload.newType;
-				break;
-			case 'animalDetails.identifiers.valueChange':
-				updatedState.animalDetails.identifiers[action.payload.index].identifier = action.payload.newValue;
-				break;
-			case 'animalDetails.identifiers.additionalAttributesChange':
-				// some types of identifier (eg. ear tags have additional attributes beyond identifier)
-				updatedState.animalDetails.identifiers[action.payload.index].additionalAttributes = action.payload.newAttributes;
-				break;
-			case 'animalDetails.identifiers.delete':
-				updatedState.animalDetails.identifiers.splice(action.payload.index, 1);
-				break;
-			case 'animalDetails.identifiers.add':
-				updatedState.animalDetails.identifiers.push({
-					type: '',
-					identifier: '',
-					additionalAttributes: {}
-				});
-				break;
-			case 'events.copyFromRequester':
-				updatedState.events[action.payload.eventIndex].submitters.push({...state.purpose.requester});
-				break;
-			case 'events.add':
-				updatedState.events.push({
-					type: 'capture',
-					ageClass: '',
-					startDate: '',
-					submitters: [],
-					locations: [],
-					additionalAttributes: {},
-					history: ''
-				});
-				break;
-			case 'locations.add':
-				updatedState.events[action.payload.eventIndex].locations.push({
-					type: '',
-					attributes: {}
-				});
-				break;
-			case 'locations.delete':
-				updatedState.events[action.payload.eventIndex].locations.splice(action.payload.locationIndex, 1);
-				break;
-			case 'submitters.add':
-				updatedState.events[action.payload.eventIndex].submitters.push(action.payload.submitter);
-				break;
-			case 'submitters.delete':
-				updatedState.events[action.payload.eventIndex].submitters.splice(action.payload.submitterIndex, 1);
-				break;
+		case 'reset':
+			updatedState.formState = _.cloneDeep(updatedState.initialState);
+			break;
+		case 'fieldChange':
+			// for simple field changes
+			_.set(updatedState.formState, action.payload.field, action.payload.value);
+			break;
+		case 'status.statusChange':
+			updatedState.formState.status.dirty.status = action.payload;
+			if (action.payload === 'RETIRED') {
+				updatedState.formState.status.dirty.additionalAttributes.recaptureKitsReturned = false;
+			}
+			break;
+		case 'status.promote':
+			updatedState.formState.status.history.push({
+				status: state.status.dirty.status,
+				reason: state.status.dirty.reason,
+				additionalAttributes: state.status.dirty.additionalAttributes,
+				changedAt: new Date()
+			});
+			updatedState.formState.status.dirty = {
+				status: '',
+				reason: '',
+				additionalAttributes: {}
+			};
+			break;
+		case 'animalDetails.identifiers.typeChange':
+			updatedState.formState.animalDetails.identifiers[action.payload.index].type = action.payload.newType;
+			break;
+		case 'animalDetails.identifiers.valueChange':
+			updatedState.formState.animalDetails.identifiers[action.payload.index].identifier = action.payload.newValue;
+			break;
+		case 'animalDetails.identifiers.additionalAttributesChange':
+			// some types of identifier (eg. ear tags have additional attributes beyond identifier)
+			updatedState.formState.animalDetails.identifiers[action.payload.index].additionalAttributes = action.payload.newAttributes;
+			break;
+		case 'animalDetails.identifiers.delete':
+			updatedState.formState.animalDetails.identifiers.splice(action.payload.index, 1);
+			break;
+		case 'animalDetails.identifiers.add':
+			updatedState.formState.animalDetails.identifiers.push({
+				type: '',
+				identifier: '',
+				additionalAttributes: {}
+			});
+			break;
+		case 'events.copyFromRequester':
+			updatedState.formState.events[action.payload.eventIndex].submitters.push({...state.purpose.requester});
+			break;
+		case 'events.add':
+			updatedState.formState.events.push({
+				type: 'capture',
+				ageClass: '',
+				startDate: '',
+				submitters: [],
+				locations: [],
+				additionalAttributes: {},
+				history: ''
+			});
+			break;
+		case 'locations.add':
+			updatedState.formState.events[action.payload.eventIndex].locations.push({
+				type: '',
+				attributes: {}
+			});
+			break;
+		case 'locations.delete':
+			updatedState.formState.events[action.payload.eventIndex].locations.splice(action.payload.locationIndex, 1);
+			break;
+		case 'submitters.add':
+			updatedState.formState.events[action.payload.eventIndex].submitters.push(action.payload.submitter);
+			break;
+		case 'submitters.delete':
+			updatedState.formState.events[action.payload.eventIndex].submitters.splice(action.payload.submitterIndex, 1);
+			break;
 		}
 
+		switch (action.type) {
+		case 'reset':
+			updatedState.dirty = false;
+			break;
+		default:
+			updatedState.dirty = true;
+		}
 		return updatedState;
 	}
 
-	const [formState, formDispatch] = useReducer(formReducer, wildlifeHealthId, formReducerInit);
+	const [localState, localDispatch] = useReducer(formReducer, wildlifeHealthId, formReducerInit);
 
 	const {tables, initialized: codeTablesInitialized} = useSelector(selectCodeTables);
 
@@ -149,31 +160,30 @@ const EditForm = ({wildlifeHealthId}) => {
 	});
 
 	if (!codeTablesInitialized) {
-		return <Loading />;
+		return <Loading/>;
 	}
 
-	if (!formState?.metadata?.wildlifeHealthId) {
-		return <Loading />;
+	if (!localState?.formState?.metadata?.wildlifeHealthId) {
+		return <Loading/>;
 	}
 
 	return (
 		<Box className="container">
 			<Box className="pageHead">
 				<Box className="mainTitle">
-					<Typography>WLH ID {formState.metadata.wildlifeHealthId}</Typography>
+					<Typography>WLH ID {localState.formState.metadata.wildlifeHealthId}</Typography>
 					<Typography>Update the WLH ID details and events.</Typography>
 				</Box>
 
 				<Button
 					variant={'contained'}
 					onClick={() => {
-						if (formState.events.length > 0) {
+						if (localState.formState.events.length > 0) {
 							// confirmation is required
 							setAddEventConfirmationDialogOpen(true);
 						} else {
 							// just add it
 							setNewEventFormDialogOpen(true);
-							console.log(newEventFormDialogOpen);
 						}
 					}}
 				>
@@ -184,7 +194,7 @@ const EditForm = ({wildlifeHealthId}) => {
 			<NewEventFormDialog
 				open={newEventFormDialogOpen}
 				acceptAction={() => {
-					formDispatch({
+					localDispatch({
 						type: 'events.add'
 					});
 				}}
@@ -193,7 +203,7 @@ const EditForm = ({wildlifeHealthId}) => {
 				}}
 				resetState={resetState}
 				saveState={saveState}
-				state={formState}
+				state={localState.formState}
 			/>
 
 			<AddEventConfirm
@@ -202,7 +212,7 @@ const EditForm = ({wildlifeHealthId}) => {
 					setAddEventConfirmationDialogOpen(false);
 				}}
 				acceptAction={() => {
-					formDispatch({
+					localDispatch({
 						type: 'events.add'
 					});
 					setAddEventConfirmationDialogOpen(false);
@@ -233,13 +243,43 @@ const EditForm = ({wildlifeHealthId}) => {
 					<strong>Redux Store State</strong>
 					<pre>{JSON.stringify(wildlifeHealthId, null, 1)}</pre>
 					<strong>Form Store State</strong>
-					<pre>{JSON.stringify(formState, null, 1)}</pre>
+					<pre>{JSON.stringify(localState, null, 1)}</pre>
 				</>
 			)}
-			<Status expansionEvent={expansionEvent} dispatch={formDispatch} state={formState} saveState={saveState} resetState={resetState} />
-			<AnimalDetails expansionEvent={expansionEvent} dispatch={formDispatch} state={formState} saveState={saveState} resetState={resetState} />
-			<EventsContainer state={formState} dispatch={formDispatch} expansionEvent={expansionEvent} saveState={saveState} resetState={resetState} />
-			<Purpose expansionEvent={expansionEvent} dispatch={formDispatch} state={formState} saveState={saveState} resetState={resetState} />
+			<Status
+				dirty={localState.dirty}
+				expansionEvent={expansionEvent}
+				dispatch={localDispatch}
+				state={localState.formState}
+				saveState={saveState}
+				resetState={resetState}
+			/>
+
+			<AnimalDetails
+				dirty={localState.dirty}
+				expansionEvent={expansionEvent}
+				dispatch={localDispatch}
+				state={localState.formState}
+				saveState={saveState}
+				resetState={resetState}
+			/>
+
+			<EventsContainer
+				dirty={localState.dirty}
+				dispatch={localDispatch}
+				expansionEvent={expansionEvent}
+				state={localState.formState}
+				saveState={saveState}
+				resetState={resetState}
+			/>
+			<Purpose
+				dirty={localState.dirty}
+				expansionEvent={expansionEvent}
+				dispatch={localDispatch}
+				state={localState.formState}
+				saveState={saveState}
+				resetState={resetState}
+			/>
 		</Box>
 	);
 };

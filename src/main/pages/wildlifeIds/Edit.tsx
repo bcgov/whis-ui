@@ -8,7 +8,7 @@ import {useSelector} from "../../../state/utilities/use_selector";
 import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
 import Loading from "../../components/util/Loading";
 
-const Edit: React.FC = () => {
+const Edit = () => {
 	const {id} = useParams();
 	const {pathname} = useLocation();
 
