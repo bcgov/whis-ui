@@ -1,97 +1,148 @@
-import {Box, Card, Stack, Typography, Chip, Button, IconButton, Tooltip, TooltipProps, tooltipClasses, styled, MenuItem, Menu} from '@mui/material';
+import {
+	Box,
+	Card,
+	Stack,
+	Typography,
+	Chip,
+	Button,
+	IconButton,
+	Tooltip,
+	TooltipProps,
+	tooltipClasses,
+	styled,
+	MenuItem,
+	Menu,
+	MenuList,
+	Select
+} from '@mui/material';
 import '../../../styles/search.scss';
 import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NewEventDialog from './NewEventDialog';
 import ChangeStatusDialog from './ChangeStatusDialog';
-import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import React, {useState} from 'react';
+import {DataGrid, GridColDef, GridSelectionModel} from '@mui/x-data-grid';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import LightTooltip from '../editMultiple/LightTooltip';
+import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import {Flag} from '@mui/icons-material';
 
-const FilterResult = ({}) => {
+interface CustomMenuItem {
+	anchorEl: null | HTMLElement;
+	child: any;
+}
+
+const FilterResult = showFilterChips => {
 	const navigate = useNavigate();
 
 	//sample id data
 	const state = {
-		status:'Assigned',
-		wlh_id:'22-00001',
-		generationDate:'2023-01-19',
-		creator:'effie@plasticviking.com'
-	}
+		status: 'Assigned',
+		wlh_id: '220000-1',
+		generationDate: '2023-01-19',
+		creator: 'effie@plasticviking.com'
+	};
 
 	//table pagination
 	const [pageSize, setPageSize] = React.useState(10);
-
-	//open more actions menu
-	const [anchorEl, setAnchorEl] = useState(null);
-	const menuOpen = Boolean(anchorEl);
-
-	const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-		setAnchorEl(event.currentTarget);
-	};
-	const handleMenuClose = () => {
-		setAnchorEl(null);
-	};
 
 	//open new event / change status dialog
 	const [newEventDialogOpen, setNewEventDialogOpen] = useState(false);
 	const [changeStatusDialogOpen, setChangeStatusDialogOpen] = useState(false);
 
+	//show update buttons after any id selected
+	const [isIDSelected, setIsIDSelected] = useState(false);
+
+	const handleRowSelection = length => {
+		if (length > 0) {
+			setIsIDSelected(true);
+		} else {
+			setIsIDSelected(false);
+		}
+	};
+
+	const [newStatus, setNewStatus] = useState('');
+
+	const [moreActions, setMoreActions] = React.useState<CustomMenuItem>({
+		anchorEl: null,
+		child: (
+			<>
+				<MenuItem
+					onClick={() => {
+						navigate('/wildlifeIds/edit/86');
+						setMoreActions({...moreActions, anchorEl: null});
+					}}
+				>
+					Update WLH ID
+				</MenuItem>
+				<MenuItem
+					onClick={() => {
+						setNewEventDialogOpen(true);
+						setMoreActions({...moreActions, anchorEl: null});
+					}}
+				>
+					Add New Event
+				</MenuItem>
+			</>
+		)
+	});
+	const [changeStatus, setChangeStatus] = React.useState<CustomMenuItem>({
+		anchorEl: null,
+		child: (
+			<MenuList>
+				<MenuItem
+					className="ASSIGNED"
+					onClick={() => {
+						setChangeStatus({...changeStatus, anchorEl: null});
+					}}
+				>
+					ASSIGNED
+				</MenuItem>
+				<MenuItem
+					className="UNASSIGNED"
+					onClick={() => {
+						setChangeStatus({...changeStatus, anchorEl: null});
+						setChangeStatusDialogOpen(true);
+						setNewStatus('UNASSIGNED');
+					}}
+				>
+					UNASSIGNED
+				</MenuItem>
+				<MenuItem
+					className="RETIRED"
+					onClick={() => {
+						setChangeStatus({...changeStatus, anchorEl: null});
+						setChangeStatusDialogOpen(true);
+						setNewStatus('RETIRED');
+					}}
+				>
+					RETIRED
+				</MenuItem>
+			</MenuList>
+		)
+	});
+
 	//status styled
 	const statusClasses = id_status => {
 		const toUpperCase = id_status.toUpperCase();
-		return <Box className={toUpperCase}>{id_status}</Box>;
+		return <span className={toUpperCase}>{id_status}</span>;
 	};
-
-	const LightTooltip = styled(({className, ...props}: TooltipProps) => <Tooltip {...props} classes={{popper: className}} arrow />)(({theme}) => ({
-		[`& .${tooltipClasses.arrow}`]: {
-			color: theme.palette.common.white,
-			'&:before': {border: '1px solid #E6E8ED'}
-		},
-		[`& .${tooltipClasses.tooltip}`]: {
-			backgroundColor: theme.palette.common.white,
-			color: 'rgba(0, 0, 0, 0.87)',
-			boxShadow: theme.shadows[1],
-			fontSize: 11,
-			border: '1px solid #E6E8ED'
-		}
-	}));
 
 	//delete filter chip
-	const handleDelete = () => {
-		
-	};
+	const handleDelete = () => {};
 	//clear all filters
-	const handleClear = () => {
-		
-	};
+	const handleClear = () => {};
 
 	//actions
 	const renderMoreActions = () => {
 		return (
 			<Box className="actions">
-				<Button
-					variant="outlined"
-					onClick={() => {
-						navigate('/wildlifeIds/edit/86');
-					}}
-				>
-					Update Purpose
-				</Button>
-				<Button
-					variant="outlined"
-					onClick={() => {
-						navigate('/wildlifeIds/edit/86');
-					}}
-				>
-					Update Details
-				</Button>
 				<LightTooltip title="More Actions">
 					<IconButton
 						aria-controls={open ? 'demo-positioned-menu' : undefined}
 						aria-haspopup="true"
 						aria-expanded={open ? 'true' : undefined}
-						onClick={handleMenuClick}
+						onClick={(event: React.MouseEvent<HTMLButtonElement>) => setMoreActions({...moreActions, anchorEl: event.currentTarget})}
 					>
 						<MoreVertIcon />
 					</IconButton>
@@ -100,134 +151,192 @@ const FilterResult = ({}) => {
 		);
 	};
 
+	const renderStatus = params => {
+		const currentStatus = params.row.status.toUpperCase();
+		return (
+			<Button
+				className={`statusDropdown ${currentStatus}`}
+				onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+					setChangeStatus({...changeStatus, anchorEl: event.currentTarget});
+					// filterOptions(currentStatus);
+				}}
+			>
+				<Stack direction="row" alignItems="center" justifyContent="space-between" width="inherit">
+					{currentStatus}
+					<ArrowDropDownOutlinedIcon />
+				</Stack>
+			</Button>
+		);
+	};
+
+	const isFlag = params => {
+		if (params.row.id.includes('R')) {
+			return (
+				<>
+					{params.row.id}
+					<Flag className="idFlag" />
+				</>
+			);
+		}
+	};
+
 	const columns: GridColDef[] = [
-		{field: 'id', headerName: 'WLH ID', width: 150},
-		{field: 'creation_date', headerName: 'Creation Date', width: 160},
-		{field: 'species', headerName: 'Species', sortable: false, disableColumnMenu: true, width: 250},
+		{field: 'id', headerName: 'WLH ID', width: 150, renderCell: isFlag},
+		{field: 'species', headerName: 'Species', width: 250},
 		{
 			field: 'home_region',
 			headerName: 'Home Region',
-			sortable: false,
-			disableColumnMenu: true,
-			width: 220
+			width: 230
 		},
+		{field: 'event_date', headerName: 'Event Date', width: 200},
+		{field: 'event_type', headerName: 'Event Type', width: 180},
 		{
 			field: 'status',
 			headerName: 'Status',
-			sortable: false,
-			disableColumnMenu: true,
-			width: 150,
-			renderCell: params => statusClasses(params.row.status)
+			width: 160,
+			renderCell: renderStatus
 		},
 		{
 			field: 'actions',
 			headerName: 'Actions',
 			sortable: false,
 			disableColumnMenu: true,
-			width: 280,
+			width: 70,
+			align: 'center',
 			renderCell: renderMoreActions
 		}
 	];
 
 	const rows = [
-		{id: '220000-1', creation_date: '22-01-2022', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 1', status: 'Assigned'},
-		{id: '220000-2-R', creation_date: '22-02-2022', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 2', status: 'Retired'},
-		{id: '220000-3', creation_date: '22-03-2022', species: 'MooseMooseMoose 3', home_region: 'RegionRegion 3', status: 'Assigned'},
-		{id: '220000-4', creation_date: '22-04-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Assigned'},
-		{id: '220000-5', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-6', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-7', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-8', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-9', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-10', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-11', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-12', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-13', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-14', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-15', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-16', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-17', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-18', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-19', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-20', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-21', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-22', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-23', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-24', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-25', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-26', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-27', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-28', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-29', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'},
-		{id: '220000-30', creation_date: '22-05-2022', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', status: 'Unassigned'}
+		{id: '220000-1', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 1', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-2-R', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 2', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-3', species: 'MooseMooseMoose 3', home_region: 'RegionRegion 3', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-4', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-5', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-6-R', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-7', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-8-R', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-9', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-10', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-11', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-12-R', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-13-R', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-14', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-15', species: 'MooseMooseMoose 3', home_region: 'RegionRegion 1', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-16', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 1', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-17-R', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 2', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-18', species: 'MooseMooseMoose 3', home_region: 'RegionRegion 3', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-19', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-20', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-21', species: 'MooseMooseMoose 2', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-22', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-23', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-24', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-25', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-26', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-27', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Assigned'},
+		{id: '220000-28', species: 'MooseMooseMoose 1', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Retired'},
+		{id: '220000-29', species: 'MooseMooseMoose 4', home_region: 'RegionRegion 4', event_date: '', event_type: '', status: 'Unassigned'},
+		{id: '220000-30', species: 'MooseMooseMoose 3', home_region: 'RegionRegion 1', event_date: '', event_type: '', status: 'Assigned'}
 	];
 
 	return (
 		<Card className="filter_result">
-			<Box className="filters">
-				<Typography className="filters_title">Filters</Typography>
-				<Stack direction="row">
-					<Stack direction="row" className="chips_container">
-						<Chip label="Keyword: Moose" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
-						<Chip label="End Date:  25-01-2022" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
-						<Chip label="End Date:  25-01-2022" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
-						<Chip label="Status: Assigned" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
-						<Chip label="ID: 22000-1" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
+			{showFilterChips && (
+				<Box className="filters">
+					<Typography className="filters_title">Filters</Typography>
+					<Stack direction="row" justifyContent={'space-between'}>
+						<Stack direction="row" className="chips_container">
+							<Chip label="Keyword: Moose" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
+							<Chip label="End Date:  25-01-2022" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
+							<Chip label="End Date:  25-01-2022" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
+							<Chip label="Status: Assigned" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
+							<Chip label="ID: 22000-1" onDelete={handleDelete} className="filter_chips" deleteIcon={<CloseIcon />} />
+						</Stack>
+						<Chip label="Clear all" onClick={handleClear} className="clear_filters" />
 					</Stack>
-					<Chip label="Clear all" onClick={handleClear} className="clear_filters" />
-				</Stack>
-			</Box>
+				</Box>
+			)}
 			<Box className="results_table">
-				<Typography>Found 5 WLH IDs</Typography>
+				<Box className="resultTableHeader">
+					<Typography>Last 50 created WLH IDs</Typography>
+					{/* After search
+					<Typography>{rows.length} WLH IDs Found</Typography> */}
+					{isIDSelected ? (
+						<Stack direction="row" className="hiddenButtons">
+							<Button
+								variant="outlined"
+								onClick={() => {
+									navigate('/wildlifeIds/edit/86');
+								}}
+							>
+								Update WLH ID
+							</Button>
+							<Button
+								variant="outlined"
+								onClick={() => {
+									setNewEventDialogOpen(true);
+								}}
+							>
+								Add New Event
+							</Button>
+						</Stack>
+					) : (
+						[]
+					)}
+				</Box>
 				<DataGrid
 					className="data"
+					autoHeight
 					rows={rows}
 					columns={columns}
 					pageSize={pageSize}
 					onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-					rowsPerPageOptions={[10, 20, 30]}
+					rowsPerPageOptions={[10, 20, 30, 40, 50]}
 					checkboxSelection
 					disableSelectionOnClick
+					onSelectionModelChange={itm => {
+						handleRowSelection(itm.length);
+					}}
+					getRowClassName={params => {
+						if (params.row.id.includes('R')) {
+							return 'idFlagBG';
+						}
+					}}
 				/>
 				<Menu
 					className="moreActionsMenu"
-					anchorEl={anchorEl}
-					open={menuOpen}
-					onClose={handleMenuClose}
+					open={Boolean(moreActions.anchorEl)}
+					onClose={() => setMoreActions({...moreActions, anchorEl: null})}
+					anchorEl={moreActions.anchorEl}
 					anchorOrigin={{
-						vertical: 'bottom',
-						horizontal: 'right'
+						vertical: 'center',
+						horizontal: 'center'
 					}}
 					transformOrigin={{
 						vertical: 'top',
-						horizontal: 'left'
+						horizontal: 'right'
 					}}
 				>
-					<MenuItem
-						onClick={() => {
-							navigate('/wildlifeIds/edit/86');
-							handleMenuClose;
-						}}
-					>
-						Update Event
-					</MenuItem>
-					<MenuItem
-						onClick={() => {
-							setNewEventDialogOpen(true);
-							handleMenuClose();
-						}}
-					>
-						Add New Event
-					</MenuItem>
-					<MenuItem
-						onClick={() => {
-							setChangeStatusDialogOpen(true);
-							handleMenuClose();
-						}}
-					>
-						Change Status
-					</MenuItem>
+					{moreActions.child}
 				</Menu>
+				<Menu
+					className="statusMenu"
+					open={Boolean(changeStatus.anchorEl)}
+					onClose={() => setChangeStatus({...changeStatus, anchorEl: null})}
+					anchorEl={changeStatus.anchorEl}
+					anchorOrigin={{
+						vertical: 'bottom',
+						horizontal: 'center'
+					}}
+					transformOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+				>
+					{changeStatus.child}
+				</Menu>
+
 				<NewEventDialog
 					open={newEventDialogOpen}
 					updateAction={() => {
@@ -247,6 +356,7 @@ const FilterResult = ({}) => {
 						setChangeStatusDialogOpen(false);
 					}}
 					state={state}
+					newStatus={newStatus}
 				/>
 			</Box>
 		</Card>

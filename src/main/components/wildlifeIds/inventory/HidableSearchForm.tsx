@@ -1,8 +1,8 @@
-import {Box, Typography, TextField, MenuItem, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio} from '@mui/material';
+import {Box, Typography, TextField, MenuItem, InputAdornment, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Checkbox, FormGroup} from '@mui/material';
 import React, {useState} from 'react';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import TaxonomySearch from "../../util/TaxonomySearch";
+import TaxonomySearch from '../../util/TaxonomySearch';
 
 const HideableSearchForm = formState => {
 	const validPurposes = [
@@ -56,10 +56,60 @@ const HideableSearchForm = formState => {
 		{value: 'NOT_COLLECTED', label: 'Samples were NOT collected'}
 	];
 
+	const idStatus = [
+		{value: 'ASSIGNED', label: 'Assigned'},
+		{value: 'UNASSIGNED', label: 'Unassigned'},
+		{value: 'RETIRED', label: 'Retired'},
+		{value: 'RECAPTURE', label: 'Retired - Recapture IDs'},
+		{value: 'FLAGGED', label: 'Retired - Flagged IDs'}
+	];
+
 	const [species, setSpecies] = useState('');
 
 	return (
-		<Box>
+		<Box className="filterForm">
+			<FormGroup row className="creationPeriodCheckbox">
+				<FormControlLabel control={<Checkbox />} label="WLH IDs Created Today" />
+				<FormControlLabel control={<Checkbox />} label="WLH IDs Created This Week" />
+				<FormControlLabel control={<Checkbox />} label="WLH IDS Created Last Week" />
+				<FormControlLabel control={<Checkbox />} label="WLH IDS Created Last Month" />
+			</FormGroup>
+			<TextField label="From (enter WLH ID Number)" id="fromID" className="leftColumn" />
+			<TextField label="To (enter WLH ID Number)" id="toID" className="rightColumn" />
+			<TextField
+				className="leftColumn"
+				id="startDate"
+				name="startDate"
+				label="Start Date of WLH ID Creation (MM-DD-YYYY)"
+				InputProps={{
+					endAdornment: (
+						<InputAdornment position="end">
+							<CalendarTodayIcon />
+						</InputAdornment>
+					)
+				}}
+			/>
+
+			<TextField
+				className="rightColumn"
+				id="endDate"
+				name="endDate"
+				label="End Date of WLH ID Creation (MM-DD-YYYY)"
+				InputProps={{
+					endAdornment: (
+						<InputAdornment position="end">
+							<CalendarTodayIcon />
+						</InputAdornment>
+					)
+				}}
+			/>
+			<TextField select className="rightColumn" id="idStatus" label="WLH ID Status">
+				{idStatus.map((m, i) => (
+					<MenuItem key={i} value={m.value}>
+						{m.label}
+					</MenuItem>
+				))}
+			</TextField>
 			<Typography className="detailsSubtitle">Purpose</Typography>
 			<TextField className="leftColumn" select label="Purpose">
 				{validPurposes.map((m, i) => (
@@ -78,7 +128,13 @@ const HideableSearchForm = formState => {
 			</TextField>
 
 			<Typography className="detailsSubtitle">Animal Details</Typography>
-			<TaxonomySearch value={species} onValueChange={v => {setSpecies(v)}} className="species"/>
+			<TaxonomySearch
+				value={species}
+				onValueChange={v => {
+					setSpecies(v);
+				}}
+				className="species"
+			/>
 
 			<TextField className="leftColumn" select label="Home Region">
 				{validRegion.map((m, i) => (

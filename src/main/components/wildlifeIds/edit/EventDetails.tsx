@@ -328,9 +328,10 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 					}}
 					acceptAction={() => {
 						saveState();
+						setConfirmDialogOpen(false);
 					}}
 					icon={'NotificationImportantIcon'}
-					title={'Do you want to continue?'}
+					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>
 				<CancelDialog

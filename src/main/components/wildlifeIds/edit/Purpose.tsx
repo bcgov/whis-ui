@@ -196,7 +196,7 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 						setConfirmDialogOpen(false);
 					}}
 					icon={'NotificationImportantIcon'}
-					title={'Do you want to continue?'}
+					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>
 				<CancelDialog
