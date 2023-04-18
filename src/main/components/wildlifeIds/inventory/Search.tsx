@@ -1,57 +1,40 @@
-import React, {useReducer, useState} from 'react';
+import React, {useLayoutEffect, useReducer, useRef, useState} from 'react';
 import _ from 'lodash';
 
-
-import {
-	Box,
-	Button,
-	Card,
-	InputAdornment,
-	MenuItem,
-	TextField,
-	Typography
-} from '@mui/material';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import {Box, Button, Card, TextField, Typography} from '@mui/material';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import {useNavigate} from 'react-router-dom';
-import HidableSearchForm from './HidableSearchForm';
-import FilterResult from './FilterResult';
-import {useSelector} from "../../../../state/utilities/use_selector";
-import {getDevMode} from "../../../../state/utilities/config_helper";
-import {SEARCH_EXECUTE} from "../../../../state/actions";
-import {useDispatch} from "react-redux";
-import TemporaryResults from "./TemporaryResults";
+import HidableSearchForm from './AdvancedSearchFields';
+import SearchResults from './SearchResults';
+import {useSelector} from '../../../../state/utilities/use_selector';
+import {getDevMode} from '../../../../state/utilities/config_helper';
+import {SEARCH_EXECUTE} from '../../../../state/actions';
+import {useDispatch} from 'react-redux';
+import {getSearchRequestFromSearchFormState} from "../../../../state/utilities/search_api";
 
 // from the API -- keep this interface in sync.
 interface HealthIDSearchParams {
-	id?: number,
-	year?: number,
-	wlhID?: string,
-	keywords?: string,
-	sequenceNumberMinimum?: number | null,
-	sequenceNumberMaximum?: number | null,
-	creationDateMinimum?: number | null, //millis since epoch
-	creationDateMaximum?: number | null, //millis since epoch
-	creator?: string,
-	currentStatus?: string,
-	purpose?: string,
-	requester?: string,
-	requesterOrganization?: string,
-	species?: string,
-	homeRegion?: string
+	id?: number;
+	year?: number;
+	wlhID?: string;
+	keywords?: string;
+	sequenceNumberMinimum?: number | null;
+	sequenceNumberMaximum?: number | null;
+	creationDateMinimum?: number | null; //millis since epoch
+	creationDateMaximum?: number | null; //millis since epoch
+	creator?: string;
+	currentStatus?: string;
+	purpose?: string;
+	requester?: string;
+	requesterOrganization?: string;
+	species?: string;
+	homeRegion?: string;
 }
 
 const Search: React.FC = () => {
 	const navigate = useNavigate();
 	const devMode = useSelector(getDevMode);
 	const dispatch = useDispatch();
-
-	function constructAPISearchRequest(): HealthIDSearchParams {
-		return {
-			keywords: searchRequest.keywords,
-		}
-	}
 
 	function searchReducerInit(initialState) {
 		return initialState;
@@ -64,44 +47,95 @@ const Search: React.FC = () => {
 			// for simple field changes
 			_.set(updatedState, action.payload.field, action.payload.value);
 			break;
+		case 'addArrayElement':
+			_.set(updatedState, action.payload.field, _.union(_.get(updatedState, action.payload.field), [action.payload.value]));
+			break;
+		case 'removeArrayElement':
+			_.set(updatedState, action.payload.field, _.without(_.get(updatedState, action.payload.field), action.payload.value));
+			break;
 		}
 
 
 		return updatedState;
 	}
 
-	const [searchRequest, searchDispatch] = useReducer(searchReducer, {
-		keywords: ""
-	}, searchReducerInit);
+	const [searchRequest, searchDispatch] = useReducer(
+		searchReducer,
+		{
+			keywords: '',
+			minimumId: '',
+			maximumId: '',
+			namedDateRanges: [],
+			creation: {
+				startDate: '',
+				endDate: '',
+			},
+			status: '',
+			purpose: '',
+			requester: {
+				name: '',
+				organization: '',
+			},
+			species: '',
+			region: '',
+			identifier: {
+				type: '',
+				details: ''
+			},
+			events: {
+				type: '',
+				startDate: '',
+				endDate: '',
+				submitter: {
+					name: '',
+					organization: ''
+				},
+				location: {
+					type: '',
+					details: ''
+				},
+				ageClass: '',
+				samples: ''
+			},
+		},
+		searchReducerInit
+	);
 
-	const idCreationPeriod = [
-		{value: 'TODAY', label: 'WLH IDs Created Today'},
-		{value: 'THIS_WEEK', label: 'WLH IDs Created This Week'},
-		{value: 'LAST_WEEK', label: 'WLH IDs Created Last Week'},
-		{value: 'LAST_MONTH', label: 'WLH IDs Created Last Month'},
-		{value: 'NONE', label: 'None'}
-	];
-	const idStatus = [
-		{value: 'ASSIGNED', label: 'Assigned'},
-		{value: 'UNASSIGNED', label: 'Unassigned'},
-		{value: 'RETIRED', label: 'Retired'},
-		{value: 'RECAPTURE', label: 'Retired - Recapture IDs'},
-		{value: 'FLAGGED', label: 'Retired - Flagged IDs'}
-	];
+	const [advancedSearchExpand, setAdvancedSearchExpand] = useState(false);
+	const [searchButtonPosition, setSearchButtonPosition] = useState(false);
+	const [spacerProps, setSpacerProps] = useState({});
+	const ref = useRef(null);
 
+	useLayoutEffect(() => {
+		const {height} = ref.current.getBoundingClientRect();
+		if (advancedSearchExpand) {
+			setSpacerProps({
+				minHeight: `${height + 300}px`
+			})
+		} else {
+			setSpacerProps({
+				minHeight: 'auto'
+			});
+		}
+	}, [ref.current, advancedSearchExpand]);
 
-	const [AdvancedSearchExpand, setAdvancedSearchExpand] = useState(false);
 
 	return (
-		<Box className="container">
+		<Box className="container" sx={spacerProps}>
 			<Box className="pageHead">
 				<Box className="mainTitle">
 					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>
-						WLH ID Inventory
+							WLH ID Inventory
 					</Typography>
 					<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>
-						Find the WLH ID (s) and update the data associated to each ID.
+							Find the WLH ID (s) and update the data associated to each ID.
 					</Typography>
+					{devMode && (
+						<>
+							<h5>Search Object</h5>
+							<pre>{JSON.stringify(searchRequest, null, 2)}</pre>
+						</>
+					)}
 				</Box>
 				<Button
 					variant={'contained'}
@@ -110,104 +144,84 @@ const Search: React.FC = () => {
 						navigate('/wildlifeIds/list');
 					}}
 				>
-					Go to IDs List
+						Go to IDs List
 				</Button>
 			</Box>
 
-			{devMode && <Card className="paperStyle">
-				<pre>
-					{JSON.stringify(searchRequest, '\t', 2)}
-				</pre>
-			</Card>}
-
 			<Card className="paperStyle">
-				<Typography className="detailsSubtitle">Filter WLH IDs</Typography>
+				<Box className="searchBar">
+					<TextField
+						label="Enter WLH ID Number , Date, Status, Event History and Associated Project Keywords"
+						className="eventKeywords"
+						required
+						value={searchRequest.keywords}
+						onChange={e => {
+							searchDispatch({type: 'fieldChange', payload: {field: `keywords`, value: e.target.value}});
+						}}
+						InputProps={{
+							endAdornment: (
+								<Button
+									className="searchButton"
+									sx={searchButtonPosition ? {display: 'none'} : {display: 'auto'}}
+									variant={'contained'}
+									onClick={() => {
+										dispatch({
+											type: SEARCH_EXECUTE,
+											payload: {
+												searchRequest: getSearchRequestFromSearchFormState(searchRequest)
+											}
+										});
+									}}
+								>
+										Search
+								</Button>
+							)
+						}}
+					/>
+					<Button
+						className="hideFilterButton"
+						onClick={() => {
+							setAdvancedSearchExpand(!advancedSearchExpand);
+							setSearchButtonPosition(!searchButtonPosition);
+						}}
+					>
+						{advancedSearchExpand ? (
+							<>
+									Hide Filters <FilterAltOutlinedIcon/>
+							</>
+						) : (
+							<>
+									Show Filters <FilterAltOutlinedIcon/>
+							</>
+						)}
+					</Button>
+				</Box>
 
-				<TextField
-					label="Enter Event History and Associated Project Keywords"
-					className='eventKeywords'
-					value={searchRequest.keywords}
-					onChange={e => {
-						searchDispatch({type: 'fieldChange', payload: {field: `keywords`, value: e.target.value}});
-					}}
-				/>
-				<TextField label="From (enter WLH ID Number)" id="fromID" className="leftColumn"/>
-				<TextField label="To (enter WLH ID Number)" id="toID" className="rightColumn"/>
-				<TextField
-					className="leftColumn"
-					id="startDate"
-					name="startDate"
-					label="Start Date of WLH ID Creation (MM-DD-YYYY)"
-					InputProps={{
-						endAdornment: (
-							<InputAdornment position="end">
-								<CalendarTodayIcon/>
-							</InputAdornment>
-						)
-					}}
-				/>
-				<TextField
-					className="rightColumn"
-					id="endDate"
-					name="endDate"
-					label="End Date of WLH ID Creation (MM-DD-YYYY)"
-					InputProps={{
-						endAdornment: (
-							<InputAdornment position="end">
-								<CalendarTodayIcon/>
-							</InputAdornment>
-						)
-					}}
-				/>
-				<TextField select className="leftColumn" id="idCreationPeriod" label="WLH ID Creation Period">
-					{idCreationPeriod.map((m, i) => (
-						<MenuItem key={i} value={m.value}>
-							{m.label}
-						</MenuItem>
-					))}
-				</TextField>
-				<TextField select className="rightColumn" id="idStatus" label="WLH ID Status">
-					{idStatus.map((m, i) => (
-						<MenuItem key={i} value={m.value}>
-							{m.label}
-						</MenuItem>
-					))}
-				</TextField>
-
-				{AdvancedSearchExpand ? (
-					<HidableSearchForm formState={searchRequest}/>
-				) : (
-					''
-				)}
-
-				<Box className="cardButtons">
-					<Button variant={'contained'} onClick={() => {
-						const resolvedSearchRequest = constructAPISearchRequest();
+				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
+					<HidableSearchForm formState={searchRequest} dispatch={searchDispatch}/>
+				</Box>
+				<Button
+					className="searchButton"
+					sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
+					variant={'contained'}
+					onClick={() => {
 						dispatch({
 							type: SEARCH_EXECUTE,
 							payload: {
-								searchRequest
+								searchRequest: getSearchRequestFromSearchFormState(searchRequest)
 							}
 						});
-					}
-					}>
+						setAdvancedSearchExpand(false);
+						setSearchButtonPosition(false);
+					}}
+				>
 						Search
-					</Button>
-					<Button
-						variant={'outlined'}
-						onClick={() => {
-							setAdvancedSearchExpand(!AdvancedSearchExpand);
-						}}
-					>
-						{AdvancedSearchExpand ? <>Basic Search <KeyboardArrowUpIcon/></> : <>Advanced Search <KeyboardArrowDownIcon/></>}
-					</Button>
-				</Box>
+				</Button>
 			</Card>
 
-			<TemporaryResults/>
-
-			{/*<FilterResult/>*/}
+			<SearchResults/>
 		</Box>
 	);
-};
+}
+;
 export default Search;

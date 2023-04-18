@@ -242,23 +242,7 @@ const Generate: React.FC = () => {
 								</TextField>
 								<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message} />
 							</FormGroup>
-							<FormGroup>
-								<TextField
-									className="generate_textfield"
-									label="Species"
-									id="species"
-									value={formState.species}
-									name="species"
-									onChange={handleUpdate}
-									InputProps={{
-										endAdornment: (
-											<InputAdornment position="end">
-												<AccountTreeOutlinedIcon />
-											</InputAdornment>
-										)
-									}}
-								/>
-							</FormGroup>
+
 							<FormGroup>
 								<TextField
 									className="generate_textfield"
@@ -284,6 +268,7 @@ const Generate: React.FC = () => {
 								</TextField>
 								<ValidationError hidden={!errors?.status} message={errors.status?.message} />
 							</FormGroup>
+
 							<FormGroup>
 								<TextField
 									className="generate_textfield"
@@ -303,6 +288,23 @@ const Generate: React.FC = () => {
 							</FormGroup>
 						</TwoColumnForm>
 					</LocalizationProvider>
+					<FormGroup>
+						<TextField
+							className="species"
+							label="Species"
+							id="species"
+							value={formState.species}
+							name="species"
+							onChange={handleUpdate}
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<AccountTreeOutlinedIcon />
+									</InputAdornment>
+								)
+							}}
+						/>
+					</FormGroup>
 					<FormGroup>
 						<TextField
 							className="associated_proj"

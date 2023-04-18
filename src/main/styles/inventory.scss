@@ -49,13 +49,15 @@ table.inventory_table {
 	}
 
 	//error message
-    .error_message{
-        font-size: 14px;
-        color: #d32f2f;
-    }
+	.error_message {
+		font-size: 14px;
+		color: #d32f2f;
+	}
 
 
-	.project_details, .associated_proj {
+	.project_details,
+	.associated_proj,
+	.species {
 		min-width: 1090px;
 		margin: 32px 125px 0 125px;
 	}
@@ -132,7 +134,7 @@ table.inventory_table {
 		width: 110px;
 		height: 110px;
 		border-radius: 999rem;
-		background: rgba(	223, 240, 216, 0.83);
+		background: rgba(223, 240, 216, 0.83);
 		position: relative;
 		top: -55px;
 	}
@@ -144,6 +146,7 @@ table.inventory_table {
 		top: 30px;
 		left: 30px;
 	}
+
 	.CheckIcon {
 		position: relative;
 		color: #2d4821;
@@ -186,7 +189,7 @@ table.inventory_table {
 			text-transform: capitalize;
 			font-family: 'BCSans-Bold';
 
-			span{
+			span {
 				text-transform: lowercase;
 			}
 		}
@@ -197,7 +200,7 @@ table.inventory_table {
 			margin-left: 12px;
 		}
 
-		.cancelBtns{
+		.cancelBtns {
 			width: 94px;
 		}
 	}
