@@ -32,7 +32,7 @@ function createSearchReducer(): (Search, AnyAction) => Search {
 				...state,
 				working: false,
 				searchRequest: {},
-				results: null
+				results: []
 			};
 		}
 		case SEARCH_COMPLETE: {
@@ -47,7 +47,7 @@ function createSearchReducer(): (Search, AnyAction) => Search {
 				...state,
 				working: true,
 				searchRequest: action.payload.searchRequest,
-				results: {}
+				results: []
 			};
 		}
 		default:
