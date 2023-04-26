@@ -19,7 +19,7 @@ import {getAuthHeaders} from "../utilities/authentication_helper";
 import {default as axios} from "axios";
 
 const MIN_TOKEN_FRESHNESS = 2 * 60; //want our token to be good for atleast this long at all times
-const GRACE_PERIOD = 10; // get a new one with this much time to spare
+const TOKEN_REFRESH_CHECK_INTERVAL = 7 * 1000;
 
 let keycloakInstance = null;
 
@@ -39,13 +39,13 @@ function* refreshRoles() {
 }
 
 function* keepTokenFresh() {
-	yield keycloakInstance.updateToken(MIN_TOKEN_FRESHNESS);
-	yield put({type: AUTH_UPDATE_TOKEN_STATE});
+	const refreshed = yield keycloakInstance.updateToken(MIN_TOKEN_FRESHNESS);
 
-	const expiresIn = keycloakInstance.tokenParsed['exp'] - Math.ceil(new Date().getTime() / 1000) + keycloakInstance.timeSkew;
+	if (refreshed) {
+		yield put({type: AUTH_UPDATE_TOKEN_STATE});
+	}
 
-	// wait until the time is right
-	yield delay((expiresIn - GRACE_PERIOD) * 1000);
+	yield delay(TOKEN_REFRESH_CHECK_INTERVAL);
 	yield put({type: AUTH_REFRESH_TOKEN});
 }
 
@@ -82,7 +82,7 @@ function* initializeAuthentication() {
 
 function* handleSigninRequest(action) {
 	try {
-		const newVar = yield keycloakInstance.login();
+		yield keycloakInstance.login();
 		yield put({type: AUTH_REQUEST_COMPLETE, payload: {}});
 		yield put({type: AUTH_REFRESH_TOKEN});
 	} catch (e) {
