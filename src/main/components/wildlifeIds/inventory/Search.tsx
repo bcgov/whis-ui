@@ -119,7 +119,7 @@ const Search: React.FC = () => {
 		}
 	}, [ref.current, advancedSearchExpand]);
 
-
+	
 	return (
 		<Box className="container" sx={spacerProps}>
 			<Box className="pageHead">
@@ -200,6 +200,7 @@ const Search: React.FC = () => {
 				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
 					<HidableSearchForm formState={searchRequest} dispatch={searchDispatch}/>
 				</Box>
+				<Button className="searchButton" variant='outlined'>Clear All</Button>
 				<Button
 					className="searchButton"
 					sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}

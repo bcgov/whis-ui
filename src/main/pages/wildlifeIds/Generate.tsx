@@ -14,8 +14,8 @@ import Loading from '../../components/util/Loading';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {useForm} from 'react-hook-form';
-import ConfirmDialog from '../../components/wildlifeIds/generate/ConfirmDialog';
-import CancelDialog from '../../components/wildlifeIds/generate/CancelDialog';
+import ConfirmGenerationDialog from '../../components/wildlifeIds/generate/ConfirmGenerationDialog';
+import CancelDialog from '../../components/util/CancelDialog';
 import ValidationError from '../../components/util/ValidationError';
 
 const Generate: React.FC = () => {
@@ -82,7 +82,7 @@ const Generate: React.FC = () => {
 
 	const handleFormSubmit = () => {
 		if (yearSelectError || formState.year === null) {
-			setYearSelectError('Year is a required field');
+			setYearSelectError('Year is a required field.');
 			return;
 		}
 
@@ -143,7 +143,7 @@ const Generate: React.FC = () => {
 	const getNumberOfIDs = e => {
 		setNumOfIDs(e.target.value);
 	};
-
+	
 	if (!codeTablesInitialized) {
 		return <Loading />;
 	}
@@ -212,7 +212,7 @@ const Generate: React.FC = () => {
 									components={{
 										OpenPickerIcon: ArrowDropDownIcon
 									}}
-									renderInput={params => <TextField className="generate_textfield" name="year" error={yearSelectError !== null} {...params} />}
+									renderInput={params => <TextField  {...params} className="generate_textfield" name="year" error={yearSelectError !== null} />}
 								/>
 								<ValidationError hidden={yearSelectError == null} message={yearSelectError} />
 							</FormGroup>
@@ -325,7 +325,6 @@ const Generate: React.FC = () => {
 								label="First Name*"
 								id="requesterFirstName"
 								name="requesterFirstName"
-								value={formState.requesterFirstName}
 								{...register('requesterFirstName', {
 									required: 'Enter the first name.',
 									pattern: {
@@ -344,7 +343,6 @@ const Generate: React.FC = () => {
 								label="Last Name*"
 								id="requesterLastName"
 								name="requesterLastName"
-								value={formState.requesterLastName}
 								{...register('requesterLastName', {
 									required: 'Enter the last name.',
 									pattern: {
@@ -422,7 +420,6 @@ const Generate: React.FC = () => {
 									label="Email"
 									id="requesterContactEmail"
 									name="requesterContactEmail"
-									value={formState.requesterContactEmail}
 									type="email"
 									{...register('requesterContactEmail', {
 										pattern: {
@@ -468,8 +465,16 @@ const Generate: React.FC = () => {
 						{RequesterDetailsExpand ? 'Hide Requester Details' : 'Show Requester Details'}
 					</Button>
 
-					<ConfirmDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs} />
-					<CancelDialog openCancelDialog={openCancelDialog} handleClose={handleClose} navigate={navigate} setCancelDialog={setCancelDialog} />
+					<ConfirmGenerationDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs} />
+					<CancelDialog
+						open={openCancelDialog}
+						close={handleClose}
+						acceptAction={() => {
+							navigate('/wildlifeIds/');
+						}}
+						title={'Cancel WLH ID Generation'}
+						content={'Are you sure you want to cancel? Changes you have made will not be saved.'}
+					/>
 
 					<Stack margin={'48px 125px 88px 0'} spacing={1} direction={'row'} justifyContent={'flex-end'}>
 						<GenerationLockWidget />

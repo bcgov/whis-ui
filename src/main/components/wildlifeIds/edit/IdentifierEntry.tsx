@@ -28,7 +28,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 		{value: 'CWD', label: 'CWD Ear Card'},
 		{value: 'VAGINAL', label: 'Vaginal Implant Transmitter'},
 		{value: 'WING_BAND', label: 'Wing Band'},
-		{value: 'COLOR_ID', label: 'Color ID'}
+		{value: 'COLLAR_ID', label: 'Collar ID'}
 	];
 
 	function renderDetailed() {
@@ -45,7 +45,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 		case 'CWD':
 		case 'VAGINAL':
 		case 'WING_BAND':
-		case 'COLOR_ID':
+		case 'COLLAR_ID':
 			return (
 				<Box className="oneColumnContainer">
 					<FormGroup>
@@ -87,7 +87,6 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 			);
 			break;
 		case 'EAR_TAG':
-		case 'RAPP_TAG':
 			return (
 				<Box className="earTag">
 					<FormGroup>
@@ -131,6 +130,66 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 							});
 						}}
 					></TextField>
+					<RadioGroup
+						name="controlled-radio-buttons-group"
+						value={identifier.additionalAttributes?.taggedEar || ''}
+						onChange={e => {
+							dispatch({
+								type: 'animalDetails.identifiers.additionalAttributesChange',
+								payload: {
+									index,
+									newAttributes: {
+										...identifier.additionalAttributes,
+										taggedEar: e.target.value
+									}
+								}
+							});
+						}}
+					>
+						<FormControlLabel value="left" control={<Radio/>} label="Left"/>
+						<FormControlLabel value="right" control={<Radio/>} label="Right"/>
+					</RadioGroup>
+					<IconButton
+						onClick={e => {
+							dispatch({
+								type: 'animalDetails.identifiers.delete',
+								payload: {
+									index
+								}
+							});
+						}}
+					>
+						<TrashBinIcon/>
+					</IconButton>
+				</Box>
+			);
+			break;
+		case 'RAPP_TAG':
+			return (
+				<Box className="rappTag">
+					<FormGroup>
+						<TextField
+							label="Identifier"
+							id="identifier"
+							name="identifier"
+							value={identifier.identifier}
+							required
+							{...register('identifier', {
+								required: 'Enter the identifier.',
+								onChange(e) {
+									dispatch({
+										type: 'animalDetails.identifiers.valueChange',
+										payload: {
+											index,
+											newValue: e.target.value
+										}
+									});
+								}
+							})}
+							error={!!errors?.identifier}
+						/>
+						<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message}/>
+					</FormGroup>
 					<RadioGroup
 						name="controlled-radio-buttons-group"
 						value={identifier.additionalAttributes?.taggedEar || ''}

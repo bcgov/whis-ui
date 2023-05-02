@@ -1,5 +1,25 @@
 import Expandable from '../../pageElements/Expandable';
-import {Box, Button, IconButton, InputAdornment, MenuItem, TextField, Tooltip, Typography} from '@mui/material';
+import {
+	Autocomplete,
+	Box,
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	FormControl,
+	FormControlLabel,
+	IconButton,
+	InputAdornment,
+	MenuItem,
+	Radio,
+	RadioGroup,
+	Select,
+	SelectChangeEvent,
+	TextField,
+	Tooltip,
+	Typography
+} from '@mui/material';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,31 +27,42 @@ import React, {useState} from 'react';
 import '../../../styles/updateID.scss';
 import {DataGrid, GridColDef, GridEditInputCell} from '@mui/x-data-grid';
 import LightTooltip from './LightTooltip';
+import AnimalDetailsDialog from './AnimalDetailsDialog';
+import ConfirmDialog from '../../util/ConfirmDialog';
+import CancelDialog from '../../util/CancelDialog';
 
 const AnimalDetails = ({expansionEvent}) => {
+	const [updateRegion, setUpdateRegion] = useState(false);
+	const [updateSex, setUpdateSex] = useState(false);
+
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+
 	const columns: GridColDef[] = [
-		{field: 'id', headerName: 'WLH ID', width: 260, cellClassName: 'id_cell'},
-		{field: 'species', headerName: 'Species', sortable: false, disableColumnMenu: true, width: 300},
+		{field: 'id', headerName: 'WLH ID', width: 240, cellClassName: 'id_cell'},
+		{field: 'species', headerName: 'Species', sortable: false, disableColumnMenu: true, width: 310},
 		{
 			field: 'home_region',
 			sortable: false,
 			disableColumnMenu: true,
-			width: 300,
+			width: 310,
+			editable: true,
 			cellClassName: 'region_cell',
 			renderHeader: () => {
 				return (
 					<>
 						<span>Home Region</span>
-						<LightTooltip title="Edit Region of IDs">
-							<IconButton onClick={() => {}}>
-								<EditIcon color="primary" />
+						<LightTooltip title="Add Region to IDs">
+							<IconButton
+								onClick={() => {
+									setUpdateRegion(true);
+								}}
+							>
+								<AddIcon color="primary" />
 							</IconButton>
 						</LightTooltip>
 					</>
 				);
-			},
-			renderCell: params => {
-				return <TextField defaultValue={params.row.home_region} size="small" />;
 			}
 		},
 
@@ -39,28 +70,32 @@ const AnimalDetails = ({expansionEvent}) => {
 			field: 'sex',
 			sortable: false,
 			disableColumnMenu: true,
-			width: 260,
+			width: 230,
+			editable: true,
 			cellClassName: 'sex_cell',
 			renderHeader: () => {
 				return (
 					<>
 						<span>Sex</span>
 						<LightTooltip title="Edit Sex of IDs">
-							<IconButton onClick={() => {}}>
+							<IconButton
+								onClick={() => {
+									setUpdateSex(true);
+								}}
+							>
 								<EditIcon color="primary" />
 							</IconButton>
 						</LightTooltip>
 					</>
 				);
 			},
-			renderCell: params => {
-				return <TextField defaultValue={params.row.sex} size="small" />;
-			}
+			type: 'singleSelect',
+			valueOptions: ['Female', 'Male', 'Unknown']
 		}
 	];
 
 	const rows = [
-		{id: '22-00001', species: 'Moose', home_region: '', sex: 'Female'},
+		{id: '22-00001', species: 'Moose', home_region: 'Lower Homeland', sex: 'Female'},
 		{id: '22-00002', species: 'Deer', home_region: '', sex: 'Male'},
 		{id: '22-00003', species: 'Moose', home_region: '', sex: 'Female'},
 		{id: '22-00004', species: 'Deer', home_region: '', sex: 'Male'},
@@ -96,7 +131,7 @@ const AnimalDetails = ({expansionEvent}) => {
 			<Expandable.Detail>
 				<Box className="cardDetails">
 					<TextField
-						sx={{width: '100%', marginTop: '50px'}}
+						className="findSpecies"
 						label="Type any keyword to find the species (The selected species will be applied to all of the WLH IDs)"
 						InputProps={{
 							endAdornment: (
@@ -106,25 +141,77 @@ const AnimalDetails = ({expansionEvent}) => {
 							)
 						}}
 					/>
-					<Box sx={{marginTop: '30px', height: '400px', width: '100%'}}>
-						<DataGrid
-							rows={rows}
-							columns={columns}
-							disableSelectionOnClick
-							// autoHeight={true}
-							hideFooter={true}
-							onCellKeyDown={(params, events) => events.stopPropagation()}
-						/>
+					<Box className="dataGridContainer">
+						<DataGrid rows={rows} columns={columns} disableSelectionOnClick hideFooter={true} />
 					</Box>
 				</Box>
 				<Box className="cardButtons">
-					<Button variant={'contained'} className="update_btn">
+					<Button
+						variant={'contained'}
+						className="update_btn"
+						onClick={() => {
+							setConfirmDialogOpen(true);
+						}}
+					>
 						Update
 					</Button>
-					<Button variant={'outlined'} className="update_btn">
+					<Button
+						variant={'outlined'}
+						className="update_btn"
+						onClick={() => {
+							setCancelDialogOpen(true);
+						}}
+					>
 						Cancel
 					</Button>
 				</Box>
+
+				<ConfirmDialog
+					open={confirmDialogOpen}
+					close={() => {
+						setConfirmDialogOpen(false);
+					}}
+					acceptAction={() => {
+						setConfirmDialogOpen(false);
+					}}
+					icon={'NotificationImportantIcon'}
+					title={'Update Confirmation'}
+					content={'Would you like to save your changes?'}
+				/>
+				<CancelDialog
+					open={cancelDialogOpen}
+					close={() => {
+						setCancelDialogOpen(false);
+					}}
+					acceptAction={() => {
+						setCancelDialogOpen(false);
+					}}
+					title={'Cancel WLH ID Animal Details Update'}
+					content={'You have not saved your changes. Are you sure you want to cancel?'}
+				/>
+
+				<AnimalDetailsDialog
+					attr="region"
+					open={updateRegion}
+					close={() => {
+						setUpdateRegion(false);
+					}}
+					title="Update Region for Multiple WLH IDs"
+					acceptAction={() => {
+						setUpdateRegion(false);
+					}}
+				/>
+				<AnimalDetailsDialog
+					attr="sex"
+					open={updateSex}
+					close={() => {
+						setUpdateSex(false);
+					}}
+					title="Update Sex for Multiple WLH IDs"
+					acceptAction={() => {
+						setUpdateSex(false);
+					}}
+				/>
 			</Expandable.Detail>
 		</Expandable>
 	);

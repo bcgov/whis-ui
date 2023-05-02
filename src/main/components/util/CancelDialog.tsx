@@ -11,7 +11,6 @@ const CancelDialog = ({title, open, close, content, acceptAction}) => {
 			</Box>
 			<DialogTitle>{title}</DialogTitle>
 			<DialogContent>{content}</DialogContent>
-			{/* <DialogContent>Are you sure you want to cancel?&nbsp;Changes you have made will not be saved.</DialogContent> */}
 			<Divider variant="middle" />
 			<DialogActions>
 				<Button
@@ -19,8 +18,7 @@ const CancelDialog = ({title, open, close, content, acceptAction}) => {
 					variant={'contained'}
 					onClick={() => {
 						acceptAction();
-						close();
-						// navigate('/wildlifeIds/');
+						// close();
 					}}
 				>
 					Yes

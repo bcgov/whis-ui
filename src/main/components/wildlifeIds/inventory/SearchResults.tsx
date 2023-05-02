@@ -9,9 +9,10 @@ import {useNavigate} from 'react-router-dom';
 import LightTooltip from '../editMultiple/LightTooltip';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 import {Error, Flag} from '@mui/icons-material';
-import {FilterChips} from "./FilterChips";
-import {useSelector} from "../../../../state/utilities/use_selector";
-import Loading from "../../util/Loading";
+import {FilterChips} from './FilterChips';
+import {useSelector} from '../../../../state/utilities/use_selector';
+import Loading from '../../util/Loading';
+import DeflagDialog from './DeflagDialog';
 
 interface CustomMenuItem {
 	anchorEl: null | HTMLElement;
@@ -21,7 +22,6 @@ interface CustomMenuItem {
 const SearchResults = showFilterChips => {
 	const navigate = useNavigate();
 	const {results, working} = useSelector(state => state.Search);
-
 
 	//sample id data
 	const state = {
@@ -48,6 +48,8 @@ const SearchResults = showFilterChips => {
 			setIsIDSelected(false);
 		}
 	};
+
+	const [flagDialog, setFlagDialog] = useState(false);
 
 	const [newStatus, setNewStatus] = useState('');
 
@@ -121,7 +123,7 @@ const SearchResults = showFilterChips => {
 						aria-expanded={open ? 'true' : undefined}
 						onClick={(event: React.MouseEvent<HTMLButtonElement>) => setMoreActions({...moreActions, anchorEl: event.currentTarget})}
 					>
-						<MoreVertIcon/>
+						<MoreVertIcon />
 					</IconButton>
 				</LightTooltip>
 			</Box>
@@ -135,12 +137,11 @@ const SearchResults = showFilterChips => {
 				className={`statusDropdown ${currentStatus}`}
 				onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
 					setChangeStatus({...changeStatus, anchorEl: event.currentTarget});
-					// filterOptions(currentStatus);
 				}}
 			>
 				<Stack direction="row" alignItems="center" justifyContent="space-between" width="inherit">
 					{currentStatus}
-					<ArrowDropDownOutlinedIcon/>
+					<ArrowDropDownOutlinedIcon />
 				</Stack>
 			</Button>
 		);
@@ -151,7 +152,13 @@ const SearchResults = showFilterChips => {
 			return (
 				<>
 					{params.row.id}
-					<Flag className="idFlag"/>
+					<IconButton
+						onClick={() => {
+							setFlagDialog(true);
+						}}
+					>
+						<Flag className="idFlag" />
+					</IconButton>
 				</>
 			);
 		}
@@ -186,10 +193,10 @@ const SearchResults = showFilterChips => {
 
 	function renderTable() {
 		if (working) {
-			return (<Loading/>);
+			return <Loading />;
 		}
 		if (results == null) {
-			return (<Error/>);
+			return <Error />;
 		}
 		return (
 			<>
@@ -261,15 +268,19 @@ const SearchResults = showFilterChips => {
 					state={state}
 					newStatus={newStatus}
 				/>
+				<DeflagDialog
+					open={flagDialog}
+					close={() => {
+						setFlagDialog(false);
+					}}
+				/>
 			</>
 		);
 	}
 
-
 	return (
 		<Card className="filter_result">
-
-			<FilterChips/>
+			<FilterChips />
 
 			<Box className="results_table">
 				<Box className="resultTableHeader">
