@@ -102,8 +102,8 @@
         }
 
         .searchButton {
-            // margin-top: 20px;
-            width: 90px;
+            margin-left: 8px;
+            width: 100px;
             font-family: 'BCSans-Bold';
             float: right;
             text-transform: capitalize;
@@ -122,10 +122,6 @@
     }
 
     .filter_result {
-        // width: 1326px;
-        // min-height: 680px;
-        // margin-top: 20px;
-        // min-height: 1365px;
         width: 1360px;
         margin-top: 135px;
 
@@ -211,19 +207,14 @@
                     height: 35px;
                 }
 
-                // button:nth-child(2) {
-                //     font-size: 12px;
-                //     width: 108px;
-                //     height: 23px;
-                //     text-transform: capitalize;
-                // }
-
-
             }
 
             .idFlag {
                 color: #d8292f;
-                margin-left: 5px;
+            }
+
+            .idFlag:hover {
+                background-color: transparent;
             }
 
             .idFlagBG {
@@ -802,6 +793,40 @@
                 height: 23px;
                 color: #1a5a96;
                 margin: 0 auto 12px;
+            }
+        }
+    }
+}
+
+.deflagDialog {
+    .MuiDialog-paper {
+        width: 600px;
+        padding: 35px 32px 35px 70px;
+        border-radius: 6px;
+        color: #666666;
+
+        .correctIdNumber {
+            width: 304px;
+            margin-block: 24px;
+        }
+
+        .flagIcon {
+            margin-block: 24px;
+        }
+
+        .MuiDialogActions-root {
+            .MuiButton-root {
+                text-transform: capitalize;
+                width: 105px;
+            }
+
+            .MuiButton-root:nth-child(1) {
+                background-color: $link;
+                color: #ffffff;
+            }
+            .MuiButton-root:nth-child(2) {
+                color: #666666;
+                border-color: #868e96;
             }
         }
     }

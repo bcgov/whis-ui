@@ -1,27 +1,37 @@
-import React, {useEffect, useReducer, useState} from 'react';
-import {Box, Button, Typography} from '@mui/material';
+import React, {useState} from 'react';
+import {Box, Button, Link, Stack, Typography} from '@mui/material';
 import '../../../styles/updateID.scss';
 import {ExpansionOverrideEvent} from '../../pageElements/Expandable';
 import Status from './Status';
 import _ from 'lodash';
 import AnimalDetails from './AnimalDetails';
 import Purpose from './Purpose';
+import EditIDsListDialog from './EditIDsListDialog';
 const EditForm = () => {
-	
 	const [addEventConfirmationDialogOpen, setAddEventConfirmationDialogOpen] = useState(false);
+	const [selectIDsDialogOpen, setSelectIDsDialogOpen] = useState(false);
 
 	const [expansionEvent, setExpansionEvent] = useState<ExpansionOverrideEvent>({
 		event: 'none',
 		id: 0
 	});
 
-
 	return (
 		<Box className="container">
 			<Box className="pageHead">
-				<Box className="mainTitle">
-					<Typography>Multiple WLH ID [2200001-2200010]</Typography>
-					<Typography>Update the WLH ID status,details and events.</Typography>
+				<Box className="headerTitle">
+					<Stack direction="row" alignItems={'baseline'}>
+						<Typography>Multiple WLH ID [2200001-2200010]</Typography>
+						<Link
+							className="selectIDsLink"
+							onClick={() => {
+								setSelectIDsDialogOpen(true);
+							}}
+						>
+							<ins>Edit WLH IDs list</ins>
+						</Link>
+					</Stack>
+					<Typography className='subtitle'>Update the WLH ID status, details and events.</Typography>
 				</Box>
 
 				<Button
@@ -47,6 +57,13 @@ const EditForm = () => {
 				}}
 			/> */}
 
+			<EditIDsListDialog
+				open={selectIDsDialogOpen}
+				close={() => {
+					setSelectIDsDialogOpen(false);
+				}}
+			/>
+
 			<Box className="expandButtons">
 				<Button
 					variant="outlined"
@@ -68,10 +85,10 @@ const EditForm = () => {
 				</Button>
 			</Box>
 
-			<Status expansionEvent={expansionEvent}  />
+			<Status expansionEvent={expansionEvent} />
 
 			<AnimalDetails expansionEvent={expansionEvent} />
-			
+
 			{/* <EventsContainer state={formState} dispatch={formDispatch} expansionEvent={expansionEvent} saveState={saveState} resetState={resetState} /> */}
 
 			<Purpose expansionEvent={expansionEvent} />
