@@ -22,11 +22,11 @@ export const themeOptions: ThemeOptions = {
           font-family: 'BCSans';
           font-style: normal;
           font-display: swap;
-          font-weight: 300;
+          font-weight: 400;
           src: local('BCSans'), local('BCSans-Regular'), url(${BCSansWoff2}) format('woff2');
         }
 				@font-face {
-          font-family: 'BCSans-Bold';
+          font-family: 'BCSans';
           font-style: bold;
           font-display: swap;
           font-weight: 700;
@@ -39,21 +39,27 @@ export const themeOptions: ThemeOptions = {
 		fontSize: 16,
 		h1: {
 			fontSize: '1.6rem',
+			fontWeight: 700
 		},
 		h2: {
 			fontSize: '1.5rem',
+			fontWeight: 700,
 		},
 		h3: {
 			fontSize: '1.4rem',
+			fontWeight: 700
 		},
 		h4: {
 			fontSize: '1.3rem',
+			fontWeight: 500
 		},
 		h5: {
 			fontSize: '1.2rem',
+			fontWeight: 500
 		},
 		h6: {
 			fontSize: '1.1rem',
+			fontWeight: 500
 		},
 		fontFamily: [
 			'BCSans',
