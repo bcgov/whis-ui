@@ -3,7 +3,7 @@ import {SEARCH_CLEAR, SEARCH_COMPLETE, SEARCH_DELETE_CHIP, SEARCH_ERROR, SEARCH_
 import {getConfiguration} from "../utilities/config_helper";
 import {getAuthHeaders} from "../utilities/authentication_helper";
 import {default as axios} from "axios";
-import {deleteChipAndRecomputeSearchRequest, SearchFilterChip} from "../utilities/search_api";
+import {deleteChipAndRecomputeSearchRequest} from "../utilities/search_api";
 
 function* doSearch(action) {
 	const configuration = yield select(getConfiguration);

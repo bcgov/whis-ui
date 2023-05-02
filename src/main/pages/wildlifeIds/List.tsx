@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useAPI} from "../../hooks/useAPI";
 import {Paper, Typography} from "@mui/material";
-import '../../styles/inventory.scss';
+import '../../styles/list.scss';
 import {useNavigate} from "react-router-dom";
 
 const List: React.FC = () => {

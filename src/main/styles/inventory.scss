@@ -1,108 +1,25 @@
 @import "colours";
 
-table.inventory_table {
-
-	min-width: 80%;
-	margin: auto;
-
-	tbody {
-		tr {
-			line-height: 1;
-			padding: 0;
-
-			td {
-				padding: 0;
-				line-height: 1.5;
-			}
-		}
-
-		tr:nth-child(2n+1) {
-			background: rgb(200, 200, 200);
-
-			&:hover {
-				background: lighten($BCgovGold, 10) !important;
-			}
-		}
-
-		tr:nth-child(2n) {
-			&:hover {
-				background: lighten($BCgovGold, 15) !important;
-			}
-		}
-	}
-}
-
 .generate_container {
-	.generate_headline {
-		font-family: 'BCSans-Bold';
-		font-size: 32px;
-	}
-
-	.generate_subtitle {
-		margin-bottom: 28px;
-		font-size: 16px;
-		color: #787f81;
-	}
-
-	.generate_textfield {
-		width: 529px;
-	}
-
-	//error message
 	.error_message {
 		font-size: 14px;
 		color: #d32f2f;
 	}
 
-
-	.project_details,
-	.associated_proj,
-	.species {
-		min-width: 1090px;
-		margin: 32px 125px 0 125px;
-	}
-
-	.two_column {
-		.MuiTypography-root {
-			font-family: 'BCSans-Bold';
-			font-size: 18px;
-			margin: 32px 0 21px 125px;
-		}
-
-		.display_row {
-			margin-inline: 125px;
-		}
+	.generation_paper {
+		min-width: 1304px;
+			padding: 16px 8rem;
 	}
 
 	.requester_details_btn {
 		text-transform: capitalize;
-		font-size: 14px;
-		margin: 32px 0 0 125px;
-		padding: 5px 10px;
 	}
 
 	.generate_submit_btn {
 		text-transform: capitalize;
-		width: 130px;
-	}
-
-}
-
-.css-j5h6pi-MuiPopper-root {
-	.MuiPaper-root {
-		width: 529px;
-		position: relative;
-		left: 25px;
-
-		.css-epd502 {
-			width: 529px;
-
-			.MuiCalendarPicker-root {
-				width: 529px;
-			}
-		}
 	}
 }
+
 
 .generate_confirm_dialog,
 .generate_cancel_dialog {
@@ -206,19 +123,7 @@ table.inventory_table {
 	}
 }
 
-//list page
-.list_page {
-	width: 1344px;
-	padding: 4px;
-	padding-top: 16px;
-	border-radius: 5px;
 
-	.MuiTypography-root {
-		font-family: 'BCSans-Bold';
-		font-size: 40px;
-		margin: 20px 130px;
-	}
-}
 
 //generate lock widget
 .lockWidget {
