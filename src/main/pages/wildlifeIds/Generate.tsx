@@ -14,7 +14,7 @@ import {useForm} from 'react-hook-form';
 import ConfirmGenerationDialog from '../../components/wildlifeIds/generate/ConfirmGenerationDialog';
 import CancelDialog from '../../components/util/CancelDialog';
 import ValidationError from '../../components/util/ValidationError';
-import TaxonomySearch from "../../components/util/TaxonomySearch";
+import TaxonomySearch from '../../components/util/TaxonomySearch';
 
 const Generate: React.FC = () => {
 	const me = useSelector(state => state.Auth);
@@ -143,25 +143,22 @@ const Generate: React.FC = () => {
 	};
 
 	if (!codeTablesInitialized) {
-		return <Loading/>;
+		return <Loading />;
 	}
 
 	return (
 		<Box className="generate_container">
-			<Typography variant={'h1'}>Generate WLH ID</Typography>
-			<Typography variant={'h5'} className={'subtitle'}>Generate one or multiple WLH IDs by entering the information below.</Typography>
+			<Typography variant="h1">Generate WLH ID</Typography>
+			<Typography variant="h6" className={'subtitle'}>
+				Generate one or multiple WLH IDs by entering the information below.
+			</Typography>
 			<Paper className={'generation_paper'}>
 				<form onSubmit={handleSubmit(handleRequiredSubmit)}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
-
 						<Grid container spacing={4}>
-
-
 							<Grid item xs={12}>
 								<Typography variant={'h3'}>{'WLH ID Information'}</Typography>
 							</Grid>
-
-
 							<Grid item xs={6}>
 								<FormGroup>
 									<TextField
@@ -190,7 +187,7 @@ const Generate: React.FC = () => {
 										})}
 										error={!!errors?.wlh_id}
 									/>
-									<ValidationError hidden={!errors?.wlh_id} message={errors.wlh_id?.message}/>
+									<ValidationError hidden={!errors?.wlh_id} message={errors.wlh_id?.message} />
 								</FormGroup>
 							</Grid>
 
@@ -204,14 +201,14 @@ const Generate: React.FC = () => {
 										maxDate={new Date(2099, 0, 1)}
 										onError={(e, value) => {
 											switch (e) {
-											case 'minDate':
-											case 'invalidDate':
-											case 'maxDate':
-												setYearSelectError('Please enter a number between 2020 - 2099.');
-												break;
-											case null:
-												setYearSelectError(null);
-												break;
+												case 'minDate':
+												case 'invalidDate':
+												case 'maxDate':
+													setYearSelectError('Please enter a number between 2020 - 2099.');
+													break;
+												case null:
+													setYearSelectError(null);
+													break;
 											}
 										}}
 										onChange={year => {
@@ -222,9 +219,9 @@ const Generate: React.FC = () => {
 										components={{
 											OpenPickerIcon: ArrowDropDownIcon
 										}}
-										renderInput={params => <TextField  {...params} className="generate_textfield" name="year" error={yearSelectError !== null}/>}
+										renderInput={params => <TextField {...params} className="generate_textfield" name="year" error={yearSelectError !== null} />}
 									/>
-									<ValidationError hidden={yearSelectError == null} message={yearSelectError}/>
+									<ValidationError hidden={yearSelectError == null} message={yearSelectError} />
 								</FormGroup>
 							</Grid>
 
@@ -252,7 +249,7 @@ const Generate: React.FC = () => {
 											</MenuItem>
 										))}
 									</TextField>
-									<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message}/>
+									<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message} />
 								</FormGroup>
 							</Grid>
 
@@ -280,7 +277,7 @@ const Generate: React.FC = () => {
 											</MenuItem>
 										))}
 									</TextField>
-									<ValidationError hidden={!errors?.status} message={errors.status?.message}/>
+									<ValidationError hidden={!errors?.status} message={errors.status?.message} />
 								</FormGroup>
 							</Grid>
 
@@ -302,17 +299,11 @@ const Generate: React.FC = () => {
 										))}
 									</TextField>
 								</FormGroup>
-
 							</Grid>
 
 							<Grid item xs={12}>
-
 								<FormGroup>
-									<TaxonomySearch
-										className="species"
-										value={formState.species}
-										onValueChange={v => (setFormState({...formState, species: v}))}
-									/>
+									<TaxonomySearch className="species" value={formState.species} onValueChange={v => setFormState({...formState, species: v})} />
 								</FormGroup>
 							</Grid>
 							<Grid item xs={12}>
@@ -330,50 +321,55 @@ const Generate: React.FC = () => {
 
 							<Grid item xs={12}>
 								<FormGroup>
-									<TextField className="project_details" label="Project Details" multiline rows={3} onChange={handleUpdate}/>
+									<TextField className="project_details" label="Project Details" multiline rows={3} onChange={handleUpdate} />
 								</FormGroup>
 							</Grid>
 
-							<Grid item xs={12}><Typography variant={'h3'}>Requester</Typography>
+							<Grid item xs={12}>
+								<Typography variant={'h3'}>Requester</Typography>
 							</Grid>
 
-							<Grid item xs={6}> <FormGroup>
-								<TextField
-									className="generate_textfield"
-									label="First Name*"
-									id="requesterFirstName"
-									name="requesterFirstName"
-									{...register('requesterFirstName', {
-										required: 'Enter the first name.',
-										pattern: {
-											value: /^[\w- ]{2,}$/,
-											message: 'The first name must be at least 2 characters long.'
-										},
-										onChange: handleUpdate
-									})}
-									error={!!errors?.requesterFirstName}
-								/>
-								<ValidationError hidden={!errors?.requesterFirstName} message={errors.requesterFirstName?.message}/>
-							</FormGroup>
+							<Grid item xs={6}>
+								{' '}
+								<FormGroup>
+									<TextField
+										className="generate_textfield"
+										label="First Name*"
+										id="requesterFirstName"
+										name="requesterFirstName"
+										{...register('requesterFirstName', {
+											required: 'Enter the first name.',
+											pattern: {
+												value: /^[\w- ]{2,}$/,
+												message: 'The first name must be at least 2 characters long.'
+											},
+											onChange: handleUpdate
+										})}
+										error={!!errors?.requesterFirstName}
+									/>
+									<ValidationError hidden={!errors?.requesterFirstName} message={errors.requesterFirstName?.message} />
+								</FormGroup>
 							</Grid>
-							<Grid item xs={6}> <FormGroup>
-								<TextField
-									className="generate_textfield"
-									label="Last Name*"
-									id="requesterLastName"
-									name="requesterLastName"
-									{...register('requesterLastName', {
-										required: 'Enter the last name.',
-										pattern: {
-											value: /^[\w- ]{2,}$/,
-											message: 'The last name must be at least 2 characters long.'
-										},
-										onChange: handleUpdate
-									})}
-									error={!!errors?.requesterLastName}
-								/>
-								<ValidationError hidden={!errors?.requesterLastName} message={errors.requesterLastName?.message}/>
-							</FormGroup>
+							<Grid item xs={6}>
+								{' '}
+								<FormGroup>
+									<TextField
+										className="generate_textfield"
+										label="Last Name*"
+										id="requesterLastName"
+										name="requesterLastName"
+										{...register('requesterLastName', {
+											required: 'Enter the last name.',
+											pattern: {
+												value: /^[\w- ]{2,}$/,
+												message: 'The last name must be at least 2 characters long.'
+											},
+											onChange: handleUpdate
+										})}
+										error={!!errors?.requesterLastName}
+									/>
+									<ValidationError hidden={!errors?.requesterLastName} message={errors.requesterLastName?.message} />
+								</FormGroup>
 							</Grid>
 
 							{RequesterDetailsExpand ? (
@@ -440,7 +436,7 @@ const Generate: React.FC = () => {
 												})}
 												error={!!errors?.requesterContactPhone}
 											/>
-											<ValidationError hidden={!errors?.requesterContactPhone} message={errors.requesterContactPhone?.message}/>
+											<ValidationError hidden={!errors?.requesterContactPhone} message={errors.requesterContactPhone?.message} />
 										</FormGroup>
 									</Grid>
 									<Grid item xs={6}>
@@ -460,7 +456,7 @@ const Generate: React.FC = () => {
 												})}
 												error={!!errors?.requesterContactEmail}
 											/>
-											<ValidationError hidden={!errors?.requesterContactEmail} message={errors.requesterContactEmail?.message}/>
+											<ValidationError hidden={!errors?.requesterContactEmail} message={errors.requesterContactEmail?.message} />
 										</FormGroup>
 									</Grid>
 									<Grid item xs={6}>
@@ -484,7 +480,9 @@ const Generate: React.FC = () => {
 										</FormGroup>
 									</Grid>
 								</>
-							) : ''}
+							) : (
+								''
+							)}
 
 							<Grid item xs={12}>
 								<Button
@@ -496,14 +494,11 @@ const Generate: React.FC = () => {
 								>
 									{RequesterDetailsExpand ? 'Hide Requester Details' : 'Show Requester Details'}
 								</Button>
-
 							</Grid>
 
-							<Grid item xs={12}>
+							<Grid item xs={12}></Grid>
 
-							</Grid>
-
-							<ConfirmGenerationDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs}/>
+							<ConfirmGenerationDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs} />
 							<CancelDialog
 								open={openCancelDialog}
 								close={handleClose}
@@ -516,7 +511,7 @@ const Generate: React.FC = () => {
 
 							<Grid item xs={12}>
 								<Stack direction={'row'} spacing={1} justifyContent={'flex-end'}>
-									<GenerationLockWidget/>
+									<GenerationLockWidget />
 									<Button type="submit" className="generate_submit_btn" variant={'contained'}>
 										Generate
 									</Button>

@@ -13,8 +13,6 @@ import {
 	FormGroup
 } from '@mui/material';
 import React, {useState} from 'react';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import TaxonomySearch from '../../util/TaxonomySearch';
 
 const AdvancedSearchFields = ({formState, dispatch}) => {

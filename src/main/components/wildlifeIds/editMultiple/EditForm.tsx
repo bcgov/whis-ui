@@ -21,7 +21,7 @@ const EditForm = () => {
 			<Box className="pageHead">
 				<Box className="headerTitle">
 					<Stack direction="row" alignItems={'baseline'}>
-						<Typography>Multiple WLH ID [2200001-2200010]</Typography>
+						<Typography variant='h1'>Multiple WLH ID [2200001-2200010]</Typography>
 						<Link
 							className="selectIDsLink"
 							onClick={() => {
@@ -31,7 +31,7 @@ const EditForm = () => {
 							<ins>Edit WLH IDs list</ins>
 						</Link>
 					</Stack>
-					<Typography className='subtitle'>Update the WLH ID status, details and events.</Typography>
+					<Typography variant='h6' className='subtitle'>Update the WLH ID status, details and events.</Typography>
 				</Box>
 
 				<Button

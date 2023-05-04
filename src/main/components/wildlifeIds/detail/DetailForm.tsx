@@ -20,8 +20,8 @@ const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
 		<Box className="container">
 			<Box className="pageHead">
 				<Box className="mainTitle">
-					<Typography>WLH ID {wildlifeHealthId.metadata.wildlifeHealthId}</Typography>
-					<Typography>View the WLH ID details and events.</Typography>
+					<Typography variant='h1'>WLH ID {wildlifeHealthId.metadata.wildlifeHealthId}</Typography>
+					<Typography variant='h6'>View the WLH ID details and events.</Typography>
 				</Box>
 				<Box className="pageHeadBtn">
 					<Button className="updateIDBtn" onClick={onEditButtonClick} variant={'contained'}>
