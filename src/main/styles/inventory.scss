@@ -1,6 +1,9 @@
 @import "colours";
 
 .generate_container {
+	color: $text;
+	padding: 0 1rem;
+
 	.error_message {
 		font-size: 14px;
 		color: #d32f2f;
@@ -8,15 +11,21 @@
 
 	.generation_paper {
 		min-width: 1304px;
-			padding: 16px 8rem;
+		padding: 48px 8rem;
+		color: $text;
 	}
 
 	.requester_details_btn {
 		text-transform: capitalize;
 	}
 
+	.subtitle{
+		margin-block: 8px 32px;
+	}
+
 	.generate_submit_btn {
-		text-transform: capitalize;
+		font-weight: 700;
+		width: 128px;
 	}
 }
 

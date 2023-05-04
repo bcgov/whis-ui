@@ -25,14 +25,15 @@ const GenerationLockWidget: React.FC = () => {
 		return (
 			<Box className="lockWidget">
 				<LockSharp color={'error'} fontSize={'large'} />
-				<Typography color={'error'}>The lock is held by {lockStatus.status?.lockHolder?.email}</Typography>
+				<Typography color={'error'} variant='h6'>The lock is held by {lockStatus.status?.lockHolder?.email}</Typography>
 			</Box>
 		);
 	}
 
 	return (
 		<Box className="lockWidget">
-			<LockSharp color={'primary'} fontSize={'large'} /> Exclusive Lock Held
+			<LockSharp color={'primary'} fontSize={'large'} />
+			<Typography color={'error'} variant='h6'>Exclusive Lock Held</Typography>
 		</Box>
 	);
 };

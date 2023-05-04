@@ -8,22 +8,10 @@
         align-items: center;
 
         .mainTitle {
-            .MuiTypography-root:nth-child(1) {
-                font-size: 32px;
-                font-family: 'BCSans-Bold';
-            }
-
             .MuiTypography-root:nth-child(2) {
-                font-size: 16px;
-                margin-bottom: 28px;
+                margin-block: 8px 32px;
                 color: #787f81;
             }
-        }
-
-        button {
-            height: 41px;
-            text-transform: capitalize;
-            font-size: 14px;
         }
     }
 
@@ -78,6 +66,7 @@
         .eventRadios {
             width: 100%;
             color: #c0c0c0;
+            margin-top: 32px;
         }
 
         .eventKeywords {
@@ -89,7 +78,7 @@
         }
 
         .hideFilterButton {
-            width: 122px;
+            width: 125px;
             height: 42px;
             text-transform: capitalize;
             font-size: 14px;
@@ -118,7 +107,7 @@
     .detailsSubtitle {
         font-family: 'BCSans-Bold';
         font-size: 18px;
-        margin-block: 32px 10px;
+        margin-block: 32px 0;
     }
 
     .filter_result {

@@ -24,7 +24,7 @@
 
             .subtitle {
                 font-size: 16px;
-                margin-bottom: 28px;
+                margin-block: 8px 32px;
                 color: #787f81;
 
             }
@@ -56,7 +56,7 @@
     .expandButtons {
         display: flex;
         justify-content: flex-end;
-        margin-top: 50px;
+        margin-top: 26px;
 
         .expand_btn {
             width: 108px;
@@ -946,6 +946,10 @@
             text-transform: capitalize;
             font-size: 14px;
             margin-right: 8px;
+        }
+
+        .MuiButton-contained{
+            font-weight: 700;
         }
     }
 

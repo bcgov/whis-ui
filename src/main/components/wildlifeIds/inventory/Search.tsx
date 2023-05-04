@@ -10,7 +10,7 @@ import {useSelector} from '../../../../state/utilities/use_selector';
 import {getDevMode} from '../../../../state/utilities/config_helper';
 import {SEARCH_EXECUTE} from '../../../../state/actions';
 import {useDispatch} from 'react-redux';
-import {getSearchRequestFromSearchFormState} from "../../../../state/utilities/search_api";
+import {getSearchRequestFromSearchFormState} from '../../../../state/utilities/search_api';
 
 // from the API -- keep this interface in sync.
 interface HealthIDSearchParams {
@@ -43,18 +43,17 @@ const Search: React.FC = () => {
 	function searchReducer(state, action) {
 		const updatedState = {...state};
 		switch (action.type) {
-		case 'fieldChange':
-			// for simple field changes
-			_.set(updatedState, action.payload.field, action.payload.value);
-			break;
-		case 'addArrayElement':
-			_.set(updatedState, action.payload.field, _.union(_.get(updatedState, action.payload.field), [action.payload.value]));
-			break;
-		case 'removeArrayElement':
-			_.set(updatedState, action.payload.field, _.without(_.get(updatedState, action.payload.field), action.payload.value));
-			break;
+			case 'fieldChange':
+				// for simple field changes
+				_.set(updatedState, action.payload.field, action.payload.value);
+				break;
+			case 'addArrayElement':
+				_.set(updatedState, action.payload.field, _.union(_.get(updatedState, action.payload.field), [action.payload.value]));
+				break;
+			case 'removeArrayElement':
+				_.set(updatedState, action.payload.field, _.without(_.get(updatedState, action.payload.field), action.payload.value));
+				break;
 		}
-
 
 		return updatedState;
 	}
@@ -68,13 +67,13 @@ const Search: React.FC = () => {
 			namedDateRanges: [],
 			creation: {
 				startDate: '',
-				endDate: '',
+				endDate: ''
 			},
 			status: '',
 			purpose: '',
 			requester: {
 				name: '',
-				organization: '',
+				organization: ''
 			},
 			species: '',
 			region: '',
@@ -96,7 +95,7 @@ const Search: React.FC = () => {
 				},
 				ageClass: '',
 				samples: ''
-			},
+			}
 		},
 		searchReducerInit
 	);
@@ -111,7 +110,7 @@ const Search: React.FC = () => {
 		if (advancedSearchExpand) {
 			setSpacerProps({
 				minHeight: `${height + 300}px`
-			})
+			});
 		} else {
 			setSpacerProps({
 				minHeight: 'auto'
@@ -119,17 +118,12 @@ const Search: React.FC = () => {
 		}
 	}, [ref.current, advancedSearchExpand]);
 
-	
 	return (
 		<Box className="container" sx={spacerProps}>
 			<Box className="pageHead">
 				<Box className="mainTitle">
-					<Typography fontFamily={'BCSans-Bold'} sx={{fontSize: '32px'}}>
-							WLH ID Inventory
-					</Typography>
-					<Typography sx={{marginBottom: '28px', fontSize: '16px', color: '#787f81'}}>
-							Find the WLH ID (s) and update the data associated to each ID.
-					</Typography>
+					<Typography variant="h1">WLH ID Inventory</Typography>
+					<Typography variant="h6">Filter the WLH ID (s) and update the data associated to each ID.</Typography>
 					{devMode && (
 						<>
 							<h5>Search Object</h5>
@@ -139,12 +133,11 @@ const Search: React.FC = () => {
 				</Box>
 				<Button
 					variant={'contained'}
-					sx={{width: '150px', height: '32px', textTransform: 'capitalize', marginBlock: '10px'}}
 					onClick={() => {
 						navigate('/wildlifeIds/list');
 					}}
 				>
-						Go to IDs List
+					Go to IDs List
 				</Button>
 			</Box>
 
@@ -173,7 +166,7 @@ const Search: React.FC = () => {
 										});
 									}}
 								>
-										Search
+									Search
 								</Button>
 							)
 						}}
@@ -187,20 +180,22 @@ const Search: React.FC = () => {
 					>
 						{advancedSearchExpand ? (
 							<>
-									Hide Filters <FilterAltOutlinedIcon/>
+								Hide Filters <FilterAltOutlinedIcon />
 							</>
 						) : (
 							<>
-									Show Filters <FilterAltOutlinedIcon/>
+								Show Filters <FilterAltOutlinedIcon />
 							</>
 						)}
 					</Button>
 				</Box>
 
 				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
-					<HidableSearchForm formState={searchRequest} dispatch={searchDispatch}/>
+					<HidableSearchForm formState={searchRequest} dispatch={searchDispatch} />
 				</Box>
-				<Button className="searchButton" variant='outlined'>Clear All</Button>
+				<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
+					Clear All
+				</Button>
 				<Button
 					className="searchButton"
 					sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
@@ -216,13 +211,12 @@ const Search: React.FC = () => {
 						setSearchButtonPosition(false);
 					}}
 				>
-						Search
+					Search
 				</Button>
 			</Card>
 
-			<SearchResults/>
+			<SearchResults />
 		</Box>
 	);
-}
-;
+};
 export default Search;

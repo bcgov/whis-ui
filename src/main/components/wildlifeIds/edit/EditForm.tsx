@@ -171,8 +171,8 @@ const EditForm = ({wildlifeHealthId}) => {
 		<Box className="container">
 			<Box className="pageHead">
 				<Box className="mainTitle">
-					<Typography>WLH ID {localState.formState.metadata.wildlifeHealthId}</Typography>
-					<Typography>Update the WLH ID details and events.</Typography>
+					<Typography variant='h1'>WLH ID {localState.formState.metadata.wildlifeHealthId}</Typography>
+					<Typography variant='h6'>Update the WLH ID details and events.</Typography>
 				</Box>
 
 				<Button

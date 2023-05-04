@@ -34,12 +34,18 @@
 
 button.logout {
 	font-family: $fontFamily;
-	font-size: 16px;
+	font-size: 14px;
 	text-transform: inherit;
 	color: $navText;
 }
-button.help{
+
+button.help {
 	color: $navText;
+
+	svg {
+		width: 24px;
+
+	}
 }
 
 .profile {
@@ -65,8 +71,10 @@ button.help{
 		padding-right: 1rem;
 		border-right: 1px solid $darkBackgroundText;
 		color: $navText;
+
 		span {
 			margin-left: 0.25rem;
+			font-size: 14px;
 		}
 	}
 }

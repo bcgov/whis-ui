@@ -24,7 +24,7 @@ const List: React.FC = () => {
 
 	return (
 		<Paper className='list_page'>
-			<Typography>WLH ID Inventory</Typography>
+			<Typography variant='h1'>WLH ID Inventory</Typography>
 
 			<table className={'inventory_table'}>
 				<thead>
