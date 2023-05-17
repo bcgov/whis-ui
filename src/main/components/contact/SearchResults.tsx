@@ -1,33 +1,20 @@
-import {Box, Button, Card, IconButton, Menu, MenuItem, MenuList, Stack, Typography} from '@mui/material';
-import '../../../styles/search.scss';
+import {Box, Card, IconButton, Menu, MenuItem} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NewContactDialog from './NewContactDialog';
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import LightTooltip from '../editMultiple/LightTooltip';
+import LightTooltip from '../wildlifeIds/editMultiple/LightTooltip';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import {useSelector} from '../../../../state/utilities/use_selector';
-import Loading from '../../util/Loading';
-import TrashBinIcon from '../../util/TrashBinIcon';
-import DeleteConfirm from '../edit/DeleteConfirm';
+import TrashBinIcon from '../util/TrashBinIcon';
+import DeleteConfirm from '../wildlifeIds/edit/DeleteConfirm';
 
 interface CustomMenuItem {
 	anchorEl: null | HTMLElement;
 	child: any;
 }
 
-const SearchResults = showFilterChips => {
-	const navigate = useNavigate();
-	// const {results, working} = useSelector(state => state.Search);
-
-	//sample id data
-	const state = {
-		status: 'Assigned',
-		wlh_id: '220000-1',
-		generationDate: '2023-01-19',
-		creator: 'effie@plasticviking.com'
-	};
+const SearchResults = () => {
 
 	const results = [
 		{first_name: 'John', last_name: 'Huberman', region: 'Region 1', organization: 'organization 1', role: '', phone: '604-723-1045', email: 'sultana@gov.ca'},
@@ -58,7 +45,6 @@ const SearchResults = showFilterChips => {
 	const [deleteContactDialog, setDeleteContactDialog] = useState(false);
 
 	const [updateName, setUpdateName] = useState('');
-
 
 	//show update buttons after any id selected
 	const [isIDSelected, setIsIDSelected] = useState(false);
@@ -185,12 +171,6 @@ const SearchResults = showFilterChips => {
 	];
 
 	function renderTable() {
-		// if (working) {
-		// 	return <Loading />;
-		// }
-		// if (results == null) {
-		// 	return <Error />;
-		// }
 		return (
 			<>
 				<DataGrid

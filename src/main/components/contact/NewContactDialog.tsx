@@ -1,8 +1,8 @@
 import {Dialog, IconButton, DialogTitle, DialogContent, TextField, Button, Box, MenuItem} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, {useState} from 'react';
-import ConfirmDialog from '../../util/ConfirmDialog';
-import useCodeTable from '../../../hooks/useCodeTable';
+import ConfirmDialog from '../util/ConfirmDialog';
+import useCodeTable from '../../hooks/useCodeTable';
 
 const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, confirmTitle, confirmContent}) => {
 	//the role list is different from the old list

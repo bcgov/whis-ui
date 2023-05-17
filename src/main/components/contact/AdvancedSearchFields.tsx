@@ -1,11 +1,9 @@
 import {TextField, MenuItem} from '@mui/material';
-import React, {useState} from 'react';
-import TaxonomySearch from '../../util/TaxonomySearch';
-import useCodeTable from '../../../hooks/useCodeTable';
+import React from 'react';
+import useCodeTable from '../../hooks/useCodeTable';
 
-const AdvancedSearchFields = ({formState, dispatch}) => {
+const AdvancedSearchFields = () => {
 	const {mappedCodes: organizations} = useCodeTable('organizations');
-	// const {mappedCodes: roles} = useCodeTable('roles');
 	const {mappedCodes: regions} = useCodeTable('regions');
 
 	const validRoles = [
