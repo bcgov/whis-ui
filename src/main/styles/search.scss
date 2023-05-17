@@ -13,6 +13,15 @@
                 color: #787f81;
             }
         }
+
+        .MuiButton-root {
+            font-weight: bold;
+
+            svg {
+                font-size: 20px;
+                margin-right: 5px;
+            }
+        }
     }
 
     .paperStyle {
@@ -113,9 +122,10 @@
     .filter_result {
         width: 1360px;
         margin-top: 135px;
+        padding: 32px;
 
         .results_table {
-            margin: 12px 32px;
+            // margin: 12px 32px;
 
             .MuiTypography-root {
                 color: $text;
@@ -130,7 +140,7 @@
 
             .MuiDataGrid-columnHeaders {
                 // background-color: #ececec;
-                background-color: #f2f2f2;
+                background-color: #f8f9fa;
             }
 
             .resultTableHeader {
@@ -272,7 +282,7 @@
         }
 
         .MuiDialogTitle-root {
-            padding: 30px 38px 12px;
+            padding: 30px 44px 12px;
             font-size: 18px;
             font-family: 'BCSans-Bold';
         }
@@ -711,6 +721,10 @@
 
         }
 
+        .MuiDialogContent-root {
+            padding: 0px 44px;
+        }
+
         .dialogActions {
             float: right;
             padding: 66px 0 30px 0;
@@ -813,10 +827,31 @@
                 background-color: $link;
                 color: #ffffff;
             }
+
             .MuiButton-root:nth-child(2) {
                 color: #666666;
                 border-color: #868e96;
             }
+        }
+    }
+}
+
+.deleteMultiIcon {
+    margin-left: 10px;
+
+    svg {
+        font-size: 20px;
+    }
+}
+
+.contactActionsMenu {
+    .MuiMenuItem-root {
+        font-size: 14px;
+
+        svg {
+            font-size: 20px;
+            margin: 5px 12px 5px 0;
+            color: #868e96;
         }
     }
 }

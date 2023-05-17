@@ -195,7 +195,6 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 						saveState();
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>

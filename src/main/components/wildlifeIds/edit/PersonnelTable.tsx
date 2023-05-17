@@ -152,7 +152,7 @@ const PersonnelTable = ({people, noun = 'Requester'}) => {
 						</TableRow>
 					))}
 					<DeleteConfirm
-						noun={noun}
+						noun={`this ${noun.toLowerCase()}`}
 						open={deleteConfirmationDialogOpen}
 						cancelAction={() => {
 							setDeleteConfirmationDialogOpen(false);

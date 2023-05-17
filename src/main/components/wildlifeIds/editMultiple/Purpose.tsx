@@ -262,7 +262,6 @@ const Purpose = ({expansionEvent}) => {
 					acceptAction={() => {
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>
