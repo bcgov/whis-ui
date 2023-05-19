@@ -13,7 +13,7 @@ function* loadAllCodes() {
 	const configuration = yield select(getConfiguration);
 	const authHeaders = yield select(getAuthHeaders);
 	try {
-		const result = yield axios.get(`${configuration.API_BASE}/codes?deep=true`, {
+		const result = yield axios.get(`${configuration.API_BASE}/codes`, {
 			headers: authHeaders
 		});
 		yield put({type: CODE_TABLES_LOAD_REQUEST_COMPLETE, payload: result.data});

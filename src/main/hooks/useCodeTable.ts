@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 export const useCodeTable = (name) => {
 
 	const {tables, initialized} = useSelector(selectCodeTables);
+
 	const [internalState, setInternalState] = useState({
 		table: null,
 		codes: [],
@@ -13,12 +14,16 @@ export const useCodeTable = (name) => {
 
 	useEffect(() => {
 		if (initialized) {
+			if (!tables.hasOwnProperty(name)) {
+				console.log(`Warning, no code table ${name} found`);
+				return;
+			}
 			setInternalState({
 				table: tables[name],
 				codes: tables[name].codes,
 				mappedCodes: tables[name].codes.map(c => ({
-					value: c.value,
-					label: c.displayed_value
+					code: c.code,
+					name: c.name
 				}))
 			})
 		}

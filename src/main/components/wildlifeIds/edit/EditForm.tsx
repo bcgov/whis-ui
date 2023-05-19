@@ -7,7 +7,6 @@ import {ExpansionOverrideEvent} from '../../pageElements/Expandable';
 import Status from './Status';
 import Purpose from './Purpose';
 import AnimalDetails from './AnimalDetails';
-import {getDevMode} from '../../../../state/utilities/config_helper';
 import Loading from '../../util/Loading';
 import _ from 'lodash';
 import EventsContainer from './EventsContainer';
@@ -16,9 +15,9 @@ import {WILDLIFE_HEALTH_ID_PERSIST_REQUEST} from '../../../../state/actions';
 import {useParams} from 'react-router';
 import AddEventConfirm from './AddEventConfirm';
 import NewEventFormDialog from './NewEventFormDialog';
+import Debug from "../../util/Debug";
 
 const EditForm = ({wildlifeHealthId}) => {
-	const devMode = useSelector(getDevMode);
 	const dispatch = useDispatch();
 	const {id} = useParams();
 
@@ -168,9 +167,9 @@ const EditForm = ({wildlifeHealthId}) => {
 	}
 
 	return (
-		<Box className="container">
-			<Box className="pageHead">
-				<Box className="mainTitle">
+		<Box className='container'>
+			<Box className='pageHead'>
+				<Box className='mainTitle'>
 					<Typography variant='h1'>WLH ID {localState.formState.metadata.wildlifeHealthId}</Typography>
 					<Typography variant='h6'>Update the WLH ID details and events.</Typography>
 				</Box>
@@ -218,10 +217,10 @@ const EditForm = ({wildlifeHealthId}) => {
 					setAddEventConfirmationDialogOpen(false);
 				}}
 			/>
-			<Box className="expandButtons">
+			<Box className='expandButtons'>
 				<Button
-					variant="outlined"
-					className="expand_btn"
+					variant='outlined'
+					className='expand_btn'
 					onClick={() => {
 						setExpansionEvent({event: 'expandAll', id: expansionEvent.id + 1});
 					}}
@@ -229,8 +228,8 @@ const EditForm = ({wildlifeHealthId}) => {
 					Expand All
 				</Button>
 				<Button
-					variant="outlined"
-					className="expand_btn"
+					variant='outlined'
+					className='expand_btn'
 					onClick={() => {
 						setExpansionEvent({event: 'collapseAll', id: expansionEvent.id + 1});
 					}}
@@ -238,14 +237,8 @@ const EditForm = ({wildlifeHealthId}) => {
 					Collapse All
 				</Button>
 			</Box>
-			{devMode && (
-				<>
-					<strong>Redux Store State</strong>
-					<pre>{JSON.stringify(wildlifeHealthId, null, 1)}</pre>
-					<strong>Form Store State</strong>
-					<pre>{JSON.stringify(localState, null, 1)}</pre>
-				</>
-			)}
+			<Debug title={'redux store state'} item={wildlifeHealthId}/>
+			<Debug title={'local state'} item={localState}/>
 			<Status
 				dirty={localState.dirty}
 				expansionEvent={expansionEvent}

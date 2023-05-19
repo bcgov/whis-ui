@@ -10,7 +10,7 @@ import TaxonomySearch from "../../util/TaxonomySearch";
 
 const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, saveState}) => {
 	const {mappedCodes: validSex} = useCodeTable('animal_sex');
-	const {mappedCodes: regions} = useCodeTable('regions');
+	const {mappedCodes: regions} = useCodeTable('region');
 
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);

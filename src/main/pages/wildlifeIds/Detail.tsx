@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {useSelector} from "../../../state/utilities/use_selector";
 import {useDispatch} from "react-redux";
 import {useLocation, useParams} from "react-router";
-import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
 import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
 import Loading from "../../components/util/Loading";
 import DetailForm from '../../components/wildlifeIds/detail/DetailForm';
@@ -16,7 +15,7 @@ const Detail: React.FC = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const {loading, initialized, data} = useSelector(getWildlifeHealthId);
+	const {loading, initialized, data} = useSelector(state => state.WildlifeHealthId);
 
 	useEffect(() => {
 		dispatch({

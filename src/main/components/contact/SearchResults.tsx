@@ -8,6 +8,8 @@ import LightTooltip from '../wildlifeIds/editMultiple/LightTooltip';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TrashBinIcon from '../util/TrashBinIcon';
 import DeleteConfirm from '../wildlifeIds/edit/DeleteConfirm';
+import {useSelector} from "../../../state/utilities/use_selector";
+import Loading from "../util/Loading";
 
 interface CustomMenuItem {
 	anchorEl: null | HTMLElement;
@@ -16,26 +18,7 @@ interface CustomMenuItem {
 
 const SearchResults = () => {
 
-	const results = [
-		{first_name: 'John', last_name: 'Huberman', region: 'Region 1', organization: 'organization 1', role: '', phone: '604-723-1045', email: 'sultana@gov.ca'},
-		{first_name: 'Meghan', last_name: 'Bearg', region: 'Region 2', organization: '', role: '', phone: '773-7851-2524', email: ''},
-		{first_name: 'Robin', last_name: 'Murino', region: '', organization: 'organization 1', role: 'Hunter', phone: '', email: 'sultana@gov.ca'},
-		{first_name: 'Sultana', last_name: 'Majid', region: '', organization: '', role: '', phone: '654-123-5479', email: ''},
-		{first_name: 'Sahar', last_name: 'Champiri', region: 'Region 1', organization: 'organization 1', role: '', phone: '', email: 'schampiri@gmail.com'},
-		{
-			first_name: 'Uhana',
-			last_name: 'Mrianadol',
-			region: 'Region 2',
-			organization: 'organization 1',
-			role: '',
-			phone: '6047231055',
-			email: 'sultana@gov.ca'
-		},
-		{first_name: 'Yleena', last_name: 'Doutson', region: '', organization: '', role: 'Hunter', phone: '604-723-1063', email: ''},
-		{first_name: 'Yasamin', last_name: 'Purani', region: 'Region 2', organization: '', role: '', phone: '604-723-1063', email: ''},
-		{first_name: 'Omansalar', last_name: 'Dehghani', region: 'Region 1', organization: 'organization 1', role: '', phone: '', email: 'dehghani@gov.bc.ca'},
-		{first_name: 'Zohreh', last_name: 'Champiri', region: 'Region 2', organization: 'organization 1', role: '', phone: '', email: 'sultana@gov.ca'}
-	];
+	const {contacts, initialized, error} = useSelector(state => state.Contacts);
 
 	//table pagination
 	const [pageSize, setPageSize] = React.useState(10);
@@ -67,7 +50,7 @@ const SearchResults = () => {
 						setMoreActions({...moreActions, anchorEl: null});
 					}}
 				>
-					<EditOutlinedIcon />
+					<EditOutlinedIcon/>
 					Edit Contact
 				</MenuItem>
 				<MenuItem
@@ -76,19 +59,19 @@ const SearchResults = () => {
 						setMoreActions({...moreActions, anchorEl: null});
 					}}
 				>
-					<TrashBinIcon />
+					<TrashBinIcon/>
 					Delete Contact
 				</MenuItem>
 			</>
 		)
 	});
 
-	const renderContactInfo = params => {
-		if (params.row.email == '') {
-			return params.row.phone;
+	const renderContactInfo = ({row}) => {
+		if (row.email == '') {
+			return row.phone;
 		}
-		if (params.row.phone == '') {
-			return params.row.email;
+		if (row.phone == '') {
+			return row.email;
 		}
 	};
 
@@ -96,12 +79,12 @@ const SearchResults = () => {
 		return isIDSelected ? (
 			<LightTooltip title={'Delete Selected Contacts'}>
 				<IconButton
-					className="deleteMultiIcon"
+					className='deleteMultiIcon'
 					onClick={() => {
 						setDeleteContactDialog(true);
 					}}
 				>
-					<TrashBinIcon />
+					<TrashBinIcon/>
 				</IconButton>
 			</LightTooltip>
 		) : (
@@ -112,15 +95,15 @@ const SearchResults = () => {
 	//actions
 	const renderMoreActions = () => {
 		return (
-			<Box className="actions">
-				<LightTooltip title="More Actions">
+			<Box className='actions'>
+				<LightTooltip title='More Actions'>
 					<IconButton
 						aria-controls={open ? 'demo-positioned-menu' : undefined}
-						aria-haspopup="true"
+						aria-haspopup='true'
 						aria-expanded={open ? 'true' : undefined}
 						onClick={(event: React.MouseEvent<HTMLButtonElement>) => setMoreActions({...moreActions, anchorEl: event.currentTarget})}
 					>
-						<MoreVertIcon />
+						<MoreVertIcon/>
 					</IconButton>
 				</LightTooltip>
 			</Box>
@@ -140,22 +123,22 @@ const SearchResults = () => {
 		},
 		{
 			width: 180,
-			field: 'role',
+			field: 'role_display_name',
 			headerName: 'Role'
 		},
 		{
 			width: 200,
-			field: 'region',
+			field: 'region_display_name',
 			headerName: 'Region'
 		},
 		{
 			width: 215,
-			field: 'organization',
+			field: 'organization_display_name',
 			headerName: 'Organization'
 		},
 		{
-			width: 220,
 			field: 'email',
+			width: 220,
 			headerName: 'Email/Phone',
 			renderCell: renderContactInfo
 		},
@@ -175,9 +158,9 @@ const SearchResults = () => {
 			<>
 				<DataGrid
 					getRowId={(row: any) => row.first_name + row.last_name}
-					className="data"
+					className='data'
 					autoHeight
-					rows={results}
+					rows={contacts}
 					columns={columns}
 					pageSize={pageSize}
 					onPageSizeChange={newPageSize => setPageSize(newPageSize)}
@@ -192,7 +175,7 @@ const SearchResults = () => {
 					}}
 				/>
 				<Menu
-					className="contactActionsMenu"
+					className='contactActionsMenu'
 					open={Boolean(moreActions.anchorEl)}
 					onClose={() => setMoreActions({...moreActions, anchorEl: null})}
 					anchorEl={moreActions.anchorEl}
@@ -235,9 +218,13 @@ const SearchResults = () => {
 		);
 	}
 
+	if (!initialized) {
+		return <Loading/>;
+	}
+
 	return (
-		<Card className="filter_result">
-			<Box className="results_table">{renderTable()}</Box>
+		<Card className='filter_result'>
+			<Box className='results_table'>{renderTable()}</Box>
 		</Card>
 	);
 };

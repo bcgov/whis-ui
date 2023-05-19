@@ -1,5 +1,4 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
-import _ from 'lodash';
 import '../../styles/search.scss'
 import {Box, Button, Card, TextField, Typography} from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
@@ -10,7 +9,7 @@ import {Add} from '@mui/icons-material';
 
 
 const Search: React.FC = () => {
-	
+
 	const [addContactDialog, setAddContactDialog] = useState(false);
 	const [advancedSearchExpand, setAdvancedSearchExpand] = useState(false);
 	const [searchButtonPosition, setSearchButtonPosition] = useState(false);
@@ -48,15 +47,16 @@ const Search: React.FC = () => {
 				<NewContactDialog
 					open={addContactDialog}
 					title={'Add New Contact'}
-					updateAction={() => {
+					updateAction={(contact) => {
+						console.dir(contact);
 						setAddContactDialog(false);
 					}}
 					cancelAction={() => {
 						setAddContactDialog(false);
 					}}
 					buttonText={'Add'}
-					confirmTitle={'Create Contact List Confirmation'}
-					confirmContent={'You have created a contact.'}
+					confirmTitle={'Add Contact Confirmation'}
+					confirmContent={'You will create a new contact list entry. Proceed?'}
 				/>
 			</Box>
 

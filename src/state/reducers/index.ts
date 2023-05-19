@@ -9,6 +9,7 @@ import {createCodeTablesReducer} from "./code_tables";
 import {createFlashMessagesReducer} from "./flash_messages";
 import {createWildlifeHealthIdReducer} from "./wildlife_health_id";
 import {createSearchReducer} from "./search";
+import {createContactListReducer} from "./contacts";
 
 function createRootReducer(config: AppConfig) {
 	const rootReducer = combineReducers({
@@ -18,7 +19,8 @@ function createRootReducer(config: AppConfig) {
 		WildlifeHealthId: createWildlifeHealthIdReducer(),
 		CodeTables: createCodeTablesReducer(),
 		FlashMessages: createFlashMessagesReducer(),
-		Search: createSearchReducer()
+		Search: createSearchReducer(),
+		Contacts: createContactListReducer(),
 	});
 
 	return rootReducer;

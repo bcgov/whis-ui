@@ -32,7 +32,7 @@ const TaxonomySearch = ({value, onValueChange, className}) => {
 				.catch(e => {
 					setData([]);
 				});
-		}, 100),
+		}, 150),
 		[]
 	);
 
@@ -42,13 +42,10 @@ const TaxonomySearch = ({value, onValueChange, className}) => {
 				disablePortal
 				options={data}
 				onChange={(event, newValue) => {
-					onValueChange(newValue?.label || '');
+					onValueChange(newValue);
 				}}
-				isOptionEqualToValue={(option, value1) => {
-					return option.label == value1;
-				}}
+				getOptionLabel={(option) => option.label}
 				value={value}
-				freeSolo
 				selectOnFocus
 				clearOnBlur
 				handleHomeEndKeys

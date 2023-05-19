@@ -54,7 +54,7 @@ export const WildlifeHealthId = {
     "purpose": {
         "primaryPurpose": "PASSIVE",
         "secondaryPurpose": "TARGETED",
-        "associatedProject": "Some Project",
+        "project": "Some Project",
         "projectDetails": "Here are the details about this project",
         "requester": {
             "firstName": "Robert",
@@ -68,7 +68,7 @@ export const WildlifeHealthId = {
     },
     "animalDetails": {
         "species": "Deer",
-        "homeRegion": "SKEENA",
+        "region": "SKEENA",
         "sex": "male",
         "identifiers": [
             {

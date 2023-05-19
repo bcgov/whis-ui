@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import '../../styles/dashboard.scss';
+import '../styles/dashboard.scss';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -13,8 +13,8 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import FlagIcon from '@mui/icons-material/Flag';
 import SettingsIcon from '@mui/icons-material/Settings';
-import {useSelector} from '../../../state/utilities/use_selector';
-import {LockModal} from '../../components/wildlifeIds/generate/LockModal';
+import {useSelector} from '../../state/utilities/use_selector';
+import {LockModal} from '../components/wildlifeIds/generate/LockModal';
 import {Box, Button, Card, CardContent, CardHeader, Divider, IconButton, Typography, Link, Stack} from '@mui/material';
 
 const Dashboard: React.FC = () => {
@@ -51,54 +51,54 @@ const Dashboard: React.FC = () => {
 	return (
 		<Box className={'dash_grid'}>
 			<LockModal open={lockModalOpen} close={handleClose} handleClose={setLockModalOpen}/>
-			<Card className="dash_profile">
-				<IconButton className="settingIcon">
-					<SettingsIcon />
+			<Card className='dash_profile'>
+				<IconButton className='settingIcon'>
+					<SettingsIcon/>
 				</IconButton>
-				<CardHeader className="profileTitle" title={'Profile'} />
+				<CardHeader className='profileTitle' title={'Profile'}/>
 
 				<CardContent className={'profile_card'}>
-					<AccountCircleIcon className="userIcon" />
+					<AccountCircleIcon className='userIcon'/>
 					<Box className={'userInfo'}>
-						<PersonIcon />
-						<Typography className="name">{me.bestName}</Typography>
+						<PersonIcon/>
+						<Typography className='name'>{me.bestName}</Typography>
 
-						<Typography className="role">{me.roles.join(', ')}</Typography>
+						<Typography className='role'>{me.roles.join(', ')}</Typography>
 
-						<LocalPhoneIcon className="phoneIcon" />
-						<Typography className="infoText">phone_placeholder</Typography>
+						<LocalPhoneIcon className='phoneIcon'/>
+						<Typography className='infoText'>phone_placeholder</Typography>
 
-						<EmailIcon className="emailIcon" />
-						<Typography className="infoText">{me.email}</Typography>
+						<EmailIcon className='emailIcon'/>
+						<Typography className='infoText'>{me.email}</Typography>
 
-						<BusinessIcon className="businessIcon" />
-						<Typography className="infoText">org_placeholder</Typography>
+						<BusinessIcon className='businessIcon'/>
+						<Typography className='infoText'>org_placeholder</Typography>
 					</Box>
 
 					<Box className={'quick_access'}>
-						<Divider variant="middle" className="divider1" />
-						<Divider variant="middle" className="divider2" />
-						<Typography className="quickAccessText">Quick Access</Typography>
+						<Divider variant='middle' className='divider1'/>
+						<Divider variant='middle' className='divider2'/>
+						<Typography className='quickAccessText'>Quick Access</Typography>
 						<Box className={'actions'}>
-							<Box className="generateBtn">
+							<Box className='generateBtn'>
 								<IconButton
 									onClick={() => {
 										setLockModalOpen(true);
 									}}
 								>
-									<AddCircleOutlineIcon />
+									<AddCircleOutlineIcon/>
 								</IconButton>
 								<p>Generate IDs</p>
 							</Box>
-							<Box className="searchBtn">
+							<Box className='searchBtn'>
 								<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
-									<ManageSearchIcon />
+									<ManageSearchIcon/>
 								</IconButton>
 								<p>Inventory</p>
 							</Box>
-							<Box className="actionBtn">
+							<Box className='actionBtn'>
 								<IconButton onClick={() => navigate('/wildlifeIds/actionManagement')}>
-									<NotificationsNoneIcon />
+									<NotificationsNoneIcon/>
 								</IconButton>
 								<p>Actions & Notifications</p>
 							</Box>
@@ -107,8 +107,8 @@ const Dashboard: React.FC = () => {
 				</CardContent>
 			</Card>
 
-			<Card className="dash_welcome">
-				<CardHeader title={`Welcome, ${me.bestName}`} subheader={'There are a few actions that you can take listed in the following'} />
+			<Card className='dash_welcome'>
+				<CardHeader title={`Welcome, ${me.bestName}`} subheader={'There are a few actions that you can take listed in the following'}/>
 
 				<CardContent>
 					<Box className={'welcome_buttons'}>
@@ -123,16 +123,16 @@ const Dashboard: React.FC = () => {
 						<Button variant={'contained'} onClick={() => navigate('/wildlifeIds/inventory')}>
 							View WLH ID Inventory
 						</Button>
-						<Button disabled variant={'contained'}>
-							Future Function
+						<Button variant={'contained'} onClick={() => navigate('/contacts')}>
+							Contacts List
 						</Button>
 					</Box>
 				</CardContent>
 			</Card>
 
-			<Card className="dash_actions" id="dash_actions">
-				<Stack direction="row" spacing={2} className="actionTitle">
-					<NotificationsIcon />
+			<Card className='dash_actions' id='dash_actions'>
+				<Stack direction='row' spacing={2} className='actionTitle'>
+					<NotificationsIcon/>
 					<Link onClick={() => navigate('/wildlifeIds/actionManagement')}>{'Actions'}</Link>
 				</Stack>
 
@@ -152,9 +152,9 @@ const Dashboard: React.FC = () => {
 				</CardContent>
 			</Card>
 
-			<Card className="dash_reports" id="dash_reports">
-				<Stack direction="row" spacing={2} className="reportTitle">
-					<FlagIcon />
+			<Card className='dash_reports' id='dash_reports'>
+				<Stack direction='row' spacing={2} className='reportTitle'>
+					<FlagIcon/>
 					<Link>{'Reports'}</Link>
 				</Stack>
 				<CardContent>

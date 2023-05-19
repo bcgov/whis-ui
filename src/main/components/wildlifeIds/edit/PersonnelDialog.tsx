@@ -6,7 +6,7 @@ import useCodeTable from '../../../hooks/useCodeTable';
 const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun = 'Update Requester'}) => {
 	const {mappedCodes: roles} = useCodeTable('roles');
 	const {mappedCodes: organizations} = useCodeTable('organizations');
-	const {mappedCodes: regions} = useCodeTable('regions');
+	const {mappedCodes: regions} = useCodeTable('region');
 
 	const [person, setPerson] = useState({
 		firstName: '',

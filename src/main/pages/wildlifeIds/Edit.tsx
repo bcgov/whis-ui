@@ -5,7 +5,6 @@ import {useDispatch} from "react-redux";
 import {WILDLIFE_HEALTH_ID_CLEAR, WILDLIFE_HEALTH_ID_LOAD_REQUEST} from "../../../state/actions";
 
 import {useSelector} from "../../../state/utilities/use_selector";
-import {getWildlifeHealthId} from "../../../state/utilities/wildlife_health_id_helper";
 import Loading from "../../components/util/Loading";
 
 const Edit = () => {
@@ -13,7 +12,7 @@ const Edit = () => {
 	const {pathname} = useLocation();
 
 	const dispatch = useDispatch();
-	const {loading, initialized, data} = useSelector(getWildlifeHealthId);
+	const {loading, initialized, data} = useSelector(state => state.WildlifeHealthId);
 
 	useEffect(() => {
 		dispatch({

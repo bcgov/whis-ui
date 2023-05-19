@@ -1,14 +1,9 @@
 import CodeTables from "../../main/pages/admin/CodeTables";
-import {staticData} from "../constants/static_data";
 import {CODE_TABLES_LOAD_REQUEST, CODE_TABLES_LOAD_REQUEST_COMPLETE, CODE_TABLES_LOAD_REQUEST_ERROR} from "../actions";
 
 export interface Code {
-	id: string,
-	value: string,
-	displayed_value: string,
-	effective: string, //@todo parse date
-	expires: string, //@todo parse date
-	categories: string[]
+	name: string,
+	code: string | number,
 }
 
 export interface CodeTable {
@@ -26,7 +21,7 @@ export interface CodeTables {
 function createCodeTablesReducer() {
 
 	const initialState: CodeTables = {
-		tables: {...staticData},
+		tables: {},
 		initialized: false,
 		error: false
 	}
@@ -37,16 +32,14 @@ function createCodeTablesReducer() {
 			return {
 				...state,
 				initialized: false
-			}
-			break;
+			};
 		case CODE_TABLES_LOAD_REQUEST_COMPLETE:
 			return {
 				...state,
-				tables: {...action.payload, ...staticData},
+				tables: {...action.payload},
 				error: false,
 				initialized: true
-			}
-			break;
+			};
 		case CODE_TABLES_LOAD_REQUEST_ERROR:
 			return {
 				...state,
@@ -54,7 +47,6 @@ function createCodeTablesReducer() {
 				error: true,
 				initialized: false
 			};
-			break;
 		}
 
 		return state;

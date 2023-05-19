@@ -22,19 +22,13 @@ const List: React.FC = () => {
 							<tr>
 								<th>value</th>
 								<th>displayed value</th>
-								<th>categories</th>
-								<th>effective</th>
-								<th>expires</th>
 							</tr>
 						</thead>
 						<tbody>
 							{ct.codes.map(item => (
-								<tr key={`${ct.name} - ${item.id}`}>
-									<td>{item.value}</td>
-									<td>{item.displayed_value}</td>
-									<td>{item.categories?.join(', ')}</td>
-									<td>{item.effective}</td>
-									<td>{item.expires}</td>
+								<tr key={`${ct.name} - ${item.code}`}>
+									<td>{item.name}</td>
+									<td>{item.code}</td>
 								</tr>))}
 						</tbody>
 					</table>

@@ -21,9 +21,9 @@ const CodeLookup = ({codeTable, code}) => {
 			return;
 		}
 
-		const found = table.codes.find(c => c.value === code);
+		const found = table.codes.find(c => c.code === code);
 		if (found)
-			setValue(found.displayed_value);
+			setValue(found.name);
 		else
 			setValue(code);
 

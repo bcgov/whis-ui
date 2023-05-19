@@ -1,12 +1,9 @@
 import {
-	TEST_GENERATION_LOCK_COMPLETE,
-	TEST_GENERATION_LOCK_REQUEST,
 	WILDLIFE_HEALTH_ID_LOAD_COMPLETE,
 	WILDLIFE_HEALTH_ID_LOAD_ERROR,
-	WILDLIFE_HEALTH_ID_LOAD_REQUEST, WILDLIFE_HEALTH_ID_PERSIST_COMPLETE
+	WILDLIFE_HEALTH_ID_LOAD_REQUEST,
+	WILDLIFE_HEALTH_ID_PERSIST_COMPLETE
 } from "../actions";
-import {AppConfig} from "../config";
-import {buildFormStateFromLegacyJSON, updateJSONStructure} from "../utilities/wildlife_health_id_helper";
 
 class WildLifeHealthId {
 
@@ -38,13 +35,11 @@ function createWildlifeHealthIdReducer(): (WildLifeHealthId, AnyAction) => WildL
 			};
 		}
 		case WILDLIFE_HEALTH_ID_LOAD_COMPLETE: {
-			let newState = action.payload['persisted_form_state'] || buildFormStateFromLegacyJSON(action.payload);
-			newState = updateJSONStructure(newState);
 			return {
 				...state,
 				initialized: true,
 				working: false,
-				data: newState
+				data: action.payload
 			};
 		}
 		case WILDLIFE_HEALTH_ID_LOAD_ERROR: {
@@ -60,7 +55,7 @@ function createWildlifeHealthIdReducer(): (WildLifeHealthId, AnyAction) => WildL
 				...state,
 				initialized: true,
 				working: false,
-				data: action.payload['persisted_form_state']
+				data: action.payload
 			};
 		}
 		default:

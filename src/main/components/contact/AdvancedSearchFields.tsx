@@ -4,7 +4,7 @@ import useCodeTable from '../../hooks/useCodeTable';
 
 const AdvancedSearchFields = () => {
 	const {mappedCodes: organizations} = useCodeTable('organizations');
-	const {mappedCodes: regions} = useCodeTable('regions');
+	const {mappedCodes: regions} = useCodeTable('region');
 
 	const validRoles = [
 		{value: 'CONSERVATION_OFFICER', label: 'Conservation Officer'},
@@ -65,7 +65,7 @@ const AdvancedSearchFields = () => {
 					</MenuItem>
 				))}
 			</TextField>
-			
+
 
 			<TextField className="leftColumn" id="email" label="Email" required />
 

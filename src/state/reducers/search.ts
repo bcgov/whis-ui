@@ -1,13 +1,4 @@
-import {
-	SEARCH_CLEAR, SEARCH_COMPLETE, SEARCH_EXECUTE,
-	TEST_GENERATION_LOCK_COMPLETE,
-	TEST_GENERATION_LOCK_REQUEST,
-	WILDLIFE_HEALTH_ID_LOAD_COMPLETE,
-	WILDLIFE_HEALTH_ID_LOAD_ERROR,
-	WILDLIFE_HEALTH_ID_LOAD_REQUEST, WILDLIFE_HEALTH_ID_PERSIST_COMPLETE
-} from "../actions";
-import {AppConfig} from "../config";
-import {buildFormStateFromLegacyJSON, updateJSONStructure} from "../utilities/wildlife_health_id_helper";
+import {SEARCH_CLEAR, SEARCH_COMPLETE, SEARCH_EXECUTE} from "../actions";
 
 class Search {
 
