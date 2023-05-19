@@ -240,7 +240,6 @@ const Status = ({dirty, expansionEvent, dispatch, state, resetState, saveState})
 								setReturnedDialogOpen(false);
 								setIsReturned(true);
 							}}
-							icon={'NotificationImportantIcon'}
 							title={'Update Confirmation'}
 							content={`Do you want to switch the Sample Kits Returned to Yes?`}
 						/>
@@ -342,7 +341,6 @@ const Status = ({dirty, expansionEvent, dispatch, state, resetState, saveState})
 						}, 3000);
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={`You have changed the status of 1 WLH ID from ${displayedStatus.toLowerCase()} to ${state.status.dirty.status.toLowerCase()}. Would you like to save your changes?`}
 				/>

@@ -330,7 +330,6 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 						saveState();
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>

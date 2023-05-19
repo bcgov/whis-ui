@@ -127,7 +127,6 @@ const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, save
 						saveState()
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>

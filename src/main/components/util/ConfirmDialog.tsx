@@ -4,17 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import '../../styles/confirmationDialog.scss';
 
-const ConfirmDialog = ({open, close, title, content, icon, acceptAction}) => {
-	function renderIcon(icon) {
-		switch (icon) {
-			case 'CheckIcon':
-				return <CheckIcon className="CheckIcon" />;
-				break;
-			case 'NotificationImportantIcon':
-				return <NotificationImportantIcon className="CheckIcon" />;
-				break;
-		}
-	}
+const ConfirmDialog = ({open, close, title, content, acceptAction}) => {
 
 	return (
 		<Dialog open={open} onClose={close} className="confirm_dialog">

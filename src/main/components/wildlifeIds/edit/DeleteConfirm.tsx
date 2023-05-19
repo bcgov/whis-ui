@@ -15,8 +15,8 @@ const DeleteConfirm = ({open, acceptAction, cancelAction, noun}) => {
 		<Dialog className="deleteConfirm" open={open} onClose={handleCancel} maxWidth={false}>
 			<DialogTitle>{'Delete Confirmation'}</DialogTitle>
 			<DialogContent>
-				Are you sure you want to delete this {noun}?<br />
-				There is no Undo for this action.
+				Are you sure you want to delete {noun}?<br />
+				There is no undo for this action.
 				<Typography>Are you sure you want to proceed?</Typography>
 			</DialogContent>
 			<Divider variant="middle" />
