@@ -11,11 +11,14 @@ import Loading from '../../components/util/Loading';
 import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {useForm} from 'react-hook-form';
-import ConfirmGenerationDialog from '../../components/wildlifeIds/generate/ConfirmGenerationDialog';
+import ConfirmGenerationDialog from '../../components/wildlifeIds/generate/GenerationSuccessDialog';
 import CancelDialog from '../../components/util/CancelDialog';
 import ValidationError from '../../components/util/ValidationError';
 import TaxonomySearch from '../../components/util/TaxonomySearch';
 import Debug from "../../components/util/Debug";
+import {useDispatch} from "react-redux";
+import {WILDLIFE_HEALTH_ID_GENERATE_REQUEST} from "../../../state/actions";
+import GenerationFailureDialog from "../../components/wildlifeIds/generate/GenerationFailureDialog";
 
 const Generate: React.FC = () => {
 
@@ -28,22 +31,44 @@ const Generate: React.FC = () => {
 		contacts
 	} = useSelector(state => state.Contacts);
 
-	const api = useAPI();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const {initialized: codeTablesInitialized} = useSelector(selectCodeTables);
-
-	const validInitialStatuses = ['UNASSIGNED', 'ASSIGNED'];
-
-	const navigate = useNavigate();
-	const lockStatus = useSelector(state => state.GenerationLock);
-
-	const [lockModalOpen, setLockModalOpen] = useState(false);
+	const {generate: generationState} = useSelector(state => state.WildlifeHealthId);
+	const [generationSerial, setGenerationSerial] = useState(null);
+	const [generationResult, setGenerationResult] = useState(null);
+	const [working, setWorking] = useState(false);
 
 	useEffect(() => {
-		if (lockStatus.initialized && !lockStatus.working && lockStatus.status && lockStatus.status.lockHolder && !lockStatus.status.lockHolder.isSelf) {
-			setLockModalOpen(true);
+		if (generationSerial === null) {
+			setGenerationResult(null);
+			setWorking(false);
+			return;
 		}
-	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
+
+		const foundGenerationRequest = generationState.find(p => p.serial === generationSerial);
+		if (foundGenerationRequest == null) {
+			return;
+		}
+
+		if (working && !foundGenerationRequest.working) {
+			// we were working and now we're not. check result
+			setWorking(false);
+
+			if (foundGenerationRequest.error) {
+				setOpenFailureDialog(true);
+			} else {
+				setGenerationResult(foundGenerationRequest.data);
+				setOpenOpenSuccessDialog(true);
+
+			}
+		}
+
+	}, [generationSerial, generationState]);
+
+
+	const validInitialStatuses = ['UNASSIGNED', 'ASSIGNED'];
 
 	const [formState, setFormState] = useState({
 		species: null,
@@ -59,7 +84,7 @@ const Generate: React.FC = () => {
 	const [generationRequest, setGenerationRequest] = useState(null);
 	useEffect(() => {
 		setGenerationRequest({
-			quantity: parseInt(numOfIDs),
+			quantity: parseInt(idQuantity),
 			year: formState.selectedDate ? formState.selectedDate.getFullYear() : null,
 			purpose: formState.purpose,
 			species: formState.species?.id ? parseInt(formState.species.id) : null,
@@ -83,29 +108,14 @@ const Generate: React.FC = () => {
 	const [yearSelectError, setYearSelectError] = React.useState<string | null>(null);
 
 	//update dialog
-	const [openGenerateDialog, setGenerateDialog] = useState(false);
+	const [openSuccessDialog, setOpenOpenSuccessDialog] = useState(false);
+	const [openFailureDialog, setOpenFailureDialog] = useState(false);
 	const [openCancelDialog, setCancelDialog] = useState(false);
-	const handleClickOpen = () => {
-		setGenerateDialog(true);
-	};
 
 	const handleClose = () => {
-		setGenerateDialog(false);
+		setOpenOpenSuccessDialog(false);
 		setCancelDialog(false);
-	};
-
-	const handleFormSubmit = () => {
-		if (yearSelectError || formState.selectedDate === null) {
-			setYearSelectError('Year is a required field.');
-			return;
-		}
-
-		api.generateIDs(generationRequest)
-			.then(result => {
-			})
-			.catch(err => {
-				console.dir(err);
-			});
+		setOpenFailureDialog(false);
 	};
 
 	//handle update
@@ -116,17 +126,29 @@ const Generate: React.FC = () => {
 		});
 	};
 
+
 	//handle submit
 	const handleRequiredSubmit = () => {
-		handleFormSubmit();
-		handleClickOpen();
+		if (yearSelectError || formState.selectedDate === null) {
+			setYearSelectError('Year is a required field.');
+			return;
+		}
+
+		const serial = `gen-${new Date().getTime()}`;
+
+		setGenerationSerial(serial);
+		setWorking(true);
+
+		dispatch({
+			type: WILDLIFE_HEALTH_ID_GENERATE_REQUEST, payload: {
+				serial,
+				request: generationRequest
+			}
+		});
 	};
 
 	//get Number Of IDs
-	const [numOfIDs, setNumOfIDs] = useState();
-	const getNumberOfIDs = e => {
-		setNumOfIDs(e.target.value);
-	};
+	const [idQuantity, setIdQuantity] = useState(null);
 
 	if (!codeTablesInitialized) {
 		return <Loading/>;
@@ -170,7 +192,7 @@ const Generate: React.FC = () => {
 												message: 'Please enter a number between 1 - 100.'
 											},
 											onChange(e) {
-												getNumberOfIDs(e);
+												setIdQuantity(e.target.value);
 											}
 										})}
 										error={!!errors?.wlh_id}
@@ -290,8 +312,13 @@ const Generate: React.FC = () => {
 
 							<Grid item xs={12}>
 								<FormGroup>
-									<TaxonomySearch className='species' value={formState.species} onValueChange={v => setFormState({...formState, species: v})}/>
+									<TaxonomySearch
+										className='species'
+										value={formState.species}
+										onValueChange={v => setFormState({...formState, species: v})}
+									/>
 								</FormGroup>
+
 							</Grid>
 
 							<Grid item xs={12}>
@@ -348,7 +375,16 @@ const Generate: React.FC = () => {
 								</FormGroup>
 							</Grid>
 
-							<ConfirmGenerationDialog openGenerateDialog={openGenerateDialog} handleClose={handleClose} navigate={navigate} numOfIDs={numOfIDs}/>
+							<ConfirmGenerationDialog
+								open={openSuccessDialog}
+								handleClose={handleClose}
+								createdIDs={generationResult}
+							/>
+
+							<GenerationFailureDialog
+								open={openFailureDialog}
+								handleClose={handleClose}
+							/>
 
 							<CancelDialog
 								open={openCancelDialog}
@@ -363,7 +399,12 @@ const Generate: React.FC = () => {
 							<Grid item xs={12}>
 								<Stack direction={'row'} spacing={1} justifyContent={'flex-end'}>
 									<GenerationLockWidget/>
-									<Button type='submit' className='generate_submit_btn' variant={'contained'}>
+									<Button
+										type='submit'
+										className='generate_submit_btn'
+										variant={'contained'}
+										disabled={working}
+									>
 										Generate
 									</Button>
 									<Button
