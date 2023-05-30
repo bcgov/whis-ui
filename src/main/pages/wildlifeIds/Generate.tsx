@@ -19,6 +19,7 @@ import Debug from "../../components/util/Debug";
 import {useDispatch} from "react-redux";
 import {WILDLIFE_HEALTH_ID_GENERATE_REQUEST} from "../../../state/actions";
 import GenerationFailureDialog from "../../components/wildlifeIds/generate/GenerationFailureDialog";
+import ContactSelection from "../../components/contact/ContactSelection";
 
 const Generate: React.FC = () => {
 
@@ -26,10 +27,6 @@ const Generate: React.FC = () => {
 		purpose: purposes,
 		region: regions
 	} = useSelector(state => state.CodeTables.tables);
-
-	const {
-		contacts
-	} = useSelector(state => state.Contacts);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -322,31 +319,12 @@ const Generate: React.FC = () => {
 							</Grid>
 
 							<Grid item xs={12}>
-								<FormGroup>
-									<TextField
-										id='requester'
-										name='requester'
-										label='Requester*'
-										select
-										{...register('requester', {
-											required: 'Select the requester.'
-										})}
-										error={!!errors?.requester}
-										onChange={e => {
-											handleUpdate(e);
-											clearErrors('requester');
-										}}
-										value={formState.requester}
-									>
-										{contacts.map(c => (
-											<MenuItem key={c.id} value={c.id}>
-												{`${c.first_name} ${c.last_name}, ${c.role_display_name} at ${c.organization_display_name}`}
-											</MenuItem>
-										))}
-									</TextField>
-
-									<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message}/>
-								</FormGroup>
+								<ContactSelection handleSelect={(id) => {
+									setFormState({
+										...formState,
+										requester: id
+									})
+								}}/>
 							</Grid>
 
 
