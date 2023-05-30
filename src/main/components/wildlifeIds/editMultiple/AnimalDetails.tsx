@@ -52,7 +52,7 @@ const AnimalDetails = ({expansionEvent}) => {
 				return (
 					<>
 						<span>Home Region</span>
-						<LightTooltip title="Add Region to IDs">
+						<LightTooltip title="Update Region to IDs">
 							<IconButton
 								onClick={() => {
 									setUpdateRegion(true);
@@ -174,7 +174,6 @@ const AnimalDetails = ({expansionEvent}) => {
 					acceptAction={() => {
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>

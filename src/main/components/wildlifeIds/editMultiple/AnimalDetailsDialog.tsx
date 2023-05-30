@@ -12,25 +12,33 @@ import {
 	Radio,
 	DialogActions,
 	Button,
-	MenuItem
+	MenuItem,
+	Checkbox,
+	InputLabel,
+	ListItemText,
+	OutlinedInput,
+	Select
 } from '@mui/material';
 import useCodeTable from '../../../hooks/useCodeTable';
 import CancelDialog from '../../util/CancelDialog';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 const AnimalDetailsDialog = ({title, open, close, acceptAction, attr}) => {
 	const {mappedCodes: validSex} = useCodeTable('animal_sex');
+	const {mappedCodes: regions} = useCodeTable('region');
 
 	const fakeIDs = [
-		{id: '23-00001'},
-		{id: '23-00010'},
-		{id: '23-00023'},
-		{id: '23-00022'},
-		{id: '23-00066'},
-		{id: '22-00022'},
-		{id: '22-00077'},
-		{id: '22-00055'},
-		{id: '22-00044'},
-		{id: '22-00033'}
+		{title: '23-00001'},
+		{title: '23-00010'},
+		{title: '23-00023'},
+		{title: '23-00022'},
+		{title: '23-00066'},
+		{title: '22-00022'},
+		{title: '22-00077'},
+		{title: '22-00055'},
+		{title: '22-00044'},
+		{title: '22-00033'}
 	];
 
 	const [cancelDialog, setCancelDialog] = useState(false);
@@ -44,7 +52,15 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr}) => {
 	function renderDetails() {
 		switch (attr) {
 			case 'region':
-				return <TextField label="Region" className="region" />;
+				return (
+					<TextField label="Region" className="region" select>
+						{regions.map(m => (
+							<MenuItem key={m.value} value={m.value}>
+								{m.label}
+							</MenuItem>
+						))}
+					</TextField>
+				);
 				break;
 			case 'sex':
 				return (
@@ -62,24 +78,26 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr}) => {
 				break;
 		}
 	}
-
+	
 	return (
 		<>
 			<Dialog open={open} onClose={close} maxWidth={false} className="updateRegionDialog">
 				<DialogTitle>{title}</DialogTitle>
 				<DialogContent>
-					<Box className="selectRange">
-						<Autocomplete
-							freeSolo
-							options={fakeIDs.map(option => option.id)}
-							renderInput={params => <TextField {...params} label="From (select or write  WLH IDs)" />}
-						/>
-						<Autocomplete
-							freeSolo
-							options={fakeIDs.map(option => option.id)}
-							renderInput={params => <TextField {...params} label="To (select or write  WLH IDs)" />}
-						/>
-					</Box>
+					<Autocomplete
+						multiple
+						options={fakeIDs}
+						disableCloseOnSelect
+						getOptionLabel={option => option.title}
+						renderOption={(props, option, {selected}) => (
+							<li {...props}>
+								<Checkbox icon={<CheckBoxOutlineBlankIcon />} checkedIcon={<CheckBoxIcon />} style={{marginRight: 8}} checked={selected} />
+								{option.title}
+							</li>
+						)}
+						freeSolo
+						renderInput={params => <TextField {...params} label="Select WLH IDs"/>}
+					/>
 					{renderDetails()}
 					<FormControl>
 						<RadioGroup value={defaultRadio} onChange={handleChange}>

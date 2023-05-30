@@ -297,7 +297,7 @@ const Purpose = ({expansionEvent}) => {
 						setRequesterDialogOpen(false);
 					}}
 					noun={'requester'}
-					title={'Add Requester'}
+					title={'Update Requester'}
 				/>
 			</Expandable.Detail>
 		</Expandable>

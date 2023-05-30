@@ -121,7 +121,7 @@ const EditMultipleDialog = ({open, close, acceptAction, noun, title}) => {
 							close();
 						}}
 					>
-						Add
+						Update
 					</Button>
 					<Button
 						variant={'outlined'}
