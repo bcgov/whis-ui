@@ -15,7 +15,7 @@ const Detail: React.FC = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const {loading, initialized, data} = useSelector(state => state.WildlifeHealthId);
+	const {loading, initialized, data} = useSelector(state => state.WildlifeHealthId.single);
 
 	useEffect(() => {
 		dispatch({
@@ -37,9 +37,11 @@ const Detail: React.FC = () => {
 
 	return (
 		<>
-			<DetailForm wildlifeHealthId={data} onEditButtonClick={() => {
-				navigate(`/wildlifeIds/edit/${id}`)
-			}}/>
+			<DetailForm
+				wildlifeHealthId={data} onEditButtonClick={() => {
+					navigate(`/wildlifeIds/edit/${id}`)
+				}}
+			/>
 		</>
 
 
