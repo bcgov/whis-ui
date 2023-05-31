@@ -4,7 +4,7 @@ import Expandable from '../../pageElements/Expandable';
 import CodeLookup from '../../util/CodeLookup';
 
 const Purpose = ({state, expansionEvent}) => {
-	const requester = state.purpose.requester;
+	const requester = state.requester;
 
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
@@ -16,18 +16,18 @@ const Purpose = ({state, expansionEvent}) => {
 					<span>
 						<Typography variant="body2">Primary Purpose</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose} />
+							{state.primaryPurpose?.name}
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Secondary Purpose</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'purposes'} code={state.purpose.secondaryPurpose} />
+							{state.secondaryPurpose?.name}
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Associated Project</Typography>
-						<Typography variant="body1">{state.purpose.associatedProject}</Typography>
+						<Typography variant="body1">{state.associatedProject}</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
@@ -35,7 +35,7 @@ const Purpose = ({state, expansionEvent}) => {
 				<Box className="cardDetails">
 					<Box className="hidableDetails">
 						<Typography variant="body2">Project Details</Typography>
-						<Typography className="project_details_content">{state.purpose.projectDetails}</Typography>
+						<Typography className="project_details_content">{state.assocatedProjectDetails}</Typography>
 					</Box>
 					<Box className="hidableDetails">
 						<Typography className="title">Requester</Typography>
@@ -57,13 +57,13 @@ const Purpose = ({state, expansionEvent}) => {
 										<TableCell>{requester.firstName}</TableCell>
 										<TableCell>{requester.lastName}</TableCell>
 										<TableCell>
-											<CodeLookup codeTable={'regions'} code={requester.region} />
+											{requester.region || ''}
 										</TableCell>
 										<TableCell>
-											<CodeLookup codeTable={'organizations'} code={requester.organization} />
+											{requester.organization || ''}
 										</TableCell>
 										<TableCell>
-											<CodeLookup codeTable={'roles'} code={requester.role} />
+											{requester.organizationalRole || ''}
 										</TableCell>
 										<TableCell className="phone">{requester.phoneNumber}</TableCell>
 										<TableCell>{requester.email}</TableCell>

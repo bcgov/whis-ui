@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../../../styles/updateID.scss';
 import {Box, Button, IconButton, Typography} from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
@@ -7,7 +7,7 @@ import Status from './Status';
 import Purpose from './Purpose';
 import AnimalDetails from './AnimalDetails';
 import Event from './Event';
-import { ExpansionOverrideEvent } from '../../pageElements/Expandable';
+import {ExpansionOverrideEvent} from '../../pageElements/Expandable';
 
 const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
 
@@ -17,28 +17,28 @@ const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
 	});
 
 	return (
-		<Box className="container">
-			<Box className="pageHead">
-				<Box className="mainTitle">
-					<Typography variant='h1'>WLH ID {wildlifeHealthId.metadata.wildlifeHealthId}</Typography>
+		<Box className='container'>
+			<Box className='pageHead'>
+				<Box className='mainTitle'>
+					<Typography variant='h1'>WLH ID {wildlifeHealthId.wildlifeHealthId}</Typography>
 					<Typography variant='h6'>View the WLH ID details and events.</Typography>
 				</Box>
-				<Box className="pageHeadBtn">
-					<Button className="updateIDBtn" onClick={onEditButtonClick} variant={'contained'}>
+				<Box className='pageHeadBtn'>
+					<Button className='updateIDBtn' onClick={onEditButtonClick} variant={'contained'}>
 						Update WLH ID
 					</Button>
 					<IconButton>
-						<PrintIcon />
+						<PrintIcon/>
 					</IconButton>
 					<IconButton>
-						<DownloadIcon />
+						<DownloadIcon/>
 					</IconButton>
 				</Box>
 			</Box>
-			<Box className="expandButtons">
+			<Box className='expandButtons'>
 				<Button
-					variant="outlined"
-					className="expand_btn"
+					variant='outlined'
+					className='expand_btn'
 					onClick={() => {
 						setExpansionEvent({event: 'expandAll', id: expansionEvent.id + 1});
 					}}
@@ -46,8 +46,8 @@ const DetailForm = ({wildlifeHealthId, onEditButtonClick}) => {
 					Expand All
 				</Button>
 				<Button
-					variant="outlined"
-					className="expand_btn"
+					variant='outlined'
+					className='expand_btn'
 					onClick={() => {
 						setExpansionEvent({event: 'collapseAll', id: expansionEvent.id + 1});
 					}}
