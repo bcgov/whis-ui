@@ -1,26 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {useAPI} from "../../hooks/useAPI";
 import {Paper, Typography} from "@mui/material";
 import '../../styles/list.scss';
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {WILDLIFE_HEALTH_ID_LIST_ALL_REQUEST} from "../../../state/actions";
+import {useSelector} from "../../../state/utilities/use_selector";
 
 const List: React.FC = () => {
-	const api = useAPI();
-
-	const [items, setItems] = useState([]);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		const doAPIRequest = async () => {
-			const data = await api.getHealthIDs();
-			setItems(data);
-		};
-
-		doAPIRequest().catch(e => {
-			console.error(e)
-		});
-
+		dispatch({type: WILDLIFE_HEALTH_ID_LIST_ALL_REQUEST});
 	}, []);
+
+	const {items} = useSelector(state => state.WildlifeHealthId.list);
 
 	return (
 		<Paper className='list_page'>
