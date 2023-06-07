@@ -5,10 +5,6 @@ import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import { CheckBox } from '@mui/icons-material';
 
 const EditIDsListDialog = ({open, close}) => {
-	// const {mappedCodes: status} = useCodeTable('status');
-	// const {mappedCodes: purposes} = useCodeTable('purposes');
-	// const {mappedCodes: organizations} = useCodeTable('organizations');
-	// const {mappedCodes: roles} = useCodeTable('roles');
 
 	const [multipleStatus, setMultipleStatus] = useState('');
 	const [multipleReason, setMultipleReason] = useState('');

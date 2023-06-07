@@ -15,11 +15,15 @@ import FlagIcon from '@mui/icons-material/Flag';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {useSelector} from '../../state/utilities/use_selector';
 import {LockModal} from '../components/wildlifeIds/generate/LockModal';
-import {Box, Button, Card, CardContent, CardHeader, Divider, IconButton, Typography, Link, Stack} from '@mui/material';
+import {Box, Button, Card, CardContent, CardHeader, Divider, IconButton, Typography, Link, Stack, useMediaQuery, useTheme, Grid} from '@mui/material';
 
 const Dashboard: React.FC = () => {
 	const me = useSelector(state => state.Auth);
 	const navigate = useNavigate();
+
+	const theme = useTheme();
+	const isMedium = useMediaQuery(theme.breakpoints.down('md'));
+	const isLarge = useMediaQuery(theme.breakpoints.down('lg'));
 
 	const reports = [
 		{count: 1859, event: 'IDs Generated', discriminator: 'From last 7 days'},
@@ -49,69 +53,72 @@ const Dashboard: React.FC = () => {
 	}, [lockStatus, lockStatus.initialized, lockStatus.working]);
 
 	return (
-		<Box className={'dash_grid'}>
-			<LockModal open={lockModalOpen} close={handleClose} handleClose={setLockModalOpen}/>
-			<Card className='dash_profile'>
-				<IconButton className='settingIcon'>
-					<SettingsIcon/>
+		<Box className={isMedium ? 'grid-medium' : 'dash_grid'}>
+			<LockModal open={lockModalOpen} close={handleClose} handleClose={setLockModalOpen} />
+			<Card className="dash_profile">
+				<IconButton className="settingIcon">
+					<SettingsIcon />
 				</IconButton>
-				<CardHeader className='profileTitle' title={'Profile'}/>
+				<CardHeader className="profileTitle" title={'Profile'} />
 
 				<CardContent className={'profile_card'}>
-					<AccountCircleIcon className='userIcon'/>
+					<AccountCircleIcon className="userIcon" />
 					<Box className={'userInfo'}>
-						<PersonIcon/>
-						<Typography className='name'>{me.bestName}</Typography>
+						<PersonIcon />
+						<Typography className="name">{me.bestName}</Typography>
 
-						<Typography className='role'>{me.roles.join(', ')}</Typography>
+						<Typography className="role">{me.roles.join(', ')}</Typography>
 
-						<LocalPhoneIcon className='phoneIcon'/>
-						<Typography className='infoText'>phone_placeholder</Typography>
+						<LocalPhoneIcon className="phoneIcon" />
+						<Typography className="infoText">phone_placeholder</Typography>
 
-						<EmailIcon className='emailIcon'/>
-						<Typography className='infoText'>{me.email}</Typography>
+						<EmailIcon className="emailIcon" />
+						<Typography className="infoText">{me.email}</Typography>
 
-						<BusinessIcon className='businessIcon'/>
-						<Typography className='infoText'>org_placeholder</Typography>
+						<BusinessIcon className="businessIcon" />
+						<Typography className="infoText">org_placeholder</Typography>
 					</Box>
 
 					<Box className={'quick_access'}>
-						<Divider variant='middle' className='divider1'/>
-						<Divider variant='middle' className='divider2'/>
-						<Typography className='quickAccessText'>Quick Access</Typography>
+						<Divider variant="middle" className="divider1" />
+						<Divider variant="middle" className="divider2" />
+						<Typography className="quickAccessText">Quick Access</Typography>
 						<Box className={'actions'}>
-							<Box className='generateBtn'>
-								<IconButton
-									onClick={() => {
-										setLockModalOpen(true);
-									}}
-								>
-									<AddCircleOutlineIcon/>
-								</IconButton>
-								<p>Generate IDs</p>
-							</Box>
-							<Box className='searchBtn'>
-								<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
-									<ManageSearchIcon/>
-								</IconButton>
-								<p>Inventory</p>
-							</Box>
-							<Box className='actionBtn'>
-								<IconButton onClick={() => navigate('/wildlifeIds/actionManagement')}>
-									<NotificationsNoneIcon/>
-								</IconButton>
-								<p>Actions & Notifications</p>
-							</Box>
+							<Grid container spacing={1}>
+								<Grid item xs={4}>
+									<IconButton
+										className="generateBtn"
+										onClick={() => {
+											setLockModalOpen(true);
+										}}
+									>
+										<AddCircleOutlineIcon />
+									</IconButton>
+									<p>Generate IDs</p>
+								</Grid>
+								<Grid item xs={4}>
+									<IconButton className="searchBtn" onClick={() => navigate('/wildlifeIds/inventory')}>
+										<ManageSearchIcon />
+									</IconButton>
+									<p>Inventory</p>
+								</Grid>
+								<Grid item xs={4}>
+									<IconButton className="actionBtn" onClick={() => navigate('/wildlifeIds/actionManagement')}>
+										<NotificationsNoneIcon />
+									</IconButton>
+									<p>Actions & Notifications</p>
+								</Grid>
+							</Grid>
 						</Box>
 					</Box>
 				</CardContent>
 			</Card>
 
-			<Card className='dash_welcome'>
-				<CardHeader title={`Welcome, ${me.bestName}`} subheader={'There are a few actions that you can take listed in the following'}/>
+			<Card className="dash_welcome">
+				<CardHeader title={`Welcome, ${me.bestName}`} subheader={'There are a few actions that you can take listed in the following'} />
 
 				<CardContent>
-					<Box className={'welcome_buttons'}>
+					<Box className={`welcome_buttons ${isMedium ? 'welcome_buttons-md' : ''}`}>
 						<Button
 							variant={'contained'}
 							onClick={() => {
@@ -130,9 +137,9 @@ const Dashboard: React.FC = () => {
 				</CardContent>
 			</Card>
 
-			<Card className='dash_actions' id='dash_actions'>
-				<Stack direction='row' spacing={2} className='actionTitle'>
-					<NotificationsIcon/>
+			<Card className="dash_actions" id="dash_actions">
+				<Stack direction="row" spacing={2} className="actionTitle">
+					<NotificationsIcon />
 					<Link onClick={() => navigate('/wildlifeIds/actionManagement')}>{'Actions'}</Link>
 				</Stack>
 
@@ -152,9 +159,9 @@ const Dashboard: React.FC = () => {
 				</CardContent>
 			</Card>
 
-			<Card className='dash_reports' id='dash_reports'>
-				<Stack direction='row' spacing={2} className='reportTitle'>
-					<FlagIcon/>
+			<Card className="dash_reports" id="dash_reports">
+				<Stack direction="row" spacing={2} className="reportTitle">
+					<FlagIcon />
 					<Link>{'Reports'}</Link>
 				</Stack>
 				<CardContent>
