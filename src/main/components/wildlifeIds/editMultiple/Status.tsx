@@ -21,8 +21,6 @@ import LightTooltip from './LightTooltip';
 import EditMultipleDialog from './EditMultipleDialog';
 import ConfirmDialog from '../../util/ConfirmDialog';
 import CancelDialog from '../../util/CancelDialog';
-import DeflagDialog from '../inventory/DeflagDialog';
-import {Flag} from '@mui/icons-material';
 
 const Status = ({expansionEvent}) => {
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -158,7 +156,6 @@ const Status = ({expansionEvent}) => {
 					acceptAction={() => {
 						setConfirmDialogOpen(false);
 					}}
-					icon={'NotificationImportantIcon'}
 					title={'Update Confirmation'}
 					content={'Would you like to save your changes?'}
 				/>

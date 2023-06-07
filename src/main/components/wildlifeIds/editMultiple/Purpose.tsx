@@ -16,8 +16,6 @@ const Purpose = ({expansionEvent}) => {
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
-	const {mappedCodes: purposes} = useCodeTable('purposes');
-
 	function renderEditInfo() {
 		return (
 			<LightTooltip title="Edit WLH ID information">

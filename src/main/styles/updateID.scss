@@ -875,13 +875,14 @@
                             margin: 0;
                         }
                     }
+
                     .rappTag {
                         width: 569px;
                         display: flex;
                         align-items: flex-start;
                         margin-top: 32px;
 
-                        .MuiTextField-root:nth-child(1){
+                        .MuiTextField-root:nth-child(1) {
                             width: 434px;
                             margin-right: 16px;
                         }
@@ -948,7 +949,7 @@
             margin-right: 8px;
         }
 
-        .MuiButton-contained{
+        .MuiButton-contained {
             font-weight: 700;
         }
     }
@@ -1175,6 +1176,10 @@
             color: #868e96;
         }
 
+        .MuiTextField-root {
+            width: 100%;
+        }
+
         .twoColumns {
             width: calc((100% - 32px) / 2);
             margin-top: 24px;
@@ -1190,10 +1195,10 @@
         }
     }
 
-    .changeStatus {
-        width: 529px;
-        margin-block: 24px;
-    }
+    // .changeStatus {
+    //     width: 529px;
+    //     margin-block: 24px;
+    // }
 
     .MuiDialogActions-root {
         padding: 0;
@@ -1227,7 +1232,7 @@
     }
 
     .MuiDialogContent-root {
-        
+
         .MuiAutocomplete-root {
             margin-top: 32px;
             margin-bottom: 32px;
@@ -1238,6 +1243,25 @@
             width: 680px;
             margin-bottom: 24px;
         }
+
+        .MuiDataGrid-root {
+            border: none;
+            padding-inline: 24px;
+
+            .MuiDataGrid-columnHeaders {
+                color: #787f81;
+            }
+
+            .MuiDataGrid-cell:focus {
+                outline: none !important;
+            }
+
+            .MuiDataGrid-columnSeparator {
+                display: none;
+            }
+        }
+
+
     }
 
 

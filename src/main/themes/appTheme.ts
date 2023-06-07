@@ -6,6 +6,15 @@ import BCSansWoff2 from '../styles/assets/fonts/BCSans/BCSans-Regular.woff2';
 import BCSansBoldWoff2 from '../styles/assets/fonts/BCSans/BCSans-Bold.woff2';
 
 export const themeOptions: ThemeOptions = {
+	breakpoints: {
+		values: {
+		  xs: 0,
+		  sm: 600,
+		  md: 960,
+		  lg: 1280,
+		  xl: 1720
+		}
+	  },
 	components: {
 		MuiCssBaseline: {
 			styleOverrides: `

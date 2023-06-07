@@ -1,37 +1,20 @@
 import Expandable from '../../pageElements/Expandable';
-import {
-	Autocomplete,
-	Box,
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	FormControl,
-	FormControlLabel,
-	IconButton,
-	InputAdornment,
-	MenuItem,
-	Radio,
-	RadioGroup,
-	Select,
-	SelectChangeEvent,
-	TextField,
-	Tooltip,
-	Typography
-} from '@mui/material';
+import {Box, Button, IconButton, InputAdornment, TextField, Typography} from '@mui/material';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import React, {useState} from 'react';
 import '../../../styles/updateID.scss';
-import {DataGrid, GridColDef, GridEditInputCell} from '@mui/x-data-grid';
+import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import LightTooltip from './LightTooltip';
 import AnimalDetailsDialog from './AnimalDetailsDialog';
 import ConfirmDialog from '../../util/ConfirmDialog';
 import CancelDialog from '../../util/CancelDialog';
+import {useSelector} from '../../../../state/utilities/use_selector';
 
 const AnimalDetails = ({expansionEvent}) => {
+	const {region: regions, animal_sex: animal_sex} = useSelector(state => state.CodeTables.tables);
+
 	const [updateRegion, setUpdateRegion] = useState(false);
 	const [updateSex, setUpdateSex] = useState(false);
 
@@ -63,6 +46,12 @@ const AnimalDetails = ({expansionEvent}) => {
 						</LightTooltip>
 					</>
 				);
+			},
+			type: 'singleSelect',
+			valueOptions: () => {
+				const options = [];
+				regions?.codes?.map(type => options.push(type.name));
+				return options;
 			}
 		},
 
@@ -90,7 +79,11 @@ const AnimalDetails = ({expansionEvent}) => {
 				);
 			},
 			type: 'singleSelect',
-			valueOptions: ['Female', 'Male', 'Unknown']
+			valueOptions: () => {
+				const options = [];
+				animal_sex?.codes?.map(type => options.push(type.name));
+				return options;
+			}
 		}
 	];
 
@@ -141,9 +134,7 @@ const AnimalDetails = ({expansionEvent}) => {
 							)
 						}}
 					/>
-					<Box className="dataGridContainer">
-						<DataGrid rows={rows} columns={columns} disableSelectionOnClick hideFooter={true} />
-					</Box>
+					<DataGrid rows={rows} columns={columns} disableSelectionOnClick hideFooter={true} />
 				</Box>
 				<Box className="cardButtons">
 					<Button
@@ -199,6 +190,7 @@ const AnimalDetails = ({expansionEvent}) => {
 					acceptAction={() => {
 						setUpdateRegion(false);
 					}}
+					options={regions}
 				/>
 				<AnimalDetailsDialog
 					attr="sex"
@@ -210,6 +202,7 @@ const AnimalDetails = ({expansionEvent}) => {
 					acceptAction={() => {
 						setUpdateSex(false);
 					}}
+					options={animal_sex}
 				/>
 			</Expandable.Detail>
 		</Expandable>

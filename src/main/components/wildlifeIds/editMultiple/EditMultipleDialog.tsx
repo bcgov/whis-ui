@@ -1,92 +1,99 @@
 import React, {useState} from 'react';
-import {Dialog, DialogTitle, DialogContent, Typography, TextField, MenuItem, DialogActions, Box, Button} from '@mui/material';
+import {Dialog, DialogTitle, DialogContent, Typography, TextField, MenuItem, DialogActions, Box, Button, Grid} from '@mui/material';
 import useCodeTable from '../../../hooks/useCodeTable';
 import CancelDialog from '../../util/CancelDialog';
+import ContactSelection from '../../contact/ContactSelection';
+import {useSelector} from '../../../../state/utilities/use_selector';
 
 const EditMultipleDialog = ({open, close, acceptAction, noun, title}) => {
-	const {mappedCodes: status} = useCodeTable('status');
-	const {mappedCodes: purposes} = useCodeTable('purposes');
-	const {mappedCodes: organizations} = useCodeTable('organizations');
-	const {mappedCodes: roles} = useCodeTable('roles');
+	const {
+		purpose: purposes,
+	} = useSelector(state => state.CodeTables.tables);
+
+	const validStatuses = ['ASSIGNED', 'UNASSIGNED', 'RETIRED'];
 
 	const [cancelDialog, setCancelDialog] = useState(false);
+
+	const [formState, setFormState] = useState({
+		species: null,
+		region: '',
+		projectDetail: '',
+		purpose: '',
+		status: '',
+		requester: '',
+		project: '',
+		selectedDate: null
+	});
 
 	function renderForm() {
 		switch (noun) {
 			case 'status':
 				return (
-					<>
-						<TextField
-							className="changeStatus"
-							id="idStatus"
-							label="Change WLH Status *"
-							select
-							onChange={e => {
-								acceptAction(e.target.value);
-							}}
-						>
-							{status.map(m => (
-								<MenuItem key={m.value} value={m.value}>
-									{m.label}
-								</MenuItem>
-							))}
-						</TextField>
-						<TextField
-							className="oneColumn"
-							label="Reason (Enter a reason why you are changing the WLH ID status)"
-							id="reason"
-							name="reason"
-							multiline
-							rows={3}
-						/>
-					</>
+					<Grid item container rowGap={4} mt={2}>
+						<Grid item xs={6}>
+							<TextField
+								id="idStatus"
+								label="Change WLH Status *"
+								select
+								onChange={e => {
+									acceptAction(e.target.value);
+								}}
+							>
+								{validStatuses.map(m => (
+									<MenuItem key={m} value={m}>
+										{m}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField label="Reason (Enter a reason why you are changing the WLH ID status)" id="reason" name="reason" multiline rows={3} />
+						</Grid>
+					</Grid>
 				);
 				break;
 			case 'information':
 				return (
-					<>
-						<TextField className="twoColumns marginR" id="pri_purpose" label="Primary Purpose" required select>
-							{purposes.map(m => (
-								<MenuItem key={m.value} value={m.value}>
-									{m.label}
-								</MenuItem>
-							))}
-						</TextField>
-						<TextField className="twoColumns" id="sec_purpose" label="Secondary Purpose" required select>
-							{purposes.map(m => (
-								<MenuItem key={m.value} value={m.value}>
-									{m.label}
-								</MenuItem>
-							))}
-						</TextField>
-						<TextField className="oneColumn" label="Associated Project" id="associated_proj" />
-						<TextField className="oneColumn" label="Project Details" id="proj_details" multiline rows={3} />
-					</>
+					<Grid item container spacing={4} mt={1}>
+						<Grid item xs={6}>
+							<TextField id="pri_purpose" label="Primary Purpose" required select>
+								{purposes?.codes?.map(m => (
+									<MenuItem key={m.code} value={m.code}>
+										{m.name}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
+						<Grid item xs={6}>
+							<TextField id="sec_purpose" label="Secondary Purpose" required select>
+								{purposes?.codes?.map(m => (
+									<MenuItem key={m.code} value={m.code}>
+										{m.name}
+									</MenuItem>
+								))}
+							</TextField>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField label="Associated Project" id="associated_proj" />
+						</Grid>
+						<Grid item xs={12}>
+							<TextField label="Project Details" id="proj_details" multiline rows={3} />
+						</Grid>
+					</Grid>
 				);
 				break;
 			case 'requester':
 				return (
-					<>
-						<TextField className="twoColumns marginR" label="First Name" id="first_name" required />
-						<TextField className="twoColumns" label="Last Name" id="last_name" required />
-						<TextField className="oneColumn" label="Region" id="region" />
-						<TextField className="twoColumns marginR" id="organization" label="Organization" required select>
-							{organizations.map(m => (
-								<MenuItem key={m.value} value={m.value}>
-									{m.label}
-								</MenuItem>
-							))}
-						</TextField>
-						<TextField className="twoColumns" id="roles" label="Roles" required select>
-							{roles.map(m => (
-								<MenuItem key={m.value} value={m.value}>
-									{m.label}
-								</MenuItem>
-							))}
-						</TextField>
-						<TextField className="twoColumns marginR" label="Phone Number" id="phone_number" />
-						<TextField className="twoColumns" label="Email" id="email" />
-					</>
+					<Grid item xs={12} mt={2}>
+						<ContactSelection
+							handleSelect={id => {
+								setFormState({
+									...formState,
+									requester: id
+								});
+							}}
+						/>
+					</Grid>
 				);
 				break;
 
@@ -110,7 +117,7 @@ const EditMultipleDialog = ({open, close, acceptAction, noun, title}) => {
 					Please note that any changes will be applied to <ins>ALL selected IDs.</ins>
 				</Typography>
 				<Typography>Edit the selected WLH IDs using the link on the top of this page.</Typography>
-				{renderForm()}
+				<Grid container>{renderForm()}</Grid>
 			</DialogContent>
 			<DialogActions>
 				<Box className="cardButtons">
