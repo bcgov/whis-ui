@@ -154,14 +154,13 @@ const Generate: React.FC = () => {
 			<Paper className={'generation_paper'}>
 				<form onSubmit={handleSubmit(handleRequiredSubmit)}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<Grid container columns={{ xs: 4, md: 12 }}  spacing={4}>
+						<Grid container columns={{xs: 4, md: 12}} spacing={4}>
 							<Grid item xs={12} md={12}>
 								<Typography variant={'h3'}>{'WLH ID Information'}</Typography>
 							</Grid>
 							<Grid item xs={12} md={6}>
 								<FormGroup>
 									<TextField
-										className="generate_textfield"
 										id="wlh_id"
 										name="wlh_id"
 										label="Number of WLH IDs*"
@@ -218,7 +217,7 @@ const Generate: React.FC = () => {
 										components={{
 											OpenPickerIcon: ArrowDropDownIcon
 										}}
-										renderInput={params => <TextField {...params} className="generate_textfield" name="year" error={yearSelectError !== null} />}
+										renderInput={params => <TextField {...params} name="year" error={yearSelectError !== null} />}
 									/>
 									<ValidationError hidden={yearSelectError == null} message={yearSelectError} />
 								</FormGroup>
@@ -227,7 +226,6 @@ const Generate: React.FC = () => {
 							<Grid item xs={12} md={6}>
 								<FormGroup>
 									<TextField
-										className="generate_textfield"
 										id="purpose"
 										name="purpose"
 										label="Purpose*"
@@ -255,7 +253,6 @@ const Generate: React.FC = () => {
 							<Grid item xs={12} md={6}>
 								<FormGroup>
 									<TextField
-										className="generate_textfield"
 										id="status"
 										label="WLH ID Status*"
 										name="status"

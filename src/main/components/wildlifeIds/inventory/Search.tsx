@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useReducer, useRef, useState} from 'react';
 import _ from 'lodash';
 
-import {Box, Button, Card, TextField, Typography} from '@mui/material';
+import {Box, Button, Card, Grid, TextField, Typography} from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import {useNavigate} from 'react-router-dom';
 import HidableSearchForm from './AdvancedSearchFields';
@@ -142,77 +142,83 @@ const Search: React.FC = () => {
 			</Box>
 
 			<Card className="paperStyle">
-				<Box className="searchBar">
-					<TextField
-						label="Enter WLH ID Number , Date, Status, Event History and Associated Project Keywords"
-						className="eventKeywords"
-						required
-						value={searchRequest.keywords}
-						onChange={e => {
-							searchDispatch({type: 'fieldChange', payload: {field: `keywords`, value: e.target.value}});
-						}}
-						InputProps={{
-							endAdornment: (
-								<Button
-									className="searchButton"
-									sx={searchButtonPosition ? {display: 'none'} : {display: 'auto'}}
-									variant={'contained'}
-									onClick={() => {
-										dispatch({
-											type: SEARCH_EXECUTE,
-											payload: {
-												searchRequest: getSearchRequestFromSearchFormState(searchRequest)
-											}
-										});
-									}}
-								>
-									Search
-								</Button>
-							)
-						}}
-					/>
-					<Button
-						className="hideFilterButton"
-						onClick={() => {
-							setAdvancedSearchExpand(!advancedSearchExpand);
-							setSearchButtonPosition(!searchButtonPosition);
-						}}
-					>
-						{advancedSearchExpand ? (
-							<>
-								Hide Filters <FilterAltOutlinedIcon />
-							</>
-						) : (
-							<>
-								Show Filters <FilterAltOutlinedIcon />
-							</>
-						)}
-					</Button>
-				</Box>
-
-				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
-					<HidableSearchForm formState={searchRequest} dispatch={searchDispatch} />
-				</Box>
-				<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
-					Clear All
-				</Button>
-				<Button
-					className="searchButton"
-					sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
-					variant={'contained'}
-					onClick={() => {
-						dispatch({
-							type: SEARCH_EXECUTE,
-							payload: {
-								searchRequest: getSearchRequestFromSearchFormState(searchRequest)
-							}
-						});
-						setAdvancedSearchExpand(false);
-						setSearchButtonPosition(false);
-					}}
-				>
-					Search
-				</Button>
+				<Grid container spacing={4} className="grid_absolute">
+					<Grid container item xs={12} md={12} spacing={{lg: 2, xl: 3}} alignItems={'center'}>
+						<Grid item xs={12} md={10.8}>
+							<TextField
+								label="Enter WLH ID Number , Date, Status, Event History and Associated Project Keywords"
+								required
+								value={searchRequest.keywords}
+								onChange={e => {
+									searchDispatch({type: 'fieldChange', payload: {field: `keywords`, value: e.target.value}});
+								}}
+								InputProps={{
+									endAdornment: (
+										<Button
+											className="searchButton"
+											sx={searchButtonPosition ? {display: 'none'} : {display: 'auto'}}
+											variant={'contained'}
+											onClick={() => {
+												dispatch({
+													type: SEARCH_EXECUTE,
+													payload: {
+														searchRequest: getSearchRequestFromSearchFormState(searchRequest)
+													}
+												});
+											}}
+										>
+											Search
+										</Button>
+									)
+								}}
+							/>
+						</Grid>
+						<Grid item xs={12} md={1.2}>
+							<Button
+								className="hideFilterButton"
+								onClick={() => {
+									setAdvancedSearchExpand(!advancedSearchExpand);
+									setSearchButtonPosition(!searchButtonPosition);
+								}}
+							>
+								{advancedSearchExpand ? (
+									<>
+										Hide Filters <FilterAltOutlinedIcon />
+									</>
+								) : (
+									<>
+										Show Filters <FilterAltOutlinedIcon />
+									</>
+								)}
+							</Button>
+						</Grid>
+					</Grid>
+					<Grid container item spacing={4} ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
+						<HidableSearchForm formState={searchRequest} dispatch={searchDispatch} />
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
+							Clear All
+						</Button>
+						<Button
+							className="searchButton"
+							sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
+							variant={'contained'}
+							onClick={() => {
+								dispatch({
+									type: SEARCH_EXECUTE,
+									payload: {
+										searchRequest: getSearchRequestFromSearchFormState(searchRequest)
+									}
+								});
+								setAdvancedSearchExpand(false);
+								setSearchButtonPosition(false);
+							}}
+						>
+							Search
+						</Button>
+					</Grid>
+				</Grid>
 			</Card>
 
 			<SearchResults />

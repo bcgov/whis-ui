@@ -220,8 +220,8 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr, options}) 
 					{defaultRadio === 'all' && renderDetails()}
 					<FormControl>
 						<RadioGroup value={defaultRadio} onChange={handleChange}>
-							<FormControlLabel value="all" control={<Radio checked={defaultRadio === 'all'} />} label="Apply to all of selected IDs" />
-							<FormControlLabel value="individual" control={<Radio checked={defaultRadio === 'individual'} />} label="Apply individually" />
+							<FormControlLabel value="all" control={<Radio />} label="Apply to all of selected IDs" />
+							<FormControlLabel value="individual" control={<Radio />} label="Apply individually" />
 						</RadioGroup>
 					</FormControl>
 					{defaultRadio === 'individual' && renderTable()}

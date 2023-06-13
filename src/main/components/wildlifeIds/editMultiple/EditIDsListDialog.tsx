@@ -1,13 +1,10 @@
 import React, {useState} from 'react';
 import {Dialog, DialogTitle, DialogContent, Typography, TextField, MenuItem, DialogActions, Box, Button} from '@mui/material';
-import useCodeTable from '../../../hooks/useCodeTable';
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
-import { CheckBox } from '@mui/icons-material';
 
 const EditIDsListDialog = ({open, close}) => {
 
 	const [multipleStatus, setMultipleStatus] = useState('');
-	const [multipleReason, setMultipleReason] = useState('');
 
 	const columns: GridColDef[] = [
 		{field: 'id', headerName: 'ID', width: 150},

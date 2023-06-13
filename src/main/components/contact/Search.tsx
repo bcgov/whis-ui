@@ -1,15 +1,12 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
-import '../../styles/search.scss'
-import {Box, Button, Card, TextField, Typography} from '@mui/material';
+import {Box, Button, Card, Grid, TextField, Typography} from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import HidableSearchForm from './AdvancedSearchFields';
 import SearchResults from './SearchResults';
 import NewContactDialog from './NewContactDialog';
 import {Add} from '@mui/icons-material';
 
-
 const Search: React.FC = () => {
-
 	const [addContactDialog, setAddContactDialog] = useState(false);
 	const [advancedSearchExpand, setAdvancedSearchExpand] = useState(false);
 	const [searchButtonPosition, setSearchButtonPosition] = useState(false);
@@ -47,7 +44,7 @@ const Search: React.FC = () => {
 				<NewContactDialog
 					open={addContactDialog}
 					title={'Add New Contact'}
-					updateAction={(contact) => {
+					updateAction={contact => {
 						console.dir(contact);
 						setAddContactDialog(false);
 					}}
@@ -61,59 +58,61 @@ const Search: React.FC = () => {
 			</Box>
 
 			<Card className="paperStyle">
-				<Box className="searchBar">
-					<TextField
-						label="Enter First Name or Last Name of a Contact or any Other Keywords"
-						className="eventKeywords"
-						required
-						InputProps={{
-							endAdornment: (
-								<Button
-									className="searchButton"
-									sx={searchButtonPosition ? {display: 'none'} : {display: 'auto'}}
-									variant={'contained'}
-								>
-									Search
-								</Button>
-							)
-						}}
-					/>
-					<Button
-						className="hideFilterButton"
-						onClick={() => {
-							setAdvancedSearchExpand(!advancedSearchExpand);
-							setSearchButtonPosition(!searchButtonPosition);
-						}}
-					>
-						{advancedSearchExpand ? (
-							<>
-								Hide Filters <FilterAltOutlinedIcon />
-							</>
-						) : (
-							<>
-								Show Filters <FilterAltOutlinedIcon />
-							</>
-						)}
-					</Button>
-				</Box>
-
-				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
-					<HidableSearchForm />
-				</Box>
-				<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
-					Clear
-				</Button>
-				<Button
-					className="searchButton"
-					sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
-					variant={'contained'}
-					onClick={() => {
-						setAdvancedSearchExpand(false);
-						setSearchButtonPosition(false);
-					}}
-				>
-					Search
-				</Button>
+				<Grid container spacing={4} className="grid_absolute">
+					<Grid container item xs={12} md={12} spacing={{lg: 2, xl: 3}} alignItems={'center'}>
+						<Grid item xs={12} md={10.8}>
+							<TextField
+								label="Enter First Name or Last Name of a Contact or any Other Keywords"
+								required
+								InputProps={{
+									endAdornment: (
+										<Button className="searchButton" sx={searchButtonPosition ? {display: 'none'} : {display: 'auto'}} variant={'contained'}>
+											Search
+										</Button>
+									)
+								}}
+							/>
+						</Grid>
+						<Grid item xs={12} md={1.2}>
+							<Button
+								className="hideFilterButton"
+								onClick={() => {
+									setAdvancedSearchExpand(!advancedSearchExpand);
+									setSearchButtonPosition(!searchButtonPosition);
+								}}
+							>
+								{advancedSearchExpand ? (
+									<>
+										Hide Filters <FilterAltOutlinedIcon />
+									</>
+								) : (
+									<>
+										Show Filters <FilterAltOutlinedIcon />
+									</>
+								)}
+							</Button>
+						</Grid>
+					</Grid>
+					<Grid container item spacing={4} ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
+						<HidableSearchForm />
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
+							Clear
+						</Button>
+						<Button
+							className="searchButton"
+							sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
+							variant={'contained'}
+							onClick={() => {
+								setAdvancedSearchExpand(false);
+								setSearchButtonPosition(false);
+							}}
+						>
+							Search
+						</Button>
+					</Grid>
+				</Grid>
 			</Card>
 
 			<SearchResults />

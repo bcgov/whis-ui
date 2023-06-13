@@ -1,13 +1,9 @@
-import {TextField, MenuItem} from '@mui/material';
+import {TextField, MenuItem, Grid} from '@mui/material';
 import React from 'react';
 import {useSelector} from '../../../state/utilities/use_selector';
 
 const AdvancedSearchFields = () => {
-	const {
-		region: regions,
-		organization: organizations,
-		organizational_role: roles
-	} = useSelector(state => state.CodeTables.tables);
+	const {region: regions, organization: organizations, organizational_role: roles} = useSelector(state => state.CodeTables.tables);
 
 	const validFirstNation = [
 		{value: 'FIRST_NATION_1', label: 'First Nation 1'},
@@ -19,43 +15,57 @@ const AdvancedSearchFields = () => {
 
 	return (
 		<>
-			<TextField label="First Name" id="firstName" className="leftColumn" required />
-
-			<TextField label="Last Name" id="lastName" required className="rightColumn" />
-			<TextField select className="leftColumn" id="role" label="Role">
-				{roles?.codes?.map(m => (
-					<MenuItem key={m.code} value={m.code}>
-						{m.name}
-					</MenuItem>
-				))}
-			</TextField>
-			<TextField className="rightColumn" select id="firstNation" label="First Nation">
-				{validFirstNation.map((m, i) => (
-					<MenuItem key={i} value={m.value}>
-						{m.label}
-					</MenuItem>
-				))}
-			</TextField>
-			<TextField select className="leftColumn" id="region" label="Region">
-				{regions?.codes?.map(m => (
-					<MenuItem key={m.code} value={m.code}>
-						{m.name}
-					</MenuItem>
-				))}
-			</TextField>
-			<TextField select className="rightColumn" id="organization" label="Organization">
-				{organizations?.codes?.map(m => (
-					<MenuItem key={m.code} value={m.code}>
-						{m.name}
-					</MenuItem>
-				))}
-			</TextField>
-
-			<TextField className="leftColumn" id="email" label="Email" required />
-
-			<TextField className="rightColumn" id="phone" label="Phone" />
-
-			<TextField sx={{width: '100%', marginBlock: '32px'}} label="Description" multiline rows={3} />
+			<Grid item xs={12} md={6}>
+				<TextField label="First Name" id="firstName" required />
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField label="Last Name" id="lastName" required />
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField select id="role" label="Role">
+					{roles?.codes?.map(m => (
+						<MenuItem key={m.code} value={m.code}>
+							{m.name}
+						</MenuItem>
+					))}
+				</TextField>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField select id="firstNation" label="First Nation">
+					{validFirstNation.map((m, i) => (
+						<MenuItem key={i} value={m.value}>
+							{m.label}
+						</MenuItem>
+					))}
+				</TextField>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField select id="region" label="Region">
+					{regions?.codes?.map(m => (
+						<MenuItem key={m.code} value={m.code}>
+							{m.name}
+						</MenuItem>
+					))}
+				</TextField>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField select id="organization" label="Organization">
+					{organizations?.codes?.map(m => (
+						<MenuItem key={m.code} value={m.code}>
+							{m.name}
+						</MenuItem>
+					))}
+				</TextField>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField id="email" label="Email" required />
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<TextField id="phone" label="Phone" />
+			</Grid>
+			<Grid item xs={12} md={12}>
+				<TextField label="Description" multiline rows={3} />
+			</Grid>
 		</>
 	);
 };

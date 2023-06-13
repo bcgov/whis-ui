@@ -30,7 +30,7 @@ const EditMultipleDialog = ({open, close, acceptAction, noun, title}) => {
 			case 'status':
 				return (
 					<Grid item container rowGap={4} mt={2}>
-						<Grid item xs={6}>
+						<Grid item xs={12} md={6}>
 							<TextField
 								id="idStatus"
 								label="Change WLH Status *"
@@ -55,7 +55,7 @@ const EditMultipleDialog = ({open, close, acceptAction, noun, title}) => {
 			case 'information':
 				return (
 					<Grid item container spacing={4} mt={1}>
-						<Grid item xs={6}>
+						<Grid item xs={12} md={6}>
 							<TextField id="pri_purpose" label="Primary Purpose" required select>
 								{purposes?.codes?.map(m => (
 									<MenuItem key={m.code} value={m.code}>
@@ -64,7 +64,7 @@ const EditMultipleDialog = ({open, close, acceptAction, noun, title}) => {
 								))}
 							</TextField>
 						</Grid>
-						<Grid item xs={6}>
+						<Grid item xs={12} md={6}>
 							<TextField id="sec_purpose" label="Secondary Purpose" required select>
 								{purposes?.codes?.map(m => (
 									<MenuItem key={m.code} value={m.code}>

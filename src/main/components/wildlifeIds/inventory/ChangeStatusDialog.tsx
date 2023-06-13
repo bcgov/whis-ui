@@ -12,7 +12,8 @@ import {
 	FormControlLabel,
 	FormGroup,
 	Switch,
-	Autocomplete
+	Autocomplete,
+	Grid
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, {useState} from 'react';
@@ -107,7 +108,6 @@ const ChangeStatusDialog = ({open, updateAction, cancelAction, state, newStatus}
 			case 'UNASSIGNED':
 				return (
 					<TextField
-						className="reason"
 						label="Reason"
 						multiline
 						required
@@ -186,7 +186,6 @@ const ChangeStatusDialog = ({open, updateAction, cancelAction, state, newStatus}
 								setReturnedDialogOpen(false);
 								setIsReturned(true);
 							}}
-							icon={'NotificationImportantIcon'}
 							title={'Update Confirmation'}
 							content={`Do you want to switch the Sample Kits Returned to Yes?`}
 						/>
@@ -233,34 +232,43 @@ const ChangeStatusDialog = ({open, updateAction, cancelAction, state, newStatus}
 			</IconButton>
 			<DialogTitle>Change WLH ID Status - WLH {state.wlh_id}</DialogTitle>
 			<DialogContent className="cardBody">
-				<TextField className="changeStatus" label="Current Status" defaultValue={state.status} disabled />
-				<TextField
-					className="changeStatus"
-					label="Change to"
-					defaultValue={newStatus}
-					select
-					// onChange={e => {
-					// 	dispatch({
-					// 		type: 'status.statusChange',
-					// 		payload: e.target.value
-					// 	});
-					// }}
-				>
-					{statuses.map(m => (
-						<MenuItem key={m.value} value={m.value}>
-							{m.label}
-						</MenuItem>
-					))}
-				</TextField>
-				{renderStatusDetails(newStatus)}
-				<Box className="updateBtn">
-					<Button variant={'contained'} onClick={onUpdate} className="requesterFormBtn">
-						Update
-					</Button>
-					<Button variant={'outlined'} onClick={onClose} className="requesterFormBtn">
-						Cancel
-					</Button>
-				</Box>
+				<Grid container spacing={4}>
+					<Grid item xs={12} md={6}>
+						<TextField label="Current Status" defaultValue={state.status} disabled />
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							label="Change to"
+							defaultValue={newStatus}
+							select
+							// onChange={e => {
+							// 	dispatch({
+							// 		type: 'status.statusChange',
+							// 		payload: e.target.value
+							// 	});
+							// }}
+						>
+							{statuses.map(m => (
+								<MenuItem key={m.value} value={m.value}>
+									{m.label}
+								</MenuItem>
+							))}
+						</TextField>
+					</Grid>
+					<Grid item xs={12} md={12}>
+						{renderStatusDetails(newStatus)}
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<Box className="updateBtn">
+							<Button variant={'contained'} onClick={onUpdate} >
+								Update
+							</Button>
+							<Button variant={'outlined'} onClick={onClose}>
+								Cancel
+							</Button>
+						</Box>
+					</Grid>
+				</Grid>
 			</DialogContent>
 		</Dialog>
 	);

@@ -1,4 +1,4 @@
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, MenuItem, TextField} from '@mui/material';
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, MenuItem, Stack, TextField} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, {useEffect, useState} from 'react';
 import useCodeTable from '../../../hooks/useCodeTable';
@@ -72,96 +72,107 @@ const PersonnelDialog = ({open, acceptAction, cancelAction, initialState, noun =
 			</IconButton>
 			<DialogTitle>{noun}</DialogTitle>
 			<DialogContent>
-				<TextField
-					className="requesterFormInput"
-					label="First Name"
-					inputProps={{maxLength: 30}}
-					value={person.firstName}
-					onChange={e => {
-						setPerson({...person, firstName: e.target.value});
-					}}
-					required
-				/>
-				<TextField
-					className="requesterFormInput"
-					label="Last Name"
-					inputProps={{maxLength: 30}}
-					value={person.lastName}
-					onChange={e => {
-						setPerson({...person, lastName: e.target.value});
-					}}
-					required
-				/>
-				<TextField
-					className='region'
-					select
-					label="Region"
-					value={person.region}
-					onChange={e => {
-						setPerson({...person, region: e.target.value});
-					}}
-				>
-					{regions.map((m, i) => (
-						<MenuItem key={i} value={m.value}>
-							{m.label}
-						</MenuItem>
-					))}
-				</TextField>
-				<TextField
-					className="requesterFormInput"
-					select
-					label="Organization"
-					value={person.organization}
-					onChange={e => {
-						setPerson({...person, organization: e.target.value});
-					}}
-				>
-					{organizations.map((m, i) => (
-						<MenuItem key={i} value={m.value}>
-							{m.label}
-						</MenuItem>
-					))}
-				</TextField>
-				<TextField
-					className="requesterFormInput"
-					select
-					label="Role"
-					value={person.role}
-					onChange={e => {
-						setPerson({...person, role: e.target.value});
-					}}
-				>
-					{roles.map((m, i) => (
-						<MenuItem key={i} value={m.value}>
-							{m.label}
-						</MenuItem>
-					))}
-				</TextField>
-				<TextField
-					className="requesterFormInput"
-					label="Phone Number"
-					value={person.phoneNumber}
-					onChange={e => {
-						setPerson({...person, phoneNumber: e.target.value});
-					}}
-				/>
-				<TextField
-					className="requesterFormInput"
-					label="Email"
-					value={person.email}
-					onChange={e => {
-						setPerson({...person, email: e.target.value});
-					}}
-				/>
+				<Grid container spacing={4}>
+					<Grid item xs={12} md={6}>
+						<TextField
+							label="First Name"
+							inputProps={{maxLength: 30}}
+							value={person.firstName}
+							onChange={e => {
+								setPerson({...person, firstName: e.target.value});
+							}}
+							required
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							label="Last Name"
+							inputProps={{maxLength: 30}}
+							value={person.lastName}
+							onChange={e => {
+								setPerson({...person, lastName: e.target.value});
+							}}
+							required
+						/>
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<TextField
+							select
+							label="Region"
+							value={person.region}
+							onChange={e => {
+								setPerson({...person, region: e.target.value});
+							}}
+						>
+							{regions.map((m, i) => (
+								<MenuItem key={i} value={m.value}>
+									{m.label}
+								</MenuItem>
+							))}
+						</TextField>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							select
+							label="Organization"
+							value={person.organization}
+							onChange={e => {
+								setPerson({...person, organization: e.target.value});
+							}}
+						>
+							{organizations.map((m, i) => (
+								<MenuItem key={i} value={m.value}>
+									{m.label}
+								</MenuItem>
+							))}
+						</TextField>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							select
+							label="Role"
+							value={person.role}
+							onChange={e => {
+								setPerson({...person, role: e.target.value});
+							}}
+						>
+							{roles.map((m, i) => (
+								<MenuItem key={i} value={m.value}>
+									{m.label}
+								</MenuItem>
+							))}
+						</TextField>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							label="Phone Number"
+							value={person.phoneNumber}
+							onChange={e => {
+								setPerson({...person, phoneNumber: e.target.value});
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<TextField
+							label="Email"
+							value={person.email}
+							onChange={e => {
+								setPerson({...person, email: e.target.value});
+							}}
+						/>
+					</Grid>
+					<Grid item xs={12} md={12}>
+						<Box sx={{float:'right'}}>
+							<Button variant={'contained'} onClick={onAccept} className="requesterFormBtn">
+								Save
+							</Button>
+							<Button variant={'outlined'} onClick={onClose} className="requesterFormBtn">
+								Cancel
+							</Button>
+						</Box>
+					</Grid>
+				</Grid>
 			</DialogContent>
-			<DialogActions>
-				<Button variant={'contained'} onClick={onAccept} className="requesterFormBtn">
-					Save
-				</Button>
-				<Button variant={'outlined'} onClick={onClose} className="requesterFormBtn">
-					Cancel
-				</Button>
-			</DialogActions>
 		</Dialog>
 	);
 };

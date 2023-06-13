@@ -1,6 +1,8 @@
 @import "colours";
 
 .container {
+    width: 100%;
+    
 
     .pageHead {
         display: flex;
@@ -25,32 +27,22 @@
     }
 
     .paperStyle {
-        width: 1360px;
+        max-width: 100%;
         padding: 32px 24px;
-        position: absolute;
+        position: relative;
 
-        z-index: 1000;
-        overflow: auto;
 
-        .searchBar {
-            display: flex;
-            align-items: center;
+        .MuiTextField-root {
+            width: 100%;
         }
 
-        .leftColumn {
-            width: 640px;
-            margin: 32px 32px 0 0;
-        }
+        // .grid_absolute {
+        //     position: absolute;
+        //     z-index: 1000;
+        //     overflow: auto;
+        // }
 
-        .rightColumn {
-            width: 640px;
-            margin-top: 32px;
-        }
-
-        .species {
-            width: 1312px;
-            margin-top: 32px;
-        }
+      
 
         .cardButtons {
             display: flex;
@@ -75,12 +67,8 @@
         .eventRadios {
             width: 100%;
             color: #c0c0c0;
-            margin-top: 32px;
         }
 
-        .eventKeywords {
-            width: 1180px;
-        }
 
         .hideFilterButton:hover {
             color: $BCgovBlue;
@@ -91,7 +79,6 @@
             height: 42px;
             text-transform: capitalize;
             font-size: 14px;
-            margin-left: 7px;
             color: #adb5bd;
         }
 
@@ -105,6 +92,7 @@
             font-family: 'BCSans-Bold';
             float: right;
             text-transform: capitalize;
+            z-index: 1200;
         }
 
         .filterForm {
@@ -120,12 +108,11 @@
     }
 
     .filter_result {
-        width: 1360px;
-        margin-top: 135px;
+        width: 100%;
+        margin-top: 32px;
         padding: 32px;
 
         .results_table {
-            // margin: 12px 32px;
 
             .MuiTypography-root {
                 color: $text;
@@ -139,7 +126,6 @@
             }
 
             .MuiDataGrid-columnHeaders {
-                // background-color: #ececec;
                 background-color: #f8f9fa;
             }
 
@@ -271,9 +257,14 @@
 }
 
 .addEventDialog,
+.addContactDialog,
 .changeStatusDialog {
     .MuiDialog-paper {
         width: 1120px;
+
+        .MuiTextField-root {
+            width: 100%;
+        }
 
         .dialogBtn {
             position: absolute;
@@ -405,13 +396,12 @@
 
 
             .reason {
-                width: 1040px;
-                height: 104px;
+                width: 100%;
                 margin-top: 32px;
             }
 
             .updateBtn {
-                margin: 64px 0 0 773px;
+                float: right;
 
                 button {
                     width: 130px;
@@ -445,14 +435,13 @@
 
                 .switchLabels,
                 .eventRadios {
-                    margin-top: 32px;
                     color: #666666;
                 }
             }
         }
 
         .cardDetails {
-            width: 1035px;
+            width: 100%;
             margin: 10px auto 0 auto;
 
 
@@ -566,7 +555,6 @@
             .addLocation {
                 width: 175px;
                 height: 32px;
-                margin-top: 24px;
                 font-size: 14px;
                 text-transform: capitalize;
             }
@@ -722,12 +710,11 @@
         }
 
         .MuiDialogContent-root {
-            padding: 0px 44px;
+            padding: 32px 44px;
         }
 
         .dialogActions {
             float: right;
-            padding: 66px 0 30px 0;
 
             .dialogButtons {
                 width: 131px;

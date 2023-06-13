@@ -290,7 +290,7 @@
 .personnelDialog {
     .MuiDialog-paper {
         width: 975px;
-        height: 508px;
+        padding: 32px;
 
         .dialogBtn {
             position: absolute;
@@ -301,33 +301,20 @@
         .MuiTypography-root {
             font-size: 18px;
             font-family: 'BCSans-Bold';
-            padding: 59px 0 12px 31px;
+            padding-bottom: 32px;
         }
 
         .MuiDialogContent-root {
-            display: block;
-            padding: 0 15px;
 
-            .requesterFormInput {
-                width: 440px;
-                margin: 12px 16px;
+            .MuiTextField-root {
+                width: 100%;
             }
-
-            .region {
-                width: 912px;
-                margin: 12px 16px;
-            }
-
-        }
-
-        .MuiDialogActions-root {
-            padding: 29px 32px 32px 0;
 
             .requesterFormBtn {
                 width: 106px;
                 height: 34px;
                 font-size: 14px;
-                text-transform: capitalize;
+                font-family: 'BCSans-Bold';
             }
 
             .MuiButton-root:nth-child(2) {
@@ -443,7 +430,7 @@
 .multiple_card {
     margin: 0 auto;
     margin-top: 9px;
-    width: 1296px;
+    width: 100%;
     height: 152px;
     display: flex;
     align-items: center;
@@ -452,6 +439,8 @@
     position: relative;
     z-index: 5 !important;
     border-left: 8px solid #1a5a96;
+    justify-content: space-between; //test 0613
+    text-align: left;
 
 
     .idInformationCard {
@@ -484,10 +473,8 @@
         color: $body2;
     }
 
-    span:nth-child(1) {
-        width: 200px;
-        margin-right: 105px;
-        flex-shrink: 0;
+    span {
+        width: 150px;
     }
 
     .cardSubtitle {
@@ -502,28 +489,10 @@
     }
 
     .info {
+        width: 100%;
         display: flex;
         align-items: center;
-
-        span {
-            width: 166px;
-        }
-
-        span:nth-child(1) {
-            margin-right: 82px;
-        }
-
-        span:nth-child(2) {
-            margin-right: 125px;
-        }
-
-        span:nth-child(3) {
-            margin-right: 137px;
-        }
-
-        span:nth-child(4) {
-            width: 197px;
-        }
+        justify-content: space-evenly;
     }
 
     .expand_icon {
@@ -538,10 +507,8 @@
 
 .card {
     margin: 0 auto;
-    // margin-top: 9px;
     margin-top: 12px;
     width: 1296px;
-    // height: 152px;
     height: 120px;
     display: flex;
     align-items: center;
@@ -557,7 +524,6 @@
 
         .info {
             span:nth-child(1) {
-                // margin-right: 82px;
 
                 .MuiTypography-root:nth-child(2) {
                     color: #ffffff;
@@ -581,12 +547,6 @@
         color: $body2;
     }
 
-    // span:nth-child(1) {
-    //     width: 200px;
-    //     margin-right: 105px;
-    //     flex-shrink: 0;
-    // }
-
     .cardSubtitle {
         width: 128px;
 
@@ -609,22 +569,6 @@
         span {
             width: 166px;
         }
-
-        // span:nth-child(1) {
-        //     margin-right: 82px;
-        // }
-
-        // span:nth-child(2) {
-        //     margin-right: 125px;
-        // }
-
-        // span:nth-child(3) {
-        //     margin-right: 137px;
-        // }
-
-        // span:nth-child(4) {
-        //     width: 197px;
-        // }
     }
 
     .expand_icon {
@@ -637,7 +581,7 @@
 
 .expand_paper {
     margin: 0 auto;
-    width: 1296px;
+    width: 100%;
     display: flex;
     flex-direction: column;
 
@@ -647,7 +591,7 @@
     }
 
     .cardDetails {
-        width: 1091px;
+        width: 79%;
         margin: 10px auto 30px auto;
 
         //for pri and sec purpose
@@ -676,7 +620,6 @@
         .retiredSection {
             display: flex;
             flex-direction: row;
-            // justify-content: space-between;
             align-items: flex-end;
         }
 
@@ -939,7 +882,6 @@
     .cardButtons {
         display: flex;
         justify-content: flex-end;
-        margin: 40px 94px 48px 0;
 
         .update_btn {
             width: 132px;
@@ -1195,11 +1137,6 @@
         }
     }
 
-    // .changeStatus {
-    //     width: 529px;
-    //     margin-block: 24px;
-    // }
-
     .MuiDialogActions-root {
         padding: 0;
         margin-top: 35px;
@@ -1222,7 +1159,6 @@
 .updateRegionDialog {
     .MuiDialog-paper {
         width: 728px;
-        // padding: 40px 45px 78px;
     }
 
     .MuiDialogTitle-root {
@@ -1240,7 +1176,7 @@
         }
 
         .region {
-            width: 680px;
+            width: 100%;
             margin-bottom: 24px;
         }
 
@@ -1287,7 +1223,6 @@
 .selectMultipleIDsDialog {
     .MuiDialog-paper {
         width: 580px;
-        // padding: 40px 45px 78px;
     }
 
 

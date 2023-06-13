@@ -9,8 +9,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import BusinessIcon from '@mui/icons-material/Business';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SpeedIcon from '@mui/icons-material/Speed';
@@ -27,13 +25,15 @@ import {
 	DialogTitle,
 	Divider,
 	FormControlLabel,
+	Grid,
 	IconButton,
-	InputAdornment,
 	MenuItem,
 	Stack,
 	Switch,
 	TextField,
-	Typography
+	Typography,
+	useMediaQuery,
+	useTheme
 } from '@mui/material';
 import {LocalizationProvider, MobileDatePicker, MobileTimePicker} from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
@@ -42,8 +42,8 @@ const ActionManagement: React.FC = () => {
 	const me = useSelector(state => state.Auth);
 	const navigate = useNavigate();
 
-	// const [date, setDate] = useState(null);
-	// const [time, setTime] = useState(null);
+	// const theme = useTheme();
+	// const isMedium = useMediaQuery(theme.breakpoints.down('md'));
 
 	const receivers = [
 		{label: 'Shari', value: 'Shari'},
@@ -78,118 +78,137 @@ const ActionManagement: React.FC = () => {
 		setOpen(false);
 	};
 
-	
 	return (
-		<Box>
-			<Stack direction="row" spacing={1}>
-				<Card className="actionManagement_profile" id="actionManagement_profile">
-					<IconButton className="settingIcon">
-						<SettingsIcon />
-					</IconButton>
-					<CardHeader title={'Profile'} className="profileTitle" />
+		<>
+			<Grid container spacing={2} >
+				<Grid item xs={12} md={3}>
+					<Card className="actionManagement_profile">
+						<IconButton className="settingIcon">
+							<SettingsIcon />
+						</IconButton>
+						<CardHeader title={'Profile'} className="profileTitle" />
 
-					<CardContent className={'profile_card'}>
-						<AccountCircleIcon className="userIcon" />
-						<Box className={'userInfo'}>
-							<PersonIcon />
-							<Typography className="name">{me.bestName}</Typography>
+						<CardContent className={'profile_card'}>
+							<AccountCircleIcon className="userIcon" />
+							<Box className={'userInfo'}>
+								<PersonIcon />
+								<Typography className="name">{me.bestName}</Typography>
 
-							<Typography className="role">{me.roles.join(', ')}</Typography>
+								<Typography className="role">{me.roles.join(', ')}</Typography>
 
-							<LocalPhoneIcon className="phoneIcon" />
-							<Typography className="infoText">phone_placeholder</Typography>
+								<LocalPhoneIcon className="phoneIcon" />
+								<Typography className="infoText">phone_placeholder</Typography>
 
-							<EmailIcon className="emailIcon" />
-							<Typography className="infoText">{me.email}</Typography>
+								<EmailIcon className="emailIcon" />
+								<Typography className="infoText">{me.email}</Typography>
 
-							<BusinessIcon className="businessIcon" />
-							<Typography className="infoText">org_placeholder</Typography>
-						</Box>
+								<BusinessIcon className="businessIcon" />
+								<Typography className="infoText">org_placeholder</Typography>
+							</Box>
 
-						<Box className={'quick_access'}>
-							<Divider variant="middle" className="divider1" />
-							<Divider variant="middle" className="divider2" />
-							<Typography className="quickAccessText">Quick Access</Typography>
-							<Box className={'actions'}>
-								<Box className="generateBtn">
-									<IconButton onClick={() => navigate('/wildlifeIds/generate')}>
-										<AddCircleOutlineIcon />
-									</IconButton>
-									<p>Generate IDs</p>
-								</Box>
-								<Box className="searchBtn">
-									<IconButton onClick={() => navigate('/wildlifeIds/inventory')}>
-										<ManageSearchIcon />
-									</IconButton>
-									<p>Inventory</p>
-								</Box>
-								<Box className="actionBtn">
-									<IconButton onClick={() => navigate('/wildlifeIds')}>
-										<SpeedIcon />
-									</IconButton>
-									<p>Dashboard</p>
+							<Box className={'quick_access'}>
+								<Divider variant="middle" className="divider1" />
+								<Divider variant="middle" className="divider2" />
+								<Typography className="quickAccessText">Quick Access</Typography>
+								<Box className={'actions'}>
+									<Grid container spacing={1}>
+										<Grid item xs={4}>
+											<IconButton className="generateBtn" onClick={() => navigate('/wildlifeIds/generate')}>
+												<AddCircleOutlineIcon />
+											</IconButton>
+											<p>Generate IDs</p>
+										</Grid>
+										<Grid item xs={4}>
+											<IconButton className="searchBtn" onClick={() => navigate('/wildlifeIds/inventory')}>
+												<ManageSearchIcon />
+											</IconButton>
+											<p>Inventory</p>
+										</Grid>
+										<Grid item xs={4}>
+											<IconButton className="actionBtn" onClick={() => navigate('/wildlifeIds')}>
+												<SpeedIcon />
+											</IconButton>
+											<p>Dashboard</p>
+										</Grid>
+									</Grid>
 								</Box>
 							</Box>
-						</Box>
-					</CardContent>
-				</Card>
+						</CardContent>
+					</Card>
+				</Grid>
+				<Grid item container xs={12} md={9}>
+					<Card className="actionManagement_welcome">
+						<CardHeader title={'Action & Notification Management'} subheader={'You may set some actions that you need reminders for them'} />
+						<CardContent>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<Grid item container spacing={4}>
+									<Grid item xs={12}>
+										<TextField
+											className="action_inputs"
+											label="Action Title"
+											id="actionTitle"
+											name="actionTitle"
+											error={requiredTitle}
+											onBlur={e => {
+												handleOnblur(e);
+											}}
+											required
+										/>
+									</Grid>
+									<Grid item xs={6}>
+										<TextField
+											label="Date"
+											type="date"
+											className="action_inputs date"
+											InputLabelProps={{
+												shrink: true
+											}}
+										/>
+									</Grid>
+									<Grid item xs={6}>
+										<TextField
+											label="Time"
+											type="time"
+											className="action_inputs"
+											InputLabelProps={{
+												shrink: true
+											}}
+										/>
+									</Grid>
+									<Grid item xs={12}>
+										<TextField className="action_inputs" select label="Receiver" placeholder="Receiver" required>
+											{receivers.map((m, i) => (
+												<MenuItem key={i} value={m.value}>
+													{m.label}
+												</MenuItem>
+											))}
+										</TextField>
+									</Grid>
+									<Grid item xs={12}>
+										<TextField className="action_inputs" label="Note (Optional)" multiline rows={3} />
+									</Grid>
+									<Grid item container direction={'row'} alignItems={'center'} xs={10} className='Notification'>
+										<Grid item xs>
+											<Typography>Notification Method (s)</Typography>
+										</Grid>
+										<Grid item xs>
+											<FormControlLabel control={<Switch onChange={toggleChecked1} />} label="Dashboard" />
+										</Grid>
+										<Grid item xs>
+											<FormControlLabel control={<Switch onChange={toggleChecked2} />} label="Email" />
+										</Grid>
+									</Grid>
+								</Grid>
 
-				<Card className="actionManagement_welcome" id="actionManagement_welcome">
-					<CardHeader title={'Action & Notification Management'} subheader={'You may set some actions that you need reminders for them'} />
-					<CardContent>
-						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							<Stack spacing={3}>
-								<TextField
-									className="action_inputs"
-									label="Action Title"
-									id="actionTitle"
-									name="actionTitle"
-									error={requiredTitle}
-									onBlur={e => {
-										handleOnblur(e);
-									}}
-									required
-								/>
-								<Box>
-									<TextField
-										label="Date"
-										type="date"
-										className="action_inputs date"
-										InputLabelProps={{
-											shrink: true
-										}}
-									/>
-									<TextField
-										label="Time"
-										type="time"
-										className="action_inputs"
-										InputLabelProps={{
-											shrink: true
-										}}
-									/>
-									
-								</Box>
-								<TextField className="action_inputs" select label="Receiver" placeholder="Receiver" required>
-									{receivers.map((m, i) => (
-										<MenuItem key={i} value={m.value}>
-											{m.label}
-										</MenuItem>
-									))}
-								</TextField>
-								<TextField className="note" label="Note (Optional)" multiline rows={3} />
-								<Box className="Notification">
-									<Typography>Notification Method (s)</Typography>
-									<FormControlLabel control={<Switch onChange={toggleChecked1} />} label="Dashboard" />
-									<FormControlLabel control={<Switch onChange={toggleChecked2} />} label="Email" />
-								</Box>
-							</Stack>
-							<Button variant="contained" className="reminderBtn" onClick={handleClickOpen}>
-								Set Reminder
-							</Button>
-						</LocalizationProvider>
-					</CardContent>
-				</Card>
-			</Stack>
+								<Button variant="contained" className="reminderBtn" onClick={handleClickOpen}>
+									Set Reminder
+								</Button>
+							</LocalizationProvider>
+						</CardContent>
+					</Card>
+				</Grid>
+			</Grid>
+
 			<Dialog className="set_reminder_dialog" open={open} onClose={handleClose}>
 				<Box className="icon_container">
 					<CheckIcon className="CheckIcon" />
@@ -203,7 +222,7 @@ const ActionManagement: React.FC = () => {
 					</Button>
 				</DialogActions>
 			</Dialog>
-		</Box>
+		</>
 	);
 };
 
