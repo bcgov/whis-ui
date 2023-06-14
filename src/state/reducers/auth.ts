@@ -63,7 +63,7 @@ function loadCurrentStateFromKeycloak(previousState: AuthState, config: AppConfi
 	}
 
 	const headers = {
-		authorization: `Bearer ${keycloakInstance.idToken}`
+		authorization: `Bearer ${keycloakInstance.token}`
 	};
 
 	return {

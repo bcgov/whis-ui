@@ -157,7 +157,7 @@ const SearchResults = () => {
 		return (
 			<>
 				<DataGrid
-					getRowId={(row: any) => row.first_name + row.last_name}
+					getRowId={(row: any) => row.id}
 					className='data'
 					autoHeight
 					rows={contacts}
@@ -169,9 +169,6 @@ const SearchResults = () => {
 					disableSelectionOnClick
 					onSelectionModelChange={itm => {
 						handleRowSelection(itm.length);
-					}}
-					onRowClick={itm => {
-						setUpdateName(itm.row.first_name + ' ' + itm.row.last_name);
 					}}
 				/>
 				<Menu
@@ -191,19 +188,6 @@ const SearchResults = () => {
 					{moreActions.child}
 				</Menu>
 
-				<NewContactDialog
-					open={editContactDialog}
-					title={'Update Contact'}
-					buttonText={'Update'}
-					confirmTitle={'Contact List Update'}
-					confirmContent={`You have changed the contact information of ${updateName}`}
-					updateAction={() => {
-						setEditContactDialog(false);
-					}}
-					cancelAction={() => {
-						setEditContactDialog(false);
-					}}
-				/>
 				<DeleteConfirm
 					open={deleteContactDialog}
 					acceptAction={() => {
@@ -212,7 +196,7 @@ const SearchResults = () => {
 					cancelAction={() => {
 						setDeleteContactDialog(false);
 					}}
-					noun={'selected contact list(s)'}
+					noun={'selected contact(s)'}
 				/>
 			</>
 		);

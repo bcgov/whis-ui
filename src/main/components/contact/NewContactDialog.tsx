@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import ConfirmDialog from '../util/ConfirmDialog';
 import useCodeTable from '../../hooks/useCodeTable';
 
-const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, confirmTitle, confirmContent}) => {
+const NewContactDialog = ({open, updateAction, cancelAction}) => {
 
 	const [contact, setContact] = useState({
 		firstName: '',
@@ -18,19 +18,18 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 		description: ''
 	});
 
-	const validFirstNation = [
-		{code: 'FIRST_NATION_1', name: 'First Nation 1'},
-		{code: 'FIRST_NATION_2', name: 'First Nation 2'},
-		{code: 'FIRST_NATION_3', name: 'First Nation 3'},
-		{code: 'FIRST_NATION_4', name: 'First Nation 4'},
-		{code: 'FIRST_NATION_5', name: 'First Nation 5'}
-	];
 
 	const {mappedCodes: organizations} = useCodeTable('organization');
+	const {mappedCodes: firstNations} = useCodeTable('first_nation');
 	const {mappedCodes: regions} = useCodeTable('region');
 	const {mappedCodes: roles} = useCodeTable('organizational_role');
 
-	const [dialogOpen, setDialogOpen] = useState(false);
+	const [confirmOpen, setConfirmOpen] = useState(false);
+
+	const title = 'Adding a new Contact List Entry';
+	const buttonText = 'Create';
+	const confirmTitle = 'Confirm?';
+	const confirmContent = 'Proceed with creating a new contact?';
 
 	function onClose() {
 		cancelAction();
@@ -83,7 +82,8 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 						onChange={(e) => setContact({...contact, firstNation: e.target.value})}
 
 					>
-						{validFirstNation.map((m) => (
+						<MenuItem value={''}>None</MenuItem>
+						{firstNations.map((m) => (
 							<MenuItem key={m.code} value={m.code}>
 								{m.name}
 							</MenuItem>
@@ -110,6 +110,7 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 						label='Organization'
 						onChange={(e) => setContact({...contact, organization: e.target.value})}
 					>
+						<MenuItem value={''}>None</MenuItem>
 						{organizations.map((m) => (
 							<MenuItem key={m.code} value={m.code}>
 								{m.name}
@@ -125,7 +126,6 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 						type={'email'}
 						required
 						onChange={(e) => setContact({...contact, email: e.target.value})}
-
 					/>
 
 
@@ -154,7 +154,7 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 						variant={'contained'}
 						className='dialogButtons'
 						onClick={() => {
-							setDialogOpen(true);
+							setConfirmOpen(true);
 						}}
 					>
 						{buttonText}
@@ -170,14 +170,14 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 					</Button>
 				</Box>
 				<ConfirmDialog
-					open={dialogOpen}
+					open={confirmOpen}
 					close={() => {
-						setDialogOpen(false);
+						setConfirmOpen(false);
 					}}
 					title={confirmTitle}
 					content={confirmContent}
 					acceptAction={() => {
-						setDialogOpen(false);
+						setConfirmOpen(false);
 						updateAction(contact);
 					}}
 				/>

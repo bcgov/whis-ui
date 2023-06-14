@@ -19,7 +19,9 @@ import Debug from '../../components/util/Debug';
 import {useDispatch} from 'react-redux';
 import {WILDLIFE_HEALTH_ID_GENERATE_REQUEST} from '../../../state/actions';
 import GenerationFailureDialog from '../../components/wildlifeIds/generate/GenerationFailureDialog';
-import ContactSelection from '../../components/contact/ContactSelection';
+import ContactAutofill from "../../components/contact/ContactAutofill";
+import ContactDisplay from "../../components/contact/ContactDisplay";
+import NewContactComponent from "../../components/contact/NewContactComponent";
 
 const Generate: React.FC = () => {
 	const {purpose: purposes, region: regions} = useSelector(state => state.CodeTables.tables);
@@ -66,7 +68,7 @@ const Generate: React.FC = () => {
 		projectDetail: '',
 		purpose: '',
 		status: '',
-		requester: '',
+		requester: null,
 		project: '',
 		selectedDate: null
 	});
@@ -82,7 +84,7 @@ const Generate: React.FC = () => {
 			region: formState.region,
 			initialStatus: formState.status,
 			projectDetail: formState.projectDetail,
-			requester: formState.requester
+			requester: formState.requester?.id || null
 		});
 	}, [formState]);
 
@@ -141,7 +143,7 @@ const Generate: React.FC = () => {
 	const [idQuantity, setIdQuantity] = useState(null);
 
 	if (!codeTablesInitialized) {
-		return <Loading />;
+		return <Loading/>;
 	}
 
 	return (
@@ -154,7 +156,7 @@ const Generate: React.FC = () => {
 			<Paper className={'generation_paper'}>
 				<form onSubmit={handleSubmit(handleRequiredSubmit)}>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<Grid container columns={{ xs: 4, md: 12 }}  spacing={4}>
+						<Grid container columns={{xs: 4, md: 12}} spacing={4}>
 							<Grid item xs={12} md={12}>
 								<Typography variant={'h3'}>{'WLH ID Information'}</Typography>
 							</Grid>
@@ -186,7 +188,7 @@ const Generate: React.FC = () => {
 										})}
 										error={!!errors?.wlh_id}
 									/>
-									<ValidationError hidden={!errors?.wlh_id} message={errors.wlh_id?.message} />
+									<ValidationError hidden={!errors?.wlh_id} message={errors.wlh_id?.message}/>
 								</FormGroup>
 							</Grid>
 
@@ -200,14 +202,14 @@ const Generate: React.FC = () => {
 										maxDate={new Date(2099, 0, 1)}
 										onError={(e, value) => {
 											switch (e) {
-												case 'minDate':
-												case 'invalidDate':
-												case 'maxDate':
-													setYearSelectError('Please enter a number between 2020 - 2099.');
-													break;
-												case null:
-													setYearSelectError(null);
-													break;
+											case 'minDate':
+											case 'invalidDate':
+											case 'maxDate':
+												setYearSelectError('Please enter a number between 2020 - 2099.');
+												break;
+											case null:
+												setYearSelectError(null);
+												break;
 											}
 										}}
 										onChange={d => {
@@ -218,9 +220,9 @@ const Generate: React.FC = () => {
 										components={{
 											OpenPickerIcon: ArrowDropDownIcon
 										}}
-										renderInput={params => <TextField {...params} className="generate_textfield" name="year" error={yearSelectError !== null} />}
+										renderInput={params => <TextField {...params} className="generate_textfield" name="year" error={yearSelectError !== null}/>}
 									/>
-									<ValidationError hidden={yearSelectError == null} message={yearSelectError} />
+									<ValidationError hidden={yearSelectError == null} message={yearSelectError}/>
 								</FormGroup>
 							</Grid>
 
@@ -248,7 +250,7 @@ const Generate: React.FC = () => {
 											</MenuItem>
 										))}
 									</TextField>
-									<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message} />
+									<ValidationError hidden={!errors?.purpose} message={errors?.purpose?.message}/>
 								</FormGroup>
 							</Grid>
 
@@ -276,7 +278,7 @@ const Generate: React.FC = () => {
 											</MenuItem>
 										))}
 									</TextField>
-									<ValidationError hidden={!errors?.status} message={errors.status?.message} />
+									<ValidationError hidden={!errors?.status} message={errors.status?.message}/>
 								</FormGroup>
 							</Grid>
 
@@ -292,38 +294,53 @@ const Generate: React.FC = () => {
 								</FormGroup>
 							</Grid>
 
-							<Grid item xs={12} md={12}>
+							<Grid item xs={4} md={12}>
 								<FormGroup>
-									<TaxonomySearch className="species" value={formState.species} onValueChange={v => setFormState({...formState, species: v})} />
+									<TaxonomySearch className="species" value={formState.species} onValueChange={v => {
+										setFormState({...formState, species: v})
+									}}/>
 								</FormGroup>
 							</Grid>
 
-							<Grid item xs={10} md={12}>
-								<ContactSelection
-									handleSelect={id => {
-										setFormState({
-											...formState,
-											requester: id
-										});
-									}}
-								/>
+
+							<Grid item xs={3} md={9}>
+								<FormGroup>
+									<ContactAutofill className="contact" label='Requester' value={formState.requester}
+																	 onValueChange={v => {
+																		 setFormState({...formState, requester: v});
+																	 }}/>
+								</FormGroup>
 							</Grid>
+
+							<Grid item xs={1} md={3}>
+								<NewContactComponent createHandler={(contact) => {
+									setFormState({
+										...formState, requester: {
+											...contact,
+											label: "New Contact"
+										}
+									});
+								}
+								}/>
+							</Grid>
+
+							{formState.requester && <Grid item xs={12} sx={{overflow: 'auto'}}><ContactDisplay contact={formState.requester.document}/></Grid>}
 
 							<Grid item xs={12} md={12}>
 								<FormGroup>
-									<TextField label="Associated Project" id="project" value={formState.project} name="project" onChange={handleUpdate} />
+									<TextField label="Associated Project" id="project" value={formState.project} name="project" onChange={handleUpdate}/>
 								</FormGroup>
 							</Grid>
 
 							<Grid item xs={12} md={12}>
 								<FormGroup>
-									<TextField label="Project Details" name="projectDetail" value={formState.projectDetail} multiline rows={3} onChange={handleUpdate} />
+									<TextField label="Project Details" name="projectDetail" value={formState.projectDetail} multiline rows={3} onChange={handleUpdate}/>
 								</FormGroup>
 							</Grid>
 
-							<ConfirmGenerationDialog open={openSuccessDialog} handleClose={handleClose} createdIDs={generationResult} />
+							<ConfirmGenerationDialog open={openSuccessDialog} handleClose={handleClose} createdIDs={generationResult}/>
 
-							<GenerationFailureDialog open={openFailureDialog} handleClose={handleClose} />
+							<GenerationFailureDialog open={openFailureDialog} handleClose={handleClose}/>
 
 							<CancelDialog
 								open={openCancelDialog}
@@ -337,7 +354,7 @@ const Generate: React.FC = () => {
 
 							<Grid item xs={12} md={12}>
 								<Stack direction={'row'} spacing={1} justifyContent={'flex-end'}>
-									<GenerationLockWidget />
+									<GenerationLockWidget/>
 									<Button type="submit" className="generate_submit_btn" variant={'contained'} disabled={working}>
 										Generate
 									</Button>

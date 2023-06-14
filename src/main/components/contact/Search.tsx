@@ -4,13 +4,11 @@ import {Box, Button, Card, TextField, Typography} from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import HidableSearchForm from './AdvancedSearchFields';
 import SearchResults from './SearchResults';
-import NewContactDialog from './NewContactDialog';
-import {Add} from '@mui/icons-material';
+import NewContactComponent from "./NewContactComponent";
 
 
 const Search: React.FC = () => {
 
-	const [addContactDialog, setAddContactDialog] = useState(false);
 	const [advancedSearchExpand, setAdvancedSearchExpand] = useState(false);
 	const [searchButtonPosition, setSearchButtonPosition] = useState(false);
 	const [spacerProps, setSpacerProps] = useState({});
@@ -34,30 +32,10 @@ const Search: React.FC = () => {
 			<Box className="pageHead">
 				<Box className="mainTitle">
 					<Typography variant="h1">Contact List</Typography>
-					<Typography variant="h6">Search for the existing contacts, add a new contact or edit one.</Typography>
+					<Typography variant="h6">Search for existing contacts, add a new contact or edit one.</Typography>
 				</Box>
-				<Button
-					variant={'contained'}
-					onClick={() => {
-						setAddContactDialog(true);
-					}}
-				>
-					<Add /> Add New Contact
-				</Button>
-				<NewContactDialog
-					open={addContactDialog}
-					title={'Add New Contact'}
-					updateAction={(contact) => {
-						console.dir(contact);
-						setAddContactDialog(false);
-					}}
-					cancelAction={() => {
-						setAddContactDialog(false);
-					}}
-					buttonText={'Add'}
-					confirmTitle={'Add Contact Confirmation'}
-					confirmContent={'You will create a new contact list entry. Proceed?'}
-				/>
+				<NewContactComponent createHandler={() => {
+				}}/>
 			</Box>
 
 			<Card className="paperStyle">
@@ -87,18 +65,18 @@ const Search: React.FC = () => {
 					>
 						{advancedSearchExpand ? (
 							<>
-								Hide Filters <FilterAltOutlinedIcon />
+								Hide Filters <FilterAltOutlinedIcon/>
 							</>
 						) : (
 							<>
-								Show Filters <FilterAltOutlinedIcon />
+								Show Filters <FilterAltOutlinedIcon/>
 							</>
 						)}
 					</Button>
 				</Box>
 
 				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
-					<HidableSearchForm />
+					<HidableSearchForm/>
 				</Box>
 				<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
 					Clear
@@ -116,7 +94,7 @@ const Search: React.FC = () => {
 				</Button>
 			</Card>
 
-			<SearchResults />
+			<SearchResults/>
 		</Box>
 	);
 };

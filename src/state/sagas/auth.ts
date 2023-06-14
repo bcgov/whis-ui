@@ -39,11 +39,13 @@ function* refreshRoles() {
 }
 
 function* keepTokenFresh() {
-	const refreshed = yield keycloakInstance.updateToken(MIN_TOKEN_FRESHNESS);
-
-	if (refreshed) {
-		yield put({type: AUTH_UPDATE_TOKEN_STATE});
+	try {
+		yield keycloakInstance.updateToken(MIN_TOKEN_FRESHNESS);
+	} catch (e) {
+		yield put({type: AUTH_INITIALIZE_REQUEST});
 	}
+
+	yield put({type: AUTH_UPDATE_TOKEN_STATE});
 
 	yield delay(TOKEN_REFRESH_CHECK_INTERVAL);
 	yield put({type: AUTH_REFRESH_TOKEN});
