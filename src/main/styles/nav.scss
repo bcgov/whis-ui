@@ -31,8 +31,6 @@
 	}
 
 	li {
-		//display: inline-flex;
-
 		padding: 0.25rem 0;
 		margin: 0;
 
@@ -60,3 +58,16 @@
 	}
 }
 
+@media screen and (max-width: 1000px) {
+	.topNav {
+		li {
+			a {
+				font-size: 13px;
+				padding: 9px;
+			}
+			&.devModeToggle {
+				font-size: 13px;
+			}
+		}
+	}
+}

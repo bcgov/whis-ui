@@ -230,26 +230,26 @@ const Purpose = ({expansionEvent}) => {
 					<DataGrid rows={id_rows} columns={id_columns} disableSelectionOnClick hideFooter={true} />
 					<Typography className="detailsSubtitle">Requester</Typography>
 					<DataGrid rows={requester_rows} columns={requester_columns} disableSelectionOnClick hideFooter={true} />
-				</Box>
-				<Box className="cardButtons">
-					<Button
-						variant={'contained'}
-						className="update_btn"
-						onClick={() => {
-							setConfirmDialogOpen(true);
-						}}
-					>
-						Update
-					</Button>
-					<Button
-						variant={'outlined'}
-						className="update_btn"
-						onClick={() => {
-							setCancelDialogOpen(true);
-						}}
-					>
-						Cancel
-					</Button>
+					<Box className="cardButtons">
+						<Button
+							variant={'contained'}
+							className="update_btn"
+							onClick={() => {
+								setConfirmDialogOpen(true);
+							}}
+						>
+							Update
+						</Button>
+						<Button
+							variant={'outlined'}
+							className="update_btn"
+							onClick={() => {
+								setCancelDialogOpen(true);
+							}}
+						>
+							Cancel
+						</Button>
+					</Box>
 				</Box>
 
 				<ConfirmDialog

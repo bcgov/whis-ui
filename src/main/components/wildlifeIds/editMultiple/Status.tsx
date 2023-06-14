@@ -97,7 +97,6 @@ const Status = ({expansionEvent}) => {
 		{id: '220000-5', status: 'Unassigned', reason: ''}
 	];
 
-
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'multiple_card'}>
 			<Expandable.Title>
@@ -125,27 +124,26 @@ const Status = ({expansionEvent}) => {
 			<Expandable.Detail>
 				<Box className="cardDetails">
 					<DataGrid rows={rows} columns={columns} disableSelectionOnClick hideFooter={true} />
-				</Box>
-
-				<Box className="cardButtons">
-					<Button
-						variant={'contained'}
-						className="update_btn"
-						onClick={() => {
-							setConfirmDialogOpen(true);
-						}}
-					>
-						Update
-					</Button>
-					<Button
-						variant={'outlined'}
-						className="update_btn"
-						onClick={() => {
-							setCancelDialogOpen(true);
-						}}
-					>
-						Cancel
-					</Button>
+					<Box className="cardButtons">
+						<Button
+							variant={'contained'}
+							className="update_btn"
+							onClick={() => {
+								setConfirmDialogOpen(true);
+							}}
+						>
+							Update
+						</Button>
+						<Button
+							variant={'outlined'}
+							className="update_btn"
+							onClick={() => {
+								setCancelDialogOpen(true);
+							}}
+						>
+							Cancel
+						</Button>
+					</Box>
 				</Box>
 
 				<ConfirmDialog

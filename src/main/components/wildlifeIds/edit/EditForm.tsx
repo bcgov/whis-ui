@@ -178,10 +178,8 @@ const EditForm = ({wildlifeHealthId}) => {
 					variant={'contained'}
 					onClick={() => {
 						if (localState.formState.events.length > 0) {
-							// confirmation is required
 							setAddEventConfirmationDialogOpen(true);
 						} else {
-							// just add it
 							setNewEventFormDialogOpen(true);
 						}
 					}}
