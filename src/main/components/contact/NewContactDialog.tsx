@@ -1,10 +1,10 @@
-import {Dialog, IconButton, DialogTitle, DialogContent, TextField, Button, Box, MenuItem} from '@mui/material';
+import {Dialog, IconButton, DialogTitle, DialogContent, TextField, Button, Box, MenuItem, Grid} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React, {useState} from 'react';
 import ConfirmDialog from '../util/ConfirmDialog';
 import useCodeTable from '../../hooks/useCodeTable';
 
-const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, confirmTitle, confirmContent}) => {
+const NewContactDialog = ({open, updateAction, cancelAction}) => {
 
 	const [contact, setContact] = useState({
 		firstName: '',
@@ -49,7 +49,6 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 							value={contact.firstName}
 							label='First Name'
 							id='firstName'
-							className='leftColumn'
 							onChange={(e) => setContact({...contact, firstName: e.target.value})}
 							required
 						/>
@@ -61,14 +60,12 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 							id='lastName'
 							onChange={(e) => setContact({...contact, lastName: e.target.value})}
 							required
-							className='rightColumn'
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
 							select
 							value={contact.role}
-							className='leftColumn'
 							id='role'
 							label='Role'
 							onChange={(e) => setContact({...contact, role: e.target.value})}
@@ -82,14 +79,13 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							className='rightColumn'
 							value={contact.firstNation}
 							select id='firstNation'
 							label='First Nation'
 							onChange={(e) => setContact({...contact, firstNation: e.target.value})}
-
 						>
-							{validFirstNation.map((m) => (
+							<MenuItem value={''}>None</MenuItem>
+							{firstNations.map((m) => (
 								<MenuItem key={m.code} value={m.code}>
 									{m.name}
 								</MenuItem>
@@ -98,7 +94,6 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							className='leftColumn'
 							value={contact.region}
 							select id='region'
 							label='Region'
@@ -114,12 +109,12 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 					<Grid item xs={12} md={6}>
 						<TextField
 							select
-							className='rightColumn'
 							value={contact.organization}
 							id='organization'
 							label='Organization'
 							onChange={(e) => setContact({...contact, organization: e.target.value})}
 						>
+							<MenuItem value={''}>None</MenuItem>
 							{organizations.map((m) => (
 								<MenuItem key={m.code} value={m.code}>
 									{m.name}
@@ -129,28 +124,24 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							className='leftColumn'
 							value={contact.email}
 							id='email'
 							label='Email'
 							type={'email'}
 							required
 							onChange={(e) => setContact({...contact, email: e.target.value})}
-
 						/>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<TextField
-							className='rightColumn'
 							value={contact.phone}
 							id='phone'
 							label='Phone'
 							type={'tel'}
 							onChange={(e) => setContact({...contact, phone: e.target.value})}
-
 						/>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12} md={12}>
 						<TextField
 							value={contact.description}
 							sx={{width: '100%', marginBlock: '32px'}}
@@ -160,14 +151,14 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 							onChange={(e) => setContact({...contact, description: e.target.value})}
 						/>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item xs={12} md={12}>
 
 						<Box className='dialogActions'>
 							<Button
 								variant={'contained'}
 								className='dialogButtons'
 								onClick={() => {
-									setDialogOpen(true);
+									setConfirmOpen(true);
 								}}
 							>
 								{buttonText}
@@ -186,17 +177,19 @@ const NewContactDialog = ({open, updateAction, cancelAction, title, buttonText, 
 					</Grid>
 
 					<ConfirmDialog
-					open={confirmOpen}
+						open={confirmOpen}
 						close={() => {
-						setConfirmOpen(false);
+							setConfirmOpen(false);
 						}}
 						title={confirmTitle}
 						content={confirmContent}
 						acceptAction={() => {
-						setConfirmOpen(false);
+							setConfirmOpen(false);
 							updateAction(contact);
 						}}
 					/>
+
+				</Grid>
 			</DialogContent>
 		</Dialog>
 );

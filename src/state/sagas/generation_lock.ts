@@ -1,4 +1,4 @@
-import {all, put, select, takeLatest} from 'redux-saga/effects';
+import {all, delay, put, select, takeLatest} from 'redux-saga/effects';
 import {
 	ACQUIRE_GENERATION_LOCK_COMPLETE,
 	ACQUIRE_GENERATION_LOCK_REQUEST,
@@ -14,6 +14,8 @@ import {getConfiguration} from '../utilities/config_helper';
 import {getAuthHeaders} from "../utilities/authentication_helper";
 import {default as axios} from "axios";
 
+const LOCK_KEEPALIVE_TIME = 30 * 1000;
+
 function* testLock() {
 	const configuration = yield select(getConfiguration);
 	const authHeaders = yield select(getAuthHeaders);
@@ -22,6 +24,10 @@ function* testLock() {
 			headers: authHeaders
 		});
 		yield put({type: TEST_GENERATION_LOCK_COMPLETE, payload: result.data});
+		if (result.data?.lockHolder?.isSelf) {
+			yield delay(LOCK_KEEPALIVE_TIME);
+			yield put({type: RENEW_GENERATION_LOCK_REQUEST});
+		}
 	} catch (err) {
 		yield put({type: GENERATION_LOCK_ERROR});
 	}
