@@ -81,7 +81,7 @@ const SearchResults = showFilterChips => {
 		child: (
 			<MenuList>
 				<MenuItem
-					className="ASSIGNED"
+					className='ASSIGNED'
 					onClick={() => {
 						setChangeStatus({...changeStatus, anchorEl: null});
 					}}
@@ -89,7 +89,7 @@ const SearchResults = showFilterChips => {
 					ASSIGNED
 				</MenuItem>
 				<MenuItem
-					className="UNASSIGNED"
+					className='UNASSIGNED'
 					onClick={() => {
 						setChangeStatus({...changeStatus, anchorEl: null});
 						setChangeStatusDialogOpen(true);
@@ -99,7 +99,7 @@ const SearchResults = showFilterChips => {
 					UNASSIGNED
 				</MenuItem>
 				<MenuItem
-					className="RETIRED"
+					className='RETIRED'
 					onClick={() => {
 						setChangeStatus({...changeStatus, anchorEl: null});
 						setChangeStatusDialogOpen(true);
@@ -115,15 +115,15 @@ const SearchResults = showFilterChips => {
 	//actions
 	const renderMoreActions = () => {
 		return (
-			<Box className="actions">
-				<LightTooltip title="More Actions">
+			<Box className='actions'>
+				<LightTooltip title='More Actions'>
 					<IconButton
 						aria-controls={open ? 'demo-positioned-menu' : undefined}
-						aria-haspopup="true"
+						aria-haspopup='true'
 						aria-expanded={open ? 'true' : undefined}
 						onClick={(event: React.MouseEvent<HTMLButtonElement>) => setMoreActions({...moreActions, anchorEl: event.currentTarget})}
 					>
-						<MoreVertIcon />
+						<MoreVertIcon/>
 					</IconButton>
 				</LightTooltip>
 			</Box>
@@ -139,9 +139,9 @@ const SearchResults = showFilterChips => {
 					setChangeStatus({...changeStatus, anchorEl: event.currentTarget});
 				}}
 			>
-				<Stack direction="row" alignItems="center" justifyContent="space-between" width="inherit">
+				<Stack direction='row' alignItems='center' justifyContent='space-between' width='inherit'>
 					{currentStatus}
-					<ArrowDropDownOutlinedIcon />
+					<ArrowDropDownOutlinedIcon/>
 				</Stack>
 			</Button>
 		);
@@ -157,7 +157,7 @@ const SearchResults = showFilterChips => {
 							setFlagDialog(true);
 						}}
 					>
-						<Flag className="idFlag" />
+						<Flag className='idFlag'/>
 					</IconButton>
 				</>
 			);
@@ -165,20 +165,35 @@ const SearchResults = showFilterChips => {
 	};
 
 	const columns: GridColDef[] = [
-		{field: 'wlhID', headerName: 'WLH ID', width: 150, renderCell: isFlag},
-		{field: 'species', headerName: 'Species', width: 250},
 		{
-			field: 'homeRegion',
+			field: 'wildlifeHealthId',
+			headerName: 'WLH ID',
+			width: 150,
+			renderCell: isFlag
+		},
+		{
+			field: 'species',
+			headerName: 'Species',
+			valueGetter: (params) => {
+				return `${params.row.species?.englishName || ''}`;
+			},
+			width: 250
+		},
+		{
+			field: 'region',
 			headerName: 'Home Region',
-			width: 230
+			width: 230,
+			valueGetter: (params) => {
+				return `${params.row.region?.name || ''}`;
+			}
 		},
 		{field: 'lastEventDate', headerName: 'Event Date', width: 200},
 		{field: 'lastEventType', headerName: 'Event Type', width: 180},
 		{
-			field: 'currentStatus',
+			field: 'status',
 			headerName: 'Status',
 			width: 160,
-			renderCell: renderStatus
+			// renderCell: renderStatus
 		},
 		{
 			field: 'actions',
@@ -193,15 +208,15 @@ const SearchResults = showFilterChips => {
 
 	function renderTable() {
 		if (working) {
-			return <Loading />;
+			return <Loading/>;
 		}
 		if (results == null) {
-			return <Error />;
+			return <Error/>;
 		}
 		return (
 			<>
 				<DataGrid
-					className="data"
+					className='data'
 					autoHeight
 					rows={results}
 					columns={columns}
@@ -215,7 +230,7 @@ const SearchResults = showFilterChips => {
 					}}
 				/>
 				<Menu
-					className="moreActionsMenu"
+					className='moreActionsMenu'
 					open={Boolean(moreActions.anchorEl)}
 					onClose={() => setMoreActions({...moreActions, anchorEl: null})}
 					anchorEl={moreActions.anchorEl}
@@ -231,7 +246,7 @@ const SearchResults = showFilterChips => {
 					{moreActions.child}
 				</Menu>
 				<Menu
-					className="statusMenu"
+					className='statusMenu'
 					open={Boolean(changeStatus.anchorEl)}
 					onClose={() => setChangeStatus({...changeStatus, anchorEl: null})}
 					anchorEl={changeStatus.anchorEl}
@@ -279,18 +294,18 @@ const SearchResults = showFilterChips => {
 	}
 
 	return (
-		<Card className="filter_result">
-			<FilterChips />
+		<Card className='filter_result'>
+			<FilterChips/>
 
-			<Box className="results_table">
-				<Box className="resultTableHeader">
+			<Box className='results_table'>
+				<Box className='resultTableHeader'>
 					{/*<Typography>Last 50 created WLH IDs</Typography>*/}
 					{/* After search */}
 					<Typography>{results?.length} WLH IDs Found</Typography>
 					{isIDSelected ? (
-						<Stack direction="row" className="hiddenButtons">
+						<Stack direction='row' className='hiddenButtons'>
 							<Button
-								variant="outlined"
+								variant='outlined'
 								onClick={() => {
 									navigate('/wildlifeIds/edit/86');
 								}}
@@ -298,7 +313,7 @@ const SearchResults = showFilterChips => {
 								Update WLH ID
 							</Button>
 							<Button
-								variant="outlined"
+								variant='outlined'
 								onClick={() => {
 									setNewEventDialogOpen(true);
 								}}

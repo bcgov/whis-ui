@@ -15,40 +15,20 @@ import {
 } from '@mui/material';
 import React, {useState} from 'react';
 import TaxonomySearch from '../../util/TaxonomySearch';
+import {useSelector} from "../../../../state/utilities/use_selector";
+import Loading from "../../util/Loading";
 
 const AdvancedSearchFields = ({formState, dispatch}) => {
-	const validPurposes = [
-		{value: 'UNKNOWN', label: 'Unknown'},
-		{value: 'HERD_HEALTH', label: 'Herd Health'},
-		{value: 'PASSIVE', label: 'Passive Surveillance'},
-		{value: 'TARGETED', label: 'Targeted Surveillance'}
-	];
-	const validIdentifier = [
-		{value: 'UNKNOWN', label: 'Alternate Animal ID'},
-		{value: 'COMPULSORY', label: 'Compulsory Inspection Number'},
-		{value: 'EAR_TAG', label: 'Ear Tag Number'},
-		{value: 'HUMAN_WILDLIFE', label: 'Human Wildlife Conflict Number'},
-		{value: 'COORS', label: 'COORS Number'},
-		{value: 'MICROCHIP', label: 'Microchip'},
-		{value: 'NICKNA', label: 'Nickna'},
-		{value: 'PIT_TAG', label: 'Pit Tag Number'},
-		{value: 'RAPP_TAG', label: 'RAPP Ear Tag'},
-		{value: 'RECAPTURE_ID', label: 'Recapture ID'},
-		{value: 'VAGINAL', label: 'Vaginal Implant Transmitter'},
-		{value: 'WING_BAND', label: 'Wing Band'}
-	];
-	const validOrganization = [
-		{value: 'ONE', label: 'Organization 1'},
-		{value: 'TWO', label: 'Organization 2'},
-		{value: 'THREE', label: 'Organization 3'},
-		{value: 'FOUR', label: 'Organization 4'}
-	];
-	const validRegion = [
-		{value: 'PEACE', label: 'Region 1'},
-		{value: 'TWO', label: 'Region 2'},
-		{value: 'THREE', label: 'Region 3'},
-		{value: 'FOUR', label: 'Region 4'}
-	];
+
+	const {
+		purpose: purposes,
+		region: regions,
+		organization: organizations,
+		animal_identifier_type: animal_identifier_types,
+	} = useSelector(state => state.CodeTables.tables);
+
+	const codesLoaded = useSelector(state => state.CodeTables.initialized);
+
 	const validLocation = [
 		{value: 'REGION', label: 'Region'},
 		{value: 'MANAGEMENT_UNIT', label: 'Management Unit'},
@@ -63,6 +43,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 		{value: 'AGED_ADULT', label: 'Aged adult'},
 		{value: 'UNCLASSIFIED', label: 'Unclassified'}
 	];
+
 	const validSample = [
 		{value: 'COLLECTED', label: 'Samples were collected'},
 		{value: 'NOT_COLLECTED', label: 'Samples were NOT collected'}
@@ -75,6 +56,10 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 		{value: 'RECAPTURE', label: 'Retired - Recapture IDs'},
 		{value: 'FLAGGED', label: 'Retired - Flagged IDs'}
 	];
+
+	if (!codesLoaded) {
+		return (<Loading/>);
+	}
 
 	return (
 		<>
@@ -199,7 +184,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					}}
 				>
 					{idStatus.map((m, i) => (
-						<MenuItem key={i} value={m.value}>
+						<MenuItem key={m.value} value={m.value}>
 							{m.label}
 						</MenuItem>
 					))}
@@ -218,9 +203,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 							dispatch({type: 'fieldChange', payload: {field: `purpose`, value: e.target.value}});
 						}}
 					>
-						{validPurposes.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{purposes.codes.map((m) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
@@ -243,9 +228,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 							dispatch({type: 'fieldChange', payload: {field: `requester.organization`, value: e.target.value}});
 						}}
 					>
-						{validOrganization.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{organizations.codes.map((m, i) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
@@ -274,9 +259,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 							dispatch({type: 'fieldChange', payload: {field: `region`, value: e.target.value}});
 						}}
 					>
-						{validRegion.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{regions.codes.map((m, i) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
@@ -290,9 +275,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 							dispatch({type: 'fieldChange', payload: {field: `identifier.type`, value: e.target.value}});
 						}}
 					>
-						{validIdentifier.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{animal_identifier_types.codes.map((m, i) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
@@ -365,7 +350,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 						}}
 					>
 						{validLocation.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
+							<MenuItem key={m.value} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}
@@ -398,9 +383,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 						}}
 						label="Submitter Organization"
 					>
-						{validOrganization.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{organizations.codes.map((m, i) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
@@ -415,7 +400,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 						label="Age Class"
 					>
 						{validAgeClass.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
+							<MenuItem key={m.value} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}
@@ -431,7 +416,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 						label="Samples"
 					>
 						{validSample.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
+							<MenuItem key={m.value} value={m.value}>
 								{m.label}
 							</MenuItem>
 						))}

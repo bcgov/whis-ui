@@ -142,7 +142,7 @@ export function getChipsFromSearchRequest(request: SearchRequest): SearchFilterC
 					chips.push(new SearchFilterChip(`${mapping.path}`, kw, mapping.name));
 				}
 			} else {
-				if (value && (value as string).trim().length > 0) {
+				if (value) {
 					chips.push(new SearchFilterChip(mapping.path, value as string, mapping.name));
 				}
 			}

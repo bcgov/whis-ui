@@ -51,14 +51,14 @@ const Navigation: React.FC = () => {
 			<nav className={'topNav container'}>
 				<ul>
 					{categoriesSeen.map(c => (
-						<>
+						<React.Fragment key={c}>
 
 							{sortedNavs
 								.filter(n => n.category === c)
 								.map((n, i) => {
 									if (n.roles.length === 0 || (n.roles.length > 0 && userHasAnyRole(currentUserRoles, n.roles))) {
 										return (
-											<li key={i}>
+											<li key={n.path}>
 												<Link to={n.path} className={activeLink === n.path ? 'active' : ''}>
 													{n.name}
 												</Link>
@@ -69,10 +69,10 @@ const Navigation: React.FC = () => {
 									}
 								})}
 
-						</>
+						</React.Fragment>
 					))}
 					{currentConfiguration.DEBUG &&
-						<li className={'devModeToggle'}>
+						<li key='devmode' className={'devModeToggle'}>
 							<input checked={devMode} type='checkbox' onChange={(e) => {
 								dispatch({type: DEVMODE_SET_STATE, payload: e.target.checked});
 							}}/> Enable developer-friendly features

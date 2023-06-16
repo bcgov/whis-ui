@@ -12,14 +12,14 @@ import EditMultiple from '../pages/wildlifeIds/EditMultiple';
 import ContactList from '../pages/ContactList';
 
 const WildlifeIdRoutes = [
-	<Route path='/wildlifeIds' element={<DefaultLayout showNavigation={true}><Dashboard/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/list' element={<DefaultLayout><List/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/inventory' element={<DefaultLayout><Inventory/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/generate' element={<DefaultLayout><Generate/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/detail/:id' element={<DefaultLayout><Detail/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/edit/:id' element={<DefaultLayout><Edit/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/multiEdit' element={<DefaultLayout><EditMultiple/></DefaultLayout>}/>,
-	<Route path='/wildlifeIds/actionManagement' element={<DefaultLayout><ActionManagement/></DefaultLayout>}/>,
-	<Route path='/contacts' element={<DefaultLayout><ContactList/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds' path='/wildlifeIds' element={<DefaultLayout showNavigation={true}><Dashboard/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/list' path='/wildlifeIds/list' element={<DefaultLayout><List/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/inventory' path='/wildlifeIds/inventory' element={<DefaultLayout><Inventory/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/generate' path='/wildlifeIds/generate' element={<DefaultLayout><Generate/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/detail/:id' path='/wildlifeIds/detail/:id' element={<DefaultLayout><Detail/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/edit/:id' path='/wildlifeIds/edit/:id' element={<DefaultLayout><Edit/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/multiEdit' path='/wildlifeIds/multiEdit' element={<DefaultLayout><EditMultiple/></DefaultLayout>}/>,
+	<Route key='/wildlifeIds/actionManagement' path='/wildlifeIds/actionManagement' element={<DefaultLayout><ActionManagement/></DefaultLayout>}/>,
+	<Route key='/contacts' path='/contacts' element={<DefaultLayout><ContactList/></DefaultLayout>}/>,
 ];
 export default WildlifeIdRoutes;

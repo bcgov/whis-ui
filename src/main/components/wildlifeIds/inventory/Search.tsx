@@ -1,7 +1,7 @@
 import React, {useLayoutEffect, useReducer, useRef, useState} from 'react';
 import _ from 'lodash';
 
-import {Box, Button, Card, Grid, TextField, Typography} from '@mui/material';
+import {Box, Button, Card, Grid, TextField, Typography, useMediaQuery} from '@mui/material';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import {useNavigate} from 'react-router-dom';
 import HidableSearchForm from './AdvancedSearchFields';
@@ -13,22 +13,44 @@ import {useDispatch} from 'react-redux';
 import {getSearchRequestFromSearchFormState} from '../../../../state/utilities/search_api';
 
 // from the API -- keep this interface in sync.
-interface HealthIDSearchParams {
-	id?: number;
-	year?: number;
-	wlhID?: string;
-	keywords?: string;
-	sequenceNumberMinimum?: number | null;
-	sequenceNumberMaximum?: number | null;
-	creationDateMinimum?: number | null; //millis since epoch
-	creationDateMaximum?: number | null; //millis since epoch
-	creator?: string;
-	currentStatus?: string;
+interface SearchRequest {
+	keywords?: string[];
+	minimumId?: string;
+	maximumId?: string;
+	namedDateRanges?: string[];
+	creation?: {
+		startDate?: string;
+		endDate?: string;
+	};
+	status?: string;
 	purpose?: string;
-	requester?: string;
-	requesterOrganization?: string;
-	species?: string;
-	homeRegion?: string;
+	requester?: {
+		name?: string;
+		organization?: string;
+	};
+	species?: {
+		code: string;
+	};
+	region?: number | string;
+	identifier?: {
+		type?: string;
+		details?: string;
+	};
+	events?: {
+		type?: string;
+		startDate?: string;
+		endDate?: string;
+		submitter?: {
+			name?: string;
+			organization?: string;
+		};
+		location?: {
+			type?: string;
+			details?: string;
+		};
+		ageClass?: string;
+		samples?: string;
+	};
 }
 
 const Search: React.FC = () => {
@@ -43,16 +65,16 @@ const Search: React.FC = () => {
 	function searchReducer(state, action) {
 		const updatedState = {...state};
 		switch (action.type) {
-			case 'fieldChange':
-				// for simple field changes
-				_.set(updatedState, action.payload.field, action.payload.value);
-				break;
-			case 'addArrayElement':
-				_.set(updatedState, action.payload.field, _.union(_.get(updatedState, action.payload.field), [action.payload.value]));
-				break;
-			case 'removeArrayElement':
-				_.set(updatedState, action.payload.field, _.without(_.get(updatedState, action.payload.field), action.payload.value));
-				break;
+		case 'fieldChange':
+			// for simple field changes
+			_.set(updatedState, action.payload.field, action.payload.value);
+			break;
+		case 'addArrayElement':
+			_.set(updatedState, action.payload.field, _.union(_.get(updatedState, action.payload.field), [action.payload.value]));
+			break;
+		case 'removeArrayElement':
+			_.set(updatedState, action.payload.field, _.without(_.get(updatedState, action.payload.field), action.payload.value));
+			break;
 		}
 
 		return updatedState;
@@ -75,7 +97,9 @@ const Search: React.FC = () => {
 				name: '',
 				organization: ''
 			},
-			species: '',
+			species: {
+				code: ''
+			},
 			region: '',
 			identifier: {
 				type: '',
@@ -143,7 +167,7 @@ const Search: React.FC = () => {
 
 			<Card className="paperStyle">
 				<Grid container spacing={4} className="grid_absolute">
-					<Grid container item xs={12} md={12} spacing={{lg: 2, xl: 3}} alignItems={'center'}>
+					<Grid container item xs={12} md={12} spacing={2} alignItems={'center'}>
 						<Grid item xs={12} md={10.8}>
 							<TextField
 								label="Enter WLH ID Number , Date, Status, Event History and Associated Project Keywords"

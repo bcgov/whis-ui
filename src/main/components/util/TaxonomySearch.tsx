@@ -44,7 +44,12 @@ const TaxonomySearch = ({value, onValueChange, className}) => {
 				onChange={(event, newValue) => {
 					onValueChange(newValue);
 				}}
-				getOptionLabel={(option) => option.label}
+				getOptionLabel={(option) => {
+					if (option?.label) {
+						return option.label;
+					}
+					return '';
+				}}
 				value={value}
 				selectOnFocus
 				clearOnBlur

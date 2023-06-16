@@ -91,7 +91,7 @@ const Search: React.FC = () => {
 					Search
 				</Button>
 				<Grid container spacing={4} className="grid_absolute">
-					<Grid container item xs={12} md={12} spacing={{lg: 2, xl: 3}} alignItems={'center'}>
+					<Grid container item xs={12} md={12} spacing={2} alignItems={'center'}>
 						<Grid item xs={12} md={10.8}>
 							<TextField
 								label="Enter First Name or Last Name of a Contact or any Other Keywords"
