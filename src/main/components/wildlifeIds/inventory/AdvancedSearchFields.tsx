@@ -17,6 +17,7 @@ import React, {useState} from 'react';
 import TaxonomySearch from '../../util/TaxonomySearch';
 import {useSelector} from "../../../../state/utilities/use_selector";
 import Loading from "../../util/Loading";
+import Debug from "../../util/Debug";
 
 const AdvancedSearchFields = ({formState, dispatch}) => {
 
@@ -149,9 +150,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					name="startDate"
 					type={'date'}
 					label="Start Date of WLH ID Creation"
-					value={formState.creation.startDate}
+					value={formState.creationStartDate}
 					onChange={e => {
-						dispatch({type: 'fieldChange', payload: {field: `creation.startDate`, value: e.target.value}});
+						dispatch({type: 'fieldChange', payload: {field: `creationStartDate`, value: e.target.value}});
 					}}
 					InputLabelProps={{
 						shrink: true
@@ -164,9 +165,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					name="endDate"
 					type={'date'}
 					label="End Date of WLH ID Creation"
-					value={formState.creation.endDate}
+					value={formState.creationEndDate}
 					onChange={e => {
-						dispatch({type: 'fieldChange', payload: {field: `creation.endDate`, value: e.target.value}});
+						dispatch({type: 'fieldChange', payload: {field: `creationEndDate`, value: e.target.value}});
 					}}
 					InputLabelProps={{
 						shrink: true
@@ -213,9 +214,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						label="Requester First/Last Name"
-						value={formState.requester.name}
+						value={formState.requesterName}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `requester.name`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `requesterName`, value: e.target.value}});
 						}}
 					/>
 				</Grid>
@@ -223,9 +224,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					<TextField
 						select
 						label="Requester Organization"
-						value={formState.requester.organization}
+						value={formState.requesterOrganization}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `requester.organization`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `requesterOrganization`, value: e.target.value}});
 						}}
 					>
 						{organizations.codes.map((m, i) => (
@@ -242,9 +243,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				</Grid>
 				<Grid item xs={12} md={12}>
 					<TaxonomySearch
-						value={formState.species}
+						value={formState.speciesObject}
 						onValueChange={v => {
-							dispatch({type: 'fieldChange', payload: {field: `species`, value: v}});
+							dispatch({type: 'fieldChange', payload: {field: `speciesObject`, value: v}});
 						}}
 						className="species"
 					/>
@@ -259,7 +260,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 							dispatch({type: 'fieldChange', payload: {field: `region`, value: e.target.value}});
 						}}
 					>
-						{regions.codes.map((m, i) => (
+						{regions.codes.map((m) => (
 							<MenuItem key={m.code} value={m.code}>
 								{m.name}
 							</MenuItem>
@@ -270,12 +271,12 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					<TextField
 						select
 						label="Identifier Type"
-						value={formState.identifier.type}
+						value={formState.identifierType}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `identifier.type`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `identifierType`, value: e.target.value}});
 						}}
 					>
-						{animal_identifier_types.codes.map((m, i) => (
+						{animal_identifier_types.codes.map((m) => (
 							<MenuItem key={m.code} value={m.code}>
 								{m.name}
 							</MenuItem>
@@ -285,9 +286,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						label="Other Identifier ID"
-						value={formState.identifier.details}
+						value={formState.identifierDetails}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `identifier.details`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `identifierDetails`, value: e.target.value}});
 						}}
 					/>
 				</Grid>
@@ -301,9 +302,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 						<FormLabel>Event Type</FormLabel>
 						<RadioGroup
 							row
-							value={formState.events.type}
+							value={formState.eventType}
 							onChange={e => {
-								dispatch({type: 'fieldChange', payload: {field: `events.type`, value: e.target.value}});
+								dispatch({type: 'fieldChange', payload: {field: `eventType`, value: e.target.value}});
 							}}
 						>
 							<FormControlLabel value="" control={<Radio />} label="Any" />
@@ -317,10 +318,10 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						label="Event Start Date"
-						value={formState.events.startDate}
+						value={formState.eventStartDate}
 						type={'date'}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.startDate`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventStartDate`, value: e.target.value}});
 						}}
 						InputLabelProps={{
 							shrink: true
@@ -330,10 +331,10 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						label="Event End Date"
-						value={formState.events.endDate}
+						value={formState.eventEndDate}
 						type={'date'}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.endDate`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventEndDate`, value: e.target.value}});
 						}}
 						InputLabelProps={{
 							shrink: true
@@ -344,9 +345,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					<TextField
 						select
 						label="Location"
-						value={formState.events.location.type}
+						value={formState.eventLocationType}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.location.type`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventLocationType`, value: e.target.value}});
 						}}
 					>
 						{validLocation.map((m, i) => (
@@ -359,27 +360,27 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						label="Location Details"
-						value={formState.events.location.details}
+						value={formState.eventLocationDetails}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.location.details`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventLocationDetails`, value: e.target.value}});
 						}}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
 					<TextField
 						label="Submitter First/Last Name"
-						value={formState.events.submitter.name}
+						value={formState.eventSubmitterName}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.submitter.name`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventSubmitterName`, value: e.target.value}});
 						}}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
 					<TextField
 						select
-						value={formState.events.submitter.organization}
+						value={formState.eventSubmitterOrganization}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.submitter.organization`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventSubmitterOrganization`, value: e.target.value}});
 						}}
 						label="Submitter Organization"
 					>
@@ -393,9 +394,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						select
-						value={formState.events.ageClass}
+						value={formState.eventAgeClass}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.ageClass`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventAgeClass`, value: e.target.value}});
 						}}
 						label="Age Class"
 					>
@@ -409,9 +410,9 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 				<Grid item xs={12} md={6}>
 					<TextField
 						select
-						value={formState.events.samples}
+						value={formState.eventSamples}
 						onChange={e => {
-							dispatch({type: 'fieldChange', payload: {field: `events.samples`, value: e.target.value}});
+							dispatch({type: 'fieldChange', payload: {field: `eventSamples`, value: e.target.value}});
 						}}
 						label="Samples"
 					>
@@ -423,6 +424,7 @@ const AdvancedSearchFields = ({formState, dispatch}) => {
 					</TextField>
 				</Grid>
 			</Grid>
+			<Debug item={formState}/>
 		</>
 	);
 };

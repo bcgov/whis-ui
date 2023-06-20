@@ -162,15 +162,15 @@ const EditForm = ({wildlifeHealthId}) => {
 		return <Loading/>;
 	}
 
-	if (!localState?.formState?.metadata?.wildlifeHealthId) {
-		return <Loading/>;
-	}
+	// if (!localState?.formState?.metadata?.wildlifeHealthId) {
+	// 	return <Loading/>;
+	// }
 
 	return (
 		<Box className='container'>
 			<Box className='pageHead'>
 				<Box className='mainTitle'>
-					<Typography variant='h1'>WLH ID {localState.formState.metadata.wildlifeHealthId}</Typography>
+					<Typography variant='h1'>WLH ID {localState.formState.wildlifeHealthId}</Typography>
 					<Typography variant='h6'>Update the WLH ID details and events.</Typography>
 				</Box>
 
@@ -237,14 +237,14 @@ const EditForm = ({wildlifeHealthId}) => {
 			</Box>
 			<Debug title={'redux store state'} item={wildlifeHealthId}/>
 			<Debug title={'local state'} item={localState}/>
-			<Status
-				dirty={localState.dirty}
-				expansionEvent={expansionEvent}
-				dispatch={localDispatch}
-				state={localState.formState}
-				saveState={saveState}
-				resetState={resetState}
-			/>
+			{/*<Status*/}
+			{/*	dirty={localState.dirty}*/}
+			{/*	expansionEvent={expansionEvent}*/}
+			{/*	dispatch={localDispatch}*/}
+			{/*	state={localState.formState}*/}
+			{/*	saveState={saveState}*/}
+			{/*	resetState={resetState}*/}
+			{/*/>*/}
 
 			<AnimalDetails
 				dirty={localState.dirty}

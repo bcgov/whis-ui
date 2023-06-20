@@ -33,7 +33,7 @@ const ContactAutofill = ({value, onValueChange, className, label = 'Contact List
 					setData([]);
 				});
 		}, 150),
-		[]
+		[authHeaders]
 	);
 
 	return (

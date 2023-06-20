@@ -1,80 +1,59 @@
 import _ from 'lodash';
 
-interface SearchFormState {
+export interface SearchFormState {
 	keywords: string;
 	minimumId: string;
 	maximumId: string;
 	namedDateRanges: string[],
-	creation: {
-		startDate: string;
-		endDate: string;
-	},
+	creationStartDate: string;
+	creationEndDate: string;
 	status: string;
 	purpose: string;
-	requester: {
-		name: string;
-		organization: string;
+	requesterName: string;
+	requesterOrganization: number | '';
+	speciesObject: {
+		id: string;
+		label: string;
 	},
-	species: string;
-	region: string;
-	identifier: {
-		type: string;
-		details: string;
-	},
-	events: {
-		type: string;
-		startDate: string;
-		endDate: string;
-		submitter: {
-			name: string;
-			organization: string;
-		},
-		location: {
-			type: string;
-			details: string;
-		},
-		ageClass: string;
-		samples: string;
-	}
+	region: number | '';
+	identifierType: string;
+	identifierDetails: string;
+	eventType: string;
+	eventStartDate: string;
+	eventEndDate: string;
+	eventSubmitterName: string;
+	eventSubmitterOrganization: number | '';
+	eventLocationType: string;
+	eventLocationDetails: string;
+	eventAgeClass: string;
+	eventSamples: string;
 }
 
 // the form actual request to be sent to the API
 interface SearchRequest {
-	keywords?: string[];
-	minimumId?: string;
-	maximumId?: string;
-	namedDateRanges?: string[],
-	creation?: {
-		startDate?: string;
-		endDate?: string;
-	},
-	status?: string;
-	purpose?: string;
-	requester?: {
-		name?: string;
-		organization?: string;
-	},
-	species?: string;
-	region?: string;
-	identifier?: {
-		type?: string;
-		details?: string;
-	},
-	events?: {
-		type?: string;
-		startDate?: string;
-		endDate?: string;
-		submitter?: {
-			name?: string;
-			organization?: string;
-		},
-		location?: {
-			type?: string;
-			details?: string;
-		},
-		ageClass?: string;
-		samples?: string;
-	}
+	keywords: string[];
+	minimumId: number | null;
+	maximumId: number | null;
+	namedDateRanges: string[],
+	creationStartDate: string,
+	creationEndDate: string,
+	status: string;
+	purpose: string;
+	requesterName: string,
+	requesterOrganization: number | null;
+	speciesId: number | null;
+	region: number | null;
+	identifierType: string;
+	identifierDetails: string;
+	eventType: string;
+	eventStartDate: string;
+	eventEndDate: string;
+	eventSubmitterName: string;
+	eventSubmitterOrganization: number | null;
+	eventLocationType: string;
+	eventLocationDetails: string;
+	eventAgeClass: string;
+	eventSamples: string;
 }
 
 function tokenizeKeywords(keywords: string): string[] {
@@ -85,8 +64,16 @@ function tokenizeKeywords(keywords: string): string[] {
 export function getSearchRequestFromSearchFormState(formState: SearchFormState): SearchRequest {
 	const transformed = {
 		...formState,
-		keywords: tokenizeKeywords(formState.keywords)
+		keywords: tokenizeKeywords(formState.keywords),
+		speciesId: formState.speciesObject?.id ? parseInt(formState.speciesObject.id) : null,
+		minimumId: formState.minimumId !== '' ? parseInt(formState.minimumId) : null,
+		maximumId: formState.maximumId !== '' ? parseInt(formState.maximumId) : null,
+		region: formState.region !== '' ? formState.region : null,
+		requesterOrganization: formState.requesterOrganization !== '' ? formState.requesterOrganization : null,
+		eventSubmitterOrganization: formState.eventSubmitterOrganization !== '' ? formState.eventSubmitterOrganization : null,
 	}
+	delete transformed['speciesObject'];
+
 	return transformed;
 }
 
@@ -106,27 +93,27 @@ const mappings = [
 
 	new FilterChipMapping('minimumId', 'From ID'),
 	new FilterChipMapping('maximumId', 'To ID'),
-	new FilterChipMapping('creation.startDate', 'Creation Start Date'),
-	new FilterChipMapping('creation.endDate', 'Creation End Date'),
+	new FilterChipMapping('creationStartDate', 'Creation Start Date'),
+	new FilterChipMapping('creationEndDate', 'Creation End Date'),
 	new FilterChipMapping('namedDateRanges', 'Date Range', true),
 
 	new FilterChipMapping('status', 'Status'),
 	new FilterChipMapping('purpose', 'Purpose'),
-	new FilterChipMapping('requester.name', 'Requester Name'),
-	new FilterChipMapping('requester.organization', 'Requester Organization'),
-	new FilterChipMapping('species', 'Species'),
+	new FilterChipMapping('requesterName', 'Requester Name'),
+	new FilterChipMapping('requesterOrganization', 'Requester Organization'),
+	new FilterChipMapping('speciesId', 'Species'),
 	new FilterChipMapping('region', 'Region'),
-	new FilterChipMapping('identifier.type', 'Identifier Type'),
-	new FilterChipMapping('identifier.details', 'Identifier'),
-	new FilterChipMapping('events.type', 'Event Type'),
-	new FilterChipMapping('events.startDate', 'Event Start'),
-	new FilterChipMapping('events.endDate', 'Event End'),
-	new FilterChipMapping('events.submitter.name', 'Submitter Name'),
-	new FilterChipMapping('events.submitter.organization', 'Submitter Organization'),
-	new FilterChipMapping('events.location.type', 'Event Location Type'),
-	new FilterChipMapping('events.location.details', 'Event Location'),
-	new FilterChipMapping('events.location.ageClass', 'Event Age Class'),
-	new FilterChipMapping('events.samples', 'Samples Collected?'),
+	new FilterChipMapping('identifierType', 'Identifier Type'),
+	new FilterChipMapping('identifierDetails', 'Identifier'),
+	new FilterChipMapping('eventType', 'Event Type'),
+	new FilterChipMapping('eventStartDate', 'Event Start'),
+	new FilterChipMapping('eventEndDate', 'Event End'),
+	new FilterChipMapping('eventSubmitterName', 'Submitter Name'),
+	new FilterChipMapping('eventSubmitterOrganization', 'Submitter Organization'),
+	new FilterChipMapping('eventLocationType', 'Event Location Type'),
+	new FilterChipMapping('eventLocationDetails', 'Event Location'),
+	new FilterChipMapping('eventLocationAgeClass', 'Event Age Class'),
+	new FilterChipMapping('eventSamples', 'Samples Collected?'),
 
 ];
 

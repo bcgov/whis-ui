@@ -25,19 +25,19 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 					<span>
 						<Typography variant="body2">Primary Purpose</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'purposes'} code={state.purpose.primaryPurpose}/>
+							<CodeLookup codeTable={'purposes'} code={state.primaryPurpose}/>
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Requester</Typography>
 						<Typography variant="body1">
-							{(state.purpose.requester && `${state.purpose.requester.firstName} ${state.purpose.requester.lastName}`) || 'unset'}
+							{(state.requester && `${state.requester.firstName} ${state.requester.lastName}`) || 'unset'}
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Organization</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'organizations'} code={(state.purpose.requester && `${state.purpose.requester.organization}`) || 'unset'}/>
+							<CodeLookup codeTable={'organizations'} code={(state.requester && `${state.requester.organization}`) || 'unset'}/>
 						</Typography>
 					</span>
 				</Box>
@@ -49,7 +49,7 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 						className="priPurpose"
 						select
 						label="Primary Purpose"
-						value={state.purpose.primaryPurpose}
+						value={state.primaryPurpose}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
@@ -70,7 +70,7 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 						className="secPurpose"
 						select
 						label="Secondary Purpose"
-						value={state.purpose.secondaryPurpose}
+						value={state.secondaryPurpose}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
@@ -93,7 +93,7 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 						label="Associated Project"
 						id="associatedProject"
 						name="associatedProject"
-						value={state.purpose.associatedProject}
+						value={state.associatedProject}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
@@ -111,7 +111,7 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 						name="projectDetails"
 						multiline
 						rows={3}
-						value={state.purpose.projectDetails}
+						value={state.associatedProjectDetails}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
@@ -126,11 +126,11 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 					<Box>
 						<Typography className="detailsSubtitle">Requester</Typography>
 
-						{state.purpose.requester && (
+						{state.requester && (
 							<PersonnelTable
 								people={[
 									{
-										...state.purpose.requester,
+										...state.requester,
 										editAction: updatedPerson => {
 											dispatch({
 												type: 'fieldChange',
@@ -154,7 +154,7 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 							/>
 						)}
 
-						{state.purpose.requester === null && (
+						{state.requester === null && (
 							<Button
 								variant={'outlined'}
 								className="addRequester"

@@ -5,7 +5,7 @@ import NewEventDialog from './NewEventDialog';
 import ChangeStatusDialog from './ChangeStatusDialog';
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
 import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import LightTooltip from '../editMultiple/LightTooltip';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 import {Error, Flag} from '@mui/icons-material';
@@ -148,10 +148,10 @@ const SearchResults = showFilterChips => {
 	};
 
 	const isFlag = params => {
-		if (params.row.wlhID?.includes('R')) {
+		if (params.row.flagged) {
 			return (
 				<>
-					{params.row.id}
+					{params.row.wildlifeHealthId}
 					<IconButton
 						onClick={() => {
 							setFlagDialog(true);
@@ -159,6 +159,13 @@ const SearchResults = showFilterChips => {
 					>
 						<Flag className='idFlag'/>
 					</IconButton>
+				</>
+			);
+		} else {
+			console.dir(params.row);
+			return (
+				<>
+					<Link to={`/wildlifeIds/detail/${params.row.id}`}>{params.row.wildlifeHealthId}</Link>
 				</>
 			);
 		}

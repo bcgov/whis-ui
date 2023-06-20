@@ -33,7 +33,7 @@ const TaxonomySearch = ({value, onValueChange, className}) => {
 					setData([]);
 				});
 		}, 150),
-		[]
+		[authHeaders]
 	);
 
 	return (

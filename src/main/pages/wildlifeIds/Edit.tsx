@@ -12,7 +12,8 @@ const Edit = () => {
 	const {pathname} = useLocation();
 
 	const dispatch = useDispatch();
-	const {loading, initialized, data} = useSelector(state => state.WildlifeHealthId);
+	const {working, initialized, data} = useSelector(state => state.WildlifeHealthId.single);
+
 
 	useEffect(() => {
 		dispatch({
@@ -28,7 +29,7 @@ const Edit = () => {
 		}
 	}, [pathname, id]);
 
-	if (!initialized || loading) {
+	if (!initialized || working) {
 		return (<Loading/>);
 	}
 

@@ -17,19 +17,6 @@ const Status = ({dirty, expansionEvent, dispatch, state, resetState, saveState})
 		{value: 'UNASSIGNED', label: 'Unassigned'}
 	];
 
-	const fakeIDs = [
-		{id: '23-00001'},
-		{id: '23-00010'},
-		{id: '23-00023'},
-		{id: '23-00022'},
-		{id: '23-00066'},
-		{id: '22-00022'},
-		{id: '22-00077'},
-		{id: '22-00055'},
-		{id: '22-00044'},
-		{id: '22-00033'}
-	];
-
 	const [returnedDialogOpen, setReturnedDialogOpen] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
@@ -110,29 +97,140 @@ const Status = ({dirty, expansionEvent, dispatch, state, resetState, saveState})
 
 	function renderDetailed(status) {
 		switch (status) {
-			case 'ASSIGNED':
-				return (
+		case 'ASSIGNED':
+			return (
+				<TextField
+					className="reason"
+					label="Reason (Enter a reason why you are changing the WLH ID status)"
+					id="reason"
+					name="reason"
+					multiline
+					onChange={e => {
+						dispatch({
+							type: 'fieldChange',
+							payload: {
+								field: 'status.dirty.reason',
+								value: e.target.value
+							}
+						});
+					}}
+					value={state.status.dirty.reason}
+					rows={3}
+				/>
+			);
+		case 'UNASSIGNED':
+			return (
+				<FormGroup>
 					<TextField
 						className="reason"
 						label="Reason (Enter a reason why you are changing the WLH ID status)"
 						id="reason"
 						name="reason"
 						multiline
-						onChange={e => {
-							dispatch({
-								type: 'fieldChange',
-								payload: {
-									field: 'status.dirty.reason',
-									value: e.target.value
-								}
-							});
-						}}
+						required
 						value={state.status.dirty.reason}
 						rows={3}
+						{...register('reason', {
+							required: 'Enter the reason.',
+							onChange(e) {
+								dispatch({
+									type: 'fieldChange',
+									payload: {
+										field: 'status.dirty.reason',
+										value: e.target.value
+									}
+								});
+							}
+						})}
+						error={!!errors?.reason}
 					/>
-				);
-			case 'UNASSIGNED':
-				return (
+					<ValidationError hidden={!errors?.reason} message={errors.reason?.message} />
+				</FormGroup>
+			);
+		case 'RETIRED':
+			return (
+				<>
+					<Box className="retiredSection">
+						<FormGroup className="retiredSwitches">
+							<Typography variant="body1">Recapture Kits Returned</Typography>
+							<FormControlLabel
+								className="switchLabels"
+								control={
+									<Switch
+										onChange={e => {
+											dispatch({
+												type: 'fieldChange',
+												payload: {
+													field: 'status.dirty.additionalAttributes.recaptureKitsReturned',
+													value: e.target.checked
+												}
+											});
+											isRecaptureKitsReturned(e);
+										}}
+										checked={isReturned}
+										onClick={() => {
+											setIsReturned(!isReturned);
+										}}
+										className="switch"
+									/>
+								}
+								label={isReturned ? 'Yes' : 'No'}
+							/>
+							<Typography variant="body1">Recapture Status</Typography>
+							<FormControlLabel
+								className="switchLabels"
+								control={
+									<Switch
+										onChange={e => {
+											dispatch({
+												type: 'fieldChange',
+												payload: {
+													field: 'status.dirty.additionalAttributes.recaptureStatus',
+													value: e.target.checked
+												}
+											});
+										}}
+										checked={state.status.dirty.additionalAttributes.recaptureStatus}
+										className="switch"
+									/>
+								}
+								label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`}
+							/>
+						</FormGroup>
+						{state.status.dirty.additionalAttributes.recaptureStatus ? (
+							<>
+								{/* Should be Autocomplete with the ID number list */}
+								{isFlag()}
+								<LightTooltip title="Flag it if the ID is not available as a to do list for the future">
+									<IconButton
+										onClick={() => {
+											setFlag(!flag);
+										}}
+										className="flagIcon"
+									>
+										{flag && <FlagIcon sx={{fontSize: '40px', color: '#d8292f'}} />}
+										{flag || <FlagOutlinedIcon sx={{fontSize: '40px'}} />}
+									</IconButton>
+								</LightTooltip>
+							</>
+						) : (
+							<></>
+						)}
+					</Box>
+					<ConfirmDialog
+						open={returnedDialogOpen}
+						close={() => {
+							setReturnedDialogOpen(false);
+							// setIsReturned(false);
+						}}
+						acceptAction={() => {
+							setReturnedDialogOpen(false);
+							setIsReturned(true);
+						}}
+						title={'Update Confirmation'}
+						content={`Do you want to switch the Sample Kits Returned to Yes?`}
+					/>
+
 					<FormGroup>
 						<TextField
 							className="reason"
@@ -159,121 +257,10 @@ const Status = ({dirty, expansionEvent, dispatch, state, resetState, saveState})
 						/>
 						<ValidationError hidden={!errors?.reason} message={errors.reason?.message} />
 					</FormGroup>
-				);
-			case 'RETIRED':
-				return (
-					<>
-						<Box className="retiredSection">
-							<FormGroup className="retiredSwitches">
-								<Typography variant="body1">Recapture Kits Returned</Typography>
-								<FormControlLabel
-									className="switchLabels"
-									control={
-										<Switch
-											onChange={e => {
-												dispatch({
-													type: 'fieldChange',
-													payload: {
-														field: 'status.dirty.additionalAttributes.recaptureKitsReturned',
-														value: e.target.checked
-													}
-												});
-												isRecaptureKitsReturned(e);
-											}}
-											checked={isReturned}
-											onClick={() => {
-												setIsReturned(!isReturned);
-											}}
-											className="switch"
-										/>
-									}
-									label={isReturned ? 'Yes' : 'No'}
-								/>
-								<Typography variant="body1">Recapture Status</Typography>
-								<FormControlLabel
-									className="switchLabels"
-									control={
-										<Switch
-											onChange={e => {
-												dispatch({
-													type: 'fieldChange',
-													payload: {
-														field: 'status.dirty.additionalAttributes.recaptureStatus',
-														value: e.target.checked
-													}
-												});
-											}}
-											checked={state.status.dirty.additionalAttributes.recaptureStatus}
-											className="switch"
-										/>
-									}
-									label={`${state.status.dirty.additionalAttributes.recaptureStatus ? 'On' : 'Off'}`}
-								/>
-							</FormGroup>
-							{state.status.dirty.additionalAttributes.recaptureStatus ? (
-								<>
-									{/* Should be Autocomplete with the ID number list */}
-									{isFlag()}
-									<LightTooltip title="Flag it if the ID is not available as a to do list for the future">
-										<IconButton
-											onClick={() => {
-												setFlag(!flag);
-											}}
-											className="flagIcon"
-										>
-											{flag && <FlagIcon sx={{fontSize: '40px', color: '#d8292f'}} />}
-											{flag || <FlagOutlinedIcon sx={{fontSize: '40px'}} />}
-										</IconButton>
-									</LightTooltip>
-								</>
-							) : (
-								<></>
-							)}
-						</Box>
-						<ConfirmDialog
-							open={returnedDialogOpen}
-							close={() => {
-								setReturnedDialogOpen(false);
-								// setIsReturned(false);
-							}}
-							acceptAction={() => {
-								setReturnedDialogOpen(false);
-								setIsReturned(true);
-							}}
-							title={'Update Confirmation'}
-							content={`Do you want to switch the Sample Kits Returned to Yes?`}
-						/>
-
-						<FormGroup>
-							<TextField
-								className="reason"
-								label="Reason (Enter a reason why you are changing the WLH ID status)"
-								id="reason"
-								name="reason"
-								multiline
-								required
-								value={state.status.dirty.reason}
-								rows={3}
-								{...register('reason', {
-									required: 'Enter the reason.',
-									onChange(e) {
-										dispatch({
-											type: 'fieldChange',
-											payload: {
-												field: 'status.dirty.reason',
-												value: e.target.value
-											}
-										});
-									}
-								})}
-								error={!!errors?.reason}
-							/>
-							<ValidationError hidden={!errors?.reason} message={errors.reason?.message} />
-						</FormGroup>
-					</>
-				);
-			default:
-				return <></>;
+				</>
+			);
+		default:
+			return <></>;
 		}
 	}
 

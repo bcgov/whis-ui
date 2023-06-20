@@ -1,7 +1,6 @@
 import React from 'react';
 import {Route} from 'react-router';
 import Dashboard from '../pages/Dashboard';
-import List from '../pages/wildlifeIds/List';
 import Inventory from '../pages/wildlifeIds/Inventory';
 import Generate from '../pages/wildlifeIds/Generate';
 import DefaultLayout from "../layouts/DefaultLayout";
@@ -13,7 +12,6 @@ import ContactList from '../pages/ContactList';
 
 const WildlifeIdRoutes = [
 	<Route key='/wildlifeIds' path='/wildlifeIds' element={<DefaultLayout showNavigation={true}><Dashboard/></DefaultLayout>}/>,
-	<Route key='/wildlifeIds/list' path='/wildlifeIds/list' element={<DefaultLayout><List/></DefaultLayout>}/>,
 	<Route key='/wildlifeIds/inventory' path='/wildlifeIds/inventory' element={<DefaultLayout><Inventory/></DefaultLayout>}/>,
 	<Route key='/wildlifeIds/generate' path='/wildlifeIds/generate' element={<DefaultLayout><Generate/></DefaultLayout>}/>,
 	<Route key='/wildlifeIds/detail/:id' path='/wildlifeIds/detail/:id' element={<DefaultLayout><Detail/></DefaultLayout>}/>,

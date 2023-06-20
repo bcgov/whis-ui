@@ -8,7 +8,7 @@ const Event = ({ state, expansionEvent }) => {
 			{state.events.map((event, i) => (
 				<EventDetails
 					expansionEvent={expansionEvent}
-					key={`event-${i}`}
+					key={`event-${event.id}`}
 					state={state}
 					index={i}
 				/>

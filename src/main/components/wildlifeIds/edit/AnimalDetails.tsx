@@ -7,13 +7,22 @@ import CodeLookup from '../../util/CodeLookup';
 import CancelDialog from '../../util/CancelDialog';
 import ConfirmDialog from '../../util/ConfirmDialog';
 import TaxonomySearch from "../../util/TaxonomySearch";
+import {useSelector} from "../../../../state/utilities/use_selector";
+import Loading from "../../util/Loading";
 
 const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, saveState}) => {
-	const {mappedCodes: validSex} = useCodeTable('animal_sex');
-	const {mappedCodes: regions} = useCodeTable('region');
 
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+	const {
+		region: regions,
+		animal_sex: sexes
+	} = useSelector(state => state.CodeTables.tables);
+	const {initialized: codeTablesLoaded} = useSelector(state => state.CodeTables);
+
+	if (!codeTablesLoaded) {
+		return (<Loading/>);
+	}
 
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
@@ -24,18 +33,18 @@ const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, save
 				<Box className="info">
 					<span>
 						<Typography variant="body2">Species</Typography>
-						<Typography variant="body1">{state.animalDetails.species}</Typography>
+						<Typography variant="body1">{state.species?.englishName}</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Sex</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'animal_sex'} code={state.animalDetails.sex}/>
+							<CodeLookup codeTable={'animal_sex'} code={state.animalSex}/>
 						</Typography>
 					</span>
 					<span>
 						<Typography variant="body2">Home Region</Typography>
 						<Typography variant="body1">
-							<CodeLookup codeTable={'regions'} code={state.animalDetails.homeRegion}/>
+							<CodeLookup codeTable={'regions'} code={state.region}/>
 						</Typography>
 					</span>
 				</Box>
@@ -51,28 +60,28 @@ const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, save
 							}
 						})}
 						className="species"
-						value={state.animalDetails.species}
+						value={state.species}
 					/>
 
 					<TextField
 						select
 						className="leftColumn"
 						label="Home Region"
-						id="homeRegion"
-						value={state.animalDetails.homeRegion}
+						id="region"
+						value={state.region}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'animalDetails.homeRegion',
+									field: 'region',
 									value: e.target.value
 								}
 							});
 						}}
 					>
-						{regions.map(r => (
-							<MenuItem key={r.value} value={r.value}>
-								{r.label}
+						{regions.codes.map(r => (
+							<MenuItem key={r.code} value={r.code}>
+								{r.name}
 							</MenuItem>
 						))}
 					</TextField>
@@ -81,25 +90,25 @@ const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, save
 						className="rightColumn"
 						id="sex"
 						label="Sex"
-						value={state.animalDetails.sex}
+						value={state.animalSex}
 						onChange={e => {
 							dispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'animalDetails.sex',
+									field: 'animalSex',
 									value: e.target.value
 								}
 							});
 						}}
 					>
-						{validSex.map(m => (
-							<MenuItem key={m.value} value={m.value}>
-								{m.label}
+						{sexes.codes.map(m => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
 					<Box className="identifier">
-						{state.animalDetails.identifiers.map((identifier, index) => (
+						{state.identifiers.map((identifier, index) => (
 							<Box className="identifierEntry">
 								<IdentifierEntry identifier={identifier} index={index} dispatch={dispatch}/>
 							</Box>
@@ -110,7 +119,7 @@ const AnimalDetails = ({dirty, expansionEvent, dispatch, state, resetState, save
 						className="addIdentifier"
 						onClick={() => {
 							dispatch({
-								type: 'animalDetails.identifiers.add'
+								type: 'identifiers.add'
 							});
 						}}
 					>

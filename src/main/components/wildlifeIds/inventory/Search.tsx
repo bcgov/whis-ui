@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useReducer, useRef, useState} from 'react';
+import React, {Reducer, useLayoutEffect, useReducer, useRef, useState} from 'react';
 import _ from 'lodash';
 
 import {Box, Button, Card, Grid, TextField, Typography, useMediaQuery} from '@mui/material';
@@ -10,48 +10,7 @@ import {useSelector} from '../../../../state/utilities/use_selector';
 import {getDevMode} from '../../../../state/utilities/config_helper';
 import {SEARCH_EXECUTE} from '../../../../state/actions';
 import {useDispatch} from 'react-redux';
-import {getSearchRequestFromSearchFormState} from '../../../../state/utilities/search_api';
-
-// from the API -- keep this interface in sync.
-interface SearchRequest {
-	keywords?: string[];
-	minimumId?: string;
-	maximumId?: string;
-	namedDateRanges?: string[];
-	creation?: {
-		startDate?: string;
-		endDate?: string;
-	};
-	status?: string;
-	purpose?: string;
-	requester?: {
-		name?: string;
-		organization?: string;
-	};
-	species?: {
-		code: string;
-	};
-	region?: number | string;
-	identifier?: {
-		type?: string;
-		details?: string;
-	};
-	events?: {
-		type?: string;
-		startDate?: string;
-		endDate?: string;
-		submitter?: {
-			name?: string;
-			organization?: string;
-		};
-		location?: {
-			type?: string;
-			details?: string;
-		};
-		ageClass?: string;
-		samples?: string;
-	};
-}
+import {getSearchRequestFromSearchFormState, SearchFormState} from '../../../../state/utilities/search_api';
 
 const Search: React.FC = () => {
 	const navigate = useNavigate();
@@ -80,46 +39,32 @@ const Search: React.FC = () => {
 		return updatedState;
 	}
 
-	const [searchRequest, searchDispatch] = useReducer(
+	const [searchRequest, searchDispatch] = useReducer<Reducer<SearchFormState, any>, any>(
 		searchReducer,
 		{
 			keywords: '',
 			minimumId: '',
 			maximumId: '',
 			namedDateRanges: [],
-			creation: {
-				startDate: '',
-				endDate: ''
-			},
+			creationStartDate: '',
+			creationEndDate: '',
 			status: '',
 			purpose: '',
-			requester: {
-				name: '',
-				organization: ''
-			},
-			species: {
-				code: ''
-			},
+			requesterName: '',
+			requesterOrganization: '',
 			region: '',
-			identifier: {
-				type: '',
-				details: ''
-			},
-			events: {
-				type: '',
-				startDate: '',
-				endDate: '',
-				submitter: {
-					name: '',
-					organization: ''
-				},
-				location: {
-					type: '',
-					details: ''
-				},
-				ageClass: '',
-				samples: ''
-			}
+			speciesObject: null,
+			identifierType: '',
+			identifierDetails: '',
+			eventType: '',
+			eventStartDate: '',
+			eventEndDate: '',
+			eventSubmitterName: '',
+			eventSubmitterOrganization: '',
+			eventLocationType: '',
+			eventLocationDetails: '',
+			eventAgeClass: '',
+			eventSamples: ''
 		},
 		searchReducerInit
 	);
@@ -155,14 +100,6 @@ const Search: React.FC = () => {
 						</>
 					)}
 				</Box>
-				<Button
-					variant={'contained'}
-					onClick={() => {
-						navigate('/wildlifeIds/list');
-					}}
-				>
-					Go to IDs List
-				</Button>
 			</Box>
 
 			<Card className="paperStyle">
@@ -207,18 +144,18 @@ const Search: React.FC = () => {
 							>
 								{advancedSearchExpand ? (
 									<>
-										Hide Filters <FilterAltOutlinedIcon />
+										Hide Filters <FilterAltOutlinedIcon/>
 									</>
 								) : (
 									<>
-										Show Filters <FilterAltOutlinedIcon />
+										Show Filters <FilterAltOutlinedIcon/>
 									</>
 								)}
 							</Button>
 						</Grid>
 					</Grid>
 					<Grid container item spacing={4} ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
-						<HidableSearchForm formState={searchRequest} dispatch={searchDispatch} />
+						<HidableSearchForm formState={searchRequest} dispatch={searchDispatch}/>
 					</Grid>
 					<Grid item xs={12} md={12}>
 						<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
@@ -245,7 +182,7 @@ const Search: React.FC = () => {
 				</Grid>
 			</Card>
 
-			<SearchResults />
+			<SearchResults/>
 		</Box>
 	);
 };

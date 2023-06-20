@@ -22,6 +22,7 @@ import useCodeTable from '../../../hooks/useCodeTable';
 import PersonnelDialog from './PersonnelDialog';
 import CancelDialog from '../../util/CancelDialog';
 import ConfirmDialog from '../../util/ConfirmDialog';
+import ContactDisplay from "../../contact/ContactDisplay";
 
 const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
 	const CHARACTER_LIMIT = 500;
@@ -31,45 +32,10 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
-	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(false);
+	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(true);
 	const [addSubmitterDialogOpen, setAddSubmitterDialogOpen] = useState(false);
 	const [personnelTableDetails, setPersonnelTableDetails] = useState([]);
 	const [serial, setSerial] = useState(0);
-
-	useEffect(() => {
-		if (event.submitters.length > 0) {
-			setShouldShowCopyFromRequesterButton(false);
-		} else {
-			setShouldShowCopyFromRequesterButton(!!state.purpose.requester);
-		}
-	}, [event.submitters, state.purpose.requester, serial, state]);
-
-	useEffect(() => {
-		const details = event.submitters.map((submitter, submitterIndex) => ({
-			...submitter,
-			editAction: updatedPerson => {
-				dispatch({
-					type: 'fieldChange',
-					payload: {
-						field: `events[${index}].submitters[${submitterIndex}]`,
-						value: updatedPerson
-					}
-				});
-				setSerial(serial + 1);
-			},
-			deleteAction: () => {
-				dispatch({
-					type: 'submitters.delete',
-					payload: {
-						eventIndex: index,
-						submitterIndex
-					}
-				});
-				setSerial(serial + 1);
-			}
-		}));
-		setPersonnelTableDetails(details);
-	}, [event.submitters, index, serial]);
 
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
@@ -168,12 +134,14 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 					<Box className="locations">
 						{event.locations.map((location, locationIndex) => (
 							<Box className="locationEntry" key={index}>
-								<LocationEntry
-									location={location}
-									dispatch={dispatch}
-									eventIndex={index}
-									locationIndex={locationIndex}
-								/>
+								coming soon...
+								{JSON.stringify(location, null, 2)}
+								{/*<LocationEntry*/}
+								{/*	location={location}*/}
+								{/*	dispatch={dispatch}*/}
+								{/*	eventIndex={index}*/}
+								{/*	locationIndex={locationIndex}*/}
+								{/*/>*/}
 							</Box>
 						))}
 					</Box>
@@ -214,12 +182,7 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 						)}
 					</FormGroup>
 
-					{event.submitters.length > 0 && (
-						<PersonnelTable
-							noun="Submitter"
-							people={personnelTableDetails}
-						/>
-					)}
+					{event.submitter && <ContactDisplay contact={event.submitter}/>}
 
 					<Button
 						variant={'outlined'}
@@ -258,39 +221,39 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 							className="sampleLabel"
 							control={
 								<Switch
-									checked={event.additionalAttributes.samplesCollected}
+									checked={event.samplesCollected}
 									onChange={e => {
-										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.samplesCollected`, value: e.target.checked}});
+										dispatch({type: 'fieldChange', payload: {field: `events[${index}].samplesCollected`, value: e.target.checked}});
 									}}
 								/>
 							}
-							label={`${event.additionalAttributes.samplesCollected ? 'Yes' : 'No'}`}
+							label={`${event.samplesCollected ? 'Yes' : 'No'}`}
 						/>
 						<Typography variant="body1">Samples Sent for Testing?</Typography>
 						<FormControlLabel
 							className="sampleLabel"
 							control={
 								<Switch
-									checked={event.additionalAttributes.samplesSentForTesting}
+									checked={event.samplesSentForTesting}
 									onChange={e => {
-										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.samplesSentForTesting`, value: e.target.checked}});
+										dispatch({type: 'fieldChange', payload: {field: `events[${index}].samplesSentForTesting`, value: e.target.checked}});
 									}}
 								/>
 							}
-							label={`${event.additionalAttributes.samplesSentForTesting ? 'Yes' : 'No'}`}
+							label={`${event.samplesSentForTesting ? 'Yes' : 'No'}`}
 						/>
 						<Typography variant="body1">Test Results Received?</Typography>
 						<FormControlLabel
 							className="sampleLabel"
 							control={
 								<Switch
-									checked={event.additionalAttributes.testResultsReceived}
+									checked={event.testResultsReceived}
 									onChange={e => {
-										dispatch({type: 'fieldChange', payload: {field: `events[${index}].additionalAttributes.testResultsReceived`, value: e.target.checked}});
+										dispatch({type: 'fieldChange', payload: {field: `events[${index}].testResultsReceived`, value: e.target.checked}});
 									}}
 								/>
 							}
-							label={`${event.additionalAttributes.testResultsReceived ? 'Yes' : 'No'}`}
+							label={`${event.testResultsReceived ? 'Yes' : 'No'}`}
 						/>
 					</FormGroup>
 

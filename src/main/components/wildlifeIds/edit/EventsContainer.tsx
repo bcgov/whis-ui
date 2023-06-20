@@ -7,7 +7,7 @@ const EventsContainer = ({dirty, expansionEvent, state, dispatch, resetState, sa
 		<>
 			{state.events.map((event, i) => (
 				<EventDetails
-					key={`event-${i}`}
+					key={`event-${event.id}`}
 					expansionEvent={expansionEvent}
 					dirty={dirty}
 					event={event}

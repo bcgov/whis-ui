@@ -2,6 +2,7 @@ import {Box, Card, Paper, Table, TableCell, TableContainer, TableHead, TableRow,
 import React from 'react';
 import Expandable from '../../pageElements/Expandable';
 import CodeLookup from '../../util/CodeLookup';
+import ContactDisplay from "../../contact/ContactDisplay";
 
 const Purpose = ({state, expansionEvent}) => {
 	const requester = state.requester;
@@ -35,42 +36,12 @@ const Purpose = ({state, expansionEvent}) => {
 				<Box className="cardDetails">
 					<Box className="hidableDetails">
 						<Typography variant="body2">Project Details</Typography>
-						<Typography className="project_details_content">{state.assocatedProjectDetails}</Typography>
+						<Typography className="project_details_content">{state.associatedProjectDetails}</Typography>
 					</Box>
 					<Box className="hidableDetails">
 						<Typography className="title">Requester</Typography>
-						<TableContainer component={Box}>
-							<Table className="personnelTable">
-								<TableHead>
-									<TableRow className="tableHead">
-										<TableCell>First</TableCell>
-										<TableCell>Last</TableCell>
-										<TableCell>Region</TableCell>
-										<TableCell>Organization</TableCell>
-										<TableCell>Role</TableCell>
-										<TableCell>Phone</TableCell>
-										<TableCell>Email</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableHead>
-									<TableRow>
-										<TableCell>{requester.firstName}</TableCell>
-										<TableCell>{requester.lastName}</TableCell>
-										<TableCell>
-											{requester.region || ''}
-										</TableCell>
-										<TableCell>
-											{requester.organization || ''}
-										</TableCell>
-										<TableCell>
-											{requester.organizationalRole || ''}
-										</TableCell>
-										<TableCell className="phone">{requester.phoneNumber}</TableCell>
-										<TableCell>{requester.email}</TableCell>
-									</TableRow>
-								</TableHead>
-							</Table>
-						</TableContainer>
+						{state.requester !== null && <ContactDisplay contact={state.requester}/>}
+
 					</Box>
 				</Box>
 			</Expandable.Detail>
