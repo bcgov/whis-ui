@@ -139,7 +139,7 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr, options}) 
 		switch (attr) {
 			case 'region':
 				return (
-					<TextField label="Region" className="region" select>
+					<TextField label="Region" className="multiEdit_field" select>
 						{options?.codes?.map(m => (
 							<MenuItem key={m.code} value={m.code}>
 								{m.name}
@@ -150,7 +150,7 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr, options}) 
 				break;
 			case 'sex':
 				return (
-					<TextField label="Sex" className="region" select>
+					<TextField label="Sex" className="multiEdit_field" select>
 						{options?.codes?.map(m => (
 							<MenuItem key={m.code} value={m.code}>
 								{m.name}
@@ -227,10 +227,8 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr, options}) 
 					{defaultRadio === 'individual' && renderTable()}
 				</DialogContent>
 				<DialogActions>
-					<Box className="cardButtons">
 						<Button
 							variant={'contained'}
-							className="update_btn"
 							onClick={() => {
 								acceptAction();
 								setApplyRadio('all');
@@ -240,14 +238,12 @@ const AnimalDetailsDialog = ({title, open, close, acceptAction, attr, options}) 
 						</Button>
 						<Button
 							variant={'outlined'}
-							className="update_btn"
 							onClick={() => {
 								setCancelDialog(true);
 							}}
 						>
 							Close
 						</Button>
-					</Box>
 				</DialogActions>
 			</Dialog>
 			<CancelDialog

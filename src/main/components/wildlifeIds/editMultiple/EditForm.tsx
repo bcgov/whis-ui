@@ -7,6 +7,7 @@ import _ from 'lodash';
 import AnimalDetails from './AnimalDetails';
 import Purpose from './Purpose';
 import EditIDsListDialog from './EditIDsListDialog';
+import { Add } from '@mui/icons-material';
 const EditForm = () => {
 	const [addEventConfirmationDialogOpen, setAddEventConfirmationDialogOpen] = useState(false);
 	const [selectIDsDialogOpen, setSelectIDsDialogOpen] = useState(false);
@@ -40,7 +41,7 @@ const EditForm = () => {
 						setAddEventConfirmationDialogOpen(true);
 					}}
 				>
-					+ Add New Event
+					<Add/> Add New Event
 				</Button>
 			</Box>
 

@@ -168,7 +168,7 @@ const Search: React.FC = () => {
 			<Card className="paperStyle">
 				<Grid container spacing={4} className="grid_absolute">
 					<Grid container item xs={12} md={12} spacing={2} alignItems={'center'}>
-						<Grid item xs={12} md={10.8}>
+						<Grid item xs={12} md={10.5}>
 							<TextField
 								label="Enter WLH ID Number , Date, Status, Event History and Associated Project Keywords"
 								required
@@ -197,7 +197,7 @@ const Search: React.FC = () => {
 								}}
 							/>
 						</Grid>
-						<Grid item xs={12} md={1.2}>
+						<Grid item xs={12} md={1.5}>
 							<Button
 								className="hideFilterButton"
 								onClick={() => {

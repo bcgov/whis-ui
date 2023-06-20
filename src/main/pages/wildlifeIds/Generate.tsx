@@ -300,7 +300,7 @@ const Generate: React.FC = () => {
 							</Grid>
 
 
-							<Grid item xs={3} md={9}>
+							<Grid item xs={12} md={9.5}>
 								<FormGroup>
 									<ContactAutofill className="contact" label='Requester' value={formState.requester}
 																	 onValueChange={v => {
@@ -309,7 +309,7 @@ const Generate: React.FC = () => {
 								</FormGroup>
 							</Grid>
 
-							<Grid item xs={1} md={3}>
+							<Grid item xs={12} md={2.5} alignSelf={'center'}>
 								<NewContactComponent createHandler={(contact) => {
 									setFormState({
 										...formState, requester: {

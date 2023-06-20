@@ -36,14 +36,6 @@
             width: 100%;
         }
 
-        // .grid_absolute {
-        //     position: absolute;
-        //     z-index: 1000;
-        //     overflow: auto;
-        // }
-
-      
-
         .cardButtons {
             display: flex;
             justify-content: flex-end;
@@ -75,9 +67,8 @@
         }
 
         .hideFilterButton {
-            width: 125px;
+            width: 100%;
             height: 42px;
-            text-transform: capitalize;
             font-size: 14px;
             color: #adb5bd;
         }

@@ -57,7 +57,6 @@ const Expandable = ({children, initiallyExpanded = false, expansionEvent = {even
 			</>
 		);
 	}
-	
 
 	return (
 		<>
@@ -65,6 +64,7 @@ const Expandable = ({children, initiallyExpanded = false, expansionEvent = {even
 				{renderTitle()}
 				<IconButton
 					className="expand_icon"
+					disableRipple
 					onClick={() => {
 						setExpanded(!expanded);
 					}}

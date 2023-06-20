@@ -70,10 +70,8 @@ const EditIDsListDialog = ({open, close}) => {
 				/>
 			</DialogContent>
 			<DialogActions>
-				<Box className="cardButtons">
 					<Button
 						variant={'contained'}
-						className="update_btn"
 						onClick={() => {
 							close();
 						}}
@@ -82,7 +80,6 @@ const EditIDsListDialog = ({open, close}) => {
 					</Button>
 					<Button
 						variant={'outlined'}
-						className="update_btn"
 						onClick={() => {
 							close();
 							setMultipleStatus('');
@@ -90,7 +87,6 @@ const EditIDsListDialog = ({open, close}) => {
 					>
 						Close
 					</Button>
-				</Box>
 			</DialogActions>
 		</Dialog>
 	);

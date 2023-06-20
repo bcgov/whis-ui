@@ -1,12 +1,11 @@
 import {Box, Typography} from '@mui/material';
 import React from 'react';
 import HidableDetails from './HidableDetails';
-import CodeLookup from '../../util/CodeLookup';
 import Expandable from '../../pageElements/Expandable';
 
 const EventDetails = ({state, index, expansionEvent}) => {
 	return (
-		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'details_card'}>
 			<Expandable.Title>
 				<span className='cardSubtitle'>
 					<Typography>Event {index + 1}</Typography>

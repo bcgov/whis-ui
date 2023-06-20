@@ -1,41 +1,37 @@
-import {Box, Card, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
+import {Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography} from '@mui/material';
 import React from 'react';
 import Expandable from '../../pageElements/Expandable';
 import CodeLookup from '../../util/CodeLookup';
 
 const AnimalDetails = ({state, expansionEvent}) => {
 	return (
-		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'details_card'}>
 			<Expandable.Title>
-				<span className='cardSubtitle'>
+				<span className="cardSubtitle">
 					<Typography>Animal Details</Typography>
 				</span>
-				<Box className='info'>
+				<Box className="info">
 					<span>
-						<Typography variant='body2'>Species</Typography>
-						<Typography variant='body1'>{state.species?.englishName || 'not set'}</Typography>
+						<Typography variant="body2">Species</Typography>
+						<Typography variant="body1">{state.species?.englishName || 'not set'}</Typography>
 					</span>
 					<span>
-						<Typography variant='body2'>Sex</Typography>
-						<Typography variant='body1'>
-							{state.animalSex?.name || 'not set'}
-						</Typography>
+						<Typography variant="body2">Sex</Typography>
+						<Typography variant="body1">{state.animalSex?.name || 'not set'}</Typography>
 					</span>
 					<span>
-						<Typography variant='body2'>Home Region</Typography>
-						<Typography variant='body1'>
-							{state.region?.name || 'not set'}
-						</Typography>
+						<Typography variant="body2">Home Region</Typography>
+						<Typography variant="body1">{state.region?.name || 'not set'}</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
-				<Box className='cardDetails'>
-					<Typography className='detailsSubtitle'>Identifiers</Typography>
+				<Box className="cardDetails">
+					<Typography className="detailsSubtitle">Identifiers</Typography>
 					<TableContainer component={Box}>
 						<Table>
 							<TableHead>
-								<TableRow className='tableHead'>
+								<TableRow className="tableHead">
 									<TableCell>Identifier Type</TableCell>
 									<TableCell>Identifier Name/Number</TableCell>
 								</TableRow>
