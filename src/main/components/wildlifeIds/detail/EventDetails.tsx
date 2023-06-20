@@ -7,7 +7,7 @@ const EventDetails = ({state, index, expansionEvent}) => {
 	const [event, setEvent] = useState(state.events[index]);
 
 	return (
-		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'details_card'}>
 			<Expandable.Title>
 				<span className='cardSubtitle'>
 					<Typography>Event {index + 1}</Typography>

@@ -40,6 +40,7 @@ const TaxonomySearch = ({value, onValueChange, className}) => {
 		<>
 			<Autocomplete
 				disablePortal
+				freeSolo
 				options={data}
 				onChange={(event, newValue) => {
 					onValueChange(newValue);

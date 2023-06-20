@@ -40,7 +40,7 @@ export const themeOptions: ThemeOptions = {
 					textTransform: 'none',
 					borderRadius: '5px',
 					fontSize: '0.9rem',
-					fontWeight: '400'
+					fontWeight: '700'
 				}
 			}
 		}

@@ -233,7 +233,6 @@ const Purpose = ({expansionEvent}) => {
 					<Box className="cardButtons">
 						<Button
 							variant={'contained'}
-							className="update_btn"
 							onClick={() => {
 								setConfirmDialogOpen(true);
 							}}
@@ -242,7 +241,6 @@ const Purpose = ({expansionEvent}) => {
 						</Button>
 						<Button
 							variant={'outlined'}
-							className="update_btn"
 							onClick={() => {
 								setCancelDialogOpen(true);
 							}}

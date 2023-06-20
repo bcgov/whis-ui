@@ -138,7 +138,6 @@ const AnimalDetails = ({expansionEvent}) => {
 					<Box className="cardButtons">
 						<Button
 							variant={'contained'}
-							className="update_btn"
 							onClick={() => {
 								setConfirmDialogOpen(true);
 							}}
@@ -147,7 +146,6 @@ const AnimalDetails = ({expansionEvent}) => {
 						</Button>
 						<Button
 							variant={'outlined'}
-							className="update_btn"
 							onClick={() => {
 								setCancelDialogOpen(true);
 							}}

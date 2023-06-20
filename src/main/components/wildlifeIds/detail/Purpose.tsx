@@ -8,7 +8,7 @@ const Purpose = ({state, expansionEvent}) => {
 	const requester = state.requester;
 
 	return (
-		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
+		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'details_card'}>
 			<Expandable.Title>
 				<span className="cardSubtitle">
 					<Typography>Purpose</Typography>

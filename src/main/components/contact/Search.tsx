@@ -37,60 +37,7 @@ const Search: React.FC = () => {
 			</Box>
 
 			<Card className="paperStyle">
-				<Box className="searchBar">
-					<TextField
-						label="Enter First Name or Last Name of a Contact or any Other Keywords"
-						className="eventKeywords"
-						required
-						InputProps={{
-							endAdornment: (
-								<Button
-									className="searchButton"
-									sx={searchButtonPosition ? {display: 'none'} : {display: 'auto'}}
-									variant={'contained'}
-								>
-									Search
-								</Button>
-							)
-						}}
-					/>
-					<Button
-						className="hideFilterButton"
-						onClick={() => {
-							setAdvancedSearchExpand(!advancedSearchExpand);
-							setSearchButtonPosition(!searchButtonPosition);
-						}}
-					>
-						{advancedSearchExpand ? (
-							<>
-								Hide Filters <FilterAltOutlinedIcon/>
-							</>
-						) : (
-							<>
-								Show Filters <FilterAltOutlinedIcon/>
-							</>
-						)}
-					</Button>
-				</Box>
-
-				<Box ref={ref} className="filterForm" sx={{display: advancedSearchExpand ? 'box' : 'none'}}>
-					<HidableSearchForm/>
-				</Box>
-				<Button className="searchButton" variant="outlined" sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}>
-					Clear
-				</Button>
-				<Button
-					className="searchButton"
-					sx={searchButtonPosition ? {display: 'auto'} : {display: 'none'}}
-					variant={'contained'}
-					onClick={() => {
-						setAdvancedSearchExpand(false);
-						setSearchButtonPosition(false);
-					}}
-				>
-					Search
-				</Button>
-				<Grid container spacing={4} className="grid_absolute">
+				<Grid container spacing={4}>
 					<Grid container item xs={12} md={12} spacing={2} alignItems={'center'}>
 						<Grid item xs={12} md={10.8}>
 							<TextField

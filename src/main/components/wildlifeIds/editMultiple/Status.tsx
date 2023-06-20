@@ -1,19 +1,5 @@
 import Expandable from '../../pageElements/Expandable';
-import {
-	Box,
-	Button,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogTitle,
-	FormControlLabel,
-	FormGroup,
-	IconButton,
-	MenuItem,
-	Switch,
-	TextField,
-	Typography
-} from '@mui/material';
+import {Box, Button, IconButton, Typography} from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import {DataGrid, GridColDef} from '@mui/x-data-grid';
@@ -127,7 +113,6 @@ const Status = ({expansionEvent}) => {
 					<Box className="cardButtons">
 						<Button
 							variant={'contained'}
-							className="update_btn"
 							onClick={() => {
 								setConfirmDialogOpen(true);
 							}}
@@ -136,7 +121,6 @@ const Status = ({expansionEvent}) => {
 						</Button>
 						<Button
 							variant={'outlined'}
-							className="update_btn"
 							onClick={() => {
 								setCancelDialogOpen(true);
 							}}

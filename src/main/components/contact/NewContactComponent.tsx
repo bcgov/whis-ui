@@ -39,6 +39,7 @@ const NewContactComponent = ({createHandler}) => {
 	return (
 		<>
 			<Button
+				sx={{ gap:'8px'}}
 				variant={'contained'}
 				disabled={working}
 				onClick={() => {
