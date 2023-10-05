@@ -1,122 +1,152 @@
 import Expandable from '../../pageElements/Expandable';
 import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
-import React, {useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import useCodeTable from '../../../hooks/useCodeTable';
 import PersonnelTable from './PersonnelTable';
 import PersonnelDialog from './PersonnelDialog';
 import CodeLookup from '../../util/CodeLookup';
 import ConfirmDialog from '../../util/ConfirmDialog';
 import CancelDialog from '../../util/CancelDialog';
+import _ from "lodash";
+import Debug from "../../util/Debug";
+import ContactDisplay from "../../contact/ContactDisplay";
 
-const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}) => {
+const Purpose = ({expansionEvent, wildlifeHealthId, applyChanges}) => {
 	const [addRequesterDialogOpen, setAddRequesterDialogOpen] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
-	const {mappedCodes: purposes} = useCodeTable('purposes');
+	const {mappedCodes: purposes} = useCodeTable('purpose');
+
+	function buildInitialLocalState(seed) {
+		return {
+			primaryPurpose: seed.primaryPurpose?.code || '',
+			secondaryPurpose: seed.secondaryPurpose?.code || '',
+			associatedProject: seed.associatedProject || '',
+			associatedProjectDetails: seed.associatedProjectDetails || ''
+		};
+	}
+
+	function formReducerInit(seed) {
+		return buildInitialLocalState(seed);
+	}
+
+	function formReducer(state, action) {
+		let updatedState = {...state};
+
+		switch (action.type) {
+		case 'reset':
+			updatedState = {...buildInitialLocalState(wildlifeHealthId)};
+			break;
+		case 'fieldChange':
+			_.set(updatedState, action.payload.field, action.payload.value);
+			break;
+		}
+
+		return updatedState;
+	}
+
+	const [localState, localDispatch] = useReducer(formReducer, wildlifeHealthId, formReducerInit);
+
+
+	const [dirty, setDirty] = useState(false);
+	useEffect(() => {
+		const compareBasis = buildInitialLocalState(wildlifeHealthId);
+		setDirty(!_.isEqual(compareBasis, localState));
+	}, [wildlifeHealthId, localState]);
+
 
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
 			<Expandable.Title>
-				<span className="cardSubtitle">
+				<span className='cardSubtitle'>
 					<Typography>Purpose</Typography>
 				</span>
-				<Box className="info">
+				<Box className='info'>
 					<span>
-						<Typography variant="body2">Primary Purpose</Typography>
-						<Typography variant="body1">
-							<CodeLookup codeTable={'purposes'} code={state.primaryPurpose}/>
-						</Typography>
-					</span>
-					<span>
-						<Typography variant="body2">Requester</Typography>
-						<Typography variant="body1">
-							{(state.requester && `${state.requester.firstName} ${state.requester.lastName}`) || 'unset'}
-						</Typography>
-					</span>
-					<span>
-						<Typography variant="body2">Organization</Typography>
-						<Typography variant="body1">
-							<CodeLookup codeTable={'organizations'} code={(state.requester && `${state.requester.organization}`) || 'unset'}/>
+						<Typography variant='body2'>Primary Purpose</Typography>
+						<Typography variant='body1'>
+							<CodeLookup codeTable={'purpose'} code={wildlifeHealthId.primaryPurpose?.code}/>
 						</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
-				<Box className="cardDetails">
-					<Typography className="detailsSubtitle">WLH ID information</Typography>
+				<Debug item={localState}/>
+				<Box className='cardDetails'>
+					<Typography className='detailsSubtitle'>WLH ID information</Typography>
 					<TextField
-						className="priPurpose"
+						className='priPurpose'
 						select
-						label="Primary Purpose"
-						value={state.primaryPurpose}
+						label='Primary Purpose'
+						value={localState.primaryPurpose}
 						onChange={e => {
-							dispatch({
+							localDispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'purpose.primaryPurpose',
+									field: 'primaryPurpose',
 									value: e.target.value
 								}
 							});
 						}}
 					>
-						{purposes.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{purposes.map((m) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
 					<TextField
-						className="secPurpose"
+						className='secPurpose'
 						select
-						label="Secondary Purpose"
-						value={state.secondaryPurpose}
+						label='Secondary Purpose'
+						value={localState.secondaryPurpose}
 						onChange={e => {
-							dispatch({
+							localDispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'purpose.secondaryPurpose',
+									field: 'secondaryPurpose',
 									value: e.target.value
 								}
 							});
 						}}
 					>
-						{purposes.map((m, i) => (
-							<MenuItem key={i} value={m.value}>
-								{m.label}
+						{purposes.map((m) => (
+							<MenuItem key={m.code} value={m.code}>
+								{m.name}
 							</MenuItem>
 						))}
 					</TextField>
 
 					<TextField
-						className="project"
-						label="Associated Project"
-						id="associatedProject"
-						name="associatedProject"
-						value={state.associatedProject}
+						className='project'
+						label='Associated Project'
+						id='associatedProject'
+						name='associatedProject'
+						value={localState.associatedProject}
 						onChange={e => {
-							dispatch({
+							localDispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'purpose.associatedProject',
+									field: 'associatedProject',
 									value: e.target.value
 								}
 							});
 						}}
 					/>
 					<TextField
-						className="projectDetails"
-						label="Project Details"
-						id="projectDetails"
-						name="projectDetails"
+						className='projectDetails'
+						label='Project Details'
+						id='projectDetails'
+						name='projectDetails'
 						multiline
 						rows={3}
-						value={state.associatedProjectDetails}
+						value={localState.associatedProjectDetails}
 						onChange={e => {
-							dispatch({
+							localDispatch({
 								type: 'fieldChange',
 								payload: {
-									field: 'purpose.projectDetails',
+									field: 'associatedProjectDetails',
 									value: e.target.value
 								}
 							});
@@ -124,75 +154,17 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 					/>
 
 					<Box>
-						<Typography className="detailsSubtitle">Requester</Typography>
-
-						{state.requester && (
-							<PersonnelTable
-								people={[
-									{
-										...state.requester,
-										editAction: updatedPerson => {
-											dispatch({
-												type: 'fieldChange',
-												payload: {
-													field: 'purpose.requester',
-													value: updatedPerson
-												}
-											});
-										},
-										deleteAction: () => {
-											dispatch({
-												type: 'fieldChange',
-												payload: {
-													field: 'purpose.requester',
-													value: null
-												}
-											});
-										}
-									}
-								]}
-							/>
-						)}
-
-						{state.requester === null && (
-							<Button
-								variant={'outlined'}
-								className="addRequester"
-								onClick={() => {
-									setAddRequesterDialogOpen(true);
-								}}
-							>
-								+ Add Requester
-							</Button>
-						)}
-
-						<PersonnelDialog
-							open={addRequesterDialogOpen}
-							acceptAction={p => {
-								dispatch({
-									type: 'fieldChange',
-									payload: {
-										field: 'purpose.requester',
-										value: p
-									}
-								});
-								setAddRequesterDialogOpen(false);
-							}}
-							cancelAction={() => {
-								setAddRequesterDialogOpen(false);
-							}}
-							initialState={null}
-						/>
+						<Typography className='detailsSubtitle'>Requester</Typography>
 					</Box>
+					<ContactDisplay contact={wildlifeHealthId.requester}/>
 				</Box>
 				<ConfirmDialog
 					open={confirmDialogOpen}
 					close={() => {
-						resetState();
 						setConfirmDialogOpen(false);
 					}}
 					acceptAction={() => {
-						saveState();
+						applyChanges('purpose', localState);
 						setConfirmDialogOpen(false);
 					}}
 					title={'Update Confirmation'}
@@ -203,19 +175,23 @@ const Purpose = ({dirty, expansionEvent, dispatch, state, resetState, saveState}
 					close={() => {
 						setCancelDialogOpen(false);
 					}}
-					acceptAction={resetState}
+					acceptAction={() => localDispatch({type: 'reset'})}
 					title={'Cancel WLH ID Purpose Update'}
 					content={'You have not saved your changes. Are you sure you want to cancel?'}
 				/>
-				<Box className="cardButtons">
-					<Button disabled={!dirty} variant={'contained'} className="update_btn" onClick={() => {
+				<Box className='cardButtons'>
+					<Button
+						disabled={!dirty} variant={'contained'} className='update_btn' onClick={() => {
 						setConfirmDialogOpen(true);
-					}}>
+					}}
+					>
 						Update
 					</Button>
-					<Button disabled={!dirty} variant={'outlined'} className="update_btn" onClick={() => {
+					<Button
+						disabled={!dirty} variant={'outlined'} className='update_btn' onClick={() => {
 						setCancelDialogOpen(true);
-					}}>
+					}}
+					>
 						Cancel
 					</Button>
 				</Box>

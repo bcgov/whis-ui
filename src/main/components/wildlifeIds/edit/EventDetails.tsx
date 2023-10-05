@@ -15,91 +15,119 @@ import {
 	Typography
 } from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import LocationEntry from './LocationEntry';
 import React, {useEffect, useState} from 'react';
-import PersonnelTable from './PersonnelTable';
 import useCodeTable from '../../../hooks/useCodeTable';
 import PersonnelDialog from './PersonnelDialog';
 import CancelDialog from '../../util/CancelDialog';
 import ConfirmDialog from '../../util/ConfirmDialog';
 import ContactDisplay from "../../contact/ContactDisplay";
+import Debug from "../../util/Debug";
+import LocationEntry from "./LocationEntry";
+import ContactAutofill from "../../contact/ContactAutofill";
 
-const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, resetState, saveState}) => {
+const EventDetails = ({
+												expansionEvent,
+												dirty,
+												event,
+												index,
+												formDispatch,
+												applyChanges,
+											}) => {
 	const CHARACTER_LIMIT = 500;
 
-	const {mappedCodes: ageClasses} = useCodeTable('animal_age');
+	const {mappedCodes: ageClasses} = useCodeTable('animal_age_class');
 
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
-	const [shouldShowCopyFromRequesterButton, setShouldShowCopyFromRequesterButton] = useState(true);
-	const [addSubmitterDialogOpen, setAddSubmitterDialogOpen] = useState(false);
-	const [personnelTableDetails, setPersonnelTableDetails] = useState([]);
-	const [serial, setSerial] = useState(0);
+	const [submitterRenderState, setSubmitterRenderState] = useState(null);
+
+	useEffect(() => {
+		setSubmitterRenderState({
+			...event._local.submitter,
+			label: 'Unchanged'
+		});
+	}, [event._local.submitter]);
+
+	function setSubmitterToRequester() {
+		formDispatch(
+			{
+				type: 'fieldChange',
+				payload: {
+					field: `[${index}].submitter`,
+					value: event._local.requester.contactListEntry.id
+				}
+			}
+		);
+		setSubmitterRenderState({
+			...event._local.requester,
+			label: `Requester: ${event._local.requester.firstName}`
+		})
+	}
 
 	return (
 		<Expandable expansionEvent={expansionEvent} expansionCardsClassName={'card'}>
 			<Expandable.Title>
-				<span className="cardSubtitle">
+				<span className='cardSubtitle'>
 					<Typography>Event {index + 1}</Typography>
 				</span>
-				<Box className="info">
+				<Box className='info'>
 					<span>
-						<Typography variant="body2">Event type</Typography>
-						<Typography variant="body1">{event.type || 'unset'}</Typography>
+						<Typography variant='body2'>Event type</Typography>
+						<Typography variant='body1'>{event._local.type || 'unset'}</Typography>
 					</span>
 					<span>
-						<Typography variant="body2">Date</Typography>
-						<Typography variant="body1">{event.startDate || 'unset'}</Typography>
-					</span>
-					<span>
-						<Typography variant="body2">Location</Typography>
-						<Typography variant="body1">{(event.locations && event.locations.length > 0 && JSON.stringify(event.locations[0], null, 1)) || 'unset'}</Typography>
+						<Typography variant='body2'>Date</Typography>
+						<Typography variant='body1'>{event._local.startDate || 'unset'}</Typography>
 					</span>
 				</Box>
 			</Expandable.Title>
 			<Expandable.Detail>
-				<Box className="cardDetails">
-					<FormControl className="eventRadios">
+
+				<Debug item={event}/>
+
+				<Box className='cardDetails'>
+					<FormControl className='eventRadios'>
 						<FormLabel>Event Type</FormLabel>
 						<RadioGroup
 							row
 							value={event.type}
 							onChange={e => {
-								dispatch({
+								formDispatch({
 									type: 'fieldChange',
 									payload: {
-										field: `events[${index}].type`,
+										field: `[${index}].type`,
 										value: e.target.value
 									}
 								});
 							}}
 						>
-							<FormControlLabel value="capture" control={<Radio/>} label="Capture"/>
-							<FormControlLabel value="mortality" control={<Radio/>} label="Mortality"/>
-							<FormControlLabel value="recapture" control={<Radio/>} label="Recapture"/>
-							<FormControlLabel value="release" control={<Radio/>} label="Release"/>
+							<FormControlLabel value='CAPTURE' control={<Radio/>} label='Capture'/>
+							<FormControlLabel value='MORTALITY' control={<Radio/>} label='Mortality'/>
+							<FormControlLabel value='RECAPTURE' control={<Radio/>} label='Recapture'/>
+							{/*<FormControlLabel value='RELEASE' control={<Radio/>} label='Release'/>*/}
 						</RadioGroup>
 					</FormControl>
 
 					<Box>
 						<TextField
-							className="leftColumn"
-							label="Event Start Date(MM-DD-YYYY)"
-							id="start_date"
-							name="start_date"
+							className='leftColumn'
+							label='Event Start Date(MM-DD-YYYY)'
+							id='start_date'
+							name='start_date'
+							value={event.startDate}
 							onChange={e => {
-								dispatch({
+								formDispatch({
 									type: 'fieldChange',
 									payload: {
-										field: `events[${index}].startDate`,
+										field: `[${index}].startDate`,
 										value: e.target.value
 									}
 								});
 							}}
 							InputProps={{
 								endAdornment: (
-									<InputAdornment position="end">
+									<InputAdornment position='end'>
 										<CalendarTodayIcon/>
 									</InputAdornment>
 								)
@@ -107,50 +135,48 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 						/>
 
 						<TextField
-							className="rightColumn"
-							id="ageClass"
+							className='rightColumn'
+							id='ageClass'
 							select
-							label="Age Class"
+							label='Age Class'
 							value={event.ageClass}
 							onChange={e => {
-								dispatch({
+								formDispatch({
 									type: 'fieldChange',
 									payload: {
-										field: `events[${index}].ageClass`,
+										field: `[${index}].ageClass`,
 										value: e.target.value
 									}
 								});
 							}}
 						>
-							{ageClasses.map((m, i) => (
-								<MenuItem key={i} value={m.value}>
-									{m.label}
+							{ageClasses.map((m) => (
+								<MenuItem key={m.code} value={m.code}>
+									{m.name}
 								</MenuItem>
 							))}
 						</TextField>
 					</Box>
 
-					<Typography className="detailsSubtitle">Location</Typography>
-					<Box className="locations">
+					<Typography className='detailsSubtitle'>Location</Typography>
+					<Box className='locations'>
 						{event.locations.map((location, locationIndex) => (
-							<Box className="locationEntry" key={index}>
-								coming soon...
-								{JSON.stringify(location, null, 2)}
-								{/*<LocationEntry*/}
-								{/*	location={location}*/}
-								{/*	dispatch={dispatch}*/}
-								{/*	eventIndex={index}*/}
-								{/*	locationIndex={locationIndex}*/}
-								{/*/>*/}
+							<Box className='locationEntry' key={index}>
+								<LocationEntry
+									location={location}
+									formDispatch={formDispatch}
+									eventIndex={index}
+									locationIndex={locationIndex}
+								/>
 							</Box>
 						))}
 					</Box>
 
 					<Button
 						variant={'outlined'}
-						className="addLocation"
+						className='addLocation'
 						onClick={() => {
-							dispatch({
+							formDispatch({
 								type: 'locations.add',
 								payload: {
 									eventIndex: index
@@ -161,95 +187,76 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 						+ Add Location
 					</Button>
 
-					<Typography className="detailsSubtitle">Submitters</Typography>
-					<FormGroup className="submitterContainer">
-						{shouldShowCopyFromRequesterButton && (
-							<Button
-								variant={'outlined'}
-								className="copyFromRequester"
-								onClick={() => {
-									dispatch({
-										type: 'events.copyFromRequester',
-										payload: {
-											eventIndex: index
-										}
-									});
-									setSerial(serial + 1);
-								}}
-							>
-								Copy from requester
-							</Button>
-						)}
+					<Typography className='detailsSubtitle'>Submitters</Typography>
+					<FormGroup className='submitterContainer'>
+						<Button
+							variant={'outlined'}
+							className='copyFromRequester'
+							onClick={() => {
+								setSubmitterToRequester()
+							}}
+						>
+							Use Requester as Submitter
+						</Button>
 					</FormGroup>
 
-					{event.submitter && <ContactDisplay contact={event.submitter}/>}
-
-					<Button
-						variant={'outlined'}
-						className="addSubmitter"
-						onClick={() => {
-							setAddSubmitterDialogOpen(true);
-						}}
-					>
-						+ Add Submitter
-					</Button>
-
-					<PersonnelDialog
-						open={addSubmitterDialogOpen}
-						acceptAction={p => {
-							dispatch({
-								type: 'submitters.add',
-								payload: {
-									eventIndex: index,
-									submitter: p
+					<ContactAutofill
+						value={submitterRenderState}
+						className='contact'
+						onValueChange={v => {
+							setSubmitterRenderState(v);
+							formDispatch(
+								{
+									type: 'fieldChange',
+									payload: {
+										field: `[${index}].submitter`,
+										value: v?.id || ''
+									}
 								}
-							});
-							setSerial(serial + 1);
-							setAddSubmitterDialogOpen(false);
+							);
 						}}
-						cancelAction={() => {
-							setAddSubmitterDialogOpen(false);
-						}}
-						initialState={null}
-						noun="Add Submitter"
+						label={"Submitter"}
 					/>
 
-					<Typography className="detailsSubtitle">Samples</Typography>
-					<FormGroup className="samplesContainer">
-						<Typography variant="body1">Samples Were Collected?</Typography>
+					{submitterRenderState?.document && <ContactDisplay contact={submitterRenderState.document}/>}
+					{submitterRenderState?.contactListEntry && <ContactDisplay contact={submitterRenderState.contactListEntry}/>}
+
+					<Typography className='detailsSubtitle'>Samples</Typography>
+					<FormGroup className='samplesContainer'>
+						<Typography variant='body1'>Samples Were Collected?</Typography>
 						<FormControlLabel
-							className="sampleLabel"
+							className='sampleLabel'
 							control={
 								<Switch
-									checked={event.samplesCollected}
+									checked={event.samples.collected}
 									onChange={e => {
-										dispatch({type: 'fieldChange', payload: {field: `events[${index}].samplesCollected`, value: e.target.checked}});
+										formDispatch({type: 'fieldChange', payload: {field: `[${index}].samples.collected`, value: e.target.checked}});
 									}}
 								/>
 							}
 							label={`${event.samplesCollected ? 'Yes' : 'No'}`}
 						/>
-						<Typography variant="body1">Samples Sent for Testing?</Typography>
+						<Typography variant='body1'>Samples Sent for Testing?</Typography>
 						<FormControlLabel
-							className="sampleLabel"
+							className='sampleLabel'
 							control={
 								<Switch
-									checked={event.samplesSentForTesting}
+									checked={event.samples.sentForTesting}
 									onChange={e => {
-										dispatch({type: 'fieldChange', payload: {field: `events[${index}].samplesSentForTesting`, value: e.target.checked}});
+										formDispatch({type: 'fieldChange', payload: {field: `[${index}].samples.sentForTesting`, value: e.target.checked}});
 									}}
 								/>
 							}
 							label={`${event.samplesSentForTesting ? 'Yes' : 'No'}`}
 						/>
-						<Typography variant="body1">Test Results Received?</Typography>
+						<Typography variant='body1'>Test Results Received?</Typography>
 						<FormControlLabel
-							className="sampleLabel"
+							className='sampleLabel'
 							control={
 								<Switch
-									checked={event.testResultsReceived}
+									checked={event.samples.resultsReceived}
 									onChange={e => {
-										dispatch({type: 'fieldChange', payload: {field: `events[${index}].testResultsReceived`, value: e.target.checked}});
+										formDispatch({type: 'fieldChange', payload: {field: `[${index}].samples.resultsReceived`, value: e.target.checked}});
 									}}
 								/>
 							}
@@ -258,18 +265,18 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 					</FormGroup>
 
 					<TextField
-						className="history"
-						label="History (Max 500 Characters)"
-						id="history"
-						name="history"
+						className='history'
+						label='History (Max 500 Characters)'
+						id='history'
+						name='history'
 						multiline
 						rows={5}
 						value={event.history}
 						onChange={e => {
-							dispatch({
+							formDispatch({
 								type: 'fieldChange',
 								payload: {
-									field: `events[${index}].history`,
+									field: `[${index}].history`,
 									value: e.target.value
 								}
 							});
@@ -290,7 +297,7 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 						setConfirmDialogOpen(false);
 					}}
 					acceptAction={() => {
-						saveState();
+						applyChanges();
 						setConfirmDialogOpen(false);
 					}}
 					title={'Update Confirmation'}
@@ -302,16 +309,17 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 						setCancelDialogOpen(false);
 					}}
 					acceptAction={() => {
-						resetState();
+						formDispatch({type: 'reset'})
 					}}
 					title={'Cancel WLH ID Event Details Update'}
 					content={'You have not saved your changes. Are you sure you want to cancel?'}
 				/>
-				<Box className="cardButtons">
+
+				<Box className='cardButtons'>
 					<Button
 						variant={'contained'}
 						disabled={!dirty}
-						className="update_btn"
+						className='update_btn'
 						onClick={() => {
 							setConfirmDialogOpen(true);
 						}}
@@ -321,7 +329,7 @@ const EventDetails = ({dirty, expansionEvent, state, event, index, dispatch, res
 					<Button
 						variant={'outlined'}
 						disabled={!dirty}
-						className="update_btn"
+						className='update_btn'
 						onClick={() => {
 							setCancelDialogOpen(true);
 						}}

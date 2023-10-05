@@ -1,11 +1,11 @@
 import {
+	WILDLIFE_HEALTH_ID_APPLY_CHANGES_COMPLETE,
 	WILDLIFE_HEALTH_ID_GENERATE_COMPLETE, WILDLIFE_HEALTH_ID_GENERATE_ERROR,
 	WILDLIFE_HEALTH_ID_GENERATE_REQUEST,
 	WILDLIFE_HEALTH_ID_LIST_ALL_COMPLETE, WILDLIFE_HEALTH_ID_LIST_ALL_ERROR, WILDLIFE_HEALTH_ID_LIST_ALL_REQUEST,
 	WILDLIFE_HEALTH_ID_LOAD_COMPLETE,
 	WILDLIFE_HEALTH_ID_LOAD_ERROR,
-	WILDLIFE_HEALTH_ID_LOAD_REQUEST,
-	WILDLIFE_HEALTH_ID_PERSIST_COMPLETE
+	WILDLIFE_HEALTH_ID_LOAD_REQUEST
 } from "../actions";
 
 class WildLifeHealthId {
@@ -90,7 +90,7 @@ function createWildlifeHealthIdReducer(): (WildLifeHealthId, AnyAction) => WildL
 				}
 			};
 		}
-		case WILDLIFE_HEALTH_ID_PERSIST_COMPLETE: {
+		case WILDLIFE_HEALTH_ID_APPLY_CHANGES_COMPLETE: {
 			return {
 				...state,
 				single: {
@@ -147,9 +147,6 @@ function createWildlifeHealthIdReducer(): (WildLifeHealthId, AnyAction) => WildL
 			const found = updatedGenerate.findIndex(p => p.serial === action.payload.serial);
 			if (found == -1) {
 				console.error(`Cannot find serial ${action.payload.serial}`);
-				console.dir(updatedGenerate);
-				console.dir(updatedGenerate.findIndex(p => p.serial == action.payload.serial));
-
 			} else {
 				updatedGenerate[found] = {
 					working: false,

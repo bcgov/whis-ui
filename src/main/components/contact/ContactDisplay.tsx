@@ -2,6 +2,9 @@ import {Box, Grid, Table, TableBody, TableCell, TableContainer, TableHead, Table
 import React from "react";
 
 const ContactDisplay = ({contact}) => {
+	if (contact == null) {
+		return null;
+	}
 
 	return (
 		<TableContainer component={Box} sx={{borderRadius: '6px', border: '1px solid #dfe0e0', width: '100%', display: 'table', tableLayout: 'fixed'}}>

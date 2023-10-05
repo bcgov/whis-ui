@@ -47,25 +47,25 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 		case 'WING_BAND':
 		case 'COLLAR_ID':
 			return (
-				<Box className="oneColumnContainer">
+				<Box className='oneColumnContainer'>
 					<FormGroup>
 						<TextField
-							label="Identifier"
-							id="identifier"
-							name="identifier"
+							label='Identifier'
+							id='identifier'
+							name='identifier'
 							value={identifier.identifier}
 							required
 							{...register('identifier', {
 								required: 'Enter the identifier.',
 								onChange(e) {
 									dispatch({
-										type: 'animalDetails.identifiers.valueChange',
+										type: 'identifiers.valueChange',
 										payload: {
 											index,
 											newValue: e.target.value
 										}
 									});
-									}
+								}
 							})}
 							error={!!errors?.identifier}
 						/>
@@ -74,7 +74,7 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 					<IconButton
 						onClick={e => {
 							dispatch({
-								type: 'animalDetails.identifiers.delete',
+								type: 'identifiers.delete',
 								payload: {
 									index
 								}
@@ -88,19 +88,19 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 			break;
 		case 'EAR_TAG':
 			return (
-				<Box className="earTag">
+				<Box className='earTag'>
 					<FormGroup>
 						<TextField
-							label="Identifier"
-							id="identifier"
-							name="identifier"
+							label='Identifier'
+							id='identifier'
+							name='identifier'
 							value={identifier.identifier}
 							required
 							{...register('identifier', {
 								required: 'Enter the identifier.',
 								onChange(e) {
 									dispatch({
-										type: 'animalDetails.identifiers.valueChange',
+										type: 'identifiers.valueChange',
 										payload: {
 											index,
 											newValue: e.target.value
@@ -113,46 +113,42 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 						<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message}/>
 					</FormGroup>
 					<TextField
-						id="color"
-						label="Color"
+						id='color'
+						label='Colour'
 						required
-						value={identifier.additionalAttributes?.color || ''}
+						value={identifier.colour || ''}
 						onChange={e => {
 							dispatch({
-								type: 'animalDetails.identifiers.additionalAttributesChange',
+								type: 'identifiers.additionalAttributesChange',
 								payload: {
 									index,
-									newAttributes: {
-										...identifier.additionalAttributes,
-										color: e.target.value
-									}
+									attribute: 'colour',
+									newValue: e.target.value
 								}
 							});
 						}}
 					></TextField>
 					<RadioGroup
-						name="controlled-radio-buttons-group"
-						value={identifier.additionalAttributes?.taggedEar || ''}
+						name='controlled-radio-buttons-group'
+						value={identifier.earCode || ''}
 						onChange={e => {
 							dispatch({
-								type: 'animalDetails.identifiers.additionalAttributesChange',
+								type: 'identifiers.additionalAttributesChange',
 								payload: {
 									index,
-									newAttributes: {
-										...identifier.additionalAttributes,
-										taggedEar: e.target.value
-									}
+									attribute: 'earCode',
+									newValue: e.target.value
 								}
 							});
 						}}
 					>
-						<FormControlLabel value="left" control={<Radio/>} label="Left"/>
-						<FormControlLabel value="right" control={<Radio/>} label="Right"/>
+						<FormControlLabel value='L' control={<Radio/>} label='Left'/>
+						<FormControlLabel value='R' control={<Radio/>} label='Right'/>
 					</RadioGroup>
 					<IconButton
 						onClick={e => {
 							dispatch({
-								type: 'animalDetails.identifiers.delete',
+								type: 'identifiers.delete',
 								payload: {
 									index
 								}
@@ -166,19 +162,19 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 			break;
 		case 'RAPP_TAG':
 			return (
-				<Box className="rappTag">
+				<Box className='rappTag'>
 					<FormGroup>
 						<TextField
-							label="Identifier"
-							id="identifier"
-							name="identifier"
+							label='Identifier'
+							id='identifier'
+							name='identifier'
 							value={identifier.identifier}
 							required
 							{...register('identifier', {
 								required: 'Enter the identifier.',
 								onChange(e) {
 									dispatch({
-										type: 'animalDetails.identifiers.valueChange',
+										type: 'identifiers.valueChange',
 										payload: {
 											index,
 											newValue: e.target.value
@@ -191,28 +187,26 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 						<ValidationError hidden={!errors?.identifier} message={errors.identifier?.message}/>
 					</FormGroup>
 					<RadioGroup
-						name="controlled-radio-buttons-group"
-						value={identifier.additionalAttributes?.taggedEar || ''}
+						name='controlled-radio-buttons-group'
+						value={identifier.earCode || ''}
 						onChange={e => {
 							dispatch({
-								type: 'animalDetails.identifiers.additionalAttributesChange',
+								type: 'identifiers.additionalAttributesChange',
 								payload: {
 									index,
-									newAttributes: {
-										...identifier.additionalAttributes,
-										taggedEar: e.target.value
-									}
+									attribute: 'earCode',
+									newValue: e.target.value
 								}
 							});
 						}}
 					>
-						<FormControlLabel value="left" control={<Radio/>} label="Left"/>
-						<FormControlLabel value="right" control={<Radio/>} label="Right"/>
+						<FormControlLabel value='L' control={<Radio/>} label='Left'/>
+						<FormControlLabel value='R' control={<Radio/>} label='Right'/>
 					</RadioGroup>
 					<IconButton
 						onClick={e => {
 							dispatch({
-								type: 'animalDetails.identifiers.delete',
+								type: 'identifiers.delete',
 								payload: {
 									index
 								}
@@ -230,17 +224,17 @@ const IdentifierEntry = ({identifier, index, dispatch}) => {
 	}
 
 	return (
-		<Box className="identifierContainer">
+		<Box className='identifierContainer'>
 			<TextField
 				select
-				className="identifierSelect"
-				id="identifier"
-				name="identifier"
-				label="Identifier Types"
+				className='identifierSelect'
+				id='identifier'
+				name='identifier'
+				label='Identifier Types'
 				value={identifier.type}
 				onChange={e => {
 					dispatch({
-						type: 'animalDetails.identifiers.typeChange',
+						type: 'identifiers.typeChange',
 						payload: {
 							index,
 							newType: e.target.value

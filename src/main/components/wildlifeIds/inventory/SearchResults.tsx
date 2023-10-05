@@ -162,7 +162,6 @@ const SearchResults = showFilterChips => {
 				</>
 			);
 		} else {
-			console.dir(params.row);
 			return (
 				<>
 					<Link to={`/wildlifeIds/detail/${params.row.id}`}>{params.row.wildlifeHealthId}</Link>
